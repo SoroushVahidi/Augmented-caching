@@ -1,18 +1,20 @@
 """
 Deterministic Marker (LRU-Marker) caching policy.
 
-The Marker algorithm is a classical online caching algorithm that achieves
-an O(H_k) = O(log k) competitive ratio in the unweighted setting.  It is
-used as the *robustness sub-routine* inside TRUST&DOUBT and is also a
-standalone baseline.
+References
+----------
+Fiat, Karp, Luby, McGeoch, Sleator, Young.
+"Competitive Paging Algorithms."  Journal of Algorithms, 1991.
 
-Reference (original randomized Marker):
-    Fiat, Karp, Luby, McGeoch, Sleator, Young.
-    "Competitive Paging Algorithms."  Journal of Algorithms, 1991.
+Used as the deterministic backbone of Predictive Marker in:
+    Lykouris, Vassilvitskii.
+    "Competitive Caching with Machine Learned Advice."
+    ICML 2018 / JACM 2021.
 
-Deterministic variant (LRU-Marker):
-    Use LRU order among unmarked pages for a deterministic implementation.
-    This preserves the Θ(log k) competitive-ratio guarantee in the worst case.
+Also serves as the *robustness sub-routine* inside TRUST&DOUBT:
+    Antoniadis, Coester, Eliáš, Polak, Simon.
+    "Online Metric Algorithms with Untrusted Predictions."
+    ICML 2020.
 
 Setting: unweighted paging (unit costs), cache of k pages.
 
@@ -39,6 +41,15 @@ For each request at time t for page p:
 occurs with all cached pages marked.  Equivalently, each phase sees at most
 k distinct page requests before a miss triggers a phase boundary.
 
+INTERPRETATION NOTE — Eviction tie-breaking
+--------------------------------------------
+The original Marker paper evicts a *randomly* chosen unmarked page for
+a randomised O(log k)-competitive algorithm.  This implementation is
+deterministic: we evict the **least-recently-used** unmarked page (by
+last access timestamp) to make the algorithm reproducible and independent
+of insertion order.  LRU tie-breaking also makes the algorithm suitable
+as the doubt sub-routine in TRUST&DOUBT.
+
 Paper-to-code mapping
 ----------------------
 | Concept             | Code location                            |
@@ -46,7 +57,7 @@ Paper-to-code mapping
 | Phase boundary      | ``len(unmarked) == 0`` branch in on_request |
 | Marked pages        | ``_marked: Set[PageId]``                 |
 | LRU tracking        | ``_lru_order: OrderedDict``              |
-| Phase counter       | ``_phase_count``                         |
+| Phase counter       | ``_phase_count`` (completed phases, 0-based) |
 """
 
 from __future__ import annotations
@@ -74,7 +85,7 @@ class MarkerPolicy(BasePolicy):
         self._marked: Set[PageId] = set()
         # LRU order for all *cached* pages (oldest → newest).
         self._lru_order: collections.OrderedDict[PageId, None] = collections.OrderedDict()
-        # Diagnostic counter: number of phases completed.
+        # Diagnostic counter: number of phases completed (0-based).
         self._phase_count: int = 0
 
     # ------------------------------------------------------------------
@@ -142,9 +153,17 @@ class MarkerPolicy(BasePolicy):
     # ------------------------------------------------------------------
 
     def phase_count(self) -> int:
-        """Number of phases completed so far (starts at 0)."""
+        """Number of phases completed so far (0-based; incremented at each phase boundary)."""
         return self._phase_count
+
+    def current_phase(self) -> int:
+        """Current phase index (1-based; equivalent to phase_count() + 1)."""
+        return self._phase_count + 1
 
     def marked_snapshot(self) -> frozenset:
         """Return a snapshot of the currently marked page ids."""
+        return frozenset(self._marked)
+
+    def marked_pages(self) -> frozenset:
+        """Alias for :meth:`marked_snapshot` (backward compatibility)."""
         return frozenset(self._marked)

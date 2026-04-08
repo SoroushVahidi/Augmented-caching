@@ -70,6 +70,7 @@ class CacheEvent:
     hit: bool
     cost: float  # 0.0 on a hit, w_p on a miss.
     evicted: Optional[PageId] = None  # Set when a page was evicted to make room.
+    phase: Optional[int] = None  # Phase index (for phase-based policies such as Marker).
 
 
 @dataclass
@@ -84,3 +85,5 @@ class SimulationResult:
     # Filled in by the runner after the simulation.
     prediction_error_eta: Optional[float] = None
     prediction_error_surprises: Optional[Dict[str, Any]] = None
+    # Optional extra diagnostics (e.g. phase/clean-chain info from Predictive Marker).
+    extra_diagnostics: Optional[Dict[str, Any]] = None

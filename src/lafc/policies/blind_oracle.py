@@ -1,16 +1,19 @@
 """
-Blind Oracle caching policy.
+Blind Oracle caching policy (unweighted paging).
 
-The Blind Oracle is the prediction-following baseline from:
+References
+----------
+Lykouris, Vassilvitskii.
+"Competitive Caching with Machine Learned Advice."
+ICML 2018 / JACM 2021.
 
-    Antoniadis, Coester, Eliáš, Polak, Simon.
-    "Online Metric Algorithms with Untrusted Predictions."
-    ICML 2020.
+Antoniadis, Coester, Eliáš, Polak, Simon.
+"Online Metric Algorithms with Untrusted Predictions."
+ICML 2020.
 
-In the caching context, the Blind Oracle simply trusts the predictor
-completely: on a miss it evicts the cached page whose *predicted* next
-arrival is farthest in the future (Belady's algorithm run on predictions
-instead of actual arrivals).
+The Blind Oracle fully trusts the predictor: on a miss it evicts the cached
+page whose *predicted* next arrival is farthest in the future (Belady's
+algorithm run on predictions instead of actual arrivals).
 
 Setting: unweighted paging (unit fetch costs), cache of k pages.
 
@@ -23,17 +26,20 @@ Prediction interface (aligned with :class:`~lafc.types.Request`):
     ``request.page_id`` will be requested again.  ``math.inf`` means
     "predicted to never be requested again."
 
-This class is essentially equivalent to
-:class:`~lafc.policies.advice_trusting.AdviceTrustingPolicy` but is
-documented in the ICML 2020 context and is used as the trust-phase
-sub-routine inside :class:`~lafc.policies.trust_and_doubt.TrustAndDoubtPolicy`.
+This class is the "trust" sub-routine inside
+:class:`~lafc.policies.trust_and_doubt.TrustAndDoubtPolicy` and the
+base implementation for :class:`~lafc.policies.follow_the_prediction.FollowThePredictionPolicy`.
 
 Paper-to-code mapping
 ----------------------
-Section 2 (caching setting), Algorithm FTP → this class.
-The FTP (Follow-The-Prediction) abstraction from Section 3 specialises
-to the Blind Oracle for caching: follow the predictor's recommended
-eviction order.
+Section 2 of ICML 2020 (caching setting), Algorithm FTP → this class.
+Also serves as the Blind Oracle from Lykouris & Vassilvitskii 2018.
+
+INTERPRETATION NOTE — cost model
+---------------------------------
+The canonical unweighted paging setting uses unit cost (1.0 per miss).
+This implementation uses ``page.weight`` to support weighted generalisation,
+but all correctness guarantees from both papers apply to unit-weight pages.
 """
 
 from __future__ import annotations
@@ -51,9 +57,8 @@ class BlindOraclePolicy(BasePolicy):
     Faithfully follows the predictor's advice with no robustness mechanism.
     Consistent (optimal under perfect predictions); not robust.
 
-    Parameters
-    ----------
-    None.  The policy is stateless beyond the cache and predicted_next dict.
+    There are no configurable parameters; the policy is fully determined
+    by the predictions received at each step.
     """
 
     name: str = "blind_oracle"
@@ -66,8 +71,8 @@ class BlindOraclePolicy(BasePolicy):
         #
         # INTERPRETATION NOTE: For pages whose prediction has not yet been
         # received, math.inf means they are treated as first-to-evict
-        # candidates.  This is consistent with the ICML 2020 paper's
-        # "Follow-The-Prediction" framing: absent advice, assume far future.
+        # candidates.  This is consistent with both papers' framing:
+        # absent advice, assume far future.
         self._predicted_next: Dict[PageId, float] = {
             pid: math.inf for pid in pages
         }
@@ -90,10 +95,13 @@ class BlindOraclePolicy(BasePolicy):
             )
         return max(candidates, key=lambda q: (self._predicted_next.get(q, math.inf), q))
 
+    # Alias for backward compatibility with test_policies_baseline2.py.
+    _choose_victim = _choose_eviction_candidate
+
     def on_request(self, request: Request) -> CacheEvent:
         pid = request.page_id
 
-        # Update prediction for this page regardless of hit/miss.
+        # Always record the latest prediction for the requested page.
         # Section 2 of ICML 2020: prediction τ_t is revealed at time t.
         self._predicted_next[pid] = request.predicted_next
 
