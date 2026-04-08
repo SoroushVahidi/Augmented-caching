@@ -3,8 +3,8 @@
 PAPER-TO-CODE NOTE (Step 0)
 ---------------------------
 1) Setting: unweighted paging with cache size k.
-2) Predictions: predictor cache configuration P_t (lazy predictor); this code
-   reads it from request.metadata['predicted_cache'].
+2) Predictions: predictor cache configuration P_t (lazy predictor); in code
+   this is ``request.metadata['predicted_cache']``.
 3) State: A, stale, C, T, D, U, M; per-clean-page p_q, trusted(q), t_q,
    q_interval_change; plus random priority order on U when A empties.
 4) Logic: implemented from Algorithm 3 (supplementary, page with Alg. 3).
@@ -13,19 +13,23 @@ PAPER-TO-CODE NOTE (Step 0)
    - Predictive Marker stays marking-only and evicts unmarked only.
    - TRUST&DOUBT can evict marked pages in T and adaptively doubles thresholds.
 6) Ambiguities interpreted:
-   - "arbitrary" choices are deterministic LRU tie-breakers.
+   - "arbitrary" choices use seeded random choices for reproducibility.
    - non-lazy algorithm is simulated in background; real cache is lazy per Remark 10.
 7) Mapping: on_request implements Alg.3 blocks (phase start, step1..4).
+8) Previous implementation status:
+   - Partly interpreted and too deterministic in "arbitrary" branches.
+   - This version restores randomized arbitrary choices while preserving
+     deterministic replay under a fixed seed.
 
-INTERPRETATION NOTE: deterministic choices are used for reproducibility where
-paper says "arbitrary"; see docs/baselines.md.
+INTERPRETATION NOTE: where the paper leaves tie-breaking unspecified, seeded
+random selection is used and documented for reproducibility.
 """
 
 from __future__ import annotations
 
 import random
 from collections import defaultdict
-from typing import Dict, List, Optional, Set
+from typing import Dict, Optional, Set
 
 from lafc.policies.base import BasePolicy
 from lafc.types import CacheEvent, Page, PageId, Request
@@ -70,10 +74,20 @@ class TrustAndDoubtPolicy(BasePolicy):
                 "TRUST&DOUBT requires metadata['predicted_cache']; "
                 "use --derive-predicted-caches or provide predicted_caches in trace"
             )
-        return set(str(x) for x in pc)
+        P = set(str(x) for x in pc)
+        if len(P) > self._cache.capacity:
+            raise ValueError(
+                f"predicted_cache size {len(P)} exceeds capacity {self._cache.capacity}"
+            )
+        return P
 
     def _lru_pick(self, pages: Set[PageId]) -> PageId:
         return min(pages, key=lambda p: (self._last_touch[p], p))
+
+    def _random_pick(self, pages: Set[PageId]) -> PageId:
+        """Pick an arbitrary page using seeded randomness."""
+        items = sorted(pages)
+        return items[self._rng.randrange(len(items))]
 
     def _start_new_phase_if_needed(self, r: PageId) -> None:
         if len(self._marked) == self._cache.capacity and r not in self._marked:
@@ -106,7 +120,8 @@ class TrustAndDoubtPolicy(BasePolicy):
             candidates = (self._U | self._M) - self._D
             if not candidates:
                 raise RuntimeError("No candidate page available for p_q definition")
-        return self._lru_pick(candidates)
+        # INTERPRETATION NOTE: paper says "arbitrary"; we use seeded random.
+        return self._random_pick(candidates)
 
     def _sync_real_cache_on_fault(self, requested: PageId) -> Optional[PageId]:
         """Lazy implementation per Remark 10.
@@ -145,7 +160,8 @@ class TrustAndDoubtPolicy(BasePolicy):
             if r in self._A:
                 self._A.remove(r)
             elif r not in self._sim_cache:
-                anc = self._lru_pick(self._A)
+                # INTERPRETATION NOTE: paper says arbitrary ancient page.
+                anc = self._random_pick(self._A)
                 self._A.remove(anc)
                 self._sim_cache.remove(anc)
                 self._sim_cache.add(r)
@@ -162,7 +178,8 @@ class TrustAndDoubtPolicy(BasePolicy):
                     in_u = self._U & self._sim_cache
                     if not in_u:
                         raise RuntimeError("step 1 expected a victim in U ∩ cache")
-                    victim = max(in_u, key=lambda p: (self._priority.get(p, -1), p))
+                    # Lowest priority (i.e. largest rank) is evicted.
+                    victim = max(in_u, key=lambda p: (self._priority.get(p, 10**9), p))
                     self._sim_cache.remove(victim)
                     self._sim_cache.add(r)
 
@@ -236,5 +253,12 @@ class TrustAndDoubtPolicy(BasePolicy):
                 "T": sorted(self._T),
                 "D": sorted(self._D),
                 "C": sorted(self._C),
+                "pq": {k: self._pq[k] for k in sorted(self._pq)},
+                "trusted": {k: self._trusted[k] for k in sorted(self._trusted)},
+                "tq": {k: self._tq[k] for k in sorted(self._tq)},
+                "q_interval_change": {
+                    k: self._q_interval_change[k]
+                    for k in sorted(self._q_interval_change)
+                },
             },
         )

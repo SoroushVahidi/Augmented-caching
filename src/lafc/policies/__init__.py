@@ -8,6 +8,7 @@ from lafc.policies.blind_oracle_lru_combiner import BlindOracleLRUCombiner
 from lafc.policies.blind_oracle_randomized_combiner import BlindOracleRandomizedCombiner
 from lafc.policies.equitable import EquitablePolicy
 from lafc.policies.la_weighted_paging_deterministic import LAWeightedPagingDeterministic
+from lafc.policies.la_weighted_paging_det_faithful import LAWeightedPagingDeterministicFaithful
 from lafc.policies.la_weighted_paging_randomized import LAWeightedPagingRandomized
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
@@ -22,6 +23,7 @@ __all__ = [
     "WeightedLRUPolicy",
     "AdviceTrustingPolicy",
     "LAWeightedPagingDeterministic",
+    "LAWeightedPagingDeterministicFaithful",
     "LAWeightedPagingRandomized",
     "MarkerPolicy",
     "BlindOraclePolicy",
