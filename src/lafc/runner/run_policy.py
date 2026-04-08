@@ -36,6 +36,7 @@ from lafc.policies.base import BasePolicy
 from lafc.policies.blind_oracle import BlindOraclePolicy
 from lafc.policies.blind_oracle_lru_combiner import BlindOracleLRUCombiner
 from lafc.policies.la_weighted_paging_deterministic import LAWeightedPagingDeterministic
+from lafc.policies.la_weighted_paging_det_faithful import LAWeightedPagingDeterministicFaithful
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
@@ -57,7 +58,11 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "lru": LRUPolicy(),
     "weighted_lru": WeightedLRUPolicy(),
     "advice_trusting": AdviceTrustingPolicy(),
+    # Historical interpreted heuristic (kept for backward compatibility).
     "la_det": LAWeightedPagingDeterministic(),
+    "la_det_approx": LAWeightedPagingDeterministic(),
+    # Faithful-style class-level deterministic algorithm (SODA'22 baseline).
+    "la_det_faithful": LAWeightedPagingDeterministicFaithful(),
     # Baseline 2: Lykouris & Vassilvitskii 2018 (unweighted paging)
     "marker": MarkerPolicy(),
     "blind_oracle": BlindOraclePolicy(),
@@ -473,6 +478,12 @@ def main() -> None:
         help="RNG seed for bucket corruption (atlas_v1 only).",
     )
     parser.add_argument(
+        "--trust-seed",
+        type=int,
+        default=0,
+        help="RNG seed for trust_and_doubt randomized choices (Baseline 3).",
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug logging.",
@@ -505,6 +516,8 @@ def main() -> None:
             seed=args.bucket_noise_seed,
         )
         policy = AtlasV1Policy(default_confidence=args.default_confidence)
+    elif args.policy == "trust_and_doubt":
+        policy = TrustAndDoubtPolicy(seed=args.trust_seed)
     else:
         policy = POLICY_REGISTRY[args.policy]
     result = run_policy(policy, requests, pages, args.capacity)

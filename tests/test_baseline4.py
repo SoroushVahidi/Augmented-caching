@@ -364,9 +364,22 @@ def test_combiner_step_log_chosen_uses_prior_costs():
     # t=0: no prior requests → both shadows have 0 misses.
     assert log[0].bo_misses_before == 0
     assert log[0].lru_misses_before == 0
-    # Tie → chosen is blind_oracle (or None if cache not full, i.e. no eviction).
-    # With capacity=3 and only 3 pages, no eviction is needed — chosen is None.
-    assert log[0].chosen is None  # no eviction needed (cache not full)
+    # Tie → BlindOracle is chosen deterministically.
+    assert log[0].chosen == "blind_oracle"
+
+
+def test_combiner_tie_breaks_to_blind_oracle():
+    """When cumulative misses tie, combiner must choose BlindOracle."""
+    requests, pages = _build(["A", "B", "A"], predictions=[10, 10, 10])
+    policy = BlindOracleLRUCombiner()
+    policy.reset(2, pages)
+
+    for req in requests:
+        policy.on_request(req)
+
+    first = policy.step_log()[0]
+    assert first.bo_misses_before == first.lru_misses_before == 0
+    assert first.chosen == "blind_oracle"
 
 
 def test_combiner_step_log_records_eviction_choice():
@@ -514,8 +527,7 @@ def test_combiner_extra_diagnostics_present():
 
 def test_combiner_chosen_is_always_valid():
     """
-    'chosen' in the step log must be 'blind_oracle', 'lru', or None.
-    'None' is only valid when there was a cache hit or no eviction needed.
+    'chosen' in the step log must always be 'blind_oracle' or 'lru'.
     """
     page_ids = ["A", "B", "C", "A", "B", "D", "A", "C", "B", "A"]
     preds = [3, 4, 7, 6, 8, 9, 10, 9999, 9999, 9999]
@@ -527,13 +539,9 @@ def test_combiner_chosen_is_always_valid():
         policy.on_request(req)
 
     for entry in policy.step_log():
-        assert entry.chosen in (None, "blind_oracle", "lru"), (
+        assert entry.chosen in ("blind_oracle", "lru"), (
             f"Unexpected chosen value: {entry.chosen}"
         )
-        if not entry.hit and entry.evicted is not None:
-            assert entry.chosen in ("blind_oracle", "lru"), (
-                f"t={entry.t}: eviction without chosen sub-algorithm"
-            )
 
 
 # ---------------------------------------------------------------------------
@@ -620,10 +628,9 @@ def test_combiner_fallback_to_lru_when_bo_worse():
     Trace: A B A B, capacity=2, predictions always wrong.
     With pred = [100, 200, 100, 200]: BO evicts based on predictions.
     """
-    page_ids = ["A", "B", "C", "A", "B", "C"]
-    # Adversarial: predict C (index 2,5) as having very large next time.
-    # This makes BO reluctant to evict C, which is bad when C isn't requested again.
-    preds = [10, 10, 9999, 10, 10, 9999]
+    # Hand-checkable example where BO incurs more misses than LRU by t=4.
+    page_ids = ["A", "C", "A", "B", "A", "D"]
+    preds = [7, 3, 20, 8, 5, 9999]
     requests, pages = _build(page_ids, predictions=preds)
 
     policy = BlindOracleLRUCombiner()
@@ -631,6 +638,26 @@ def test_combiner_fallback_to_lru_when_bo_worse():
     for req in requests:
         policy.on_request(req)
 
-    chosen_values = [s.chosen for s in policy.step_log() if s.chosen is not None]
+    chosen_values = [s.chosen for s in policy.step_log()]
     # With adversarial predictions, LRU should be chosen at some point.
-    assert "lru" in chosen_values or "blind_oracle" in chosen_values
+    assert "lru" in chosen_values
+
+
+def test_combiner_no_future_leakage_choice_rule():
+    """Chosen shadow must be a pure function of pre-request shadow misses."""
+    page_ids = ["A", "B", "C", "A", "D", "B", "E"]
+    preds = [100, 100, 100, 100, 1, 1, 1]
+    requests, pages = _build(page_ids, predictions=preds)
+
+    policy = BlindOracleLRUCombiner()
+    policy.reset(2, pages)
+    for req in requests:
+        policy.on_request(req)
+
+    for step in policy.step_log():
+        expected = (
+            "blind_oracle"
+            if step.bo_misses_before <= step.lru_misses_before
+            else "lru"
+        )
+        assert step.chosen == expected

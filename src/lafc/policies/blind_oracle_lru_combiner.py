@@ -5,371 +5,187 @@ Reference
 ---------
 Alexander Wei.
 "Better and Simpler Learning-Augmented Online Caching."
-Approximation, Randomization, and Combinatorial Optimization.
-Algorithms and Techniques (APPROX/RANDOM 2020).
-LIPIcs, Vol. 176, Article 60.
+APPROX/RANDOM 2020 (LIPIcs Vol. 176, Art. 60).
 
 ============================================================
-PAPER-TO-CODE IMPLEMENTATION NOTE (Wei 2020, Baseline 4)
+STEP-0 PAPER-TO-CODE NOTE (faithfulness-oriented)
 ============================================================
-No public code release exists for this paper.  The implementation is
-reconstructed from the paper itself.  All ambiguities are documented
-with INTERPRETATION NOTE tags.
+1) Required combiner state
+--------------------------
+To combine BlindOracle and LRU online, we maintain:
+- two shadow policies (BlindOracle and LRU),
+- cumulative miss counts of both shadows,
+- deterministic tie-breaking rule when shadow costs are equal,
+- combiner-visible cache state (for diagnostics/output consistency).
 
-1. Exact learning-augmented paging model (Wei 2020)
-----------------------------------------------------
-Standard paging (unweighted caching):
-- Cache capacity k; all pages have unit size.
-- All misses have unit cost (cost = 1).
-- Request sequence σ_1, ..., σ_T.
-- Each request σ_t arrives with a prediction τ_t: the predicted next
-  arrival time of σ_t after time t.  τ_t = ∞ means "never again."
-- Objective: minimise total number of cache misses.
+2) BlindOracle definition
+-------------------------
+Unweighted paging, unit miss cost, eviction on a miss with full cache:
+    evict argmax predicted_next among cached pages
+with deterministic tie-breaking.
 
-2. Definition of BlindOracle (Wei 2020)
------------------------------------------
-BlindOracle fully trusts the predictor:
-    On a cache miss when the cache is full, evict the cached page whose
-    *predicted* next arrival τ_q is largest (farthest in the future).
+3) LRU definition
+-----------------
+Standard deterministic LRU paging with unit miss cost.
 
-This is equivalent to Belady's optimal offline algorithm run with
-predicted arrivals in place of actual arrivals.  When predictions are
-perfect (τ_t = a_t for all t), BlindOracle is optimal.  Already
-implemented in blind_oracle.py.
+4) How cumulative costs are tracked
+-----------------------------------
+Each shadow processes every request.  Their private miss counters are read
+before each request and used for the combiner decision at that request.
 
-3. Prediction error η (Wei 2020)
-----------------------------------
-    η = Σ_t |τ_t − a_t|
+5) Operational meaning of
+   "follow whichever has performed better so far"
+--------------------------------------------------
+INTERPRETATION NOTE:
+The paper gives this rule informally and cites black-box combiner machinery.
+To preserve the literal "follow the algorithm" semantics (and avoid a custom
+third-cache hybrid rule), this implementation does **not** apply BO/LRU rules
+on an independent combiner cache.  Instead, at request t it follows the shadow
+algorithm whose cumulative misses up to t-1 are lower (tie -> BlindOracle).
+The combiner event at t is taken from that selected shadow's action.
 
-where τ_t is the predicted next arrival and a_t is the actual next
-arrival of σ_t at time t.  Both being ∞ contributes 0; one finite and
-one infinite contributes ∞.
+6) Tie-breaking
+---------------
+If both shadows have equal cumulative misses, choose BlindOracle.
+This deterministic choice is documented and reproducible.
 
-4. Deterministic black-box combination idea (Wei 2020)
---------------------------------------------------------
-Wei 2020 (Section 3, Theorem 1) shows a deterministic online combiner
-that achieves a competitive ratio bounded by the *minimum* of the
-individual competitive ratios of BlindOracle and LRU (up to constants).
-
-The paper's key algorithmic claim:
-    "The optimal deterministic strategy is especially simple: for each
-    eviction, follow whichever of BlindOracle and LRU has performed
-    better so far."
-
-5. "Follow whichever has performed better" → executable code
--------------------------------------------------------------
-INTERPRETATION NOTE 1 — "performed better" definition:
-    "Performed better so far" is interpreted as "has incurred fewer
-    cache misses so far."  Both BlindOracle and LRU are run as
-    INDEPENDENT shadow instances on the same request sequence.  Each
-    shadow maintains its own cache state.  Their cumulative miss counts
-    are compared to decide the combiner's eviction rule.
-
-    At each request t:
-      1.  Read shadow miss counts accumulated from requests 0 .. t−1
-          (before processing request t, so the decision is made on
-          information strictly prior to time t — fully online).
-      2.  If shadow_bo.misses ≤ shadow_lru.misses:
-              apply BlindOracle eviction rule to combiner's own cache.
-          Else:
-              apply LRU eviction rule to combiner's own cache.
-      3.  Process request t through BOTH shadows (update their states).
-
-    RATIONALE: "Follow" means applying the eviction RULE of the chosen
-    algorithm to the combiner's OWN cache state (not the shadow's cache).
-    This avoids the need to synchronise the combiner's cache with a
-    shadow's cache, which would require teleporting pages in and out of
-    cache — an operation not available in an online algorithm.
-
-6. Hidden assumptions for the combiner
+7) Was previous implementation faithful?
 ----------------------------------------
-INTERPRETATION NOTE 2 — independent shadows:
-    The combiner's cache state is independent of both shadow caches.
-    The shadows run on the same request sequence but make their own
-    independent eviction decisions.  Shadow miss counts are the sole
-    channel of information from shadow to combiner.
-
-INTERPRETATION NOTE 3 — eviction rules applied to combiner's cache:
-    "BlindOracle rule" applied to the combiner's cache:
-        evict argmax_{q ∈ combiner_cache} predicted_next[q]
-    using the combiner's OWN predicted_next dict (updated on every
-    request received by the combiner).
-
-    "LRU rule" applied to the combiner's cache:
-        evict the least-recently-used page in the combiner's cache
-    using the combiner's OWN recency order (updated on every request).
-
-INTERPRETATION NOTE 4 — tie-breaking when shadow costs are equal:
-    When shadow_bo.misses == shadow_lru.misses the combiner favours
-    BlindOracle.  This is an arbitrary but deterministic and
-    reproducible choice.  It could be reversed without affecting the
-    algorithm's theoretical properties.
-
-INTERPRETATION NOTE 5 — hits and shadow updates:
-    Both shadows are updated on every request (hits included), so that
-    their cumulative miss counts accurately reflect the full request
-    sequence up to the current time.
-
-7. Randomized Equitable-based combination (Wei 2020)
------------------------------------------------------
-Wei 2020 also describes a randomized variant using an H_k-competitive
-randomized paging algorithm (e.g. Equitable) in place of LRU.  See
-blind_oracle_randomized_combiner.py for a scaffold with TODO markers
-explaining what is needed for a faithful implementation.
+Previous code kept an independent combiner cache and applied whichever
+*eviction rule* was leading to that third cache.  That is a plausible
+interpretation, but it is not a literal "follow the leading algorithm"
+implementation.  This file now implements the latter explicitly.
 """
 
 from __future__ import annotations
 
-import collections
-import math
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 from lafc.policies.base import BasePolicy
 from lafc.policies.blind_oracle import BlindOraclePolicy
 from lafc.policies.lru import LRUPolicy
+from lafc.simulator.cache_state import CacheState
 from lafc.types import CacheEvent, Page, PageId, Request
-
-
-# ---------------------------------------------------------------------------
-# Per-step diagnostics
-# ---------------------------------------------------------------------------
 
 
 @dataclass
 class CombinerStepLog:
-    """Per-step diagnostics for the deterministic BlindOracle + LRU combiner.
-
-    Attributes
-    ----------
-    t:
-        Request index.
-    page_id:
-        Requested page.
-    hit:
-        True if the page was in the combiner's cache.
-    evicted:
-        Page evicted by the combiner (None on a hit or when cache was not full).
-    chosen:
-        Which sub-algorithm's eviction rule was applied: ``"blind_oracle"``,
-        ``"lru"``, or ``None`` (cache hit — no eviction needed).
-    bo_misses_before:
-        Shadow BlindOracle miss count *before* processing request t.
-    lru_misses_before:
-        Shadow LRU miss count *before* processing request t.
-    """
+    """Per-step diagnostics for the deterministic combiner."""
 
     t: int
     page_id: PageId
     hit: bool
     evicted: Optional[PageId]
-    chosen: Optional[str]
+    chosen: str
     bo_misses_before: int
     lru_misses_before: int
 
 
-# ---------------------------------------------------------------------------
-# Combiner policy
-# ---------------------------------------------------------------------------
-
-
 class BlindOracleLRUCombiner(BasePolicy):
-    """Deterministic BlindOracle + LRU black-box combiner (Wei 2020).
+    """Deterministic BlindOracle + LRU combiner for Baseline 4.
 
-    At each cache miss requiring an eviction, the combiner applies the
-    eviction rule of whichever shadow algorithm (BlindOracle or LRU) has
-    accumulated fewer cache misses so far.
-
-    Parameters
-    ----------
-    There are no configurable parameters.  Behaviour is fully determined
-    by the predictions received at each step.
-
-    Attributes (exposed for diagnostics)
-    ------------------------------------
-    step_log()
-        Returns the per-step ``CombinerStepLog`` list.
-    shadow_bo_misses()
-        Current miss count of the shadow BlindOracle instance.
-    shadow_lru_misses()
-        Current miss count of the shadow LRU instance.
+    The policy keeps two shadow simulations and follows the one with lower
+    cumulative miss count so far (tie -> BlindOracle).
     """
 
     name: str = "blind_oracle_lru_combiner"
 
-    # ------------------------------------------------------------------
-    # Initialisation
-    # ------------------------------------------------------------------
-
     def reset(self, capacity: int, pages: Dict[PageId, Page]) -> None:
         super().reset(capacity, pages)
 
-        # Shadow algorithms: independent instances sharing no state with the
-        # combiner.  Their sole purpose is to track cumulative miss counts.
-        # INTERPRETATION NOTE 2.
-        self._shadow_bo: BlindOraclePolicy = BlindOraclePolicy()
+        self._shadow_bo = BlindOraclePolicy()
         self._shadow_bo.reset(capacity, pages)
 
-        self._shadow_lru: LRUPolicy = LRUPolicy()
+        self._shadow_lru = LRUPolicy()
         self._shadow_lru.reset(capacity, pages)
 
-        # Combiner's own recency order (for LRU eviction rule).
-        # Most-recently-used end = right/end of OrderedDict.
-        # INTERPRETATION NOTE 3.
-        self._order: collections.OrderedDict[PageId, None] = (
-            collections.OrderedDict()
-        )
-
-        # Combiner's own predicted next-arrivals (for BlindOracle eviction rule).
-        # INTERPRETATION NOTE 3.
-        self._predicted_next: Dict[PageId, float] = {}
-
-        # Per-step diagnostics.
         self._step_log: List[CombinerStepLog] = []
 
-    # ------------------------------------------------------------------
-    # Main algorithm step
-    # ------------------------------------------------------------------
+        # The currently selected algorithm for serving requests.
+        self._active: str = "blind_oracle"
+
+    def _select_active(self, bo_misses: int, lru_misses: int) -> str:
+        # Tie broken in favor of BlindOracle.
+        return "blind_oracle" if bo_misses <= lru_misses else "lru"
+
+    def _shadow_event(self, which: str, request: Request) -> CacheEvent:
+        if which == "blind_oracle":
+            return self._shadow_bo.on_request(request)
+        if which == "lru":
+            return self._shadow_lru.on_request(request)
+        raise ValueError(f"Unknown shadow '{which}'")
+
+    def _sync_visible_cache(self, which: str) -> None:
+        """Mirror visible cache state to chosen shadow for diagnostics.
+
+        INTERPRETATION NOTE:
+        This model treats the combiner as literally following one of two
+        black-box shadows; the visible cache is mirrored to the selected
+        shadow cache after every request.
+        """
+        target = (
+            self._shadow_bo.current_cache()
+            if which == "blind_oracle"
+            else self._shadow_lru.current_cache()
+        )
+        new_cache = CacheState(self._cache.capacity, self._pages)
+        for pid in sorted(target):
+            new_cache.add(pid)
+        self._cache = new_cache
 
     def on_request(self, request: Request) -> CacheEvent:
-        pid = request.page_id
+        bo_before = self._shadow_bo._misses
+        lru_before = self._shadow_lru._misses
 
-        # Always update combiner's own predicted_next for the requested page.
-        # This mirrors BlindOraclePolicy's behaviour (see blind_oracle.py).
-        self._predicted_next[pid] = request.predicted_next
+        chosen = self._select_active(bo_before, lru_before)
+        self._active = chosen
 
-        # Read shadow miss counts BEFORE processing this request.
-        # This ensures decisions at time t are based on information from
-        # times 0 .. t−1 only — the algorithm is fully online.
-        # INTERPRETATION NOTE 1.
-        bo_misses_before: int = self._shadow_bo._misses
-        lru_misses_before: int = self._shadow_lru._misses
+        chosen_event = self._shadow_event(chosen, request)
+        # Keep the non-chosen shadow updated on every request as well.
+        other = "lru" if chosen == "blind_oracle" else "blind_oracle"
+        self._shadow_event(other, request)
 
-        # ----------------------------------------------------------------
-        # Cache hit
-        # ----------------------------------------------------------------
-        if self.in_cache(pid):
-            # Update combiner's LRU recency order (for future evictions).
-            self._order.move_to_end(pid)
+        if chosen_event.hit:
             self._record_hit()
-
-            # Both shadows are updated on every request (hits included).
-            # INTERPRETATION NOTE 5.
-            self._shadow_bo.on_request(request)
-            self._shadow_lru.on_request(request)
-
-            self._step_log.append(
-                CombinerStepLog(
-                    t=request.t,
-                    page_id=pid,
-                    hit=True,
-                    evicted=None,
-                    chosen=None,
-                    bo_misses_before=bo_misses_before,
-                    lru_misses_before=lru_misses_before,
-                )
-            )
-            return CacheEvent(t=request.t, page_id=pid, hit=True, cost=0.0)
-
-        # ----------------------------------------------------------------
-        # Cache miss — unit cost (unweighted paging).
-        # ----------------------------------------------------------------
-        self._record_miss(1.0)
-        evicted: Optional[PageId] = None
-        chosen: Optional[str] = None
-
-        if self._cache.is_full():
-            # Choose sub-algorithm based on which shadow has fewer misses.
-            # Tie broken in favour of BlindOracle.  INTERPRETATION NOTE 4.
-            if bo_misses_before <= lru_misses_before:
-                chosen = "blind_oracle"
-                evicted = self._evict_by_blind_oracle_rule(exclude=pid)
-            else:
-                chosen = "lru"
-                evicted = self._evict_by_lru_rule()
-
-            # Remove evicted page from combiner's bookkeeping.
-            self._evict(evicted)
-            self._order.pop(evicted, None)
-
-        # Fetch the requested page.
-        self._add(pid)
-        self._order[pid] = None  # insert at most-recently-used end
-
-        # Update both shadows AFTER the combiner's eviction decision.
-        # Their costs thus reflect requests 0 .. t−1 at the moment of
-        # comparison (step 1 above) and 0 .. t after the update.
-        # INTERPRETATION NOTE 1.
-        self._shadow_bo.on_request(request)
-        self._shadow_lru.on_request(request)
+        else:
+            self._record_miss(1.0)
 
         self._step_log.append(
             CombinerStepLog(
                 t=request.t,
-                page_id=pid,
-                hit=False,
-                evicted=evicted,
+                page_id=request.page_id,
+                hit=chosen_event.hit,
+                evicted=chosen_event.evicted,
                 chosen=chosen,
-                bo_misses_before=bo_misses_before,
-                lru_misses_before=lru_misses_before,
+                bo_misses_before=bo_before,
+                lru_misses_before=lru_before,
             )
         )
+
+        # Mirror visible cache to whichever algorithm is better *after* this
+        # request, so next request starts from the current leader.
+        next_active = self._select_active(self._shadow_bo._misses, self._shadow_lru._misses)
+        self._sync_visible_cache(next_active)
+        self._active = next_active
+
         return CacheEvent(
-            t=request.t, page_id=pid, hit=False, cost=1.0, evicted=evicted
+            t=request.t,
+            page_id=request.page_id,
+            hit=chosen_event.hit,
+            cost=0.0 if chosen_event.hit else 1.0,
+            evicted=chosen_event.evicted,
+            diagnostics={
+                "active_before": chosen,
+                "active_after": next_active,
+            },
         )
-
-    # ------------------------------------------------------------------
-    # Eviction rules (applied to COMBINER's own cache, not a shadow's)
-    # INTERPRETATION NOTE 3.
-    # ------------------------------------------------------------------
-
-    def _evict_by_blind_oracle_rule(self, exclude: PageId) -> PageId:
-        """Evict the cached page with the largest predicted_next.
-
-        Uses the combiner's own predicted_next dict.
-
-        Parameters
-        ----------
-        exclude:
-            Page being fetched (not yet in cache; excluded for safety).
-
-        Tie-breaking: lexicographically largest page_id (deterministic).
-        """
-        candidates = [q for q in self._cache.current_cache() if q != exclude]
-        if not candidates:
-            raise RuntimeError(
-                f"BlindOracle rule: no eviction candidate; "
-                f"cache={self._cache.current_cache()}, requesting={exclude}"
-            )
-
-        def sort_key(q: PageId):
-            # Larger predicted_next → evict first; break ties by page_id.
-            return (-self._predicted_next.get(q, math.inf), q)
-
-        return min(candidates, key=sort_key)
-
-    def _evict_by_lru_rule(self) -> PageId:
-        """Evict the least-recently-used page from the combiner's cache.
-
-        Uses the combiner's own LRU order (the front of the OrderedDict).
-        """
-        if not self._order:
-            raise RuntimeError("LRU rule: order is empty; cannot evict.")
-        # Front = least-recently-used.
-        return next(iter(self._order))
-
-    # ------------------------------------------------------------------
-    # Diagnostics
-    # ------------------------------------------------------------------
 
     def step_log(self) -> List[CombinerStepLog]:
-        """Return a copy of the per-step decision log."""
         return list(self._step_log)
 
     def shadow_bo_misses(self) -> int:
-        """Current miss count of the shadow BlindOracle instance."""
         return self._shadow_bo._misses
 
     def shadow_lru_misses(self) -> int:
-        """Current miss count of the shadow LRU instance."""
         return self._shadow_lru._misses
