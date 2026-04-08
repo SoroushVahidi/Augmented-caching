@@ -7,9 +7,9 @@ Bansal, Coester, Kumar, Purohit, Vee.
 "Learning-Augmented Weighted Paging."
 SODA 2022.
 
-============================================================
+------------------------------------------------------------
 PAPER-TO-CODE IMPLEMENTATION NOTE
-============================================================
+------------------------------------------------------------
 
 Setting (Section 2 of the paper)
 ----------------------------------
@@ -100,7 +100,7 @@ For every request at time t for page p with prediction τ_t:
             where eviction_score(q) = predicted_next[q] / w_q.
        c. Add p to cache.
 
-============================================================
+------------------------------------------------------------
 """
 
 from __future__ import annotations

@@ -38,8 +38,7 @@ Also serves as the Blind Oracle from Lykouris & Vassilvitskii 2018.
 INTERPRETATION NOTE — cost model
 ---------------------------------
 The canonical unweighted paging setting uses unit cost (1.0 per miss).
-This implementation uses ``page.weight`` to support weighted generalisation,
-but all correctness guarantees from both papers apply to unit-weight pages.
+This implementation follows that setting directly.
 """
 
 from __future__ import annotations
@@ -109,8 +108,8 @@ class BlindOraclePolicy(BasePolicy):
             self._record_hit()
             return CacheEvent(t=request.t, page_id=pid, hit=True, cost=0.0)
 
-        # Cache miss.
-        cost = self._pages[pid].weight
+        # Cache miss (unit-cost paging baseline).
+        cost = 1.0
         self._record_miss(cost)
         evicted: Optional[PageId] = None
 
