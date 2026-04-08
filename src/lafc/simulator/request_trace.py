@@ -2,7 +2,7 @@
 
 Supported formats:
 - JSON with keys: requests, optional weights, optional predictions,
-  optional predicted_caches.
+  optional predicted_caches, optional prediction_records.
 - CSV with columns: t,page_id and optional predicted_next,predicted_cache.
 """
 
@@ -34,6 +34,7 @@ def build_requests_from_lists(
     weights: Optional[Dict[PageId, float]] = None,
     predictions: Optional[List[float]] = None,
     predicted_caches: Optional[List[List[PageId]]] = None,
+    prediction_records: Optional[List[Dict[str, object]]] = None,
 ) -> Tuple[List[Request], Dict[PageId, Page]]:
     if not page_ids:
         raise ValueError("page_ids must not be empty")
@@ -49,6 +50,8 @@ def build_requests_from_lists(
         raise ValueError("predictions length must match requests length")
     if predicted_caches is not None and len(predicted_caches) != len(page_ids):
         raise ValueError("predicted_caches length must match requests length")
+    if prediction_records is not None and len(prediction_records) != len(page_ids):
+        raise ValueError("prediction_records length must match requests length")
 
     actual_nexts = _compute_actual_next(page_ids)
     preds = predictions if predictions is not None else [math.inf] * len(page_ids)
@@ -58,6 +61,12 @@ def build_requests_from_lists(
         md = {}
         if predicted_caches is not None:
             md["predicted_cache"] = [str(x) for x in predicted_caches[t]]
+        if prediction_records is not None:
+            rec = prediction_records[t]
+            if "bucket" in rec and rec["bucket"] is not None:
+                md["bucket"] = int(rec["bucket"])
+            if "confidence" in rec and rec["confidence"] is not None:
+                md["confidence"] = float(rec["confidence"])
         requests.append(
             Request(
                 t=t,
@@ -87,7 +96,29 @@ def _load_json_trace(path: str) -> Tuple[List[Request], Dict[PageId, Page]]:
         if "predicted_caches" in data
         else None
     )
-    return build_requests_from_lists(page_ids, weights, predictions, predicted_caches)
+    prediction_records = None
+    # Preferred format for bucket/confidence metadata (atlas_v1):
+    # prediction_records[t] = {"bucket": int, "confidence": float?}
+    if "prediction_records" in data:
+        prediction_records = [dict(rec) for rec in data["prediction_records"]]
+    elif "buckets" in data or "confidences" in data:
+        # Backward-compatible convenience loader for parallel arrays.
+        buckets = data.get("buckets", [None] * len(page_ids))
+        confidences = data.get("confidences", [None] * len(page_ids))
+        if len(buckets) != len(page_ids) or len(confidences) != len(page_ids):
+            raise ValueError("buckets/confidences length must match requests length")
+        prediction_records = [
+            {"bucket": buckets[t], "confidence": confidences[t]}
+            for t in range(len(page_ids))
+        ]
+
+    return build_requests_from_lists(
+        page_ids,
+        weights,
+        predictions,
+        predicted_caches,
+        prediction_records,
+    )
 
 
 def _load_csv_trace(path: str) -> Tuple[List[Request], Dict[PageId, Page]]:

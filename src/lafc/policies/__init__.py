@@ -11,6 +11,7 @@ from lafc.policies.la_weighted_paging_deterministic import LAWeightedPagingDeter
 from lafc.policies.la_weighted_paging_randomized import LAWeightedPagingRandomized
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
+from lafc.policies.atlas_v1 import AtlasV1Policy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
@@ -25,6 +26,7 @@ __all__ = [
     "MarkerPolicy",
     "BlindOraclePolicy",
     "PredictiveMarkerPolicy",
+    "AtlasV1Policy",
     # Baseline 4 (Wei 2020)
     "BlindOracleLRUCombiner",
     "OfflineBeladyPolicy",

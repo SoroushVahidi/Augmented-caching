@@ -12,7 +12,7 @@ python -m lafc.runner.run_policy \\
 Supported --policy values:
     lru, weighted_lru, advice_trusting, la_det,
     marker, blind_oracle, predictive_marker,
-    blind_oracle_lru_combiner, offline_belady
+    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1
 """
 
 from __future__ import annotations
@@ -40,8 +40,10 @@ from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
+from lafc.policies.atlas_v1 import AtlasV1Policy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
+from lafc.predictors.buckets import attach_perfect_buckets, maybe_corrupt_buckets
 from lafc.simulator.request_trace import load_trace
 from lafc.types import Page, PageId, Request, SimulationResult
 
@@ -65,6 +67,8 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "offline_belady": OfflineBeladyPolicy(),
     # Baseline 3: Antoniadis et al. 2020
     "trust_and_doubt": TrustAndDoubtPolicy(),
+    # Experimental framework policy (unweighted).
+    "atlas_v1": AtlasV1Policy(),
 }
 
 
@@ -153,6 +157,7 @@ def run_policy(
             BlindOracleLRUCombiner,
             OfflineBeladyPolicy,
             TrustAndDoubtPolicy,
+            AtlasV1Policy,
         ),
     ):
         try:
@@ -209,6 +214,28 @@ def run_policy(
         except Exception as exc:  # pragma: no cover
             logger.warning("Could not collect combiner step log: %s", exc)
 
+    # Experimental atlas_v1 diagnostics.
+    if isinstance(policy, AtlasV1Policy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["atlas_v1"] = {
+            "summary": policy.diagnostics_summary(),
+            "decision_log": [
+                {
+                    "t": d.t,
+                    "request_page": d.request_page,
+                    "chosen_eviction": d.chosen_eviction,
+                    "candidate_buckets": d.candidate_buckets,
+                    "candidate_confidences": d.candidate_confidences,
+                    "candidate_lambdas": d.candidate_lambdas,
+                    "candidate_base_scores": d.candidate_base_scores,
+                    "candidate_pred_scores": d.candidate_pred_scores,
+                    "candidate_combined_scores": d.candidate_combined_scores,
+                    "decision_mode": d.decision_mode,
+                }
+                for d in policy.decision_log()
+            ],
+        }
+
     return result
 
 
@@ -263,6 +290,10 @@ def _save_metrics(result: SimulationResult, output_dir: str) -> None:
             ]
         if "cache_state_error" in result.extra_diagnostics:
             metrics["cache_state_error_total"] = result.extra_diagnostics["cache_state_error"].get("total_error")
+        if "atlas_v1" in result.extra_diagnostics:
+            atlas = result.extra_diagnostics["atlas_v1"]
+            for key, value in atlas.get("summary", {}).items():
+                metrics[f"atlas_{key}"] = value
 
 
     path = os.path.join(output_dir, "metrics.json")
@@ -330,6 +361,19 @@ def _save_combiner_decisions(result: SimulationResult, output_dir: str) -> None:
     logger.info("Combiner decisions saved to %s", path)
 
 
+def _save_atlas_diagnostics(result: SimulationResult, output_dir: str) -> None:
+    """Save atlas_v1 diagnostics when present."""
+    if not result.extra_diagnostics:
+        return
+    atlas = result.extra_diagnostics.get("atlas_v1")
+    if not atlas:
+        return
+    path = os.path.join(output_dir, "atlas_v1_diagnostics.json")
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(atlas, fh, indent=2)
+    logger.info("ATLAS diagnostics saved to %s", path)
+
+
 def save_results(result: SimulationResult, output_dir: str) -> None:
     """Save all output files to *output_dir*."""
     os.makedirs(output_dir, exist_ok=True)
@@ -337,6 +381,7 @@ def save_results(result: SimulationResult, output_dir: str) -> None:
     _save_metrics(result, output_dir)
     _save_per_step(result, output_dir)
     _save_combiner_decisions(result, output_dir)
+    _save_atlas_diagnostics(result, output_dir)
 
 
 # ---------------------------------------------------------------------------
@@ -398,6 +443,36 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--default-confidence",
+        type=float,
+        default=0.5,
+        help="Default confidence λ when per-request confidence is missing (atlas_v1 only).",
+    )
+    parser.add_argument(
+        "--bucket-source",
+        choices=["trace", "perfect"],
+        default="trace",
+        help="Source of bucket hints for atlas_v1 (default: trace).",
+    )
+    parser.add_argument(
+        "--bucket-horizon",
+        type=int,
+        default=2,
+        help="Distance horizon used when generating perfect buckets (atlas_v1 only).",
+    )
+    parser.add_argument(
+        "--bucket-noise-prob",
+        type=float,
+        default=0.0,
+        help="Probability of corrupting a bucket hint (atlas_v1 only).",
+    )
+    parser.add_argument(
+        "--bucket-noise-seed",
+        type=int,
+        default=0,
+        help="RNG seed for bucket corruption (atlas_v1 only).",
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug logging.",
@@ -421,7 +496,17 @@ def main() -> None:
         from lafc.predictors.offline_from_trace import attach_predicted_caches
         requests = attach_predicted_caches(requests, capacity=args.capacity)
 
-    policy = POLICY_REGISTRY[args.policy]
+    if args.policy == "atlas_v1":
+        if args.bucket_source == "perfect":
+            requests = attach_perfect_buckets(requests, bucket_horizon=args.bucket_horizon)
+        requests = maybe_corrupt_buckets(
+            requests,
+            noise_prob=args.bucket_noise_prob,
+            seed=args.bucket_noise_seed,
+        )
+        policy = AtlasV1Policy(default_confidence=args.default_confidence)
+    else:
+        policy = POLICY_REGISTRY[args.policy]
     result = run_policy(policy, requests, pages, args.capacity)
     save_results(result, args.output_dir)
 
