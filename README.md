@@ -1,6 +1,6 @@
 # Learning-Augmented Caching (`lafc`)
 
-This repository contains two learning-augmented caching baselines:
+This repository contains learning-augmented caching baselines:
 
 ## Baseline 1 — Learning-Augmented Weighted Paging
 
@@ -17,6 +17,14 @@ Implementation of:
 > Lykouris, Vassilvitskii.
 > **"Competitive Caching with Machine Learned Advice"**.
 > ICML 2018 / JACM 2021.
+
+## Baseline 3 — TRUST&DOUBT (Online Metric Algorithms with Untrusted Predictions)
+
+Implementation of:
+
+> Antoniadis, Coester, Eliáš, Polak, Simon.
+> **"Online Metric Algorithms with Untrusted Predictions"**.
+> ICML 2020.
 
 ---
 
@@ -49,7 +57,7 @@ pip install -e ".[dev]"
 
 ---
 
-## Input Format (JSON)
+## Input Format (JSON or CSV)
 
 ### Baseline 1 (weighted paging)
 
@@ -70,10 +78,15 @@ pip install -e ".[dev]"
 }
 ```
 
-`predictions` is optional; if omitted, the runner generates perfect
-predictions from the trace automatically.  `weights` is optional for
-Baseline 2 (unit weights are used by Marker/BlindOracle/PredictiveMarker
-regardless).
+`predictions` is optional; if omitted, default is `inf` predictions. `weights` is optional for
+unweighted baselines (unit weights are used).
+
+
+For TRUST&DOUBT, provide either:
+- `predicted_caches` in JSON (list of cache states aligned with requests), or
+- `--derive-predicted-caches` to convert next-arrival predictions to state predictions.
+
+CSV format requires `page_id` and optional `predicted_next`, `predicted_cache` (pipe-separated pages).
 
 ---
 
@@ -88,6 +101,7 @@ regardless).
 | `marker`             | 2        | Standard Marker (phase-based, unit cost)           |
 | `blind_oracle`       | 2        | Blind Oracle: evict argmax predicted next-arrival  |
 | `predictive_marker`  | 2        | Predictive Marker (Lykouris & Vassilvitskii 2018)  |
+| `trust_and_doubt`   | 3        | TRUST&DOUBT (Antoniadis et al. 2020)               |
 
 ---
 

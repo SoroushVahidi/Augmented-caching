@@ -1,40 +1,25 @@
-"""
-Request trace loader.
+"""Request trace loading/building utilities.
 
-Supports a simple JSON format:
-
-.. code-block:: json
-
-    {
-        "requests":    ["A", "B", "C", "A"],
-        "weights":     {"A": 1.0, "B": 2.0, "C": 4.0},
-        "predictions": [3, 5, 9999, 9999]
-    }
-
-``predictions`` is optional.  When absent every ``predicted_next`` is set to
-``math.inf`` (treat all pages as "never needed again").
-
-``actual_next`` is always computed from the trace itself and is not read from
-the file, because it is derived ground-truth rather than an input.
+Supported formats:
+- JSON with keys: requests, optional weights, optional predictions,
+  optional predicted_caches.
+- CSV with columns: t,page_id and optional predicted_next,predicted_cache.
 """
 
 from __future__ import annotations
 
+import csv
 import json
 import math
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 from lafc.types import Page, PageId, Request
 
 
 def _compute_actual_next(page_ids: List[PageId]) -> List[float]:
-    """For each index t, return the smallest t' > t with page_ids[t'] == page_ids[t].
-
-    Returns ``math.inf`` if the page never appears again.
-    """
     n = len(page_ids)
     result: List[float] = [math.inf] * n
-    # Walk backwards; keep the most recent occurrence of each page id.
     last_seen: Dict[PageId, int] = {}
     for t in range(n - 1, -1, -1):
         pid = page_ids[t]
@@ -48,106 +33,97 @@ def build_requests_from_lists(
     page_ids: List[PageId],
     weights: Optional[Dict[PageId, float]] = None,
     predictions: Optional[List[float]] = None,
+    predicted_caches: Optional[List[List[PageId]]] = None,
 ) -> Tuple[List[Request], Dict[PageId, Page]]:
-    """Build a request list and page dictionary from raw lists.
-
-    Parameters
-    ----------
-    page_ids:
-        Ordered list of requested page identifiers.
-    weights:
-        Mapping from page identifier to fetch cost.  All page ids that appear
-        in *page_ids* must have an entry here.  If ``None``, unit weights
-        (1.0) are used for all pages — appropriate for the unweighted paging
-        setting (Lykouris & Vassilvitskii 2018).
-    predictions:
-        Optional list of predicted next-arrival times aligned with *page_ids*.
-        Length must equal ``len(page_ids)`` when provided.
-
-    Returns
-    -------
-    requests:
-        List of :class:`~lafc.types.Request` objects with ``actual_next``
-        and ``predicted_next`` filled in.
-    pages:
-        Dictionary of :class:`~lafc.types.Page` objects for every unique page
-        referenced in the trace.
-    """
     if not page_ids:
         raise ValueError("page_ids must not be empty")
 
-    # Default to unit weights when none are supplied (unweighted paging).
     if weights is None:
         weights = {pid: 1.0 for pid in set(page_ids)}
 
-    # Validate that all requested pages have weights.
     missing = [pid for pid in page_ids if pid not in weights]
     if missing:
         raise KeyError(f"No weight provided for page(s): {sorted(set(missing))}")
 
-    # Validate weights > 0.
-    for pid, w in weights.items():
-        if w <= 0:
-            raise ValueError(f"Weight for page '{pid}' must be > 0, got {w}")
-
     if predictions is not None and len(predictions) != len(page_ids):
-        raise ValueError(
-            f"len(predictions)={len(predictions)} != len(page_ids)={len(page_ids)}"
-        )
+        raise ValueError("predictions length must match requests length")
+    if predicted_caches is not None and len(predicted_caches) != len(page_ids):
+        raise ValueError("predicted_caches length must match requests length")
 
     actual_nexts = _compute_actual_next(page_ids)
     preds = predictions if predictions is not None else [math.inf] * len(page_ids)
 
-    requests: List[Request] = [
-        Request(
-            t=t,
-            page_id=pid,
-            predicted_next=float(preds[t]),
-            actual_next=actual_nexts[t],
+    requests: List[Request] = []
+    for t, pid in enumerate(page_ids):
+        md = {}
+        if predicted_caches is not None:
+            md["predicted_cache"] = [str(x) for x in predicted_caches[t]]
+        requests.append(
+            Request(
+                t=t,
+                page_id=pid,
+                predicted_next=float(preds[t]),
+                actual_next=actual_nexts[t],
+                metadata=md,
+            )
         )
-        for t, pid in enumerate(page_ids)
-    ]
 
-    # Build Page objects for every unique page id in the trace.
-    pages: Dict[PageId, Page] = {
-        pid: Page(page_id=pid, weight=weights[pid])
-        for pid in set(page_ids)
-    }
-
+    pages: Dict[PageId, Page] = {pid: Page(page_id=pid, weight=weights[pid]) for pid in set(page_ids)}
     return requests, pages
 
 
-def load_trace(path: str) -> Tuple[List[Request], Dict[PageId, Page]]:
-    """Load a weighted paging trace from a JSON file.
-
-    See module docstring for the expected file format.
-
-    Parameters
-    ----------
-    path:
-        Filesystem path to a JSON trace file.
-
-    Returns
-    -------
-    Same as :func:`build_requests_from_lists`.
-    """
+def _load_json_trace(path: str) -> Tuple[List[Request], Dict[PageId, Page]]:
     with open(path, "r", encoding="utf-8") as fh:
         data = json.load(fh)
 
     if "requests" not in data:
         raise ValueError(f"Trace file '{path}' is missing 'requests' field")
 
-    page_ids: List[PageId] = [str(p) for p in data["requests"]]
-    # weights is optional; if absent, unit weights are used (unweighted paging).
-    weights: Optional[Dict[PageId, float]] = (
-        {str(k): float(v) for k, v in data["weights"].items()}
-        if "weights" in data
+    page_ids = [str(p) for p in data["requests"]]
+    weights = {str(k): float(v) for k, v in data.get("weights", {}).items()} or None
+    predictions = [float(x) for x in data["predictions"]] if "predictions" in data else None
+    predicted_caches = (
+        [[str(y) for y in row] for row in data["predicted_caches"]]
+        if "predicted_caches" in data
         else None
     )
-    predictions: Optional[List[float]] = (
-        [float(x) for x in data["predictions"]]
-        if "predictions" in data
-        else None
+    return build_requests_from_lists(page_ids, weights, predictions, predicted_caches)
+
+
+def _load_csv_trace(path: str) -> Tuple[List[Request], Dict[PageId, Page]]:
+    page_ids: List[PageId] = []
+    predictions: List[float] = []
+    predicted_caches: List[List[PageId]] = []
+    has_pred = False
+    has_pred_cache = False
+
+    with open(path, "r", encoding="utf-8") as fh:
+        reader = csv.DictReader(fh)
+        for row in reader:
+            page_ids.append(str(row["page_id"]))
+            if "predicted_next" in row and row["predicted_next"] not in ("", None):
+                has_pred = True
+                predictions.append(float(row["predicted_next"]))
+            else:
+                predictions.append(math.inf)
+            if "predicted_cache" in row and row["predicted_cache"] not in ("", None):
+                has_pred_cache = True
+                predicted_caches.append([str(x).strip() for x in row["predicted_cache"].split("|") if x.strip()])
+            else:
+                predicted_caches.append([])
+
+    return build_requests_from_lists(
+        page_ids=page_ids,
+        weights=None,
+        predictions=predictions if has_pred else None,
+        predicted_caches=predicted_caches if has_pred_cache else None,
     )
 
-    return build_requests_from_lists(page_ids, weights, predictions)
+
+def load_trace(path: str) -> Tuple[List[Request], Dict[PageId, Page]]:
+    suffix = Path(path).suffix.lower()
+    if suffix == ".json":
+        return _load_json_trace(path)
+    if suffix == ".csv":
+        return _load_csv_trace(path)
+    raise ValueError(f"Unsupported trace format '{suffix}'. Use .json or .csv")

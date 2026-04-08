@@ -25,7 +25,12 @@ import os
 from typing import Dict, List
 
 from lafc.metrics.cost import hit_rate, total_fetch_cost, total_hits, total_misses
-from lafc.metrics.prediction_error import compute_eta, compute_eta_unweighted, compute_weighted_surprises
+from lafc.metrics.prediction_error import (
+    compute_cache_state_error,
+    compute_eta,
+    compute_eta_unweighted,
+    compute_weighted_surprises,
+)
 from lafc.policies.advice_trusting import AdviceTrustingPolicy
 from lafc.policies.base import BasePolicy
 from lafc.policies.blind_oracle import BlindOraclePolicy
@@ -36,6 +41,7 @@ from lafc.policies.marker import MarkerPolicy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
+from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
 from lafc.simulator.request_trace import load_trace
 from lafc.types import Page, PageId, Request, SimulationResult
 
@@ -57,6 +63,8 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     # Baseline 4: Wei 2020 (unweighted paging)
     "blind_oracle_lru_combiner": BlindOracleLRUCombiner(),
     "offline_belady": OfflineBeladyPolicy(),
+    # Baseline 3: Antoniadis et al. 2020
+    "trust_and_doubt": TrustAndDoubtPolicy(),
 }
 
 
@@ -144,6 +152,7 @@ def run_policy(
             PredictiveMarkerPolicy,
             BlindOracleLRUCombiner,
             OfflineBeladyPolicy,
+            TrustAndDoubtPolicy,
         ),
     ):
         try:
@@ -165,6 +174,15 @@ def run_policy(
             result.extra_diagnostics["clean_chains"] = policy.compute_clean_chains()
         except Exception as exc:  # pragma: no cover
             logger.warning("Could not compute clean chains: %s", exc)
+
+    # MTS-style cache-state prediction error (used by TRUST&DOUBT).
+    try:
+        state_err = compute_cache_state_error(requests, capacity)
+        if state_err.get("total_error") is not None:
+            result.extra_diagnostics = result.extra_diagnostics or {}
+            result.extra_diagnostics["cache_state_error"] = state_err
+    except Exception as exc:  # pragma: no cover
+        logger.warning("Could not compute cache-state error: %s", exc)
 
     # For BlindOracleLRUCombiner, collect per-step combiner decision log.
     if isinstance(policy, BlindOracleLRUCombiner):
@@ -243,6 +261,9 @@ def _save_metrics(result: SimulationResult, output_dir: str) -> None:
             metrics["shadow_lru_total_misses"] = result.extra_diagnostics[
                 "shadow_lru_total_misses"
             ]
+        if "cache_state_error" in result.extra_diagnostics:
+            metrics["cache_state_error_total"] = result.extra_diagnostics["cache_state_error"].get("total_error")
+
 
     path = os.path.join(output_dir, "metrics.json")
     with open(path, "w", encoding="utf-8") as fh:
@@ -363,6 +384,11 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--derive-predicted-caches",
+        action="store_true",
+        help="Derive predictor cache states P_t from next-arrival predictions via Blind Oracle conversion.",
+    )
+    parser.add_argument(
         "--noise-sigma",
         type=float,
         default=0.0,
@@ -390,6 +416,10 @@ def main() -> None:
     if args.noise_sigma > 0.0:
         from lafc.predictors.noisy import add_additive_noise
         requests = add_additive_noise(requests, sigma=args.noise_sigma)
+
+    if args.derive_predicted_caches:
+        from lafc.predictors.offline_from_trace import attach_predicted_caches
+        requests = attach_predicted_caches(requests, capacity=args.capacity)
 
     policy = POLICY_REGISTRY[args.policy]
     result = run_policy(policy, requests, pages, args.capacity)

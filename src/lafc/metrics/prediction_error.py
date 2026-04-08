@@ -1,185 +1,103 @@
-"""
-Prediction error metrics from the paper.
-
-Two papers' error measures are implemented:
-
-**Bansal et al. SODA 2022 (weighted paging)**
-
-1.  **η (eta)** — weighted absolute error:
-
-        η = Σ_t  w_{σ_t} · |τ_t − a_t|
-
-    where τ_t is the predicted next arrival and a_t is the actual next
-    arrival of page σ_t at time t.
-
-2.  **Weighted surprises** — per-weight-class inversion count.
-
-    INTERPRETATION NOTE: The paper's "ε-like" weighted surprise metric
-    is described informally in terms of inversions within weight classes.
-    Our implementation counts, for each request t in weight class W_i,
-    whether the prediction τ_t disagrees with the actual a_t (τ_t ≠ a_t).
-    The per-class weighted surprise is:
-        weighted_surprise_i = w_i × (number of disagreements in class i)
-    Total weighted surprise = Σ_i weighted_surprise_i.
-
-    A stricter inversion-based count (tracking permutation inversions in
-    the τ ordering vs. the a ordering within each class) would be closer
-    to the paper's formal definition but requires O(T²) comparisons per
-    class and is beyond the scope of this baseline.
-
-**Lykouris & Vassilvitskii ICML 2018 / JACM 2021 (unweighted paging)**
-
-3.  **η_unweighted** — total absolute error (Definition in LV 2018):
-
-        η = Σ_t  |τ_t − a_t|
-
-    All pages have unit cost, so weights drop out.
-"""
+"""Prediction-error metrics for paging baselines."""
 
 from __future__ import annotations
 
 import math
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Set
 
 from lafc.types import Page, PageId, Request
 
 
-def compute_eta(
-    requests: List[Request],
-    pages: Dict[PageId, Page],
-) -> float:
-    """Compute the weighted prediction error η.
-
-        η = Σ_t  w_{σ_t} · |τ_t − a_t|
-
-    Parameters
-    ----------
-    requests:
-        Trace with ``predicted_next`` and ``actual_next`` filled in.
-    pages:
-        Page weights.
-
-    Returns
-    -------
-    float
-        Total weighted prediction error.  Returns ``math.inf`` if any
-        request has one-sided infinity in (τ_t, a_t).
-    """
+def compute_eta(requests: List[Request], pages: Dict[PageId, Page]) -> float:
     eta = 0.0
     for req in requests:
         tau = req.predicted_next
         a = req.actual_next
         w = pages[req.page_id].weight
-
         if math.isinf(tau) and math.isinf(a):
-            # Both agree "never requested again" — no error.
             diff = 0.0
         elif math.isinf(tau) or math.isinf(a):
-            # One side says "never", the other gives a finite time — max error.
             return math.inf
         else:
             diff = abs(tau - a)
-
         eta += w * diff
     return eta
 
 
-def compute_weighted_surprises(
-    requests: List[Request],
-    pages: Dict[PageId, Page],
-) -> Dict[str, Any]:
-    """Compute per-weight-class surprises and total weighted surprise.
-
-    For each weight class (group of pages with equal weight w):
-    - Count the number of requests t in the class where τ_t ≠ a_t.
-    - weighted_surprise = w × count.
-
-    INTERPRETATION NOTE:
-        The paper defines a finer notion of "weighted surprises" based on
-        inversions in the ordering induced by τ vs. a within each class.
-        The count-of-disagreements metric here is an upper bound on that
-        quantity: every inversion pair is a disagreement, but not every
-        disagreement forms an inversion pair.  See module docstring.
-
-    Returns
-    -------
-    dict with keys:
-        ``"per_class"``
-            Dict mapping weight (as str) to
-            ``{"surprises": int, "weighted_surprise": float}``.
-        ``"total_surprises"``
-            Sum of surprise counts across all classes.
-        ``"total_weighted_surprise"``
-            Sum of weighted surprises across all classes.
-    """
-    # Accumulate per weight-class counts.
+def compute_weighted_surprises(requests: List[Request], pages: Dict[PageId, Page]) -> Dict[str, Any]:
     class_surprises: Dict[float, int] = {}
     for req in requests:
         w = pages[req.page_id].weight
         tau = req.predicted_next
         a = req.actual_next
-
-        # Determine whether prediction differs from actual.
         if math.isinf(tau) and math.isinf(a):
             is_surprise = False
         elif math.isinf(tau) or math.isinf(a):
             is_surprise = True
         else:
             is_surprise = tau != a
-
         if is_surprise:
             class_surprises[w] = class_surprises.get(w, 0) + 1
 
-    # Build output structure.
     per_class: Dict[str, Any] = {}
     total_surprises = 0
     total_weighted = 0.0
-
     for w, count in sorted(class_surprises.items()):
         ws = w * count
         per_class[str(w)] = {"surprises": count, "weighted_surprise": ws}
         total_surprises += count
         total_weighted += ws
-
-    return {
-        "per_class": per_class,
-        "total_surprises": total_surprises,
-        "total_weighted_surprise": total_weighted,
-    }
+    return {"per_class": per_class, "total_surprises": total_surprises, "total_weighted_surprise": total_weighted}
 
 
 def compute_eta_unweighted(requests: List[Request]) -> float:
-    """Compute the unweighted prediction error η for standard paging.
-
-    From Lykouris & Vassilvitskii (ICML 2018 / JACM 2021):
-
-        η = Σ_t  |τ_t − a_t|
-
-    All pages have unit cost in the standard (unweighted) paging setting,
-    so weights do not appear.
-
-    Parameters
-    ----------
-    requests:
-        Trace with ``predicted_next`` and ``actual_next`` filled in.
-
-    Returns
-    -------
-    float
-        Total prediction error.  Returns ``math.inf`` if any request has
-        one-sided infinity in (τ_t, a_t).
-    """
     eta = 0.0
     for req in requests:
         tau = req.predicted_next
         a = req.actual_next
-
         if math.isinf(tau) and math.isinf(a):
             diff = 0.0
         elif math.isinf(tau) or math.isinf(a):
             return math.inf
         else:
             diff = abs(tau - a)
-
         eta += diff
     return eta
+
+
+def _belady_states(requests: List[Request], capacity: int) -> List[Set[PageId]]:
+    cache: Set[PageId] = set()
+    actual_next_by_page: Dict[PageId, float] = {}
+    states: List[Set[PageId]] = []
+    for req in requests:
+        actual_next_by_page[req.page_id] = req.actual_next
+        if req.page_id not in cache:
+            if len(cache) == capacity:
+                victim = max(cache, key=lambda q: (actual_next_by_page.get(q, math.inf), q))
+                cache.remove(victim)
+            cache.add(req.page_id)
+        states.append(set(cache))
+    return states
+
+
+def compute_cache_state_error(requests: List[Request], capacity: int) -> Dict[str, Any]:
+    """MTS-style prediction error for caching states.
+
+    INTERPRETATION NOTE: for equal-size cache states, dist(X,Y) is taken as
+    |X \ Y| (= |Y \ X|), i.e. number of replacements needed.
+    """
+    pred_states: List[Set[PageId]] = []
+    for req in requests:
+        pc = req.metadata.get("predicted_cache")
+        if pc is None:
+            return {"total_error": None, "per_step": []}
+        pred_states.append(set(str(x) for x in pc))
+
+    off_states = _belady_states(requests, capacity)
+    per_step: List[Dict[str, Any]] = []
+    total = 0
+    for t, (p, o) in enumerate(zip(pred_states, off_states)):
+        d = len(p - o)
+        total += d
+        per_step.append({"t": t, "error": d})
+    return {"total_error": total, "per_step": per_step}

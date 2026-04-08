@@ -13,6 +13,7 @@ from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
+from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
 
 __all__ = [
@@ -27,6 +28,7 @@ __all__ = [
     # Baseline 4 (Wei 2020)
     "BlindOracleLRUCombiner",
     "OfflineBeladyPolicy",
+    "TrustAndDoubtPolicy",
     # Scaffolds (not yet implemented)
     "EquitablePolicy",
     "BlindOracleRandomizedCombiner",
