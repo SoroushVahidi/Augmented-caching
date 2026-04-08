@@ -2,9 +2,10 @@
 
 ## Status
 
-This framework is **experimental** and currently implements two framework policies:
+This framework is **experimental** and currently implements three framework policies:
 - `atlas_v1` (first version),
-- `atlas_v2` (confidence-aware, dynamically trust-adaptive iteration).
+- `atlas_v2` (confidence-aware, dynamically trust-adaptive iteration),
+- `atlas_v3` (confidence-aware local-trust iteration; first CCLT version).
 It is intended for empirical comparisons against existing baselines in this repository.
 
 **Important:** this implementation does **not** claim a proved theorem or competitive guarantee.
@@ -156,6 +157,58 @@ When combined scores are tied (or nearly tied), tie-break is deterministic:
 
 ## Experimental honesty notes
 
-- `atlas_v1` and `atlas_v2` are both **experimental**.
+- `atlas_v1`, `atlas_v2`, and `atlas_v3` are all **experimental**.
 - `atlas_v2` is **confidence-aware** and **dynamically trust-adaptive**.
+- `atlas_v3` is **confidence-aware**, **local-trust**, and context-adaptive.
 - Neither variant is presented as theoretically proven in this repository.
+
+---
+
+## ATLAS v3 (experimental CCLT v1: confidence-calibrated local trust)
+
+`atlas_v3` replaces a single global trust scalar with local trust by context:
+
+```text
+ctx(i,t) = (bucket_i, confidence_bin_i)
+T[ctx] in [0,1]
+lambda_{i,t} = T[ctx(i,t)] * confidence_{i,t}
+```
+
+and keeps the blended eviction score:
+
+```text
+Score_t(i) = lambda_{i,t} * PredScore_t(i)
+           + (1 - lambda_{i,t}) * BaseScore_t(i)
+```
+
+### Predictor score in v3 (stronger separation)
+
+`atlas_v3` uses rank-based bucket scoring and squares the normalized rank:
+
+```text
+rank_i = normalized rank of bucket_i among unique candidate buckets in [0,1]
+PredScore_t(i) = rank_i^2
+```
+
+This keeps predictor ordering active even when bucket values are numerically close.
+
+### Bucket-aware rapid-regret target in v3
+
+Only predictor-dominated evictions create pending checks.
+For evicted page with bucket `b`, define tolerated return horizon `H(b)`:
+
+- `linear` mode: `H(b) = bucket_horizon * (b + 1)`
+- `exp2` mode: `H(b) = bucket_horizon * 2^b`
+
+Outcome:
+- bad if evicted page returns in `delta <= H(b)`,
+- good otherwise (including no early return until expiration).
+
+Local trust update:
+
+```text
+T[ctx] <- clip(T[ctx] + eta_pos * confidence, 0, 1)   (good)
+T[ctx] <- clip(T[ctx] - eta_neg * confidence, 0, 1)   (bad)
+```
+
+with `eta_neg >= eta_pos`.
