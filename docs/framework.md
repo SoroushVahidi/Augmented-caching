@@ -2,7 +2,9 @@
 
 ## Status
 
-This framework is **experimental** and currently implements a **first-version policy** (`atlas_v1`).
+This framework is **experimental** and currently implements two framework policies:
+- `atlas_v1` (first version),
+- `atlas_v2` (confidence-aware, dynamically trust-adaptive iteration).
 It is intended for empirical comparisons against existing baselines in this repository.
 
 **Important:** this implementation does **not** claim a proved theorem or competitive guarantee.
@@ -14,7 +16,7 @@ At each eviction, combine:
 2. a confidence-aware trust weight,
 3. a robust fallback score from LRU.
 
-## ATLAS v1 (what is implemented)
+## ATLAS v1 (implemented baseline framework variant)
 
 Scope in v1:
 - unweighted paging only,
@@ -82,3 +84,78 @@ Preferred JSON extension:
 - file caching / non-unit sizes,
 - theoretical bounds for this framework variant,
 - any claim of production readiness.
+
+---
+
+## ATLAS v2 (experimental confidence-aware + dynamic trust adaptation)
+
+`atlas_v2` keeps the same blended score structure but introduces a global online trust
+multiplier `gamma_t` and improved predictor-score normalization.
+
+### Score used by `atlas_v2`
+
+For cached page `i` at time `t`:
+
+```text
+Score_t(i) = lambda_{i,t} * PredScore_t(i)
+           + (1 - lambda_{i,t}) * BaseScore_t(i)
+```
+
+Where:
+
+- `BaseScore_t(i)` is the same normalized LRU score as v1 (`oldest -> 1`, newest -> `0`).
+- `lambda_{i,t}` uses confidence and global trust:
+
+```text
+lambda_{i,t} = gamma_t * confidence_{i,t}           (if confidence is present)
+lambda_{i,t} = gamma_t * default_confidence         (otherwise)
+```
+
+### `PredScore_t(i)` normalization in v2
+
+Given candidate bucket `b_i`, candidate min/max `b_min, b_max`, and range `R = b_max - b_min`:
+
+```text
+raw_i    = (b_i - b_min) / max(1, R)
+rank_i   = normalized rank of b_i among unique candidate bucket values in [0,1]
+spread   = R / (R + 1)
+PredScore_t(i) = spread * raw_i + (1 - spread) * rank_i
+```
+
+This is monotone in bucket value (larger bucket => more evictable) and keeps predictor signal
+active even when the bucket spread is narrow.
+
+### Dynamic trust (`gamma_t`) update
+
+`atlas_v2` tracks a rolling mismatch proxy over the latest `W` resolved
+predictor-dominated events:
+
+```text
+E_t = rolling mismatch rate in [0,1]
+gamma_{t+1} = clip((1-rho) * gamma_t + rho * (1 - E_t), 0, 1)
+```
+
+### Mismatch proxy used (online-safe delayed bookkeeping)
+
+For a predictor-dominated eviction of page `p` with bucket hint `b_p`:
+
+- keep the event pending for up to `mismatch_threshold` future requests,
+- if `p` is requested again within that window **and** `b_p >= soon_bucket_cutoff`
+  (predicted “not soon”), record mismatch `1`,
+- otherwise record mismatch `0`.
+
+This uses only information available online when future requests actually arrive.
+
+### Tie-breaking
+
+When combined scores are tied (or nearly tied), tie-break is deterministic:
+- if mean tie-set `lambda` is high, prefer predictor-favored candidate,
+- otherwise prefer fallback (LRU)-favored candidate.
+
+---
+
+## Experimental honesty notes
+
+- `atlas_v1` and `atlas_v2` are both **experimental**.
+- `atlas_v2` is **confidence-aware** and **dynamically trust-adaptive**.
+- Neither variant is presented as theoretically proven in this repository.

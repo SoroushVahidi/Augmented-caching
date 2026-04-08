@@ -12,7 +12,7 @@ python -m lafc.runner.run_policy \\
 Supported --policy values:
     lru, weighted_lru, advice_trusting, la_det,
     marker, blind_oracle, predictive_marker,
-    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1
+    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2
 """
 
 from __future__ import annotations
@@ -42,6 +42,7 @@ from lafc.policies.marker import MarkerPolicy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
 from lafc.policies.atlas_v1 import AtlasV1Policy
+from lafc.policies.atlas_v2 import AtlasV2Policy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
 from lafc.predictors.buckets import attach_perfect_buckets, maybe_corrupt_buckets
@@ -74,6 +75,7 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "trust_and_doubt": TrustAndDoubtPolicy(),
     # Experimental framework policy (unweighted).
     "atlas_v1": AtlasV1Policy(),
+    "atlas_v2": AtlasV2Policy(),
 }
 
 
@@ -163,6 +165,7 @@ def run_policy(
             OfflineBeladyPolicy,
             TrustAndDoubtPolicy,
             AtlasV1Policy,
+            AtlasV2Policy,
         ),
     ):
         try:
@@ -240,6 +243,32 @@ def run_policy(
                 for d in policy.decision_log()
             ],
         }
+    # Experimental atlas_v2 diagnostics.
+    if isinstance(policy, AtlasV2Policy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["atlas_v2"] = {
+            "summary": policy.diagnostics_summary(),
+            "time_series": policy.time_series_diagnostics(),
+            "decision_log": [
+                {
+                    "t": d.t,
+                    "request_page": d.request_page,
+                    "chosen_eviction": d.chosen_eviction,
+                    "candidate_buckets": d.candidate_buckets,
+                    "candidate_confidences": d.candidate_confidences,
+                    "candidate_lambdas": d.candidate_lambdas,
+                    "candidate_base_scores": d.candidate_base_scores,
+                    "candidate_pred_scores": d.candidate_pred_scores,
+                    "candidate_combined_scores": d.candidate_combined_scores,
+                    "decision_mode": d.decision_mode,
+                    "gamma_before": d.gamma_before,
+                    "mismatch_rate": d.mismatch_rate,
+                    "tie_break_used": d.tie_break_used,
+                    "tie_break_mode": d.tie_break_mode,
+                }
+                for d in policy.decision_log()
+            ],
+        }
 
     return result
 
@@ -299,6 +328,10 @@ def _save_metrics(result: SimulationResult, output_dir: str) -> None:
             atlas = result.extra_diagnostics["atlas_v1"]
             for key, value in atlas.get("summary", {}).items():
                 metrics[f"atlas_{key}"] = value
+        if "atlas_v2" in result.extra_diagnostics:
+            atlas2 = result.extra_diagnostics["atlas_v2"]
+            for key, value in atlas2.get("summary", {}).items():
+                metrics[f"atlas_v2_{key}"] = value
 
 
     path = os.path.join(output_dir, "metrics.json")
@@ -367,16 +400,21 @@ def _save_combiner_decisions(result: SimulationResult, output_dir: str) -> None:
 
 
 def _save_atlas_diagnostics(result: SimulationResult, output_dir: str) -> None:
-    """Save atlas_v1 diagnostics when present."""
+    """Save atlas diagnostics when present."""
     if not result.extra_diagnostics:
         return
     atlas = result.extra_diagnostics.get("atlas_v1")
-    if not atlas:
-        return
-    path = os.path.join(output_dir, "atlas_v1_diagnostics.json")
-    with open(path, "w", encoding="utf-8") as fh:
-        json.dump(atlas, fh, indent=2)
-    logger.info("ATLAS diagnostics saved to %s", path)
+    if atlas:
+        path = os.path.join(output_dir, "atlas_v1_diagnostics.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(atlas, fh, indent=2)
+        logger.info("ATLAS v1 diagnostics saved to %s", path)
+    atlas2 = result.extra_diagnostics.get("atlas_v2")
+    if atlas2:
+        path = os.path.join(output_dir, "atlas_v2_diagnostics.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(atlas2, fh, indent=2)
+        logger.info("ATLAS v2 diagnostics saved to %s", path)
 
 
 def save_results(result: SimulationResult, output_dir: str) -> None:
@@ -451,31 +489,55 @@ def main() -> None:
         "--default-confidence",
         type=float,
         default=0.5,
-        help="Default confidence λ when per-request confidence is missing (atlas_v1 only).",
+        help="Default confidence λ when per-request confidence is missing (atlas_v1/atlas_v2).",
     )
     parser.add_argument(
         "--bucket-source",
         choices=["trace", "perfect"],
         default="trace",
-        help="Source of bucket hints for atlas_v1 (default: trace).",
+        help="Source of bucket hints for atlas_v1/atlas_v2 (default: trace).",
     )
     parser.add_argument(
         "--bucket-horizon",
         type=int,
         default=2,
-        help="Distance horizon used when generating perfect buckets (atlas_v1 only).",
+        help="Distance horizon used when generating perfect buckets (atlas_v1/atlas_v2 only).",
     )
     parser.add_argument(
         "--bucket-noise-prob",
         type=float,
         default=0.0,
-        help="Probability of corrupting a bucket hint (atlas_v1 only).",
+        help="Probability of corrupting a bucket hint (atlas_v1/atlas_v2 only).",
     )
     parser.add_argument(
         "--bucket-noise-seed",
         type=int,
         default=0,
-        help="RNG seed for bucket corruption (atlas_v1 only).",
+        help="RNG seed for bucket corruption (atlas_v1/atlas_v2 only).",
+    )
+    parser.add_argument(
+        "--atlas-window",
+        type=int,
+        default=32,
+        help="Rolling mismatch window size for atlas_v2 (default: 32).",
+    )
+    parser.add_argument(
+        "--atlas-rho",
+        type=float,
+        default=0.3,
+        help="Smoothing factor for gamma updates in atlas_v2 (default: 0.3).",
+    )
+    parser.add_argument(
+        "--atlas-initial-gamma",
+        type=float,
+        default=0.8,
+        help="Initial global trust multiplier gamma_0 for atlas_v2 (default: 0.8).",
+    )
+    parser.add_argument(
+        "--atlas-mismatch-threshold",
+        type=int,
+        default=2,
+        help="Max request-distance considered 'too soon' for atlas_v2 mismatch proxy (default: 2).",
     )
     parser.add_argument(
         "--trust-seed",
@@ -507,7 +569,7 @@ def main() -> None:
         from lafc.predictors.offline_from_trace import attach_predicted_caches
         requests = attach_predicted_caches(requests, capacity=args.capacity)
 
-    if args.policy == "atlas_v1":
+    if args.policy in {"atlas_v1", "atlas_v2"}:
         if args.bucket_source == "perfect":
             requests = attach_perfect_buckets(requests, bucket_horizon=args.bucket_horizon)
         requests = maybe_corrupt_buckets(
@@ -515,7 +577,16 @@ def main() -> None:
             noise_prob=args.bucket_noise_prob,
             seed=args.bucket_noise_seed,
         )
-        policy = AtlasV1Policy(default_confidence=args.default_confidence)
+        if args.policy == "atlas_v1":
+            policy = AtlasV1Policy(default_confidence=args.default_confidence)
+        else:
+            policy = AtlasV2Policy(
+                default_confidence=args.default_confidence,
+                atlas_window=args.atlas_window,
+                atlas_rho=args.atlas_rho,
+                atlas_initial_gamma=args.atlas_initial_gamma,
+                atlas_mismatch_threshold=args.atlas_mismatch_threshold,
+            )
     elif args.policy == "trust_and_doubt":
         policy = TrustAndDoubtPolicy(seed=args.trust_seed)
     else:
