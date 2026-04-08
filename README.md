@@ -158,3 +158,24 @@ pytest tests/ -v
 
 `docs/baselines.md` — detailed algorithm description, interpretation notes,
 and paper-to-code mapping.
+
+
+---
+
+## Dataset Support
+
+Supported benchmark families:
+
+- BrightKite check-ins
+- CitiBike NYC trip traces
+- SPEC CPU2006 memory traces (manual local ingestion)
+- wiki2018 CDN trace (manual local ingestion by default)
+
+Prepare datasets via:
+
+```bash
+python scripts/datasets/prepare_all.py --dataset <brightkite|citibike|spec_cpu2006|wiki2018|all>
+```
+
+Processed traces are written under `data/processed/<dataset>/`.
+See `docs/datasets.md` for source links, legal caveats, mapping assumptions, and exact commands.

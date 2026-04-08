@@ -1,0 +1,2 @@
+{"cost": 1.0, "item_id": "obj-1", "metadata": {"url": "/wiki/A"}, "request_index": 0, "size": 1024, "source_dataset": "wiki2018", "split": "full", "timestamp": "2018-01-01T00:00:00Z"}
+{"cost": 1.2, "item_id": "obj-2", "metadata": {"url": "/wiki/B"}, "request_index": 1, "size": 2048, "source_dataset": "wiki2018", "split": "full", "timestamp": "2018-01-01T00:00:01Z"}

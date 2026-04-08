@@ -1,0 +1,2 @@
+{"cost": 1.0, "item_id": "72", "metadata": {"bike_id": "B100", "end_station_id": "79", "tripduration": "600"}, "request_index": 0, "size": null, "source_dataset": "citibike", "split": "full", "timestamp": "2024-01-01 00:00:00"}
+{"cost": 1.0, "item_id": "72", "metadata": {"bike_id": "B101", "end_station_id": "83", "tripduration": "480"}, "request_index": 1, "size": null, "source_dataset": "citibike", "split": "full", "timestamp": "2024-01-01 00:02:00"}

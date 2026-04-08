@@ -5,3 +5,11 @@ dist/
 build/
 .pytest_cache/
 output/
+
+# Dataset artifacts
+/data/raw/**
+!/data/raw/README.md
+!/data/raw/spec_cpu2006/INSTRUCTIONS.md
+!/data/raw/wiki2018/INSTRUCTIONS.md
+/data/processed/**
+!.gitkeep
