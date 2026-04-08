@@ -26,16 +26,19 @@ Implementation of:
 > **"Online Metric Algorithms with Untrusted Predictions"**.
 > ICML 2020.
 
-## Experimental Framework — `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2` (Confidence-Aware)
+## Experimental Framework — `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2` / `rest_v1`
 
 This repository also includes **experimental** framework policies, `atlas_v1`,
-`atlas_v2`, `atlas_v3`, `atlas_cga_v1`, and `atlas_cga_v2`, for unweighted paging with bucketed predictions and optional
+`atlas_v2`, `atlas_v3`, `atlas_cga_v1`, `atlas_cga_v2`, and `rest_v1`, for unweighted paging with bucketed predictions and optional
 confidence scores. `atlas_v2` adds dynamic trust adaptation over `atlas_v1`, while
 `atlas_v3` introduces confidence-calibrated local trust by prediction context.
 `atlas_cga_v1` is a calibration-guided extension that uses online safe-to-evict calibration
 probabilities to scale predictor influence.
 `atlas_cga_v2` is a hierarchical/context-sharing refinement of CGA that shares calibration
 signal across global, bucket, confidence-bin, and full-context levels.
+`rest_v1` is an abstention/selective-trust pivot: instead of confidence blending,
+it gates between TRUST (predictor eviction) and ABSTAIN (LRU) using per-context
+online regret-style trust updates.
 Both are intended for empirical study only (no theorem guarantee is claimed).
 
 ---
@@ -100,7 +103,7 @@ For TRUST&DOUBT, provide either:
 
 CSV format requires `page_id` and optional `predicted_next`, `predicted_cache` (pipe-separated pages).
 
-For `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2`, the preferred optional JSON extension is:
+For `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2` / `rest_v1`, the preferred optional JSON extension is:
 
 ```json
 {
@@ -132,6 +135,7 @@ For `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2`, the 
 | `atlas_v3`          | Exp      | Experimental confidence-aware local-trust policy (CCLT v1) |
 | `atlas_cga_v1`      | Exp      | Experimental calibration-guided local-trust policy (CGA v1) |
 | `atlas_cga_v2`      | Exp      | Experimental hierarchical context-sharing calibration policy (CGA v2) |
+| `rest_v1`           | Exp      | Experimental ReST selective-trust/abstention gating policy |
 
 ---
 
@@ -255,6 +259,22 @@ python -m lafc.runner.run_policy \
     --atlas-hier-shrink-strength 10
 ```
 
+### Smoke test (`rest_v1`, experimental selective trust)
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy rest_v1 \
+    --trace data/example_atlas_v1.json \
+    --capacity 3 \
+    --default-confidence 0.5 \
+    --bucket-source trace \
+    --rest-initial-trust 0.5 \
+    --rest-eta-pos 0.05 \
+    --rest-eta-neg 0.10 \
+    --rest-horizon 2 \
+    --rest-confidence-bins 0.33,0.66
+```
+
 ---
 
 ## Output Files (written to `--output-dir`, default `output/`)
@@ -264,6 +284,7 @@ python -m lafc.runner.run_policy \
 | `summary.json`          | policy, total_cost, hits, misses, hit_rate       |
 | `metrics.json`          | prediction error η, per-class weighted surprises |
 | `per_step_decisions.csv`| one row per request: t, page, hit, cost, evicted |
+| `rest_v1_diagnostics.json` | ReST trust/abstain decision log and context diagnostics (when `rest_v1`) |
 
 ---
 

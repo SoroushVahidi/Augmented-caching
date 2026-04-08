@@ -12,7 +12,7 @@ python -m lafc.runner.run_policy \\
 Supported --policy values:
     lru, weighted_lru, advice_trusting, la_det,
     marker, blind_oracle, predictive_marker,
-    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3, atlas_cga_v1, atlas_cga_v2
+    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3, atlas_cga_v1, atlas_cga_v2, rest_v1
 """
 
 from __future__ import annotations
@@ -46,6 +46,7 @@ from lafc.policies.atlas_v2 import AtlasV2Policy
 from lafc.policies.atlas_v3 import AtlasV3Policy
 from lafc.policies.atlas_cga_v1 import AtlasCGAV1Policy
 from lafc.policies.atlas_cga_v2 import AtlasCGAV2Policy
+from lafc.policies.rest_v1 import RestV1Policy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
 from lafc.predictors.buckets import attach_perfect_buckets, maybe_corrupt_buckets
@@ -83,6 +84,7 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "atlas_cga_v1": AtlasCGAV1Policy(),
     "atlas_cga": AtlasCGAV1Policy(),
     "atlas_cga_v2": AtlasCGAV2Policy(),
+    "rest_v1": RestV1Policy(),
 }
 
 
@@ -176,6 +178,7 @@ def run_policy(
             AtlasV3Policy,
             AtlasCGAV1Policy,
             AtlasCGAV2Policy,
+            RestV1Policy,
         ),
     ):
         try:
@@ -369,6 +372,32 @@ def run_policy(
                 for d in policy.decision_log()
             ],
         }
+    if isinstance(policy, RestV1Policy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["rest_v1"] = {
+            "summary": policy.diagnostics_summary(),
+            "time_series": policy.time_series_diagnostics(),
+            "decision_log": [
+                {
+                    "t": d.t,
+                    "request_page": d.request_page,
+                    "chosen_eviction": d.chosen_eviction,
+                    "mode": d.mode,
+                    "context": d.context,
+                    "trust_score_before": d.trust_score_before,
+                    "trust_score_after": d.trust_score_after,
+                    "candidate_buckets": d.candidate_buckets,
+                    "candidate_confidences": d.candidate_confidences,
+                    "predictor_scores": d.predictor_scores,
+                    "lru_scores": d.lru_scores,
+                    "predictor_choice": d.predictor_choice,
+                    "lru_choice": d.lru_choice,
+                    "blind_oracle_choice": d.blind_oracle_choice,
+                    "predictive_marker_choice": d.predictive_marker_choice,
+                }
+                for d in policy.decision_log()
+            ],
+        }
 
     return result
 
@@ -444,6 +473,10 @@ def _save_metrics(result: SimulationResult, output_dir: str) -> None:
             atlas_cga2 = result.extra_diagnostics["atlas_cga_v2"]
             for key, value in atlas_cga2.get("summary", {}).items():
                 metrics[f"atlas_cga_v2_{key}"] = value
+        if "rest_v1" in result.extra_diagnostics:
+            rest = result.extra_diagnostics["rest_v1"]
+            for key, value in rest.get("summary", {}).items():
+                metrics[f"rest_v1_{key}"] = value
 
 
     path = os.path.join(output_dir, "metrics.json")
@@ -545,6 +578,12 @@ def _save_atlas_diagnostics(result: SimulationResult, output_dir: str) -> None:
         with open(path, "w", encoding="utf-8") as fh:
             json.dump(atlas_cga2, fh, indent=2)
         logger.info("ATLAS CGA v2 diagnostics saved to %s", path)
+    rest = result.extra_diagnostics.get("rest_v1")
+    if rest:
+        path = os.path.join(output_dir, "rest_v1_diagnostics.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(rest, fh, indent=2)
+        logger.info("ReST v1 diagnostics saved to %s", path)
 
 
 def save_results(result: SimulationResult, output_dir: str) -> None:
@@ -619,31 +658,31 @@ def main() -> None:
         "--default-confidence",
         type=float,
         default=0.5,
-        help="Default confidence λ when per-request confidence is missing (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2).",
+        help="Default confidence λ when per-request confidence is missing (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2/rest_v1).",
     )
     parser.add_argument(
         "--bucket-source",
         choices=["trace", "perfect"],
         default="trace",
-        help="Source of bucket hints for atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2 (default: trace).",
+        help="Source of bucket hints for atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2/rest_v1 (default: trace).",
     )
     parser.add_argument(
         "--bucket-horizon",
         type=int,
         default=2,
-        help="Distance horizon used when generating perfect buckets (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2 only).",
+        help="Distance horizon used when generating perfect buckets (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2/rest_v1 only).",
     )
     parser.add_argument(
         "--bucket-noise-prob",
         type=float,
         default=0.0,
-        help="Probability of corrupting a bucket hint (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2 only).",
+        help="Probability of corrupting a bucket hint (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2/rest_v1 only).",
     )
     parser.add_argument(
         "--bucket-noise-seed",
         type=int,
         default=0,
-        help="RNG seed for bucket corruption (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2 only).",
+        help="RNG seed for bucket corruption (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2/rest_v1 only).",
     )
     parser.add_argument(
         "--atlas-window",
@@ -789,6 +828,41 @@ def main() -> None:
         help="RNG seed for trust_and_doubt randomized choices (Baseline 3).",
     )
     parser.add_argument(
+        "--rest-initial-trust",
+        type=float,
+        default=0.5,
+        help="Initial trust score G[ctx] for unseen contexts in rest_v1.",
+    )
+    parser.add_argument(
+        "--rest-eta-pos",
+        type=float,
+        default=0.05,
+        help="Positive trust update step for rest_v1 good TRUST outcomes.",
+    )
+    parser.add_argument(
+        "--rest-eta-neg",
+        type=float,
+        default=0.10,
+        help="Negative trust update step for rest_v1 bad TRUST outcomes.",
+    )
+    parser.add_argument(
+        "--rest-horizon",
+        type=int,
+        default=2,
+        help="Delayed-feedback horizon H for rest_v1 trust outcome checks.",
+    )
+    parser.add_argument(
+        "--rest-confidence-bins",
+        default="0.33,0.66",
+        help="Comma-separated confidence-bin thresholds in (0,1) for rest_v1 contexts.",
+    )
+    parser.add_argument(
+        "--rest-trust-threshold",
+        type=float,
+        default=0.5,
+        help="Deterministic gate threshold: TRUST iff G[ctx] >= threshold (rest_v1).",
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug logging.",
@@ -812,7 +886,7 @@ def main() -> None:
         from lafc.predictors.offline_from_trace import attach_predicted_caches
         requests = attach_predicted_caches(requests, capacity=args.capacity)
 
-    if args.policy in {"atlas_v1", "atlas_v2", "atlas_v3", "atlas_cga_v1", "atlas_cga", "atlas_cga_v2"}:
+    if args.policy in {"atlas_v1", "atlas_v2", "atlas_v3", "atlas_cga_v1", "atlas_cga", "atlas_cga_v2", "rest_v1"}:
         if args.bucket_source == "perfect":
             requests = attach_perfect_buckets(requests, bucket_horizon=args.bucket_horizon)
         requests = maybe_corrupt_buckets(
@@ -864,25 +938,36 @@ def main() -> None:
                 atlas_safe_horizon_mode=args.atlas_safe_horizon_mode,
             )
         else:
-            policy = AtlasCGAV2Policy(
-                default_confidence=args.default_confidence,
-                atlas_initial_local_trust=args.atlas_initial_local_trust,
-                atlas_confidence_bins=args.atlas_confidence_bins,
-                atlas_eta_pos=args.atlas_eta_pos,
-                atlas_eta_neg=args.atlas_eta_neg,
-                atlas_bucket_regret_mode=args.atlas_bucket_regret_mode,
-                atlas_tie_epsilon=args.atlas_tie_epsilon,
-                atlas_adaptive_tie_coef=args.atlas_adaptive_tie_coef,
-                atlas_context_mode=args.atlas_context_mode,
-                atlas_bucket_group_size=args.atlas_bucket_group_size,
-                bucket_horizon=args.bucket_horizon,
-                atlas_hier_global_prior_a=args.atlas_hier_global_prior_a,
-                atlas_hier_global_prior_b=args.atlas_hier_global_prior_b,
-                atlas_hier_min_support=args.atlas_hier_min_support,
-                atlas_hier_weight_mode=args.atlas_hier_weight_mode,
-                atlas_hier_shrink_strength=args.atlas_hier_shrink_strength,
-                atlas_safe_horizon_mode=args.atlas_safe_horizon_mode,
-            )
+            if args.policy == "atlas_cga_v2":
+                policy = AtlasCGAV2Policy(
+                    default_confidence=args.default_confidence,
+                    atlas_initial_local_trust=args.atlas_initial_local_trust,
+                    atlas_confidence_bins=args.atlas_confidence_bins,
+                    atlas_eta_pos=args.atlas_eta_pos,
+                    atlas_eta_neg=args.atlas_eta_neg,
+                    atlas_bucket_regret_mode=args.atlas_bucket_regret_mode,
+                    atlas_tie_epsilon=args.atlas_tie_epsilon,
+                    atlas_adaptive_tie_coef=args.atlas_adaptive_tie_coef,
+                    atlas_context_mode=args.atlas_context_mode,
+                    atlas_bucket_group_size=args.atlas_bucket_group_size,
+                    bucket_horizon=args.bucket_horizon,
+                    atlas_hier_global_prior_a=args.atlas_hier_global_prior_a,
+                    atlas_hier_global_prior_b=args.atlas_hier_global_prior_b,
+                    atlas_hier_min_support=args.atlas_hier_min_support,
+                    atlas_hier_weight_mode=args.atlas_hier_weight_mode,
+                    atlas_hier_shrink_strength=args.atlas_hier_shrink_strength,
+                    atlas_safe_horizon_mode=args.atlas_safe_horizon_mode,
+                )
+            else:
+                policy = RestV1Policy(
+                    default_confidence=args.default_confidence,
+                    rest_initial_trust=args.rest_initial_trust,
+                    rest_eta_pos=args.rest_eta_pos,
+                    rest_eta_neg=args.rest_eta_neg,
+                    rest_horizon=args.rest_horizon,
+                    rest_confidence_bins=args.rest_confidence_bins,
+                    rest_trust_threshold=args.rest_trust_threshold,
+                )
     elif args.policy == "trust_and_doubt":
         policy = TrustAndDoubtPolicy(seed=args.trust_seed)
     else:
