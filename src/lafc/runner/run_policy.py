@@ -4,14 +4,15 @@ Simulator runner and CLI entry-point.
 Usage
 -----
 python -m lafc.runner.run_policy \\
-    --policy   la_det \\
-    --trace    data/example.json \\
+    --policy   blind_oracle_lru_combiner \\
+    --trace    data/example_unweighted.json \\
     --capacity 3 \\
     --output-dir output/
 
 Supported --policy values:
     lru, weighted_lru, advice_trusting, la_det,
-    marker, blind_oracle, predictive_marker
+    marker, blind_oracle, predictive_marker,
+    blind_oracle_lru_combiner, offline_belady
 """
 
 from __future__ import annotations
@@ -28,9 +29,11 @@ from lafc.metrics.prediction_error import compute_eta, compute_eta_unweighted, c
 from lafc.policies.advice_trusting import AdviceTrustingPolicy
 from lafc.policies.base import BasePolicy
 from lafc.policies.blind_oracle import BlindOraclePolicy
+from lafc.policies.blind_oracle_lru_combiner import BlindOracleLRUCombiner
 from lafc.policies.la_weighted_paging_deterministic import LAWeightedPagingDeterministic
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
+from lafc.policies.offline_belady import OfflineBeladyPolicy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
 from lafc.simulator.request_trace import load_trace
@@ -51,6 +54,9 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "marker": MarkerPolicy(),
     "blind_oracle": BlindOraclePolicy(),
     "predictive_marker": PredictiveMarkerPolicy(),
+    # Baseline 4: Wei 2020 (unweighted paging)
+    "blind_oracle_lru_combiner": BlindOracleLRUCombiner(),
+    "offline_belady": OfflineBeladyPolicy(),
 }
 
 
@@ -129,8 +135,17 @@ def run_policy(
     except Exception as exc:  # pragma: no cover
         logger.warning("Could not compute weighted surprises: %s", exc)
 
-    # For unweighted policies (Baseline 2), also expose the unweighted η.
-    if isinstance(policy, (MarkerPolicy, BlindOraclePolicy, PredictiveMarkerPolicy)):
+    # For unweighted policies (Baseline 2 and 4), also expose the unweighted η.
+    if isinstance(
+        policy,
+        (
+            MarkerPolicy,
+            BlindOraclePolicy,
+            PredictiveMarkerPolicy,
+            BlindOracleLRUCombiner,
+            OfflineBeladyPolicy,
+        ),
+    ):
         try:
             eta_unweighted = compute_eta_unweighted(requests)
             result.extra_diagnostics = result.extra_diagnostics or {}
@@ -150,6 +165,31 @@ def run_policy(
             result.extra_diagnostics["clean_chains"] = policy.compute_clean_chains()
         except Exception as exc:  # pragma: no cover
             logger.warning("Could not compute clean chains: %s", exc)
+
+    # For BlindOracleLRUCombiner, collect per-step combiner decision log.
+    if isinstance(policy, BlindOracleLRUCombiner):
+        try:
+            result.extra_diagnostics = result.extra_diagnostics or {}
+            result.extra_diagnostics["combiner_step_log"] = [
+                {
+                    "t": s.t,
+                    "page_id": s.page_id,
+                    "hit": s.hit,
+                    "evicted": s.evicted,
+                    "chosen": s.chosen,
+                    "bo_misses_before": s.bo_misses_before,
+                    "lru_misses_before": s.lru_misses_before,
+                }
+                for s in policy.step_log()
+            ]
+            result.extra_diagnostics["shadow_bo_total_misses"] = (
+                policy.shadow_bo_misses()
+            )
+            result.extra_diagnostics["shadow_lru_total_misses"] = (
+                policy.shadow_lru_misses()
+            )
+        except Exception as exc:  # pragma: no cover
+            logger.warning("Could not collect combiner step log: %s", exc)
 
     return result
 
@@ -184,7 +224,7 @@ def _save_metrics(result: SimulationResult, output_dir: str) -> None:
         metrics["total_surprises"] = surp.get("total_surprises")
         metrics["per_class_surprises"] = surp.get("per_class")
 
-    # Include unweighted η and clean-chain diagnostics when present.
+    # Include unweighted η, clean-chain diagnostics, and combiner diagnostics when present.
     if result.extra_diagnostics:
         if "eta_unweighted" in result.extra_diagnostics:
             metrics["eta_unweighted"] = result.extra_diagnostics["eta_unweighted"]
@@ -195,6 +235,14 @@ def _save_metrics(result: SimulationResult, output_dir: str) -> None:
             metrics["num_clean_chains"] = cc.get("num_clean_chains")
             metrics["total_clean_evictions"] = cc.get("total_clean_evictions")
             metrics["total_dirty_evictions"] = cc.get("total_dirty_evictions")
+        if "shadow_bo_total_misses" in result.extra_diagnostics:
+            metrics["shadow_bo_total_misses"] = result.extra_diagnostics[
+                "shadow_bo_total_misses"
+            ]
+        if "shadow_lru_total_misses" in result.extra_diagnostics:
+            metrics["shadow_lru_total_misses"] = result.extra_diagnostics[
+                "shadow_lru_total_misses"
+            ]
 
     path = os.path.join(output_dir, "metrics.json")
     with open(path, "w", encoding="utf-8") as fh:
@@ -220,12 +268,54 @@ def _save_per_step(result: SimulationResult, output_dir: str) -> None:
     logger.info("Per-step decisions saved to %s", path)
 
 
+def _save_combiner_decisions(result: SimulationResult, output_dir: str) -> None:
+    """Save the combiner's per-step sub-algorithm choices to a separate CSV.
+
+    Written only when ``result.extra_diagnostics`` contains
+    ``"combiner_step_log"`` (i.e. the policy was BlindOracleLRUCombiner).
+    """
+    if not result.extra_diagnostics:
+        return
+    step_log = result.extra_diagnostics.get("combiner_step_log")
+    if not step_log:
+        return
+
+    path = os.path.join(output_dir, "combiner_decisions.csv")
+    with open(path, "w", newline="", encoding="utf-8") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(
+            [
+                "t",
+                "page_id",
+                "hit",
+                "evicted",
+                "chosen",
+                "bo_misses_before",
+                "lru_misses_before",
+            ]
+        )
+        for s in step_log:
+            writer.writerow(
+                [
+                    s["t"],
+                    s["page_id"],
+                    s["hit"],
+                    s["evicted"] or "",
+                    s["chosen"] or "",
+                    s["bo_misses_before"],
+                    s["lru_misses_before"],
+                ]
+            )
+    logger.info("Combiner decisions saved to %s", path)
+
+
 def save_results(result: SimulationResult, output_dir: str) -> None:
     """Save all output files to *output_dir*."""
     os.makedirs(output_dir, exist_ok=True)
     _save_summary(result, output_dir)
     _save_metrics(result, output_dir)
     _save_per_step(result, output_dir)
+    _save_combiner_decisions(result, output_dir)
 
 
 # ---------------------------------------------------------------------------
@@ -273,6 +363,15 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--noise-sigma",
+        type=float,
+        default=0.0,
+        help=(
+            "Additive Gaussian noise standard deviation to apply to predictions "
+            "(default: 0.0 = no noise).  Applied after --perfect-predictions if both set."
+        ),
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug logging.",
@@ -287,6 +386,10 @@ def main() -> None:
     if args.perfect_predictions:
         from lafc.predictors.offline_from_trace import compute_perfect_predictions
         requests = compute_perfect_predictions(requests)
+
+    if args.noise_sigma > 0.0:
+        from lafc.predictors.noisy import add_additive_noise
+        requests = add_additive_noise(requests, sigma=args.noise_sigma)
 
     policy = POLICY_REGISTRY[args.policy]
     result = run_policy(policy, requests, pages, args.capacity)
