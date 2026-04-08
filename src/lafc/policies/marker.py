@@ -1,5 +1,5 @@
 """
-Deterministic Marker (LRU-Marker) caching policy.
+Deterministic Marker caching policy.
 
 References
 ----------
@@ -30,10 +30,10 @@ For each request at time t for page p:
 
 2. If p is not in cache (MISS):
    a. If there are unmarked pages in cache:
-      - Evict the **least-recently-used** (LRU) among the unmarked pages.
+      - Evict a deterministic unmarked page (lexicographic tie-break).
    b. If all pages are marked (no unmarked pages):
       - **Start a new phase**: unmark all cached pages.
-      - Evict the LRU page among all (now unmarked) cached pages.
+      - Evict a deterministic page among all (now unmarked) cached pages.
    - Add p to cache, mark p.
    - Return MISS.
 
@@ -41,14 +41,13 @@ For each request at time t for page p:
 occurs with all cached pages marked.  Equivalently, each phase sees at most
 k distinct page requests before a miss triggers a phase boundary.
 
-INTERPRETATION NOTE — Eviction tie-breaking
+INTERPRETATION NOTE — Deterministic eviction rule
 --------------------------------------------
 The original Marker paper evicts a *randomly* chosen unmarked page for
 a randomised O(log k)-competitive algorithm.  This implementation is
-deterministic: we evict the **least-recently-used** unmarked page (by
-last access timestamp) to make the algorithm reproducible and independent
-of insertion order.  LRU tie-breaking also makes the algorithm suitable
-as the doubt sub-routine in TRUST&DOUBT.
+deterministic: we evict the lexicographically smallest unmarked page id
+to make the algorithm reproducible and independent of randomness.  This
+tie-breaking policy is suitable as the doubt sub-routine in TRUST&DOUBT.
 
 Paper-to-code mapping
 ----------------------
@@ -56,7 +55,7 @@ Paper-to-code mapping
 |---------------------|------------------------------------------|
 | Phase boundary      | ``len(unmarked) == 0`` branch in on_request |
 | Marked pages        | ``_marked: Set[PageId]``                 |
-| LRU tracking        | ``_lru_order: OrderedDict``              |
+| Deterministic order | ``_lru_order: OrderedDict``              |
 | Phase counter       | ``_phase_count`` (completed phases, 0-based) |
 """
 
