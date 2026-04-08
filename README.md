@@ -26,12 +26,16 @@ Implementation of:
 > **"Online Metric Algorithms with Untrusted Predictions"**.
 > ICML 2020.
 
-## Experimental Framework — `atlas_v1` / `atlas_v2` / `atlas_v3` (Confidence-Aware)
+## Experimental Framework — `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2` (Confidence-Aware)
 
 This repository also includes **experimental** framework policies, `atlas_v1`,
-`atlas_v2`, and `atlas_v3`, for unweighted paging with bucketed predictions and optional
+`atlas_v2`, `atlas_v3`, `atlas_cga_v1`, and `atlas_cga_v2`, for unweighted paging with bucketed predictions and optional
 confidence scores. `atlas_v2` adds dynamic trust adaptation over `atlas_v1`, while
 `atlas_v3` introduces confidence-calibrated local trust by prediction context.
+`atlas_cga_v1` is a calibration-guided extension that uses online safe-to-evict calibration
+probabilities to scale predictor influence.
+`atlas_cga_v2` is a hierarchical/context-sharing refinement of CGA that shares calibration
+signal across global, bucket, confidence-bin, and full-context levels.
 Both are intended for empirical study only (no theorem guarantee is claimed).
 
 ---
@@ -96,7 +100,7 @@ For TRUST&DOUBT, provide either:
 
 CSV format requires `page_id` and optional `predicted_next`, `predicted_cache` (pipe-separated pages).
 
-For `atlas_v1` / `atlas_v2` / `atlas_v3`, the preferred optional JSON extension is:
+For `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2`, the preferred optional JSON extension is:
 
 ```json
 {
@@ -126,6 +130,8 @@ For `atlas_v1` / `atlas_v2` / `atlas_v3`, the preferred optional JSON extension 
 | `atlas_v1`          | Exp      | Experimental confidence-aware policy with LRU fallback |
 | `atlas_v2`          | Exp      | Experimental confidence-aware policy with dynamic trust adaptation |
 | `atlas_v3`          | Exp      | Experimental confidence-aware local-trust policy (CCLT v1) |
+| `atlas_cga_v1`      | Exp      | Experimental calibration-guided local-trust policy (CGA v1) |
+| `atlas_cga_v2`      | Exp      | Experimental hierarchical context-sharing calibration policy (CGA v2) |
 
 ---
 
@@ -215,6 +221,40 @@ python -m lafc.runner.run_policy \
     --atlas-tie-epsilon 1e-9
 ```
 
+### Smoke test (`atlas_cga_v1`, experimental)
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy atlas_cga_v1 \
+    --trace data/example_atlas_v1.json \
+    --capacity 3 \
+    --default-confidence 0.5 \
+    --bucket-source trace \
+    --atlas-initial-local-trust 0.7 \
+    --atlas-confidence-bins 0.33,0.66 \
+    --atlas-calibration-prior-a 1.0 \
+    --atlas-calibration-prior-b 1.0 \
+    --atlas-calibration-min-support 5 \
+    --atlas-calibration-shrinkage 10 \
+    --atlas-safe-horizon-mode bucket_regret
+```
+
+### Smoke test (`atlas_cga_v2`, experimental)
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy atlas_cga_v2 \
+    --trace data/example_atlas_v1.json \
+    --capacity 3 \
+    --default-confidence 0.5 \
+    --bucket-source trace \
+    --atlas-hier-global-prior-a 1.0 \
+    --atlas-hier-global-prior-b 1.0 \
+    --atlas-hier-min-support 5 \
+    --atlas-hier-weight-mode normalized_support \
+    --atlas-hier-shrink-strength 10
+```
+
 ---
 
 ## Output Files (written to `--output-dir`, default `output/`)
@@ -251,12 +291,19 @@ Supported benchmark families:
 - CitiBike NYC trip traces
 - SPEC CPU2006 memory traces (manual local ingestion)
 - wiki2018 CDN trace (manual local ingestion by default)
+- Twitter cache-trace (Twemcache / Pelikan) via manifest ingestion
+- MetaKV via manifest/oracle-style ingestion
+- MetaCDN via manifest/oracle-style ingestion
+- CloudPhysics block I/O traces via manifest ingestion
 
 Prepare datasets via:
 
 ```bash
-python scripts/datasets/prepare_all.py --dataset <brightkite|citibike|spec_cpu2006|wiki2018|all>
+python scripts/datasets/prepare_all.py --dataset <brightkite|citibike|spec_cpu2006|wiki2018|twemcache|metakv|metacdn|cloudphysics|all>
 ```
+
+For the new production traces (`twemcache`, `metakv`, `metacdn`, `cloudphysics`), place local raw files under
+`data/raw/<dataset>/` and provide `manifest.json` listing local files to ingest.
 
 Processed traces are written under `data/processed/<dataset>/`.
 See `docs/datasets.md` for source links, legal caveats, mapping assumptions, and exact commands.

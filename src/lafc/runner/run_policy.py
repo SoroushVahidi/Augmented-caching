@@ -12,7 +12,7 @@ python -m lafc.runner.run_policy \\
 Supported --policy values:
     lru, weighted_lru, advice_trusting, la_det,
     marker, blind_oracle, predictive_marker,
-    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3
+    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3, atlas_cga_v1, atlas_cga_v2
 """
 
 from __future__ import annotations
@@ -44,6 +44,8 @@ from lafc.policies.predictive_marker import PredictiveMarkerPolicy
 from lafc.policies.atlas_v1 import AtlasV1Policy
 from lafc.policies.atlas_v2 import AtlasV2Policy
 from lafc.policies.atlas_v3 import AtlasV3Policy
+from lafc.policies.atlas_cga_v1 import AtlasCGAV1Policy
+from lafc.policies.atlas_cga_v2 import AtlasCGAV2Policy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
 from lafc.predictors.buckets import attach_perfect_buckets, maybe_corrupt_buckets
@@ -78,6 +80,9 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "atlas_v1": AtlasV1Policy(),
     "atlas_v2": AtlasV2Policy(),
     "atlas_v3": AtlasV3Policy(),
+    "atlas_cga_v1": AtlasCGAV1Policy(),
+    "atlas_cga": AtlasCGAV1Policy(),
+    "atlas_cga_v2": AtlasCGAV2Policy(),
 }
 
 
@@ -169,6 +174,8 @@ def run_policy(
             AtlasV1Policy,
             AtlasV2Policy,
             AtlasV3Policy,
+            AtlasCGAV1Policy,
+            AtlasCGAV2Policy,
         ),
     ):
         try:
@@ -298,6 +305,70 @@ def run_policy(
                 for d in policy.decision_log()
             ],
         }
+    # Experimental atlas_cga_v1 diagnostics.
+    if isinstance(policy, AtlasCGAV1Policy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["atlas_cga_v1"] = {
+            "summary": policy.diagnostics_summary(),
+            "time_series": policy.time_series_diagnostics(),
+            "decision_log": [
+                {
+                    "t": d.t,
+                    "request_page": d.request_page,
+                    "chosen_eviction": d.chosen_eviction,
+                    "chosen_lambda": d.chosen_lambda,
+                    "chosen_context": d.chosen_context,
+                    "candidate_buckets": d.candidate_buckets,
+                    "candidate_confidences": d.candidate_confidences,
+                    "candidate_contexts": d.candidate_contexts,
+                    "candidate_local_trust": d.candidate_local_trust,
+                    "candidate_pcal_empirical": d.candidate_pcal_empirical,
+                    "candidate_pcal_posterior": d.candidate_pcal_posterior,
+                    "candidate_pcal_shrunk": d.candidate_pcal_shrunk,
+                    "candidate_calibration_weight": d.candidate_calibration_weight,
+                    "candidate_lambdas": d.candidate_lambdas,
+                    "candidate_base_scores": d.candidate_base_scores,
+                    "candidate_pred_scores": d.candidate_pred_scores,
+                    "candidate_combined_scores": d.candidate_combined_scores,
+                    "decision_mode": d.decision_mode,
+                }
+                for d in policy.decision_log()
+            ],
+        }
+    if isinstance(policy, AtlasCGAV2Policy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["atlas_cga_v2"] = {
+            "summary": policy.diagnostics_summary(),
+            "time_series": policy.time_series_diagnostics(),
+            "decision_log": [
+                {
+                    "t": d.t,
+                    "request_page": d.request_page,
+                    "chosen_eviction": d.chosen_eviction,
+                    "chosen_lambda": d.chosen_lambda,
+                    "chosen_context": d.chosen_context,
+                    "candidate_buckets": d.candidate_buckets,
+                    "candidate_confidences": d.candidate_confidences,
+                    "candidate_contexts": d.candidate_contexts,
+                    "candidate_local_trust": d.candidate_local_trust,
+                    "candidate_pcal_ctx": d.candidate_pcal_ctx,
+                    "candidate_pcal_bucket": d.candidate_pcal_bucket,
+                    "candidate_pcal_conf": d.candidate_pcal_conf,
+                    "candidate_pcal_global": d.candidate_pcal_global,
+                    "candidate_pcal_shared": d.candidate_pcal_shared,
+                    "candidate_weight_ctx": d.candidate_weight_ctx,
+                    "candidate_weight_bucket": d.candidate_weight_bucket,
+                    "candidate_weight_conf": d.candidate_weight_conf,
+                    "candidate_weight_global": d.candidate_weight_global,
+                    "candidate_lambdas": d.candidate_lambdas,
+                    "candidate_base_scores": d.candidate_base_scores,
+                    "candidate_pred_scores": d.candidate_pred_scores,
+                    "candidate_combined_scores": d.candidate_combined_scores,
+                    "decision_mode": d.decision_mode,
+                }
+                for d in policy.decision_log()
+            ],
+        }
 
     return result
 
@@ -365,6 +436,14 @@ def _save_metrics(result: SimulationResult, output_dir: str) -> None:
             atlas3 = result.extra_diagnostics["atlas_v3"]
             for key, value in atlas3.get("summary", {}).items():
                 metrics[f"atlas_v3_{key}"] = value
+        if "atlas_cga_v1" in result.extra_diagnostics:
+            atlas_cga = result.extra_diagnostics["atlas_cga_v1"]
+            for key, value in atlas_cga.get("summary", {}).items():
+                metrics[f"atlas_cga_v1_{key}"] = value
+        if "atlas_cga_v2" in result.extra_diagnostics:
+            atlas_cga2 = result.extra_diagnostics["atlas_cga_v2"]
+            for key, value in atlas_cga2.get("summary", {}).items():
+                metrics[f"atlas_cga_v2_{key}"] = value
 
 
     path = os.path.join(output_dir, "metrics.json")
@@ -454,6 +533,18 @@ def _save_atlas_diagnostics(result: SimulationResult, output_dir: str) -> None:
         with open(path, "w", encoding="utf-8") as fh:
             json.dump(atlas3, fh, indent=2)
         logger.info("ATLAS v3 diagnostics saved to %s", path)
+    atlas_cga = result.extra_diagnostics.get("atlas_cga_v1")
+    if atlas_cga:
+        path = os.path.join(output_dir, "atlas_cga_v1_diagnostics.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(atlas_cga, fh, indent=2)
+        logger.info("ATLAS CGA v1 diagnostics saved to %s", path)
+    atlas_cga2 = result.extra_diagnostics.get("atlas_cga_v2")
+    if atlas_cga2:
+        path = os.path.join(output_dir, "atlas_cga_v2_diagnostics.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(atlas_cga2, fh, indent=2)
+        logger.info("ATLAS CGA v2 diagnostics saved to %s", path)
 
 
 def save_results(result: SimulationResult, output_dir: str) -> None:
@@ -528,31 +619,31 @@ def main() -> None:
         "--default-confidence",
         type=float,
         default=0.5,
-        help="Default confidence λ when per-request confidence is missing (atlas_v1/atlas_v2/atlas_v3).",
+        help="Default confidence λ when per-request confidence is missing (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2).",
     )
     parser.add_argument(
         "--bucket-source",
         choices=["trace", "perfect"],
         default="trace",
-        help="Source of bucket hints for atlas_v1/atlas_v2/atlas_v3 (default: trace).",
+        help="Source of bucket hints for atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2 (default: trace).",
     )
     parser.add_argument(
         "--bucket-horizon",
         type=int,
         default=2,
-        help="Distance horizon used when generating perfect buckets (atlas_v1/atlas_v2/atlas_v3 only).",
+        help="Distance horizon used when generating perfect buckets (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2 only).",
     )
     parser.add_argument(
         "--bucket-noise-prob",
         type=float,
         default=0.0,
-        help="Probability of corrupting a bucket hint (atlas_v1/atlas_v2/atlas_v3 only).",
+        help="Probability of corrupting a bucket hint (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2 only).",
     )
     parser.add_argument(
         "--bucket-noise-seed",
         type=int,
         default=0,
-        help="RNG seed for bucket corruption (atlas_v1/atlas_v2/atlas_v3 only).",
+        help="RNG seed for bucket corruption (atlas_v1/atlas_v2/atlas_v3/atlas_cga_v1/atlas_cga_v2 only).",
     )
     parser.add_argument(
         "--atlas-window",
@@ -632,6 +723,66 @@ def main() -> None:
         help="Bucket group size when --atlas-context-mode bucket_group_confidence is used.",
     )
     parser.add_argument(
+        "--atlas-calibration-prior-a",
+        type=float,
+        default=1.0,
+        help="Beta prior alpha for atlas_cga_v1 per-context calibration.",
+    )
+    parser.add_argument(
+        "--atlas-calibration-prior-b",
+        type=float,
+        default=1.0,
+        help="Beta prior beta for atlas_cga_v1 per-context calibration.",
+    )
+    parser.add_argument(
+        "--atlas-calibration-min-support",
+        type=int,
+        default=5,
+        help="Minimum support before atlas_cga_v1 fully trusts context calibration.",
+    )
+    parser.add_argument(
+        "--atlas-calibration-shrinkage",
+        type=float,
+        default=10.0,
+        help="Shrinkage strength m for atlas_cga_v1 calibration reliability weight n/(n+m).",
+    )
+    parser.add_argument(
+        "--atlas-safe-horizon-mode",
+        choices=["bucket_regret", "fixed", "bucket_linear", "bucket_exp2"],
+        default="bucket_regret",
+        help="Safe-event horizon mode for atlas_cga_v1/atlas_cga_v2 calibration checks.",
+    )
+    parser.add_argument(
+        "--atlas-hier-global-prior-a",
+        type=float,
+        default=1.0,
+        help="Global Beta prior alpha for atlas_cga_v2 hierarchical calibration.",
+    )
+    parser.add_argument(
+        "--atlas-hier-global-prior-b",
+        type=float,
+        default=1.0,
+        help="Global Beta prior beta for atlas_cga_v2 hierarchical calibration.",
+    )
+    parser.add_argument(
+        "--atlas-hier-min-support",
+        type=int,
+        default=5,
+        help="Minimum support threshold used by atlas_cga_v2 support-aware weights.",
+    )
+    parser.add_argument(
+        "--atlas-hier-weight-mode",
+        choices=["normalized_support", "uniform_nonzero"],
+        default="normalized_support",
+        help="Weight rule for atlas_cga_v2 hierarchical sharing.",
+    )
+    parser.add_argument(
+        "--atlas-hier-shrink-strength",
+        type=float,
+        default=10.0,
+        help="Shrink strength for atlas_cga_v2 support-to-weight mapping.",
+    )
+    parser.add_argument(
         "--trust-seed",
         type=int,
         default=0,
@@ -661,7 +812,7 @@ def main() -> None:
         from lafc.predictors.offline_from_trace import attach_predicted_caches
         requests = attach_predicted_caches(requests, capacity=args.capacity)
 
-    if args.policy in {"atlas_v1", "atlas_v2", "atlas_v3"}:
+    if args.policy in {"atlas_v1", "atlas_v2", "atlas_v3", "atlas_cga_v1", "atlas_cga", "atlas_cga_v2"}:
         if args.bucket_source == "perfect":
             requests = attach_perfect_buckets(requests, bucket_horizon=args.bucket_horizon)
         requests = maybe_corrupt_buckets(
@@ -679,7 +830,7 @@ def main() -> None:
                 atlas_initial_gamma=args.atlas_initial_gamma,
                 atlas_mismatch_threshold=args.atlas_mismatch_threshold,
             )
-        else:
+        elif args.policy == "atlas_v3":
             policy = AtlasV3Policy(
                 default_confidence=args.default_confidence,
                 atlas_initial_local_trust=args.atlas_initial_local_trust,
@@ -692,6 +843,45 @@ def main() -> None:
                 atlas_context_mode=args.atlas_context_mode,
                 atlas_bucket_group_size=args.atlas_bucket_group_size,
                 bucket_horizon=args.bucket_horizon,
+            )
+        elif args.policy in {"atlas_cga_v1", "atlas_cga"}:
+            policy = AtlasCGAV1Policy(
+                default_confidence=args.default_confidence,
+                atlas_initial_local_trust=args.atlas_initial_local_trust,
+                atlas_confidence_bins=args.atlas_confidence_bins,
+                atlas_eta_pos=args.atlas_eta_pos,
+                atlas_eta_neg=args.atlas_eta_neg,
+                atlas_bucket_regret_mode=args.atlas_bucket_regret_mode,
+                atlas_tie_epsilon=args.atlas_tie_epsilon,
+                atlas_adaptive_tie_coef=args.atlas_adaptive_tie_coef,
+                atlas_context_mode=args.atlas_context_mode,
+                atlas_bucket_group_size=args.atlas_bucket_group_size,
+                bucket_horizon=args.bucket_horizon,
+                atlas_calibration_prior_a=args.atlas_calibration_prior_a,
+                atlas_calibration_prior_b=args.atlas_calibration_prior_b,
+                atlas_calibration_min_support=args.atlas_calibration_min_support,
+                atlas_calibration_shrinkage=args.atlas_calibration_shrinkage,
+                atlas_safe_horizon_mode=args.atlas_safe_horizon_mode,
+            )
+        else:
+            policy = AtlasCGAV2Policy(
+                default_confidence=args.default_confidence,
+                atlas_initial_local_trust=args.atlas_initial_local_trust,
+                atlas_confidence_bins=args.atlas_confidence_bins,
+                atlas_eta_pos=args.atlas_eta_pos,
+                atlas_eta_neg=args.atlas_eta_neg,
+                atlas_bucket_regret_mode=args.atlas_bucket_regret_mode,
+                atlas_tie_epsilon=args.atlas_tie_epsilon,
+                atlas_adaptive_tie_coef=args.atlas_adaptive_tie_coef,
+                atlas_context_mode=args.atlas_context_mode,
+                atlas_bucket_group_size=args.atlas_bucket_group_size,
+                bucket_horizon=args.bucket_horizon,
+                atlas_hier_global_prior_a=args.atlas_hier_global_prior_a,
+                atlas_hier_global_prior_b=args.atlas_hier_global_prior_b,
+                atlas_hier_min_support=args.atlas_hier_min_support,
+                atlas_hier_weight_mode=args.atlas_hier_weight_mode,
+                atlas_hier_shrink_strength=args.atlas_hier_shrink_strength,
+                atlas_safe_horizon_mode=args.atlas_safe_horizon_mode,
             )
     elif args.policy == "trust_and_doubt":
         policy = TrustAndDoubtPolicy(seed=args.trust_seed)

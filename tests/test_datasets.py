@@ -9,6 +9,11 @@ from pathlib import Path
 import pytest
 
 from lafc.datasets.base import CanonicalTraceRecord, validate_records
+from lafc.datasets.additional_public import (
+    parse_cloudphysics,
+    parse_meta_oracle_dataset,
+    parse_twemcache,
+)
 from lafc.datasets.brightkite import parse_brightkite
 from lafc.datasets.citibike import parse_citibike
 from lafc.datasets.spec_cpu2006 import parse_spec_from_manifest
@@ -118,3 +123,111 @@ def test_prepare_cli_spec_missing_manifest_fails(tmp_path: Path):
     result = subprocess.run(cmd, capture_output=True, text=True)
     assert result.returncode != 0
     assert "manifest" in (result.stderr + result.stdout).lower()
+
+
+def test_twemcache_parser(tmp_path: Path):
+    raw_dir = tmp_path / "twemcache"
+    raw_dir.mkdir(parents=True)
+    manifest = raw_dir / "manifest.json"
+    data = raw_dir / "sample.csv"
+    data.write_text(
+        "timestamp,key,key_size,value_size,client_id,operation,ttl,cluster\n"
+        "1,k1,10,100,c1,get,300,cacheA\n"
+        "2,k2,11,101,c2,set,120,cacheA\n",
+        encoding="utf-8",
+    )
+    manifest.write_text(json.dumps({"files": ["sample.csv"]}), encoding="utf-8")
+    recs = parse_twemcache(raw_dir, cluster="cacheA")
+    assert [r.item_id for r in recs] == ["k1", "k2"]
+    assert recs[0].metadata["ttl"] == 300
+
+
+def test_metakv_oracle_parser_read_filter(tmp_path: Path):
+    raw_dir = tmp_path / "metakv"
+    raw_dir.mkdir(parents=True)
+    (raw_dir / "manifest.json").write_text(json.dumps({"files": ["mk.csv"]}), encoding="utf-8")
+    (raw_dir / "mk.csv").write_text(
+        "timestamp,obj_id,obj_size,op_type,ttl,usecase,sub_usecase,next_access_vtime,cache_hit\n"
+        "1,o1,100,get,30,timeline,feed,9,1\n"
+        "2,o2,200,set,40,timeline,feed,10,0\n",
+        encoding="utf-8",
+    )
+    recs = parse_meta_oracle_dataset(raw_dir, dataset_name="metakv", read_only=True)
+    assert len(recs) == 1
+    assert recs[0].item_id == "o1"
+
+
+def test_metacdn_parser_aggregate_ranges(tmp_path: Path):
+    raw_dir = tmp_path / "metacdn"
+    raw_dir.mkdir(parents=True)
+    (raw_dir / "manifest.json").write_text(json.dumps({"files": ["cdn.csv"]}), encoding="utf-8")
+    (raw_dir / "cdn.csv").write_text(
+        "timestamp,cacheKey,objectSize,rangeStart,rangeEnd,op_type\n"
+        "1,objA:0-100,1000,0,100,get\n",
+        encoding="utf-8",
+    )
+    recs = parse_meta_oracle_dataset(raw_dir, dataset_name="metacdn", aggregate_ranges=True)
+    assert recs[0].item_id == "objA"
+
+
+def test_cloudphysics_page_size_conversion(tmp_path: Path):
+    raw_dir = tmp_path / "cloudphysics"
+    raw_dir.mkdir(parents=True)
+    (raw_dir / "manifest.json").write_text(json.dumps({"files": ["cp.csv"]}), encoding="utf-8")
+    (raw_dir / "cp.csv").write_text(
+        "timestamp,lbn,length,command,version\n"
+        "1,8,4096,read,v1\n",
+        encoding="utf-8",
+    )
+    recs = parse_cloudphysics(raw_dir, page_size=4096)
+    assert recs[0].item_id == "1"
+
+
+def test_additional_dataset_missing_manifest_fails(tmp_path: Path):
+    with pytest.raises(FileNotFoundError):
+        parse_twemcache(tmp_path / "twemcache_missing")
+
+
+def test_prepare_cli_sample_only_for_new_dataset(tmp_path: Path):
+    raw_root = tmp_path / "raw"
+    out_root = tmp_path / "out"
+    ds_dir = raw_root / "twemcache"
+    ds_dir.mkdir(parents=True)
+    (ds_dir / "manifest.json").write_text(json.dumps({"files": ["sample.csv"]}), encoding="utf-8")
+    (ds_dir / "sample.csv").write_text(
+        "timestamp,key,key_size,value_size,operation,cluster\n"
+        + "".join([f"{i},k{i},10,100,get,cacheA\n" for i in range(300)]),
+        encoding="utf-8",
+    )
+    cmd = [
+        sys.executable,
+        "scripts/datasets/prepare_all.py",
+        "--dataset",
+        "twemcache",
+        "--raw-dir",
+        str(raw_root),
+        "--output-dir",
+        str(out_root),
+        "--sample-only",
+    ]
+    subprocess.run(cmd, check=True)
+    lines = (out_root / "twemcache" / "trace.jsonl").read_text(encoding="utf-8").strip().splitlines()
+    assert len(lines) == 100
+
+
+def test_prepare_cli_sample_only_without_raw_uses_examples(tmp_path: Path):
+    raw_root = tmp_path / "raw"
+    out_root = tmp_path / "out"
+    cmd = [
+        sys.executable,
+        "scripts/datasets/prepare_all.py",
+        "--dataset",
+        "metakv",
+        "--raw-dir",
+        str(raw_root),
+        "--output-dir",
+        str(out_root),
+        "--sample-only",
+    ]
+    subprocess.run(cmd, check=True)
+    assert (out_root / "metakv" / "trace.jsonl").exists()
