@@ -72,7 +72,11 @@ from lafc.types import CacheEvent, Page, PageId, Request
 class MarkerPolicy(BasePolicy):
     """Deterministic LRU-Marker caching policy.
 
-    O(H_k)-competitive (worst-case) for unweighted paging.
+    Deterministic implementation of the marking idea for unweighted paging.
+    This class does **not** implement the randomized marking algorithm, so it
+    should not be documented as having the randomized ``O(H_k)`` worst-case
+    competitive ratio; deterministic paging policies can be as bad as
+    ``k``-competitive in the worst case.
     Ignores predictions entirely; used as the robust sub-routine in
     :class:`~lafc.policies.trust_and_doubt.TrustAndDoubtPolicy`.
     """
