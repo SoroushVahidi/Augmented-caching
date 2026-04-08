@@ -12,7 +12,7 @@ python -m lafc.runner.run_policy \\
 Supported --policy values:
     lru, weighted_lru, advice_trusting, la_det,
     marker, blind_oracle, predictive_marker,
-    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3, atlas_cga_v1, atlas_cga_v2, rest_v1
+    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3, atlas_cga_v1, atlas_cga_v2, rest_v1, ml_gate_v1, ml_gate_v2
 """
 
 from __future__ import annotations
@@ -47,6 +47,8 @@ from lafc.policies.atlas_v3 import AtlasV3Policy
 from lafc.policies.atlas_cga_v1 import AtlasCGAV1Policy
 from lafc.policies.atlas_cga_v2 import AtlasCGAV2Policy
 from lafc.policies.rest_v1 import RestV1Policy
+from lafc.policies.ml_gate_v1 import MLGateV1Policy
+from lafc.policies.ml_gate_v2 import MLGateV2Policy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
 from lafc.predictors.buckets import attach_perfect_buckets, maybe_corrupt_buckets
@@ -85,6 +87,8 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "atlas_cga": AtlasCGAV1Policy(),
     "atlas_cga_v2": AtlasCGAV2Policy(),
     "rest_v1": RestV1Policy(),
+    "ml_gate_v1": MLGateV1Policy(),
+    "ml_gate_v2": MLGateV2Policy(),
 }
 
 
@@ -179,6 +183,8 @@ def run_policy(
             AtlasCGAV1Policy,
             AtlasCGAV2Policy,
             RestV1Policy,
+            MLGateV1Policy,
+            MLGateV2Policy,
         ),
     ):
         try:
@@ -256,6 +262,16 @@ def run_policy(
                 for d in policy.decision_log()
             ],
         }
+    # Experimental ml_gate_v1 diagnostics.
+    if isinstance(policy, MLGateV1Policy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["ml_gate_v1"] = {"summary": policy.diagnostics_summary()}
+
+    # Experimental ml_gate_v2 diagnostics.
+    if isinstance(policy, MLGateV2Policy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["ml_gate_v2"] = {"summary": policy.diagnostics_summary()}
+
     # Experimental atlas_v2 diagnostics.
     if isinstance(policy, AtlasV2Policy):
         result.extra_diagnostics = result.extra_diagnostics or {}

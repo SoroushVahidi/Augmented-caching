@@ -1,0 +1,240 @@
+{
+  "horizon": 8,
+  "threshold": 0.5,
+  "models": {
+    "logistic_regression": {
+      "train": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "class_balance": 0.1,
+        "pred_positive_rate": 0.1,
+        "brier": 0.01248912554852142,
+        "roc_auc": 1.0
+      },
+      "val": {
+        "accuracy": 0.8181818181818182,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "class_balance": 0.18181818181818182,
+        "pred_positive_rate": 0.36363636363636365,
+        "brier": 0.16008972352931708,
+        "roc_auc": 0.8611111111111112
+      },
+      "test": {
+        "accuracy": 0.5294117647058824,
+        "precision": 0.25,
+        "recall": 0.5,
+        "f1": 0.3333333333333333,
+        "class_balance": 0.23529411764705882,
+        "pred_positive_rate": 0.47058823529411764,
+        "brier": 0.4274977465658957,
+        "roc_auc": 0.34615384615384615
+      },
+      "feature_importance": {
+        "request_bucket": 0.9422941764133298,
+        "request_confidence": 0.0,
+        "predictor_bucket": 0.0,
+        "predictor_confidence": 0.0,
+        "predictor_score": 0.003923484729887711,
+        "lru_score": 0.0,
+        "score_gap_pred_minus_lru": 0.003923484729887713,
+        "predictor_lru_disagree": 0.9926298847034876,
+        "predictor_recency_rank": 0.0821757874979143,
+        "lru_recency_rank": 0.0,
+        "bucket_gap_pred_minus_lru": 0.9926298847034877,
+        "confidence_gap_pred_minus_lru": 0.0,
+        "cache_unique_bucket_count": 0.003923484729887711,
+        "cache_bucket_mean": 0.03660014724085411,
+        "cache_bucket_std": 0.15230067575488018,
+        "recent_regret_rate": 0.3515877994608532,
+        "recent_disagree_rate": 0.25255249144482855,
+        "context_id_hash": 0.94229417641333,
+        "context_seen_count": 0.2008586367243693,
+        "recent_context_frequency": 0.18483434031026535
+      },
+      "calibration": {
+        "mean_pred": [
+          0.004278530704484795,
+          0.20157059535515268,
+          0.67599919851574,
+          0.9354945179666103
+        ],
+        "frac_pos": [
+          0.25,
+          0.0,
+          0.0,
+          0.2857142857142857
+        ]
+      }
+    },
+    "decision_tree": {
+      "train": {
+        "accuracy": 0.9,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "class_balance": 0.1,
+        "pred_positive_rate": 0.0,
+        "brier": 0.09000000000000001,
+        "roc_auc": 0.5
+      },
+      "val": {
+        "accuracy": 0.8181818181818182,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "class_balance": 0.18181818181818182,
+        "pred_positive_rate": 0.0,
+        "brier": 0.15545454545454543,
+        "roc_auc": 0.5
+      },
+      "test": {
+        "accuracy": 0.7647058823529411,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "class_balance": 0.23529411764705882,
+        "pred_positive_rate": 0.0,
+        "brier": 0.19823529411764707,
+        "roc_auc": 0.5
+      },
+      "feature_importance": {
+        "request_bucket": 0.0,
+        "request_confidence": 0.0,
+        "predictor_bucket": 0.0,
+        "predictor_confidence": 0.0,
+        "predictor_score": 0.0,
+        "lru_score": 0.0,
+        "score_gap_pred_minus_lru": 0.0,
+        "predictor_lru_disagree": 0.0,
+        "predictor_recency_rank": 0.0,
+        "lru_recency_rank": 0.0,
+        "bucket_gap_pred_minus_lru": 0.0,
+        "confidence_gap_pred_minus_lru": 0.0,
+        "cache_unique_bucket_count": 0.0,
+        "cache_bucket_mean": 0.0,
+        "cache_bucket_std": 0.0,
+        "recent_regret_rate": 0.0,
+        "recent_disagree_rate": 0.0,
+        "context_id_hash": 0.0,
+        "context_seen_count": 0.0,
+        "recent_context_frequency": 0.0
+      },
+      "calibration": {
+        "mean_pred": [
+          0.10000000000000002
+        ],
+        "frac_pos": [
+          0.23529411764705882
+        ]
+      }
+    },
+    "random_forest": {
+      "train": {
+        "accuracy": 0.9,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "class_balance": 0.1,
+        "pred_positive_rate": 0.0,
+        "brier": 0.07658341561322582,
+        "roc_auc": 1.0
+      },
+      "val": {
+        "accuracy": 0.8181818181818182,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "class_balance": 0.18181818181818182,
+        "pred_positive_rate": 0.0,
+        "brier": 0.1432411406580188,
+        "roc_auc": 0.9305555555555556
+      },
+      "test": {
+        "accuracy": 0.7647058823529411,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "class_balance": 0.23529411764705882,
+        "pred_positive_rate": 0.0,
+        "brier": 0.19056476263023078,
+        "roc_auc": 0.8076923076923077
+      },
+      "feature_importance": {
+        "request_bucket": 0.09523809523809523,
+        "request_confidence": 0.0,
+        "predictor_bucket": 0.0,
+        "predictor_confidence": 0.0,
+        "predictor_score": 0.0,
+        "lru_score": 0.0,
+        "score_gap_pred_minus_lru": 0.0,
+        "predictor_lru_disagree": 0.09523809523809523,
+        "predictor_recency_rank": 0.1020408163265306,
+        "lru_recency_rank": 0.0,
+        "bucket_gap_pred_minus_lru": 0.10884353741496598,
+        "confidence_gap_pred_minus_lru": 0.0,
+        "cache_unique_bucket_count": 0.0,
+        "cache_bucket_mean": 0.027210884353741496,
+        "cache_bucket_std": 0.1020408163265306,
+        "recent_regret_rate": 0.027210884353741496,
+        "recent_disagree_rate": 0.19047619047619047,
+        "context_id_hash": 0.14965986394557823,
+        "context_seen_count": 0.1020408163265306,
+        "recent_context_frequency": 0.0
+      },
+      "calibration": {
+        "mean_pred": [
+          0.08871065535771419
+        ],
+        "frac_pos": [
+          0.23529411764705882
+        ]
+      }
+    },
+    "hist_gb": {
+      "train": {
+        "accuracy": 0.9,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "class_balance": 0.1,
+        "pred_positive_rate": 0.0,
+        "brier": 0.09000000000000001,
+        "roc_auc": 0.5
+      },
+      "val": {
+        "accuracy": 0.8181818181818182,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "class_balance": 0.18181818181818182,
+        "pred_positive_rate": 0.0,
+        "brier": 0.15545454545454543,
+        "roc_auc": 0.5
+      },
+      "test": {
+        "accuracy": 0.7647058823529411,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "class_balance": 0.23529411764705882,
+        "pred_positive_rate": 0.0,
+        "brier": 0.19823529411764707,
+        "roc_auc": 0.5
+      },
+      "feature_importance": {},
+      "calibration": {
+        "mean_pred": [
+          0.10000000000000003
+        ],
+        "frac_pos": [
+          0.23529411764705882
+        ]
+      }
+    }
+  },
+  "winner_by_val_f1": "logistic_regression"
+}

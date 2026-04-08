@@ -1,0 +1,5 @@
+trace,capacity,t,predictor_victim,lru_victim,pred_next_delta,lru_next_delta,pred_penalty_h,lru_penalty_h,y,request_bucket,request_confidence,predictor_bucket,predictor_confidence,predictor_score,lru_score,score_gap_pred_minus_lru,predictor_lru_disagree,predictor_recency_rank,lru_recency_rank,bucket_gap_pred_minus_lru,confidence_gap_pred_minus_lru,cache_unique_bucket_count,cache_bucket_mean,cache_bucket_std,recent_regret_rate,recent_disagree_rate
+data/example_unweighted.json,2,4,C,C,3,3,1,1,0,0.0,0.5,0.0,0.5,0.5,1.0,-0.5,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0
+data/example_unweighted.json,2,9,C,C,inf,inf,0,0,0,0.0,0.5,0.0,0.5,0.5,1.0,-0.5,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0
+data/example_atlas_v1.json,2,4,C,C,4,4,1,1,0,3.0,0.6,3.0,0.8,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0,1.5,1.5,1.0,1.0
+data/example_atlas_v1.json,3,4,C,B,4,1,1,1,0,3.0,0.6,3.0,0.8,1.0,1.0,0.0,1.0,1.0,0.0,2.0,0.10000000000000009,3.0,1.3333333333333333,1.247219128924647,0.0,0.0

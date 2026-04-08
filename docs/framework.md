@@ -364,3 +364,12 @@ G[ctx] <- clip(G[ctx] - eta_neg, 0, 1)   (bad)
 
 This is an **experimental architectural pivot** inspired by robust LA caching,
 selective prediction/abstention, and regret-driven trust adaptation. No theorem guarantee is claimed.
+
+## Learned gating proof-of-concept
+
+`ml_gate_v1` is intentionally experimental and lightweight: logistic regression over decision-time features.
+It does **not** learn full eviction, only the gate between predictor and LRU experts.
+
+## Learned gating v2 (counterfactual labels)
+
+`ml_gate_v2` evaluates predictor-victim vs LRU-victim choices by bounded-horizon local counterfactual replay, producing a regression regret target (`y_reg`) and derived binary gate target (`y_cls`).

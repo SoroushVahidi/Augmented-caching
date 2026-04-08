@@ -328,3 +328,22 @@ For the new production traces (`twemcache`, `metakv`, `metacdn`, `cloudphysics`)
 
 Processed traces are written under `data/processed/<dataset>/`.
 See `docs/datasets.md` for source links, legal caveats, mapping assumptions, and exact commands.
+
+## Experimental learned gate (ml_gate_v1)
+
+A proof-of-concept lightweight learned gate is available as `ml_gate_v1`.
+It learns a binary decision at each eviction: TRUST predictor-style victim (atlas_v3 bucket-score expert) vs ABSTAIN to LRU.
+
+Typical workflow:
+1. `python scripts/build_ml_gate_dataset.py --sample-only`
+2. `python scripts/train_ml_gate_v1.py`
+3. `python scripts/run_ml_gate_v1_first_check.py`
+
+## Experimental learned gate v2 (stronger offline labels + model sweep)
+
+`ml_gate_v2` keeps the same TRUST-vs-ABSTAIN framing, but uses counterfactual local replay labels and a model-family sweep.
+
+Typical workflow:
+1. `python scripts/build_ml_gate_dataset_v2.py --max-rows 100000`
+2. `python scripts/train_ml_gate_v2.py --horizon 8`
+3. `python scripts/run_ml_gate_v2_first_check.py`

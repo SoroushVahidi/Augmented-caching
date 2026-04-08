@@ -1,0 +1,45 @@
+{
+  "train": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "class_balance": 0.23076923076923078,
+    "roc_auc": 1.0
+  },
+  "val": {
+    "accuracy": 0.6,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "class_balance": 0.0,
+    "roc_auc": 0.5
+  },
+  "test": {
+    "accuracy": 0.5,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "class_balance": 0.0,
+    "roc_auc": 0.5
+  },
+  "feature_importance_logreg": {
+    "request_bucket": -0.13620267103704234,
+    "request_confidence": 0.4554736391251246,
+    "predictor_bucket": 0.2853730503939101,
+    "predictor_confidence": 0.18159519189247095,
+    "predictor_score": 0.06288479426507551,
+    "lru_score": 0.0,
+    "score_gap_pred_minus_lru": 0.0628847942650755,
+    "predictor_lru_disagree": 0.5221403548510875,
+    "predictor_recency_rank": 0.5221403548510875,
+    "lru_recency_rank": 0.0,
+    "bucket_gap_pred_minus_lru": 0.548223694178933,
+    "confidence_gap_pred_minus_lru": 0.005880186803812201,
+    "cache_unique_bucket_count": 0.38481464430585927,
+    "cache_bucket_mean": 0.2543242943700189,
+    "cache_bucket_std": 0.21819778413879196,
+    "recent_regret_rate": 0.4851880190058641,
+    "recent_disagree_rate": 0.2684394481389507
+  }
+}
