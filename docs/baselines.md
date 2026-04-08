@@ -271,3 +271,257 @@ All written to `--output-dir` (default: `output/`):
 | `summary.json` | `policy_name`, `total_cost`, `total_hits`, `total_misses`, `hit_rate` |
 | `metrics.json` | `prediction_error_eta`, `total_weighted_surprise`, `per_class_surprises` |
 | `per_step_decisions.csv` | `t`, `page_id`, `hit`, `cost`, `evicted` — one row per request |
+
+---
+
+# Baseline 3: TRUST&DOUBT (ICML 2020)
+
+## Paper Citation
+
+> Antoniadis, A., Coester, C., Eliáš, M., Polak, A., & Simon, B. (2020).
+> **Online Metric Algorithms with Untrusted Predictions.**
+> *Proceedings of the 37th International Conference on Machine Learning
+> (ICML 2020).*  arXiv:2003.03033.
+
+---
+
+## Paper-to-Code Implementation Note
+
+### 1. Caching setting handled by TRUST&DOUBT
+
+Standard **unweighted paging**: cache of k pages, all pages have unit size
+and unit fetch cost.  At each time step t, request σ_t arrives together with
+a prediction τ_t — the predicted next time index at which σ_t will be
+requested again (τ_t = ∞ means "never again").  Objective: minimise total
+number of cache misses.
+
+The framework in the paper is general (Metrical Task Systems), but the
+caching specialisation is what is implemented here.
+
+### 2. Role of predictions
+
+Predictions are used exclusively in the **TRUST phase**: the algorithm evicts
+the cached page with the largest `predicted_next` (Follow-The-Prediction /
+Blind Oracle rule).
+
+In the **DOUBT phase**, predictions are ignored; the Marker algorithm governs
+evictions.  However, `predicted_next` is still updated at every request
+(both phases), so the most recent prediction is available immediately when
+the algorithm re-enters the TRUST phase.
+
+### 3. Maintained state variables
+
+| Variable | Description |
+|----------|-------------|
+| `_mode` | Current mode: `"trust"` or `"doubt"` |
+| `_predicted_next[p]` | Most recent `predicted_next` for each page (init: ∞) |
+| `_last_access[p]` | Most recent request time for each page (for LRU tiebreak) |
+| `_trust_budget` | Max faults in current TRUST phase (init: k, doubles each epoch) |
+| `_trust_phase_faults` | Faults in current TRUST phase |
+| `_marked` | Pages marked (requested) since start of current DOUBT phase |
+| `_epoch` | Number of completed DOUBT phases |
+
+### 4. Eviction / update logic
+
+**TRUST phase (FTP rule)**:
+```
+On miss for page p:
+  Evict q* = argmax_{q in cache, q ≠ p} predicted_next[q]
+  _trust_phase_faults += 1
+  If _trust_phase_faults ≥ _trust_budget: switch to DOUBT
+```
+
+**DOUBT phase (Marker rule)**:
+```
+On hit for page p: mark p
+On miss for page p:
+  Let unmarked = {q in cache : q ∉ marked}
+  If unmarked ≠ ∅:
+    Evict q* = LRU page in unmarked (argmin last_access[q])
+    Add p, mark p
+  If unmarked = ∅ (Marker phase complete):
+    End DOUBT → switch to TRUST (epoch += 1, budget *= 2, faults = 0)
+    Evict q* = argmax predicted_next[q]  (FTP rule)
+    Add p; trust_phase_faults += 1
+```
+
+### 5. How TRUST&DOUBT differs from Blind Oracle / Predictive Marker
+
+- **Blind Oracle (FTP)**: always trusts predictions, no robustness mechanism.
+  Can achieve O(n) competitive ratio under adversarial predictions.
+  TRUST&DOUBT adds a budget-limited trust phase and falls back to Marker.
+
+- **Predictive Marker**: uses predictions only to guide *which unmarked page*
+  to evict within a standard Marker phase structure.  The algorithm is always
+  in "Marker mode."  TRUST&DOUBT has a dedicated TRUST phase that uses pure
+  FTP eviction (not Marker marking), providing O(1)-consistency when
+  predictions are good.
+
+### 6. Ambiguities and interpretation choices made
+
+#### INTERPRETATION NOTE A — Trust budget initialisation
+
+**Ambiguity**: The paper does not specify the initial trust budget value.
+
+**Choice**: Use `k` (cache capacity) as the initial budget.
+
+**Rationale**: One Marker phase covers exactly k distinct pages.  Starting
+with budget = k makes the first TRUST phase comparable in length to one
+Marker phase, ensuring balanced switching.
+
+#### INTERPRETATION NOTE B — Trust budget update rule
+
+**Ambiguity**: The exact budget update rule after each DOUBT phase is not
+specified in detail.
+
+**Choice**: Double the trust budget after each DOUBT phase (epoch doubling).
+
+**Rationale**: The doubling scheme ensures that the total cost attributable
+to DOUBT phases is O(log k) times the optimal, even in the worst case.
+In epoch i, budget = k · 2^i.  Total doubt-phase overhead across all epochs
+is geometric: O(k) + O(2k) + O(4k) + ... = O(k · 2^m) for m epochs.
+The trust budget growth bounds how often doubt phases are triggered.
+
+#### INTERPRETATION NOTE C — DOUBT phase termination condition
+
+**Ambiguity**: What exactly constitutes the end of "one Marker phase"?
+
+**Choice**: The DOUBT phase ends when a miss occurs and *all currently
+cached pages* are marked (i.e., every page in cache was requested since the
+doubt phase started).
+
+**Rationale**: This is the standard Marker phase boundary: a new Marker
+phase begins when a miss occurs with all cached pages marked.  We intercept
+this moment and switch to TRUST instead of continuing with Marker.
+
+#### INTERPRETATION NOTE D — Transition step handling
+
+**Ambiguity**: When the DOUBT phase ends mid-miss (all pages marked and a new
+miss arrives), which eviction rule applies to the current miss?
+
+**Choice**: Switch to TRUST and handle the current miss using FTP eviction.
+
+**Rationale**: The current step is the first step of the new TRUST phase.
+Using FTP eviction is consistent with being in TRUST mode.
+
+#### INTERPRETATION NOTE E — Weighted pages
+
+**Ambiguity**: The ICML 2020 paper targets unweighted paging only.
+
+**Choice**: The implementation accepts arbitrary page weights (via the
+existing `Page.weight` field) for generality.  However, the FTP eviction
+rule uses `predicted_next[q]` directly (not normalised by weight), matching
+the unweighted paper.
+
+**Caveat**: Theoretical guarantees (consistency/robustness) apply only to
+unit-weight pages.
+
+### 7. Paper sections / theorems
+
+| Paper element | Code location |
+|---------------|---------------|
+| Caching setting (Section 2) | Setting in module docstring |
+| FTP algorithm (Section 3) | `_handle_trust()`, `_ftp_evict()` |
+| Marker algorithm (background) | `MarkerPolicy`, `_handle_doubt()`, `_marker_evict()` |
+| TRUST&DOUBT (Algorithm 1) | `TrustAndDoubtPolicy` |
+| Consistency guarantee (Theorem 3.3) | Documented in docstrings; not verified in code |
+| Robustness guarantee (Theorem 3.3) | Documented in docstrings; regression test qualitative check |
+| Error measure η (Definition 2.1) | `compute_discrete_eta()` in `metrics/prediction_error.py` |
+
+---
+
+## What Was Implemented
+
+| Module | Description |
+|--------|-------------|
+| `src/lafc/policies/blind_oracle.py` | Blind Oracle (FTP for caching; ICML 2020) |
+| `src/lafc/policies/follow_the_prediction.py` | FTP abstraction (thin alias of BlindOracle) |
+| `src/lafc/policies/marker.py` | Deterministic LRU-Marker (robust sub-routine) |
+| `src/lafc/policies/predictive_marker.py` | Predictive Marker (Lykouris & Vassilvitskii 2018) |
+| `src/lafc/policies/trust_and_doubt.py` | **TRUST&DOUBT** (main algorithm, ICML 2020) |
+| `src/lafc/metrics/prediction_error.py` | `compute_discrete_eta()` — discrete η for ICML 2020 |
+| `data/example_unweighted.json` | Example unit-weight trace |
+| `tests/test_trust_and_doubt.py` | Comprehensive tests (38 test cases) |
+
+---
+
+## Exact Assumptions
+
+1. All pages have **unit size** (one slot in cache).
+2. Predictions `τ_t` are for the **next arrival time** of `σ_t` after time `t`.
+3. The algorithm operates **online** (no lookahead in the trace).
+4. `actual_next` is computed from the full trace offline and used only for
+   evaluation metrics, **never** for eviction decisions.
+5. Theoretical guarantees apply to **unit fetch costs** (unweighted paging).
+
+---
+
+## Deviations from the Paper
+
+1. The paper describes TRUST&DOUBT for general Metrical Task Systems (MTS).
+   This implementation specialises directly to caching without implementing
+   the full MTS framework.
+2. The paper does not specify exact parameter values (initial trust budget,
+   update rule).  See Interpretation Notes A and B above.
+3. The Marker sub-routine is a deterministic LRU variant.  The original
+   Marker algorithm (Fiat et al. 1991) is randomized; the deterministic
+   variant may have slightly different constants in the competitive ratio.
+
+---
+
+## Theorem-Style Properties Not Verified in Code
+
+- **Consistency (Theorem 3.3 / ICML 2020):** TRUST&DOUBT achieves
+  O(1 + η/OPT)-competitive ratio when the error η is small.
+  Not formally verified in code; qualitative regression tests are included.
+
+- **Robustness (Theorem 3.3 / ICML 2020):** TRUST&DOUBT achieves
+  O(log k)-competitive ratio for any request sequence.
+  Not formally verified; tested qualitatively (`test_adversarial_trace_cost_bounded`).
+
+---
+
+## How to Run the Baseline
+
+### Install
+
+```bash
+pip install -e ".[dev]"
+```
+
+### Smoke test
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy   trust_and_doubt \
+    --trace    data/example_unweighted.json \
+    --capacity 3
+```
+
+### Toy experiment: compare all baselines (unweighted trace)
+
+```bash
+for policy in lru marker blind_oracle predictive_marker trust_and_doubt; do
+    echo "=== $policy ==="; \
+    python -m lafc.runner.run_policy \
+        --policy   $policy \
+        --trace    data/example_unweighted.json \
+        --capacity 3; \
+done
+```
+
+### With perfect predictions
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy trust_and_doubt \
+    --trace  data/example_unweighted.json \
+    --capacity 3 \
+    --perfect-predictions
+```
+
+### Run tests
+
+```bash
+pytest tests/ -v
+```

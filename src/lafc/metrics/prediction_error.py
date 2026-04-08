@@ -1,39 +1,32 @@
 """
-Prediction error metrics from the paper.
+Prediction error metrics from the papers.
 
-Reference
----------
+References
+----------
 Bansal, Coester, Kumar, Purohit, Vee.
-"Learning-Augmented Weighted Paging."
-SODA 2022.
+"Learning-Augmented Weighted Paging."  SODA 2022.
 
-Two error measures are implemented:
+Antoniadis, Coester, Eliáš, Polak, Simon.
+"Online Metric Algorithms with Untrusted Predictions."  ICML 2020.
 
-1.  **η (eta)** — weighted absolute error (Definition in the paper):
+Three error measures are implemented:
+
+1.  **η (eta)** — weighted absolute error (SODA 2022 paper):
 
         η = Σ_t  w_{σ_t} · |τ_t − a_t|
 
-    where τ_t is the predicted next arrival and a_t is the actual next
-    arrival of page σ_t at time t.
+    For unweighted paging (all w = 1), this reduces to the sum of absolute
+    time-differences between predicted and actual next arrivals.
 
-    Handling of infinities:
-    - Both τ_t = a_t = ∞ → contribution is 0 (both agree "never again").
-    - Only one is ∞         → contribution is ∞ (maximum disagreement).
+2.  **η_discrete** — discrete prediction error (ICML 2020 paper):
 
-2.  **Weighted surprises** — per-weight-class inversion count.
+        η_discrete = |{t : τ_t ≠ a_t}|
 
-    INTERPRETATION NOTE: The paper's "ε-like" weighted surprise metric
-    is described informally in terms of inversions within weight classes.
-    Our implementation counts, for each request t in weight class W_i,
-    whether the prediction τ_t disagrees with the actual a_t (τ_t ≠ a_t).
-    The per-class weighted surprise is:
-        weighted_surprise_i = w_i × (number of disagreements in class i)
-    Total weighted surprise = Σ_i weighted_surprise_i.
+    Counts the number of requests where the prediction is simply wrong.
+    This is the primary error measure used by TRUST&DOUBT.
 
-    A stricter inversion-based count (tracking permutation inversions in
-    the τ ordering vs. the a ordering within each class) would be closer
-    to the paper's formal definition but requires O(T²) comparisons per
-    class and is beyond the scope of this baseline.
+3.  **Weighted surprises** — per-weight-class inversion count (SODA 2022).
+    See :func:`compute_weighted_surprises` for details.
 """
 
 from __future__ import annotations
@@ -146,3 +139,42 @@ def compute_weighted_surprises(
         "total_surprises": total_surprises,
         "total_weighted_surprise": total_weighted,
     }
+
+
+def compute_discrete_eta(requests: List[Request]) -> int:
+    """Compute the discrete prediction error η for the ICML 2020 paper.
+
+    The discrete error counts the number of requests at which the prediction
+    is *incorrect*:
+
+        η_discrete = |{t : τ_t ≠ a_t}|
+
+    This is the primary error measure relevant to the TRUST&DOUBT algorithm
+    (Antoniadis, Coester, Eliáš, Polak, Simon, ICML 2020) in the unweighted
+    caching setting.
+
+    Handling of infinities:
+    - τ_t = a_t = ∞ → no error (both agree "never requested again").
+    - Only one of τ_t, a_t is ∞ → error (they disagree).
+
+    Parameters
+    ----------
+    requests:
+        Trace with ``predicted_next`` and ``actual_next`` filled in.
+
+    Returns
+    -------
+    int
+        Number of requests with incorrect predictions.
+    """
+    count = 0
+    for req in requests:
+        tau = req.predicted_next
+        a = req.actual_next
+        if math.isinf(tau) and math.isinf(a):
+            pass  # both ∞: agree, no error
+        elif math.isinf(tau) or math.isinf(a):
+            count += 1  # one-sided ∞: disagree
+        elif tau != a:
+            count += 1
+    return count

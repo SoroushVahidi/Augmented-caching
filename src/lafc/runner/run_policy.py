@@ -25,8 +25,13 @@ from lafc.metrics.cost import hit_rate, total_fetch_cost, total_hits, total_miss
 from lafc.metrics.prediction_error import compute_eta, compute_weighted_surprises
 from lafc.policies.advice_trusting import AdviceTrustingPolicy
 from lafc.policies.base import BasePolicy
+from lafc.policies.blind_oracle import BlindOraclePolicy
+from lafc.policies.follow_the_prediction import FollowThePredictionPolicy
 from lafc.policies.la_weighted_paging_deterministic import LAWeightedPagingDeterministic
 from lafc.policies.lru import LRUPolicy
+from lafc.policies.marker import MarkerPolicy
+from lafc.policies.predictive_marker import PredictiveMarkerPolicy
+from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
 from lafc.simulator.request_trace import load_trace
 from lafc.types import Page, PageId, Request, SimulationResult
@@ -41,6 +46,11 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "lru": LRUPolicy(),
     "weighted_lru": WeightedLRUPolicy(),
     "advice_trusting": AdviceTrustingPolicy(),
+    "blind_oracle": BlindOraclePolicy(),
+    "follow_the_prediction": FollowThePredictionPolicy(),
+    "marker": MarkerPolicy(),
+    "predictive_marker": PredictiveMarkerPolicy(),
+    "trust_and_doubt": TrustAndDoubtPolicy(),
     "la_det": LAWeightedPagingDeterministic(),
 }
 
