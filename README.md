@@ -26,6 +26,13 @@ Implementation of:
 > **"Online Metric Algorithms with Untrusted Predictions"**.
 > ICML 2020.
 
+## Experimental Framework — `atlas_v1` (Confidence-Aware, First Version)
+
+This repository also includes an **experimental** framework policy, `atlas_v1`,
+for unweighted paging with bucketed predictions and optional confidence scores.
+It blends prediction-driven eviction with LRU fallback and is intended for
+empirical study only (no theorem guarantee is claimed yet).
+
 ---
 
 ## Installation
@@ -88,6 +95,19 @@ For TRUST&DOUBT, provide either:
 
 CSV format requires `page_id` and optional `predicted_next`, `predicted_cache` (pipe-separated pages).
 
+For `atlas_v1`, the preferred optional JSON extension is:
+
+```json
+{
+  "requests": ["A", "B", "C"],
+  "prediction_records": [
+    {"bucket": 0, "confidence": 0.9},
+    {"bucket": 2, "confidence": 0.4},
+    {"bucket": 3}
+  ]
+}
+```
+
 ---
 
 ## Available Policies
@@ -102,6 +122,7 @@ CSV format requires `page_id` and optional `predicted_next`, `predicted_cache` (
 | `blind_oracle`       | 2        | Blind Oracle: evict argmax predicted next-arrival  |
 | `predictive_marker`  | 2        | Predictive Marker (Lykouris & Vassilvitskii 2018)  |
 | `trust_and_doubt`   | 3        | TRUST&DOUBT (Antoniadis et al. 2020)               |
+| `atlas_v1`          | Exp      | Experimental confidence-aware policy with LRU fallback |
 
 ---
 
@@ -146,6 +167,17 @@ for policy in marker blind_oracle predictive_marker; do
         --trace    data/example_unweighted.json \
         --capacity 3
 done
+```
+
+### Smoke test (`atlas_v1`, experimental)
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy atlas_v1 \
+    --trace data/example_atlas_v1.json \
+    --capacity 3 \
+    --default-confidence 0.5 \
+    --bucket-source trace
 ```
 
 ---

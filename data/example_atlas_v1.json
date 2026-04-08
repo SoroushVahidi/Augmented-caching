@@ -1,0 +1,15 @@
+{
+  "requests": ["A", "B", "C", "A", "D", "B", "E", "A", "C", "B"],
+  "prediction_records": [
+    {"bucket": 0, "confidence": 0.9},
+    {"bucket": 1, "confidence": 0.7},
+    {"bucket": 3, "confidence": 0.8},
+    {"bucket": 0, "confidence": 0.9},
+    {"bucket": 3, "confidence": 0.6},
+    {"bucket": 2, "confidence": 0.5},
+    {"bucket": 3, "confidence": 0.4},
+    {"bucket": 1, "confidence": 0.8},
+    {"bucket": 2, "confidence": 0.6},
+    {"bucket": 3, "confidence": 0.6}
+  ]
+}
