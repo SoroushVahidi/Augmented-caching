@@ -530,3 +530,306 @@ All written to `--output-dir` (default: `output/`):
 | `summary.json` | `policy_name`, `total_cost`, `total_hits`, `total_misses`, `hit_rate` |
 | `metrics.json` | `prediction_error_eta`, `eta_unweighted`, `num_clean_phases`, `num_dirty_phases`, `num_clean_chains`, `total_clean_evictions`, `total_dirty_evictions` |
 | `per_step_decisions.csv` | `t`, `page_id`, `hit`, `cost`, `evicted`, `phase` — one row per request |
+
+---
+
+# Baseline 4: BlindOracle + LRU Combiner (Wei 2020)
+
+## Paper Citation
+
+> Alexander Wei.
+> **"Better and Simpler Learning-Augmented Online Caching."**
+> *Approximation, Randomization, and Combinatorial Optimization.
+> Algorithms and Techniques (APPROX/RANDOM 2020).*
+> LIPIcs, Vol. 176, Article 60.
+
+No public code release exists for this paper.  This implementation is
+reconstructed from the paper itself.
+
+---
+
+## PAPER-TO-CODE IMPLEMENTATION NOTE (STEP 0)
+
+### 1. Exact learning-augmented paging model (Wei 2020)
+
+Standard paging (unweighted caching):
+- Cache capacity **k** (unit-size pages).
+- **All misses have unit cost** (cost = 1, regardless of page identity).
+- Request sequence σ_1, σ_2, ..., σ_T.
+- At time t the algorithm observes σ_t and a prediction τ_t (predicted
+  next arrival time of σ_t after t).  τ_t = ∞ means "never again."
+- Objective: minimise total cache misses.
+
+This is the **unweighted** paging setting.  Do NOT generalise to
+weighted paging; the guarantees are specific to unit costs.
+
+### 2. Exact definition of BlindOracle (Wei 2020)
+
+BlindOracle fully trusts the predictor:
+> On a cache miss when the cache is full, evict the cached page whose
+> *predicted* next arrival τ_q is largest (farthest in the future).
+
+This is equivalent to Belady's algorithm using predicted arrivals in
+place of actual arrivals.  See `src/lafc/policies/blind_oracle.py`.
+
+### 3. Exact error metric η (Wei 2020)
+
+    η = Σ_t |τ_t − a_t|
+
+where τ_t is the predicted next arrival and a_t is the actual next
+arrival of σ_t at time t.  Both being ∞ contributes 0; one finite and
+one infinite contributes ∞.
+
+### 4. Deterministic black-box combination idea (Wei 2020)
+
+Wei 2020 (Section 3, Theorem 1) proves a deterministic online combiner
+achieves competitive ratio bounded by the minimum of:
+- BlindOracle's competitive ratio (roughly O(η + k)), and
+- LRU's competitive ratio (O(k)).
+
+The paper's key algorithmic claim (paraphrased):
+> "The optimal deterministic strategy is especially simple: for each
+> eviction, follow whichever of BlindOracle and LRU has performed better
+> so far."
+
+### 5. "Follow whichever has performed better" → code
+
+At each request t:
+1. Read shadow miss counts from times 0 .. t−1 (before processing t).
+2. If `shadow_bo.misses ≤ shadow_lru.misses`: apply BlindOracle eviction
+   rule to the combiner's own cache.  Else: apply LRU eviction rule.
+3. Process request t through BOTH shadow algorithms (update their states).
+
+"Apply rule X to the combiner's own cache" means:
+- **BlindOracle rule**: evict `argmax_{q ∈ combiner_cache} predicted_next[q]`
+  using the combiner's own `predicted_next` dict.
+- **LRU rule**: evict the least-recently-used page from the combiner's
+  cache using the combiner's own recency order.
+
+### 6. Hidden assumptions for the combiner
+
+- The combiner's cache state is **independent** of both shadow caches.
+- Shadows inform only the eviction rule choice; the combiner's cache
+  may diverge from both shadows.
+- "Performing better" = fewer cumulative cache misses.
+- Both shadows run on every request (hits included).
+
+### 7. Randomized Equitable-based combination (Wei 2020)
+
+Wei 2020 (Section 4) also describes a randomized combiner using an
+H_k-competitive algorithm (e.g. Equitable) in place of LRU.  This is
+**scaffolded** but not implemented.  See files below.
+
+---
+
+## What Was Implemented
+
+| Module | Description |
+|--------|-------------|
+| `src/lafc/policies/blind_oracle_lru_combiner.py` | **Core algorithm** — deterministic combiner (Wei 2020) |
+| `src/lafc/policies/offline_belady.py` | Offline Belady OPT oracle (evaluation only, uses `actual_next`) |
+| `src/lafc/policies/equitable.py` | Equitable algorithm — scaffold with TODO markers |
+| `src/lafc/policies/blind_oracle_randomized_combiner.py` | Randomized combiner — scaffold with TODO markers |
+| `tests/test_baseline4.py` | 30 tests: correctness, online property, η, noisy predictions |
+
+**Also updated:**
+- `src/lafc/runner/run_policy.py`: added `blind_oracle_lru_combiner` and
+  `offline_belady` to the policy registry; added `--noise-sigma` CLI flag;
+  added `combiner_decisions.csv` output; added combiner diagnostics to
+  `metrics.json`.
+- `src/lafc/policies/__init__.py`: exports new policy classes.
+
+---
+
+## Algorithm Details
+
+### BlindOracle + LRU Combiner Pseudocode
+
+```
+State:
+    shadow_bo          — independent BlindOracle shadow instance
+    shadow_lru         — independent LRU shadow instance
+    combiner_cache     — the combiner's own cache (capacity k)
+    predicted_next[p]  — combiner's predicted next arrival for page p
+    lru_order          — combiner's recency order (for LRU eviction rule)
+
+On request t for page σ_t with prediction τ_t:
+    predicted_next[σ_t] ← τ_t
+
+    if σ_t ∈ combiner_cache:
+        update lru_order (move σ_t to most-recent end)
+        shadow_bo.on_request(t, σ_t, τ_t)
+        shadow_lru.on_request(t, σ_t, τ_t)
+        return HIT
+
+    // Cache miss — unit cost.
+    pay 1
+
+    if |combiner_cache| = k:
+        if shadow_bo.misses ≤ shadow_lru.misses:
+            victim ← argmax_{q ∈ combiner_cache} predicted_next[q]   // BO rule
+        else:
+            victim ← least-recently-used page in lru_order            // LRU rule
+        remove victim from combiner_cache and lru_order
+
+    add σ_t to combiner_cache and lru_order (most-recent end)
+    shadow_bo.on_request(t, σ_t, τ_t)
+    shadow_lru.on_request(t, σ_t, τ_t)
+    return MISS, evicted=victim
+```
+
+---
+
+## Interpretation Notes
+
+### INTERPRETATION NOTE 1 — "performed better" definition
+
+"Performed better so far" is interpreted as "has incurred fewer cache
+misses so far" among the two INDEPENDENT shadow algorithms.  Shadow miss
+counts are compared *before* processing the current request (so the
+decision at time t is based on information from times 0 .. t−1 only).
+
+### INTERPRETATION NOTE 2 — independent shadow caches
+
+Both shadows maintain their own independent cache states.  The combiner's
+cache is a third, independent cache.  The shadows are run on every request
+(including hits) to keep their miss counts up-to-date.
+
+### INTERPRETATION NOTE 3 — eviction rules applied to combiner's cache
+
+"Follow BlindOracle" means applying the BlindOracle eviction rule to the
+combiner's own cache — not adopting the BlindOracle shadow's cache state.
+Likewise for LRU.  This avoids state-teleportation issues.
+
+### INTERPRETATION NOTE 4 — tie-breaking
+
+When `shadow_bo.misses == shadow_lru.misses`, the combiner favours
+BlindOracle.  This is arbitrary but deterministic and reproducible.
+
+### INTERPRETATION NOTE 5 — shadow update timing
+
+Shadows are updated AFTER the combiner's eviction decision.  This ensures
+that the comparison at time t uses shadow costs from times 0 .. t−1 only.
+
+---
+
+## Exact Assumptions (Baseline 4)
+
+1. All pages have unit size and unit miss cost.  Page weights in the trace
+   are ignored by the combiner and all Baseline 4 policies.
+2. Predictions τ_t are for the **next arrival time** of σ_t after time t.
+3. The algorithm uses only the most recently received prediction for each
+   page (stored from the last time that page was requested).
+4. `actual_next` is computed offline and used ONLY for:
+   - η metric computation,
+   - OfflineBeladyPolicy eviction decisions (offline oracle, evaluation only).
+   It is NEVER used for online eviction decisions in BlindOracleLRUCombiner.
+
+---
+
+## Deviations from the Paper
+
+1. The paper does not state whether shadows share state with the combiner
+   or run independently.  We chose independent shadows (Interpretation Note 2).
+2. The exact probability schedule for the randomized combiner (Section 4)
+   is not implemented.  See scaffold files.
+3. Tie-breaking when shadow costs are equal: see Interpretation Note 4.
+
+---
+
+## Theorem-Style Properties Not Verified in Code
+
+- **Theorem 1 (Wei 2020):** The deterministic combiner is O(1)-consistent
+  and O(k)-robust.  Specifically, its fault count is bounded by
+      min(OPT + η, k · OPT) + O(k).
+  This competitive-ratio bound is not formally verified in the test suite.
+
+- **Theorem 2 (Wei 2020):** The randomized combiner achieves
+      E[faults] = O(min(OPT + η, H_k · OPT)).
+  Not implemented (see scaffold).
+
+---
+
+## Randomized Algorithm Status
+
+**SCAFFOLDED — NOT IMPLEMENTED.**
+
+- `src/lafc/policies/equitable.py`: skeleton for H_k-competitive Equitable.
+- `src/lafc/policies/blind_oracle_randomized_combiner.py`: skeleton for
+  the randomized combination from Wei 2020, Section 4.
+
+Both files contain detailed TODO markers explaining what is needed for a
+faithful implementation.
+
+---
+
+## How to Run Baseline 4
+
+### Install
+
+```bash
+pip install -e ".[dev]"
+```
+
+### Smoke test (combiner on unweighted trace)
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy   blind_oracle_lru_combiner \
+    --trace    data/example_unweighted.json \
+    --capacity 3 \
+    --output-dir output/
+```
+
+### Toy experiment: compare Baseline 4 policies
+
+```bash
+for policy in lru blind_oracle blind_oracle_lru_combiner offline_belady; do
+    echo "=== $policy ===" && \
+    python -m lafc.runner.run_policy \
+        --policy   $policy \
+        --trace    data/example_unweighted.json \
+        --capacity 3; \
+done
+```
+
+### With perfect predictions (oracle)
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy   blind_oracle_lru_combiner \
+    --trace    data/example_unweighted.json \
+    --capacity 3 \
+    --perfect-predictions
+```
+
+### With noisy predictions
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy           blind_oracle_lru_combiner \
+    --trace            data/example_unweighted.json \
+    --capacity         3 \
+    --perfect-predictions \
+    --noise-sigma      2.0
+```
+
+### Run tests
+
+```bash
+pytest tests/test_baseline4.py -v
+pytest tests/ -v   # all tests
+```
+
+---
+
+## Output Files (Baseline 4)
+
+All written to `--output-dir` (default: `output/`):
+
+| File | Contents |
+|------|----------|
+| `summary.json` | `policy_name`, `total_cost`, `total_hits`, `total_misses`, `hit_rate` |
+| `metrics.json` | `prediction_error_eta`, `eta_unweighted`, `shadow_bo_total_misses`, `shadow_lru_total_misses` |
+| `per_step_decisions.csv` | `t`, `page_id`, `hit`, `cost`, `evicted` — one row per request |
+| `combiner_decisions.csv` | `t`, `page_id`, `hit`, `evicted`, `chosen`, `bo_misses_before`, `lru_misses_before` — combiner only |
