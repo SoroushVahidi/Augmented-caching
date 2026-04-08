@@ -15,6 +15,8 @@ from lafc.policies.marker import MarkerPolicy
 from lafc.policies.atlas_v1 import AtlasV1Policy
 from lafc.policies.atlas_v2 import AtlasV2Policy
 from lafc.policies.atlas_v3 import AtlasV3Policy
+from lafc.policies.atlas_cga_v1 import AtlasCGAV1Policy
+from lafc.policies.atlas_cga_v2 import AtlasCGAV2Policy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
@@ -33,6 +35,8 @@ __all__ = [
     "AtlasV1Policy",
     "AtlasV2Policy",
     "AtlasV3Policy",
+    "AtlasCGAV1Policy",
+    "AtlasCGAV2Policy",
     # Baseline 4 (Wei 2020)
     "BlindOracleLRUCombiner",
     "OfflineBeladyPolicy",

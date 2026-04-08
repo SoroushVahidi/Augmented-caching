@@ -2,10 +2,12 @@
 
 ## Status
 
-This framework is **experimental** and currently implements three framework policies:
+This framework is **experimental** and currently implements five framework policies:
 - `atlas_v1` (first version),
 - `atlas_v2` (confidence-aware, dynamically trust-adaptive iteration),
-- `atlas_v3` (confidence-aware local-trust iteration; first CCLT version).
+- `atlas_v3` (confidence-aware local-trust iteration; first CCLT version),
+- `atlas_cga_v1` (confidence-aware local-trust + online calibration-guided scaling),
+- `atlas_cga_v2` (hierarchical/context-sharing calibration refinement of CGA).
 It is intended for empirical comparisons against existing baselines in this repository.
 
 **Important:** this implementation does **not** claim a proved theorem or competitive guarantee.
@@ -157,9 +159,13 @@ When combined scores are tied (or nearly tied), tie-break is deterministic:
 
 ## Experimental honesty notes
 
-- `atlas_v1`, `atlas_v2`, and `atlas_v3` are all **experimental**.
+- `atlas_v1`, `atlas_v2`, `atlas_v3`, `atlas_cga_v1`, and `atlas_cga_v2` are all **experimental**.
 - `atlas_v2` is **confidence-aware** and **dynamically trust-adaptive**.
 - `atlas_v3` is **confidence-aware**, **local-trust**, and context-adaptive.
+- `atlas_cga_v1` is **experimental**, **calibration-guided**, **confidence-aware**, and
+  built directly on the local-trust framework from `atlas_v3`.
+- `atlas_cga_v2` is **experimental**, **hierarchical calibration/context-sharing**, and
+  still built on the same local-trust score family.
 - Neither variant is presented as theoretically proven in this repository.
 
 ---
@@ -212,3 +218,106 @@ T[ctx] <- clip(T[ctx] - eta_neg * confidence, 0, 1)   (bad)
 ```
 
 with `eta_neg >= eta_pos`.
+
+---
+
+## ATLAS CGA v1 (experimental calibration-guided local trust)
+
+`atlas_cga_v1` keeps `atlas_v3`'s context-local trust table and score family, and adds
+an online calibration layer for safe-to-evict probabilities.
+
+Context:
+
+```text
+B(i,t) = (bucket_i, confidence_bin_i)   (same context family as atlas_v3)
+```
+
+Calibration event:
+
+```text
+T = 1  iff evicted page does NOT return within next H requests
+T = 0  otherwise
+```
+
+`H` is controlled by `bucket_horizon` and `--atlas-safe-horizon-mode`.
+
+Per-context online statistics:
+
+```text
+n_B = number of resolved calibration outcomes
+s_B = number of safe outcomes (T=1)
+```
+
+Smoothed calibration estimate and shrinkage:
+
+```text
+posterior_B = (s_B + a) / (n_B + a + b)
+w_B         = n_B / (n_B + m), with extra downweighting below min-support
+pcal_B      = w_B * posterior_B + (1 - w_B) * prior
+prior       = a / (a + b)
+```
+
+Predictor influence and blended score:
+
+```text
+lambda_{i,t} = tau_{B(i,t)} * pcal_{B(i,t)}
+Score_t(i)   = lambda_{i,t} * PredScore_t(i)
+             + (1 - lambda_{i,t}) * BaseScore_t(i)
+```
+
+Local trust updates keep atlas_v3's good/bad logic, but update magnitude uses
+the calibrated signal (not raw confidence).
+
+---
+
+## ATLAS CGA v2 (experimental hierarchical context-sharing calibration)
+
+`atlas_cga_v2` keeps all CGA-v1 mechanics (safe-event definition, local trust, score blend)
+but replaces context-isolated calibration with hierarchical sharing.
+
+Hierarchy levels:
+
+```text
+L0: global
+L1: bucket-only and confidence-bin-only
+L2: full context (bucket, confidence_bin)
+```
+
+Each level uses Beta-smoothed posterior:
+
+```text
+p = (s + a) / (n + a + b)
+```
+
+Support-aware weight rule (`normalized_support`):
+
+```text
+alpha(n) = n / (n + m), additionally scaled by n/min_support when n < min_support
+
+a_ctx    = alpha(n_ctx)
+a_bucket = alpha(n_bucket)
+a_conf   = alpha(n_conf)
+norm_mass = min(1, a_ctx + a_bucket + a_conf)
+
+w_ctx    = norm_mass * a_ctx    / (a_ctx + a_bucket + a_conf)
+w_bucket = norm_mass * a_bucket / (a_ctx + a_bucket + a_conf)
+w_conf   = norm_mass * a_conf   / (a_ctx + a_bucket + a_conf)
+w_global = 1 - norm_mass
+```
+
+Shared calibration probability:
+
+```text
+pcal_shared(B) = w_ctx * p_ctx(B)
+               + w_bucket * p_bucket(b)
+               + w_conf * p_conf(cbin)
+               + w_global * p_global
+```
+
+Predictor influence remains:
+
+```text
+lambda_{i,t} = tau_{B(i,t)} * pcal_shared(B(i,t))
+Score_t(i)   = lambda_{i,t} * PredScore_t(i)
+             + (1 - lambda_{i,t}) * BaseScore_t(i)
+```
