@@ -361,3 +361,8 @@ Typical workflow:
 1. `python scripts/build_evict_value_dataset_v1.py --max-rows 200000`
 2. `python scripts/train_evict_value_v1.py --horizon 8`
 3. `python scripts/run_evict_value_v1_first_check.py`
+
+Wulver phase-1 dataset pipeline (large reusable candidate shards + split summaries):
+1. `python scripts/build_evict_value_dataset_wulver_v1.py --trace-glob "data/processed/*/trace.jsonl" --capacities "64,128,256" --horizons "8,16,32"`
+2. `python scripts/summarize_evict_value_wulver_splits.py --manifest data/derived/evict_value_v1_wulver/manifest.json`
+3. For cluster submission/runbook: `docs/evict_value_v1_wulver_runbook.md`

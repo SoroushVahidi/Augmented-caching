@@ -13,3 +13,13 @@ output/
 !/data/raw/wiki2018/INSTRUCTIONS.md
 /data/processed/**
 !.gitkeep
+
+# Large derived artifacts (Wulver runs)
+/data/derived/evict_value_v1_wulver*/
+/data/derived/evict_value_v1_wulver_array*/
+
+# Trained model artifacts
+/models/*.pkl
+
+# Slurm job logs
+slurm/logs/

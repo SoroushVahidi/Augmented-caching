@@ -1,0 +1,4 @@
+{
+  "files": ["kvcache_traces_1_head.csv"],
+  "note": "Point files[] at local MetaKV oracle-style CSV shards listed under data/raw/metakv/."
+}

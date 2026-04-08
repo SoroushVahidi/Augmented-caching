@@ -1,0 +1,244 @@
+{
+  "manifest": "data/derived/evict_value_v1_wulver_multi/manifest.json",
+  "horizons": {
+    "4": {
+      "ridge": {
+        "val": {
+          "mae": 2.505423548423677,
+          "rmse": 2.50542720487294,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.4690831556503198,
+          "mean_regret_vs_oracle": 0.0,
+          "per_family_val": {
+            "wiki2018": {
+              "mae": 2.505423548423677,
+              "rmse": 2.50542720487294,
+              "decision_count": 469.0,
+              "top1_eviction_match": 0.4690831556503198,
+              "mean_regret_vs_oracle": 0.0
+            }
+          }
+        },
+        "test": {
+          "mae": 2.505423548423677,
+          "rmse": 2.50542720487294,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.4690831556503198,
+          "mean_regret_vs_oracle": 0.0
+        }
+      },
+      "random_forest": {
+        "val": {
+          "mae": 2.481094082484887,
+          "rmse": 2.488394445229494,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.9509594882729211,
+          "mean_regret_vs_oracle": 0.0,
+          "per_family_val": {
+            "wiki2018": {
+              "mae": 2.481094082484887,
+              "rmse": 2.488394445229494,
+              "decision_count": 469.0,
+              "top1_eviction_match": 0.9509594882729211,
+              "mean_regret_vs_oracle": 0.0
+            }
+          }
+        },
+        "test": {
+          "mae": 2.481094082484887,
+          "rmse": 2.488394445229494,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.9509594882729211,
+          "mean_regret_vs_oracle": 0.0
+        }
+      },
+      "hist_gb": {
+        "val": {
+          "mae": 2.407717378615806,
+          "rmse": 2.409253497239477,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.008528784648187633,
+          "mean_regret_vs_oracle": 0.0,
+          "per_family_val": {
+            "wiki2018": {
+              "mae": 2.407717378615806,
+              "rmse": 2.409253497239477,
+              "decision_count": 469.0,
+              "top1_eviction_match": 0.008528784648187633,
+              "mean_regret_vs_oracle": 0.0
+            }
+          }
+        },
+        "test": {
+          "mae": 2.407717378615806,
+          "rmse": 2.409253497239477,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.008528784648187633,
+          "mean_regret_vs_oracle": 0.0
+        }
+      },
+      "winner_by_val_mean_regret": "ridge"
+    },
+    "8": {
+      "ridge": {
+        "val": {
+          "mae": 5.130634075618031,
+          "rmse": 5.130647220449176,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.4690831556503198,
+          "mean_regret_vs_oracle": 0.0,
+          "per_family_val": {
+            "wiki2018": {
+              "mae": 5.130634075618031,
+              "rmse": 5.130647220449176,
+              "decision_count": 469.0,
+              "top1_eviction_match": 0.4690831556503198,
+              "mean_regret_vs_oracle": 0.0
+            }
+          }
+        },
+        "test": {
+          "mae": 5.130634075618031,
+          "rmse": 5.130647220449176,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.4690831556503198,
+          "mean_regret_vs_oracle": 0.0
+        }
+      },
+      "random_forest": {
+        "val": {
+          "mae": 4.944617039997218,
+          "rmse": 4.953222845319643,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.9509594882729211,
+          "mean_regret_vs_oracle": 0.0,
+          "per_family_val": {
+            "wiki2018": {
+              "mae": 4.944617039997218,
+              "rmse": 4.953222845319643,
+              "decision_count": 469.0,
+              "top1_eviction_match": 0.9509594882729211,
+              "mean_regret_vs_oracle": 0.0
+            }
+          }
+        },
+        "test": {
+          "mae": 4.944617039997218,
+          "rmse": 4.953222845319643,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.9509594882729211,
+          "mean_regret_vs_oracle": 0.0
+        }
+      },
+      "hist_gb": {
+        "val": {
+          "mae": 4.896123074868242,
+          "rmse": 4.899432229899725,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.01279317697228145,
+          "mean_regret_vs_oracle": 0.0,
+          "per_family_val": {
+            "wiki2018": {
+              "mae": 4.896123074868242,
+              "rmse": 4.899432229899725,
+              "decision_count": 469.0,
+              "top1_eviction_match": 0.01279317697228145,
+              "mean_regret_vs_oracle": 0.0
+            }
+          }
+        },
+        "test": {
+          "mae": 4.896123074868242,
+          "rmse": 4.899432229899725,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.01279317697228145,
+          "mean_regret_vs_oracle": 0.0
+        }
+      },
+      "winner_by_val_mean_regret": "ridge"
+    },
+    "16": {
+      "ridge": {
+        "val": {
+          "mae": 10.611053860189138,
+          "rmse": 10.611093079591125,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.4690831556503198,
+          "mean_regret_vs_oracle": 0.0,
+          "per_family_val": {
+            "wiki2018": {
+              "mae": 10.611053860189138,
+              "rmse": 10.611093079591125,
+              "decision_count": 469.0,
+              "top1_eviction_match": 0.4690831556503198,
+              "mean_regret_vs_oracle": 0.0
+            }
+          }
+        },
+        "test": {
+          "mae": 10.611053860189138,
+          "rmse": 10.611093079591125,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.4690831556503198,
+          "mean_regret_vs_oracle": 0.0
+        }
+      },
+      "random_forest": {
+        "val": {
+          "mae": 10.004001134321339,
+          "rmse": 10.016503026981386,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.0021321961620469083,
+          "mean_regret_vs_oracle": 0.0,
+          "per_family_val": {
+            "wiki2018": {
+              "mae": 10.004001134321339,
+              "rmse": 10.016503026981386,
+              "decision_count": 469.0,
+              "top1_eviction_match": 0.0021321961620469083,
+              "mean_regret_vs_oracle": 0.0
+            }
+          }
+        },
+        "test": {
+          "mae": 10.004001134321339,
+          "rmse": 10.016503026981386,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.0021321961620469083,
+          "mean_regret_vs_oracle": 0.0
+        }
+      },
+      "hist_gb": {
+        "val": {
+          "mae": 9.791759156497427,
+          "rmse": 9.803085672400892,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.0042643923240938165,
+          "mean_regret_vs_oracle": 0.0,
+          "per_family_val": {
+            "wiki2018": {
+              "mae": 9.791759156497427,
+              "rmse": 9.803085672400892,
+              "decision_count": 469.0,
+              "top1_eviction_match": 0.0042643923240938165,
+              "mean_regret_vs_oracle": 0.0
+            }
+          }
+        },
+        "test": {
+          "mae": 9.791759156497427,
+          "rmse": 9.803085672400892,
+          "decision_count": 469.0,
+          "top1_eviction_match": 0.0042643923240938165,
+          "mean_regret_vs_oracle": 0.0
+        }
+      },
+      "winner_by_val_mean_regret": "ridge"
+    }
+  },
+  "best_overall": {
+    "horizon": 4,
+    "model": "ridge",
+    "val_mean_regret": 0.0
+  }
+}

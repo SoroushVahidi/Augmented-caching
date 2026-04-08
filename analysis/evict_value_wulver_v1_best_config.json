@@ -1,0 +1,6 @@
+{
+  "horizon": 4,
+  "model": "ridge",
+  "model_path": "models/evict_value_wulver_v1_best.pkl",
+  "selection_rule": "minimize validation mean_regret_vs_oracle across (horizon, model)"
+}

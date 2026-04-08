@@ -78,6 +78,8 @@ python scripts/datasets/prepare_all.py --dataset spec_cpu2006
 python scripts/datasets/prepare_all.py --dataset wiki2018
 ```
 
+For a reproducible **public** trace without manual licensing steps, see `docs/datasets_wulver_trace_acquisition.md` (Wikimedia pageviews → `object_id` CSV).
+
 ---
 
 ## New public production-grade datasets
