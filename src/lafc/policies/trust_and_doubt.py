@@ -285,13 +285,14 @@ class TrustAndDoubtPolicy(BasePolicy):
 
         On a hit: mark the page.
         On a miss with unmarked pages: Marker eviction (LRU among unmarked).
-        On a miss with all pages marked: DOUBT phase complete → switch to
-        TRUST and handle this miss with FTP eviction.
+        On a miss when the cache is full and all cached pages are marked:
+        DOUBT phase complete → switch to TRUST and handle this miss with FTP
+        eviction.
 
-        INTERPRETATION NOTE C: The DOUBT phase ends when a miss occurs and
-        all currently cached pages are marked, i.e., every page currently in
-        cache has been requested at least once since the DOUBT phase started.
-        This is the standard Marker phase boundary condition.
+        INTERPRETATION NOTE C: The DOUBT phase ends when a miss occurs, the
+        cache is full, and all cached pages are marked, i.e., there are no
+        unmarked cached pages available for Marker eviction. This matches the
+        standard Marker phase boundary condition for a full cache.
 
         INTERPRETATION NOTE D: When the transition occurs mid-miss, we switch
         to TRUST and handle the current miss in TRUST mode (FTP eviction) so
