@@ -1,13 +1,14 @@
-# Experimental Framework: Confidence-Aware Learning-Augmented Caching
+# Experimental Framework: Learning-Augmented Caching (Calibration + Selective Trust)
 
 ## Status
 
-This framework is **experimental** and currently implements five framework policies:
+This framework is **experimental** and currently implements six framework policies:
 - `atlas_v1` (first version),
 - `atlas_v2` (confidence-aware, dynamically trust-adaptive iteration),
 - `atlas_v3` (confidence-aware local-trust iteration; first CCLT version),
 - `atlas_cga_v1` (confidence-aware local-trust + online calibration-guided scaling),
-- `atlas_cga_v2` (hierarchical/context-sharing calibration refinement of CGA).
+- `atlas_cga_v2` (hierarchical/context-sharing calibration refinement of CGA),
+- `rest_v1` (ReST selective-trust/abstention pivot with regret-like context updates).
 It is intended for empirical comparisons against existing baselines in this repository.
 
 **Important:** this implementation does **not** claim a proved theorem or competitive guarantee.
@@ -159,13 +160,15 @@ When combined scores are tied (or nearly tied), tie-break is deterministic:
 
 ## Experimental honesty notes
 
-- `atlas_v1`, `atlas_v2`, `atlas_v3`, `atlas_cga_v1`, and `atlas_cga_v2` are all **experimental**.
+- `atlas_v1`, `atlas_v2`, `atlas_v3`, `atlas_cga_v1`, `atlas_cga_v2`, and `rest_v1` are all **experimental**.
 - `atlas_v2` is **confidence-aware** and **dynamically trust-adaptive**.
 - `atlas_v3` is **confidence-aware**, **local-trust**, and context-adaptive.
 - `atlas_cga_v1` is **experimental**, **calibration-guided**, **confidence-aware**, and
   built directly on the local-trust framework from `atlas_v3`.
 - `atlas_cga_v2` is **experimental**, **hierarchical calibration/context-sharing**, and
   still built on the same local-trust score family.
+- `rest_v1` is **experimental**, **selective-trust/abstention-style**, and a
+  structural pivot away from calibration-heavy atlas refinement.
 - Neither variant is presented as theoretically proven in this repository.
 
 ---
@@ -321,3 +324,43 @@ lambda_{i,t} = tau_{B(i,t)} * pcal_shared(B(i,t))
 Score_t(i)   = lambda_{i,t} * PredScore_t(i)
              + (1 - lambda_{i,t}) * BaseScore_t(i)
 ```
+
+---
+
+## ReST v1 (experimental selective trust / abstention pivot)
+
+`rest_v1` changes the decision architecture from continuous blending to explicit gating:
+
+- **TRUST mode**: use a predictor-driven eviction expert (atlas_v3-style bucket-rank squared score).
+- **ABSTAIN mode**: use robust LRU eviction.
+
+Default context:
+
+```text
+ctx_t = (bucket(request_t), confidence_bin(request_t))
+G[ctx] in [0,1]
+```
+
+Deterministic gate:
+
+```text
+if G[ctx_t] >= theta: TRUST
+else:                 ABSTAIN (LRU)
+```
+
+with default `theta = 0.5`.
+
+Delayed online-safe trust feedback with horizon `H`:
+
+- if a TRUST-evicted page returns within `H` requests: bad outcome,
+- otherwise: good outcome.
+
+Update:
+
+```text
+G[ctx] <- clip(G[ctx] + eta_pos, 0, 1)   (good)
+G[ctx] <- clip(G[ctx] - eta_neg, 0, 1)   (bad)
+```
+
+This is an **experimental architectural pivot** inspired by robust LA caching,
+selective prediction/abstention, and regret-driven trust adaptation. No theorem guarantee is claimed.
