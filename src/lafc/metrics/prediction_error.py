@@ -1,24 +1,16 @@
 """
 Prediction error metrics from the paper.
 
-Reference
----------
-Bansal, Coester, Kumar, Purohit, Vee.
-"Learning-Augmented Weighted Paging."
-SODA 2022.
+Two papers' error measures are implemented:
 
-Two error measures are implemented:
+**Bansal et al. SODA 2022 (weighted paging)**
 
-1.  **η (eta)** — weighted absolute error (Definition in the paper):
+1.  **η (eta)** — weighted absolute error:
 
         η = Σ_t  w_{σ_t} · |τ_t − a_t|
 
     where τ_t is the predicted next arrival and a_t is the actual next
     arrival of page σ_t at time t.
-
-    Handling of infinities:
-    - Both τ_t = a_t = ∞ → contribution is 0 (both agree "never again").
-    - Only one is ∞         → contribution is ∞ (maximum disagreement).
 
 2.  **Weighted surprises** — per-weight-class inversion count.
 
@@ -34,6 +26,14 @@ Two error measures are implemented:
     the τ ordering vs. the a ordering within each class) would be closer
     to the paper's formal definition but requires O(T²) comparisons per
     class and is beyond the scope of this baseline.
+
+**Lykouris & Vassilvitskii ICML 2018 / JACM 2021 (unweighted paging)**
+
+3.  **η_unweighted** — total absolute error (Definition in LV 2018):
+
+        η = Σ_t  |τ_t − a_t|
+
+    All pages have unit cost, so weights drop out.
 """
 
 from __future__ import annotations
@@ -146,3 +146,40 @@ def compute_weighted_surprises(
         "total_surprises": total_surprises,
         "total_weighted_surprise": total_weighted,
     }
+
+
+def compute_eta_unweighted(requests: List[Request]) -> float:
+    """Compute the unweighted prediction error η for standard paging.
+
+    From Lykouris & Vassilvitskii (ICML 2018 / JACM 2021):
+
+        η = Σ_t  |τ_t − a_t|
+
+    All pages have unit cost in the standard (unweighted) paging setting,
+    so weights do not appear.
+
+    Parameters
+    ----------
+    requests:
+        Trace with ``predicted_next`` and ``actual_next`` filled in.
+
+    Returns
+    -------
+    float
+        Total prediction error.  Returns ``math.inf`` if any request has
+        one-sided infinity in (τ_t, a_t).
+    """
+    eta = 0.0
+    for req in requests:
+        tau = req.predicted_next
+        a = req.actual_next
+
+        if math.isinf(tau) and math.isinf(a):
+            diff = 0.0
+        elif math.isinf(tau) or math.isinf(a):
+            return math.inf
+        else:
+            diff = abs(tau - a)
+
+        eta += diff
+    return eta

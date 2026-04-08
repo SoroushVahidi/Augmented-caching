@@ -1,10 +1,22 @@
-# Learning-Augmented Weighted Paging (`lafc`)
+# Learning-Augmented Caching (`lafc`)
 
-Implementation of Baseline 1 from:
+This repository contains two learning-augmented caching baselines:
+
+## Baseline 1 — Learning-Augmented Weighted Paging
+
+Implementation of:
 
 > Bansal, Coester, Kumar, Purohit, Vee.
 > **"Learning-Augmented Weighted Paging"**.
 > SODA 2022.
+
+## Baseline 2 — Predictive Marker (Competitive Caching with Machine Learned Advice)
+
+Implementation of:
+
+> Lykouris, Vassilvitskii.
+> **"Competitive Caching with Machine Learned Advice"**.
+> ICML 2018 / JACM 2021.
 
 ---
 
@@ -18,6 +30,8 @@ pip install -e ".[dev]"
 
 ## Problem Setting
 
+### Baseline 1 (Weighted Paging)
+
 - Cache holds at most **k** pages (unit sizes).
 - Each page `p` has a fetch cost (weight) `w_p > 0`.
 - Requests arrive one at a time: `σ_1, σ_2, ..., σ_T`.
@@ -26,9 +40,18 @@ pip install -e ".[dev]"
 - If `σ_t` is not in cache, the algorithm pays `w_{σ_t}` and fetches the page.
 - Objective: minimise total fetch cost.
 
+### Baseline 2 (Unweighted / Standard Paging)
+
+- Cache holds at most **k** pages (unit sizes).
+- All misses cost **1** (unit cost).
+- Requests arrive one at a time with optional predictions.
+- Objective: minimise total number of cache misses.
+
 ---
 
 ## Input Format (JSON)
+
+### Baseline 1 (weighted paging)
 
 ```json
 {
@@ -38,25 +61,39 @@ pip install -e ".[dev]"
 }
 ```
 
+### Baseline 2 (unweighted paging)
+
+```json
+{
+  "requests":    ["A", "B", "C", "A", "B", "D", "A", "C", "B", "A"],
+  "predictions": [3, 4, 7, 6, 8, 9, 10, 9999, 9999, 9999]
+}
+```
+
 `predictions` is optional; if omitted, the runner generates perfect
-predictions from the trace automatically.
+predictions from the trace automatically.  `weights` is optional for
+Baseline 2 (unit weights are used by Marker/BlindOracle/PredictiveMarker
+regardless).
 
 ---
 
 ## Available Policies
 
-| CLI name             | Description                                        |
-|----------------------|----------------------------------------------------|
-| `lru`                | Least-Recently-Used                                |
-| `weighted_lru`       | Evicts the cheapest (min-weight) cached page       |
-| `advice_trusting`    | Evicts page with max predicted next-arrival        |
-| `la_det`             | Deterministic LA weighted paging (paper Theorem 1) |
+| CLI name             | Baseline | Description                                        |
+|----------------------|----------|----------------------------------------------------|
+| `lru`                | 1        | Least-Recently-Used                                |
+| `weighted_lru`       | 1        | Evicts the cheapest (min-weight) cached page       |
+| `advice_trusting`    | 1        | Evicts page with max predicted next-arrival        |
+| `la_det`             | 1        | Deterministic LA weighted paging (paper Theorem 1) |
+| `marker`             | 2        | Standard Marker (phase-based, unit cost)           |
+| `blind_oracle`       | 2        | Blind Oracle: evict argmax predicted next-arrival  |
+| `predictive_marker`  | 2        | Predictive Marker (Lykouris & Vassilvitskii 2018)  |
 
 ---
 
 ## Example Commands
 
-### Smoke test
+### Smoke test (Baseline 1)
 
 ```bash
 python -m lafc.runner.run_policy \
@@ -65,13 +102,34 @@ python -m lafc.runner.run_policy \
     --capacity 3
 ```
 
-### Compare all baselines
+### Smoke test (Baseline 2 — Predictive Marker)
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy predictive_marker \
+    --trace  data/example_unweighted.json \
+    --capacity 3
+```
+
+### Compare all Baseline 1 policies
 
 ```bash
 for policy in lru weighted_lru advice_trusting la_det; do
     python -m lafc.runner.run_policy \
         --policy   $policy \
         --trace    data/example.json \
+        --capacity 3
+done
+```
+
+### Compare all Baseline 2 policies
+
+```bash
+for policy in marker blind_oracle predictive_marker; do
+    echo "=== $policy ===" && \
+    python -m lafc.runner.run_policy \
+        --policy   $policy \
+        --trace    data/example_unweighted.json \
         --capacity 3
 done
 ```
