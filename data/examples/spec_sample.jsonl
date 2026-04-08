@@ -1,0 +1,2 @@
+{"cost": 1.0, "item_id": "0x7fff1000", "metadata": {"op": "R", "trace": "401.bzip2"}, "request_index": 0, "size": 64, "source_dataset": "spec_cpu2006", "split": "full", "timestamp": null}
+{"cost": 1.0, "item_id": "0x7fff1040", "metadata": {"op": "W", "trace": "401.bzip2"}, "request_index": 1, "size": 64, "source_dataset": "spec_cpu2006", "split": "full", "timestamp": null}
