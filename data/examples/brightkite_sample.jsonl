@@ -1,0 +1,2 @@
+{"cost": 1.0, "item_id": "venue-10", "metadata": {"latitude": "40.1", "longitude": "-73.2", "raw_timestamp": "2008-01-01T01:00:00Z", "user_id": "u1"}, "request_index": 0, "size": null, "source_dataset": "brightkite", "split": "full", "timestamp": "2008-01-01T01:00:00+00:00Z"}
+{"cost": 1.0, "item_id": "venue-11", "metadata": {"latitude": "40.2", "longitude": "-73.1", "raw_timestamp": "2008-01-01T01:05:00Z", "user_id": "u2"}, "request_index": 1, "size": null, "source_dataset": "brightkite", "split": "full", "timestamp": "2008-01-01T01:05:00+00:00Z"}
