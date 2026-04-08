@@ -2,13 +2,14 @@
 
 ## Status
 
-This framework is **experimental** and currently implements six framework policies:
+This framework is **experimental** and currently implements seven framework policies:
 - `atlas_v1` (first version),
 - `atlas_v2` (confidence-aware, dynamically trust-adaptive iteration),
 - `atlas_v3` (confidence-aware local-trust iteration; first CCLT version),
 - `atlas_cga_v1` (confidence-aware local-trust + online calibration-guided scaling),
 - `atlas_cga_v2` (hierarchical/context-sharing calibration refinement of CGA),
 - `rest_v1` (ReST selective-trust/abstention pivot with regret-like context updates).
+- `evict_value_v1` (direct candidate-centric eviction-value predictor).
 It is intended for empirical comparisons against existing baselines in this repository.
 
 **Important:** this implementation does **not** claim a proved theorem or competitive guarantee.
@@ -373,3 +374,18 @@ It does **not** learn full eviction, only the gate between predictor and LRU exp
 ## Learned gating v2 (counterfactual labels)
 
 `ml_gate_v2` evaluates predictor-victim vs LRU-victim choices by bounded-horizon local counterfactual replay, producing a regression regret target (`y_reg`) and derived binary gate target (`y_cls`).
+
+## Direct eviction-value pivot (evict_value_v1)
+
+`evict_value_v1` is an **experimental structural pivot** away from trust-gating and calibration-heavy blending.
+At each full-cache miss, it scores every cached candidate with a regression model that predicts:
+
+```text
+y_loss(q,t;H) = misses over next H requests
+                after forcing eviction of candidate q at time t
+                and replaying with LRU transitions
+```
+
+The online policy evicts `argmin_q predicted_loss(q,t;H)`.
+
+This is candidate-centric supervision (direct eviction quality), not a gate over predictor-vs-LRU experts.

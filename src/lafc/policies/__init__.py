@@ -20,6 +20,7 @@ from lafc.policies.atlas_cga_v2 import AtlasCGAV2Policy
 from lafc.policies.rest_v1 import RestV1Policy
 from lafc.policies.ml_gate_v1 import MLGateV1Policy
 from lafc.policies.ml_gate_v2 import MLGateV2Policy
+from lafc.policies.evict_value_v1 import EvictValueV1Policy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
@@ -43,6 +44,7 @@ __all__ = [
     "RestV1Policy",
     "MLGateV1Policy",
     "MLGateV2Policy",
+    "EvictValueV1Policy",
     # Baseline 4 (Wei 2020)
     "BlindOracleLRUCombiner",
     "OfflineBeladyPolicy",

@@ -26,7 +26,7 @@ Implementation of:
 > **"Online Metric Algorithms with Untrusted Predictions"**.
 > ICML 2020.
 
-## Experimental Framework — `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2` / `rest_v1`
+## Experimental Framework — `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2` / `rest_v1` / `evict_value_v1`
 
 This repository also includes **experimental** framework policies, `atlas_v1`,
 `atlas_v2`, `atlas_v3`, `atlas_cga_v1`, `atlas_cga_v2`, and `rest_v1`, for unweighted paging with bucketed predictions and optional
@@ -39,6 +39,8 @@ signal across global, bucket, confidence-bin, and full-context levels.
 `rest_v1` is an abstention/selective-trust pivot: instead of confidence blending,
 it gates between TRUST (predictor eviction) and ABSTAIN (LRU) using per-context
 online regret-style trust updates.
+`evict_value_v1` is a direct candidate-centric pivot: it predicts short-horizon
+eviction loss for each cached candidate and evicts the page with lowest predicted loss.
 Both are intended for empirical study only (no theorem guarantee is claimed).
 
 ---
@@ -136,6 +138,7 @@ For `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2` / `re
 | `atlas_cga_v1`      | Exp      | Experimental calibration-guided local-trust policy (CGA v1) |
 | `atlas_cga_v2`      | Exp      | Experimental hierarchical context-sharing calibration policy (CGA v2) |
 | `rest_v1`           | Exp      | Experimental ReST selective-trust/abstention gating policy |
+| `evict_value_v1`    | Exp      | Experimental direct safe-to-evict / eviction-value predictor |
 
 ---
 
@@ -347,3 +350,14 @@ Typical workflow:
 1. `python scripts/build_ml_gate_dataset_v2.py --max-rows 100000`
 2. `python scripts/train_ml_gate_v2.py --horizon 8`
 3. `python scripts/run_ml_gate_v2_first_check.py`
+
+## Experimental direct eviction-value predictor (evict_value_v1)
+
+`evict_value_v1` is an experimental structural pivot away from trust-gating:
+it learns candidate-level short-horizon eviction loss and directly ranks cached
+pages by predicted safe-to-evict value.
+
+Typical workflow:
+1. `python scripts/build_evict_value_dataset_v1.py --max-rows 200000`
+2. `python scripts/train_evict_value_v1.py --horizon 8`
+3. `python scripts/run_evict_value_v1_first_check.py`

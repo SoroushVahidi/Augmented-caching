@@ -1,0 +1,177 @@
+{
+  "horizon": 8,
+  "models": {
+    "ridge": {
+      "train": {
+        "mae": 0.7708198720236984,
+        "rmse": 0.9854319142788782,
+        "r2": 0.6403063477607591,
+        "pred_mean": 1.7450980392156863,
+        "target_mean": 1.7450980392156863
+      },
+      "val": {
+        "mae": 1.6686337894938077,
+        "rmse": 2.0118455698378988,
+        "r2": 0.10166845772452526,
+        "pred_mean": 2.237219519268809,
+        "target_mean": 2.88
+      },
+      "test": {
+        "mae": 1.2106860441456104,
+        "rmse": 1.467854869633336,
+        "r2": 0.4151393050173925,
+        "pred_mean": 1.6730937142131128,
+        "target_mean": 1.7777777777777777
+      },
+      "ranking_train": {
+        "decision_count": 20.0,
+        "top1_eviction_match": 0.4,
+        "mean_regret_vs_oracle": 0.1
+      },
+      "ranking_val": {
+        "decision_count": 22.0,
+        "top1_eviction_match": 0.36363636363636365,
+        "mean_regret_vs_oracle": 0.0
+      },
+      "ranking_test": {
+        "decision_count": 17.0,
+        "top1_eviction_match": 0.4117647058823529,
+        "mean_regret_vs_oracle": 0.11764705882352941
+      },
+      "feature_importance": {
+        "request_bucket": 0.21854515067845087,
+        "request_confidence": 0.0,
+        "candidate_bucket": 0.09387420355390325,
+        "candidate_confidence": 0.0,
+        "candidate_recency_rank": 0.258644737924554,
+        "candidate_age_norm": 0.17659619576188004,
+        "candidate_predictor_score": 0.15091341763568233,
+        "candidate_lru_score": 0.1765961957618848,
+        "candidate_is_predictor_victim": 0.1866003383819272,
+        "candidate_is_lru_victim": 0.32567015773537095,
+        "score_gap_to_predictor_best": 0.093874203553912,
+        "score_gap_to_lru_victim": 0.1765961957618863,
+        "bucket_gap_to_predictor_best": 0.09387420355390479,
+        "bucket_gap_to_lru_victim": 0.10677050866208038,
+        "confidence_gap_to_predictor_best": 0.0,
+        "confidence_gap_to_lru_victim": 0.0,
+        "cache_bucket_mean": 0.07555293504246158,
+        "cache_bucket_std": 0.030340423215987494,
+        "cache_bucket_min": 0.18875274201922163,
+        "cache_bucket_max": 0.0,
+        "cache_unique_bucket_count": 0.1887527420192197,
+        "cache_confidence_mean": 0.0,
+        "cache_confidence_std": 0.0,
+        "predictor_lru_disagree": 0.032200451746103184,
+        "recent_candidate_request_rate": 2.2082118728898616,
+        "recent_candidate_hit_rate": 1.3618100482095474
+      }
+    },
+    "random_forest": {
+      "train": {
+        "mae": 0.776835778550284,
+        "rmse": 0.9870659763319807,
+        "r2": 0.6391124569231887,
+        "pred_mean": 1.7388867759364484,
+        "target_mean": 1.7450980392156863
+      },
+      "val": {
+        "mae": 1.6259235440960824,
+        "rmse": 1.9112685411615793,
+        "r2": 0.18924284525170643,
+        "pred_mean": 2.2322407136393023,
+        "target_mean": 2.88
+      },
+      "test": {
+        "mae": 1.2561625497813735,
+        "rmse": 1.5138287254439777,
+        "r2": 0.3779293893822845,
+        "pred_mean": 2.1156417252601782,
+        "target_mean": 1.7777777777777777
+      },
+      "ranking_train": {
+        "decision_count": 20.0,
+        "top1_eviction_match": 0.35,
+        "mean_regret_vs_oracle": 0.1
+      },
+      "ranking_val": {
+        "decision_count": 22.0,
+        "top1_eviction_match": 0.3181818181818182,
+        "mean_regret_vs_oracle": 0.0
+      },
+      "ranking_test": {
+        "decision_count": 17.0,
+        "top1_eviction_match": 0.29411764705882354,
+        "mean_regret_vs_oracle": 0.23529411764705882
+      },
+      "feature_importance": {
+        "request_bucket": 0.019697375686902722,
+        "request_confidence": 0.0,
+        "candidate_bucket": 0.0012184999795869472,
+        "candidate_confidence": 0.0,
+        "candidate_recency_rank": 0.03546568377148435,
+        "candidate_age_norm": 0.007103182584424299,
+        "candidate_predictor_score": 0.010720008721575884,
+        "candidate_lru_score": 0.011088971848037086,
+        "candidate_is_predictor_victim": 0.018517956612434532,
+        "candidate_is_lru_victim": 0.0029389289524448473,
+        "score_gap_to_predictor_best": 0.0010339610873674717,
+        "score_gap_to_lru_victim": 0.01417200707302661,
+        "bucket_gap_to_predictor_best": 0.004165695226755758,
+        "bucket_gap_to_lru_victim": 0.0020372878327441324,
+        "confidence_gap_to_predictor_best": 0.0,
+        "confidence_gap_to_lru_victim": 0.0,
+        "cache_bucket_mean": 0.04476979192843051,
+        "cache_bucket_std": 0.049440466418966336,
+        "cache_bucket_min": 0.0,
+        "cache_bucket_max": 0.0,
+        "cache_unique_bucket_count": 0.0,
+        "cache_confidence_mean": 0.0,
+        "cache_confidence_std": 0.0,
+        "predictor_lru_disagree": 0.005910705475902318,
+        "recent_candidate_request_rate": 0.5990337217823355,
+        "recent_candidate_hit_rate": 0.17268575501758074
+      }
+    },
+    "hist_gb": {
+      "train": {
+        "mae": 1.059290526689924,
+        "rmse": 1.3158561062710623,
+        "r2": 0.3586481860494731,
+        "pred_mean": 1.7450980390949327,
+        "target_mean": 1.7450980392156863
+      },
+      "val": {
+        "mae": 1.8277071265534914,
+        "rmse": 2.170763815430905,
+        "r2": -0.04585749786579796,
+        "pred_mean": 2.0055316987638,
+        "target_mean": 2.88
+      },
+      "test": {
+        "mae": 1.470807512534103,
+        "rmse": 1.8096188483483355,
+        "r2": 0.11108461635354572,
+        "pred_mean": 2.0179452838478245,
+        "target_mean": 1.7777777777777777
+      },
+      "ranking_train": {
+        "decision_count": 20.0,
+        "top1_eviction_match": 0.4,
+        "mean_regret_vs_oracle": 0.05
+      },
+      "ranking_val": {
+        "decision_count": 22.0,
+        "top1_eviction_match": 0.3181818181818182,
+        "mean_regret_vs_oracle": 0.0
+      },
+      "ranking_test": {
+        "decision_count": 17.0,
+        "top1_eviction_match": 0.35294117647058826,
+        "mean_regret_vs_oracle": 0.17647058823529413
+      },
+      "feature_importance": {}
+    }
+  },
+  "winner_by_val_regret": "ridge"
+}
