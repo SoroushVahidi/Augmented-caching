@@ -26,11 +26,12 @@ Implementation of:
 > **"Online Metric Algorithms with Untrusted Predictions"**.
 > ICML 2020.
 
-## Experimental Framework — `atlas_v1` / `atlas_v2` (Confidence-Aware)
+## Experimental Framework — `atlas_v1` / `atlas_v2` / `atlas_v3` (Confidence-Aware)
 
-This repository also includes **experimental** framework policies, `atlas_v1`
-and `atlas_v2`, for unweighted paging with bucketed predictions and optional
-confidence scores. `atlas_v2` adds dynamic trust adaptation over `atlas_v1`.
+This repository also includes **experimental** framework policies, `atlas_v1`,
+`atlas_v2`, and `atlas_v3`, for unweighted paging with bucketed predictions and optional
+confidence scores. `atlas_v2` adds dynamic trust adaptation over `atlas_v1`, while
+`atlas_v3` introduces confidence-calibrated local trust by prediction context.
 Both are intended for empirical study only (no theorem guarantee is claimed).
 
 ---
@@ -95,7 +96,7 @@ For TRUST&DOUBT, provide either:
 
 CSV format requires `page_id` and optional `predicted_next`, `predicted_cache` (pipe-separated pages).
 
-For `atlas_v1` / `atlas_v2`, the preferred optional JSON extension is:
+For `atlas_v1` / `atlas_v2` / `atlas_v3`, the preferred optional JSON extension is:
 
 ```json
 {
@@ -124,6 +125,7 @@ For `atlas_v1` / `atlas_v2`, the preferred optional JSON extension is:
 | `trust_and_doubt`   | 3        | TRUST&DOUBT (Antoniadis et al. 2020)               |
 | `atlas_v1`          | Exp      | Experimental confidence-aware policy with LRU fallback |
 | `atlas_v2`          | Exp      | Experimental confidence-aware policy with dynamic trust adaptation |
+| `atlas_v3`          | Exp      | Experimental confidence-aware local-trust policy (CCLT v1) |
 
 ---
 
@@ -194,6 +196,23 @@ python -m lafc.runner.run_policy \
     --atlas-rho 0.3 \
     --atlas-initial-gamma 0.8 \
     --atlas-mismatch-threshold 2
+```
+
+### Smoke test (`atlas_v3`, experimental)
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy atlas_v3 \
+    --trace data/example_atlas_v1.json \
+    --capacity 3 \
+    --default-confidence 0.5 \
+    --bucket-source trace \
+    --atlas-initial-local-trust 0.7 \
+    --atlas-confidence-bins 0.33,0.66 \
+    --atlas-eta-pos 0.03 \
+    --atlas-eta-neg 0.12 \
+    --atlas-bucket-regret-mode linear \
+    --atlas-tie-epsilon 1e-9
 ```
 
 ---
