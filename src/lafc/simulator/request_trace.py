@@ -46,7 +46,7 @@ def _compute_actual_next(page_ids: List[PageId]) -> List[float]:
 
 def build_requests_from_lists(
     page_ids: List[PageId],
-    weights: Dict[PageId, float],
+    weights: Optional[Dict[PageId, float]] = None,
     predictions: Optional[List[float]] = None,
 ) -> Tuple[List[Request], Dict[PageId, Page]]:
     """Build a request list and page dictionary from raw lists.
@@ -57,7 +57,9 @@ def build_requests_from_lists(
         Ordered list of requested page identifiers.
     weights:
         Mapping from page identifier to fetch cost.  All page ids that appear
-        in *page_ids* must have an entry here.
+        in *page_ids* must have an entry here.  If ``None``, unit weights
+        (1.0) are used for all pages — appropriate for the unweighted paging
+        setting (Lykouris & Vassilvitskii 2018).
     predictions:
         Optional list of predicted next-arrival times aligned with *page_ids*.
         Length must equal ``len(page_ids)`` when provided.
@@ -73,6 +75,10 @@ def build_requests_from_lists(
     """
     if not page_ids:
         raise ValueError("page_ids must not be empty")
+
+    # Default to unit weights when none are supplied (unweighted paging).
+    if weights is None:
+        weights = {pid: 1.0 for pid in set(page_ids)}
 
     # Validate that all requested pages have weights.
     missing = [pid for pid in page_ids if pid not in weights]
@@ -130,11 +136,14 @@ def load_trace(path: str) -> Tuple[List[Request], Dict[PageId, Page]]:
 
     if "requests" not in data:
         raise ValueError(f"Trace file '{path}' is missing 'requests' field")
-    if "weights" not in data:
-        raise ValueError(f"Trace file '{path}' is missing 'weights' field")
 
     page_ids: List[PageId] = [str(p) for p in data["requests"]]
-    weights: Dict[PageId, float] = {str(k): float(v) for k, v in data["weights"].items()}
+    # weights is optional; if absent, unit weights are used (unweighted paging).
+    weights: Optional[Dict[PageId, float]] = (
+        {str(k): float(v) for k, v in data["weights"].items()}
+        if "weights" in data
+        else None
+    )
     predictions: Optional[List[float]] = (
         [float(x) for x in data["predictions"]]
         if "predictions" in data
