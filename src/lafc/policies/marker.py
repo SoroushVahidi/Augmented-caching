@@ -70,7 +70,7 @@ from lafc.types import CacheEvent, Page, PageId, Request
 
 
 class MarkerPolicy(BasePolicy):
-    """Deterministic LRU-Marker caching policy.
+    """Deterministic Marker caching policy.
 
     Deterministic implementation of the marking idea for unweighted paging.
     This class does **not** implement the randomized marking algorithm, so it
@@ -87,20 +87,22 @@ class MarkerPolicy(BasePolicy):
         super().reset(capacity, pages)
         # Pages marked in the current phase (requested at least once this phase).
         self._marked: Set[PageId] = set()
-        # LRU order for all *cached* pages (oldest → newest).
+        # Keep insertion/access order for deterministic behaviour.
         self._lru_order: collections.OrderedDict[PageId, None] = collections.OrderedDict()
         # Diagnostic counter: number of phases completed (0-based).
         self._phase_count: int = 0
+        # Current phase index (1-based).
+        self._phase: int = 1
 
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
 
     def _choose_eviction_candidate(self) -> PageId:
-        """Return the LRU page among unmarked cached pages.
+        """Return an unmarked cached page to evict.
 
         If no unmarked page exists, start a new phase (unmark all) and then
-        return the LRU page among all (now unmarked) cached pages.
+        return a deterministic victim from all (now unmarked) cached pages.
         """
         unmarked = [q for q in self._lru_order if q not in self._marked]
 
@@ -108,18 +110,15 @@ class MarkerPolicy(BasePolicy):
             # All pages marked → phase boundary: unmark all, start new phase.
             self._marked = set()
             self._phase_count += 1
+            self._phase += 1
             # After unmarking, all cached pages are candidates.
             unmarked = list(self._lru_order.keys())
 
         if not unmarked:
             raise RuntimeError("No eviction candidate found; cache may be empty.")
 
-        # Evict the LRU among the unmarked candidates.
-        # _lru_order is maintained oldest → newest, so iterate front-to-back.
-        for q in self._lru_order:  # oldest first
-            if q in unmarked:
-                return q
-        raise RuntimeError("No LRU candidate found.")  # pragma: no cover
+        # Deterministic victim: lexicographically smallest unmarked page id.
+        return min(unmarked)
 
     # ------------------------------------------------------------------
     # Main step
@@ -134,10 +133,16 @@ class MarkerPolicy(BasePolicy):
             self._marked.add(pid)
             self._lru_order.move_to_end(pid)
             self._record_hit()
-            return CacheEvent(t=request.t, page_id=pid, hit=True, cost=0.0)
+            return CacheEvent(
+                t=request.t,
+                page_id=pid,
+                hit=True,
+                cost=0.0,
+                phase=self._phase,
+            )
 
-        # Cache miss.
-        cost = self._pages[pid].weight
+        # Cache miss (unit-cost paging baseline).
+        cost = 1.0
         self._record_miss(cost)
 
         if self._cache.is_full():
@@ -150,7 +155,15 @@ class MarkerPolicy(BasePolicy):
         self._marked.add(pid)
         self._lru_order[pid] = None
 
-        return CacheEvent(t=request.t, page_id=pid, hit=False, cost=cost, evicted=evicted)
+        return CacheEvent(
+            t=request.t,
+            page_id=pid,
+            hit=False,
+            cost=cost,
+            evicted=evicted,
+            phase=self._phase,
+        )
+
 
     # ------------------------------------------------------------------
     # Diagnostics

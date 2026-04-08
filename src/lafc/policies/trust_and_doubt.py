@@ -1,9 +1,9 @@
 """
 TRUST&DOUBT caching policy.
 
-===========================================================================
+---------------------------------------------------------------------------
 PAPER-TO-CODE IMPLEMENTATION NOTE
-===========================================================================
+---------------------------------------------------------------------------
 
 Paper
 -----
@@ -141,7 +141,7 @@ See INTERPRETATION NOTEs in the code.  Documented ambiguities:
 NOTE: The exact theorem numbering may differ across arXiv versions.
       The ICML 2020 published proceedings version should be consulted.
 
-===========================================================================
+---------------------------------------------------------------------------
 """
 
 from __future__ import annotations
