@@ -1,0 +1,777 @@
+{
+  "setup": {
+    "train_rows_h8": 51,
+    "val_rows_h8": 50,
+    "val_mae": 1.6686337894938077,
+    "traces": [
+      "file::example_unweighted",
+      "file::example_atlas_v1",
+      "stress::predictor_good_lru_bad",
+      "stress::predictor_bad_lru_good",
+      "stress::mixed_regime"
+    ],
+    "regimes": [
+      "clean",
+      "noisy"
+    ],
+    "capacities": [
+      2,
+      3,
+      4
+    ],
+    "slice_count": 30,
+    "policies": [
+      "evict_value_v1_artifact",
+      "evict_value_v1_lightweight",
+      "robust_ftp_d_marker",
+      "blind_oracle_lru_combiner",
+      "rest_v1",
+      "atlas_v3",
+      "lru"
+    ],
+    "artifact_persistence": "temporary file only (deleted after run)"
+  },
+  "aggregate_by_policy": {
+    "evict_value_v1_artifact": {
+      "runs": 30,
+      "mean_misses": 5.9,
+      "mean_hit_rate": 0.41000000000000003
+    },
+    "evict_value_v1_lightweight": {
+      "runs": 30,
+      "mean_misses": 7.6,
+      "mean_hit_rate": 0.24
+    },
+    "robust_ftp_d_marker": {
+      "runs": 30,
+      "mean_misses": 5.766666666666667,
+      "mean_hit_rate": 0.42333333333333334
+    },
+    "blind_oracle_lru_combiner": {
+      "runs": 30,
+      "mean_misses": 5.9,
+      "mean_hit_rate": 0.41
+    },
+    "rest_v1": {
+      "runs": 30,
+      "mean_misses": 6.333333333333333,
+      "mean_hit_rate": 0.3666666666666667
+    },
+    "atlas_v3": {
+      "runs": 30,
+      "mean_misses": 6.066666666666666,
+      "mean_hit_rate": 0.3933333333333333
+    },
+    "lru": {
+      "runs": 30,
+      "mean_misses": 6.933333333333334,
+      "mean_hit_rate": 0.30666666666666664
+    }
+  },
+  "artifact_pairwise": {
+    "evict_value_v1_lightweight": {
+      "mean_miss_delta_artifact_minus_comp": -1.7,
+      "wins": 24,
+      "ties": 6,
+      "losses": 0,
+      "worst_loss_delta": 0,
+      "best_win_delta": -4
+    },
+    "robust_ftp_d_marker": {
+      "mean_miss_delta_artifact_minus_comp": 0.13333333333333333,
+      "wins": 0,
+      "ties": 26,
+      "losses": 4,
+      "worst_loss_delta": 1,
+      "best_win_delta": 0
+    },
+    "blind_oracle_lru_combiner": {
+      "mean_miss_delta_artifact_minus_comp": 0,
+      "wins": 3,
+      "ties": 23,
+      "losses": 4,
+      "worst_loss_delta": 1,
+      "best_win_delta": -2
+    },
+    "rest_v1": {
+      "mean_miss_delta_artifact_minus_comp": -0.43333333333333335,
+      "wins": 10,
+      "ties": 19,
+      "losses": 1,
+      "worst_loss_delta": 1,
+      "best_win_delta": -2
+    },
+    "atlas_v3": {
+      "mean_miss_delta_artifact_minus_comp": -0.16666666666666666,
+      "wins": 6,
+      "ties": 23,
+      "losses": 1,
+      "worst_loss_delta": 1,
+      "best_win_delta": -1
+    },
+    "lru": {
+      "mean_miss_delta_artifact_minus_comp": -1.0333333333333334,
+      "wins": 18,
+      "ties": 12,
+      "losses": 0,
+      "worst_loss_delta": 0,
+      "best_win_delta": -3
+    }
+  },
+  "slice_breakdown": [
+    {
+      "trace": "file::example_atlas_v1",
+      "regime": "clean",
+      "capacity": 2,
+      "artifact_misses": 8,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": -2,
+      "outcome_vs_rest_v1": "win",
+      "delta_vs_atlas_v3": -1,
+      "outcome_vs_atlas_v3": "win",
+      "delta_vs_lru": -2,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "file::example_atlas_v1",
+      "regime": "clean",
+      "capacity": 3,
+      "artifact_misses": 6,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -3,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -3,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "file::example_atlas_v1",
+      "regime": "clean",
+      "capacity": 4,
+      "artifact_misses": 5,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -1,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "file::example_atlas_v1",
+      "regime": "noisy",
+      "capacity": 2,
+      "artifact_misses": 8,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": -1,
+      "outcome_vs_rest_v1": "win",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -2,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "file::example_atlas_v1",
+      "regime": "noisy",
+      "capacity": 3,
+      "artifact_misses": 6,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -3,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -3,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "file::example_atlas_v1",
+      "regime": "noisy",
+      "capacity": 4,
+      "artifact_misses": 5,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -1,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "file::example_unweighted",
+      "regime": "clean",
+      "capacity": 2,
+      "artifact_misses": 8,
+      "delta_vs_robust_ftp_d_marker": 1,
+      "outcome_vs_robust_ftp_d_marker": "loss",
+      "delta_vs_blind_oracle_lru_combiner": 1,
+      "outcome_vs_blind_oracle_lru_combiner": "loss",
+      "delta_vs_rest_v1": -2,
+      "outcome_vs_rest_v1": "win",
+      "delta_vs_atlas_v3": -1,
+      "outcome_vs_atlas_v3": "win",
+      "delta_vs_lru": -2,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "file::example_unweighted",
+      "regime": "clean",
+      "capacity": 3,
+      "artifact_misses": 5,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": -1,
+      "outcome_vs_rest_v1": "win",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -1,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "file::example_unweighted",
+      "regime": "clean",
+      "capacity": 4,
+      "artifact_misses": 4,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": 0,
+      "outcome_vs_evict_value_v1_lightweight": "tie"
+    },
+    {
+      "trace": "file::example_unweighted",
+      "regime": "noisy",
+      "capacity": 2,
+      "artifact_misses": 8,
+      "delta_vs_robust_ftp_d_marker": 1,
+      "outcome_vs_robust_ftp_d_marker": "loss",
+      "delta_vs_blind_oracle_lru_combiner": 1,
+      "outcome_vs_blind_oracle_lru_combiner": "loss",
+      "delta_vs_rest_v1": -1,
+      "outcome_vs_rest_v1": "win",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -2,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "file::example_unweighted",
+      "regime": "noisy",
+      "capacity": 3,
+      "artifact_misses": 5,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": -1,
+      "outcome_vs_blind_oracle_lru_combiner": "win",
+      "delta_vs_rest_v1": -1,
+      "outcome_vs_rest_v1": "win",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -1,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "file::example_unweighted",
+      "regime": "noisy",
+      "capacity": 4,
+      "artifact_misses": 4,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": 0,
+      "outcome_vs_evict_value_v1_lightweight": "tie"
+    },
+    {
+      "trace": "stress::mixed_regime",
+      "regime": "clean",
+      "capacity": 2,
+      "artifact_misses": 8,
+      "delta_vs_robust_ftp_d_marker": 1,
+      "outcome_vs_robust_ftp_d_marker": "loss",
+      "delta_vs_blind_oracle_lru_combiner": 1,
+      "outcome_vs_blind_oracle_lru_combiner": "loss",
+      "delta_vs_rest_v1": -2,
+      "outcome_vs_rest_v1": "win",
+      "delta_vs_atlas_v3": -1,
+      "outcome_vs_atlas_v3": "win",
+      "delta_vs_lru": -2,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::mixed_regime",
+      "regime": "clean",
+      "capacity": 3,
+      "artifact_misses": 5,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -2,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::mixed_regime",
+      "regime": "clean",
+      "capacity": 4,
+      "artifact_misses": 4,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": 0,
+      "outcome_vs_evict_value_v1_lightweight": "tie"
+    },
+    {
+      "trace": "stress::mixed_regime",
+      "regime": "noisy",
+      "capacity": 2,
+      "artifact_misses": 8,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": -1,
+      "outcome_vs_rest_v1": "win",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -2,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::mixed_regime",
+      "regime": "noisy",
+      "capacity": 3,
+      "artifact_misses": 5,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": -2,
+      "outcome_vs_blind_oracle_lru_combiner": "win",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": -1,
+      "outcome_vs_atlas_v3": "win",
+      "delta_vs_lru": -2,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::mixed_regime",
+      "regime": "noisy",
+      "capacity": 4,
+      "artifact_misses": 4,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": 0,
+      "outcome_vs_evict_value_v1_lightweight": "tie"
+    },
+    {
+      "trace": "stress::predictor_bad_lru_good",
+      "regime": "clean",
+      "capacity": 2,
+      "artifact_misses": 6,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": -3,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::predictor_bad_lru_good",
+      "regime": "clean",
+      "capacity": 3,
+      "artifact_misses": 6,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::predictor_bad_lru_good",
+      "regime": "clean",
+      "capacity": 4,
+      "artifact_misses": 6,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": -1,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::predictor_bad_lru_good",
+      "regime": "noisy",
+      "capacity": 2,
+      "artifact_misses": 6,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": -3,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::predictor_bad_lru_good",
+      "regime": "noisy",
+      "capacity": 3,
+      "artifact_misses": 6,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::predictor_bad_lru_good",
+      "regime": "noisy",
+      "capacity": 4,
+      "artifact_misses": 6,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": -1,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::predictor_good_lru_bad",
+      "regime": "clean",
+      "capacity": 2,
+      "artifact_misses": 8,
+      "delta_vs_robust_ftp_d_marker": 1,
+      "outcome_vs_robust_ftp_d_marker": "loss",
+      "delta_vs_blind_oracle_lru_combiner": 1,
+      "outcome_vs_blind_oracle_lru_combiner": "loss",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": -1,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::predictor_good_lru_bad",
+      "regime": "clean",
+      "capacity": 3,
+      "artifact_misses": 5,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": -2,
+      "outcome_vs_rest_v1": "win",
+      "delta_vs_atlas_v3": -1,
+      "outcome_vs_atlas_v3": "win",
+      "delta_vs_lru": -2,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -4,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::predictor_good_lru_bad",
+      "regime": "clean",
+      "capacity": 4,
+      "artifact_misses": 4,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": 0,
+      "outcome_vs_evict_value_v1_lightweight": "tie"
+    },
+    {
+      "trace": "stress::predictor_good_lru_bad",
+      "regime": "noisy",
+      "capacity": 2,
+      "artifact_misses": 8,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 1,
+      "outcome_vs_rest_v1": "loss",
+      "delta_vs_atlas_v3": 1,
+      "outcome_vs_atlas_v3": "loss",
+      "delta_vs_lru": -1,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -1,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::predictor_good_lru_bad",
+      "regime": "noisy",
+      "capacity": 3,
+      "artifact_misses": 6,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": -1,
+      "outcome_vs_blind_oracle_lru_combiner": "win",
+      "delta_vs_rest_v1": -1,
+      "outcome_vs_rest_v1": "win",
+      "delta_vs_atlas_v3": -1,
+      "outcome_vs_atlas_v3": "win",
+      "delta_vs_lru": -1,
+      "outcome_vs_lru": "win",
+      "delta_vs_evict_value_v1_lightweight": -2,
+      "outcome_vs_evict_value_v1_lightweight": "win"
+    },
+    {
+      "trace": "stress::predictor_good_lru_bad",
+      "regime": "noisy",
+      "capacity": 4,
+      "artifact_misses": 4,
+      "delta_vs_robust_ftp_d_marker": 0,
+      "outcome_vs_robust_ftp_d_marker": "tie",
+      "delta_vs_blind_oracle_lru_combiner": 0,
+      "outcome_vs_blind_oracle_lru_combiner": "tie",
+      "delta_vs_rest_v1": 0,
+      "outcome_vs_rest_v1": "tie",
+      "delta_vs_atlas_v3": 0,
+      "outcome_vs_atlas_v3": "tie",
+      "delta_vs_lru": 0,
+      "outcome_vs_lru": "tie",
+      "delta_vs_evict_value_v1_lightweight": 0,
+      "outcome_vs_evict_value_v1_lightweight": "tie"
+    }
+  ],
+  "outcomes_by_regime": {
+    "clean": {
+      "robust_ftp_d_marker": {
+        "wins": 0,
+        "ties": 12,
+        "losses": 3
+      },
+      "blind_oracle_lru_combiner": {
+        "wins": 0,
+        "ties": 12,
+        "losses": 3
+      },
+      "atlas_v3": {
+        "wins": 4,
+        "ties": 11,
+        "losses": 0
+      },
+      "lru": {
+        "wins": 9,
+        "ties": 6,
+        "losses": 0
+      }
+    },
+    "noisy": {
+      "robust_ftp_d_marker": {
+        "wins": 0,
+        "ties": 14,
+        "losses": 1
+      },
+      "blind_oracle_lru_combiner": {
+        "wins": 3,
+        "ties": 11,
+        "losses": 1
+      },
+      "atlas_v3": {
+        "wins": 2,
+        "ties": 12,
+        "losses": 1
+      },
+      "lru": {
+        "wins": 9,
+        "ties": 6,
+        "losses": 0
+      }
+    }
+  },
+  "outcomes_by_capacity": {
+    "2": {
+      "robust_ftp_d_marker": {
+        "wins": 0,
+        "ties": 6,
+        "losses": 4
+      },
+      "blind_oracle_lru_combiner": {
+        "wins": 0,
+        "ties": 6,
+        "losses": 4
+      },
+      "atlas_v3": {
+        "wins": 3,
+        "ties": 6,
+        "losses": 1
+      },
+      "lru": {
+        "wins": 8,
+        "ties": 2,
+        "losses": 0
+      }
+    },
+    "3": {
+      "robust_ftp_d_marker": {
+        "wins": 0,
+        "ties": 10,
+        "losses": 0
+      },
+      "blind_oracle_lru_combiner": {
+        "wins": 3,
+        "ties": 7,
+        "losses": 0
+      },
+      "atlas_v3": {
+        "wins": 3,
+        "ties": 7,
+        "losses": 0
+      },
+      "lru": {
+        "wins": 8,
+        "ties": 2,
+        "losses": 0
+      }
+    },
+    "4": {
+      "robust_ftp_d_marker": {
+        "wins": 0,
+        "ties": 10,
+        "losses": 0
+      },
+      "blind_oracle_lru_combiner": {
+        "wins": 0,
+        "ties": 10,
+        "losses": 0
+      },
+      "atlas_v3": {
+        "wins": 0,
+        "ties": 10,
+        "losses": 0
+      },
+      "lru": {
+        "wins": 2,
+        "ties": 8,
+        "losses": 0
+      }
+    }
+  }
+}
