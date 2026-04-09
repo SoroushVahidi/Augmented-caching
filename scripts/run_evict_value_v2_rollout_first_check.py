@@ -133,6 +133,8 @@ def main() -> None:
         summary["models"][name] = {}
         for split in ["train", "val", "test"]:
             split_data = split_rows[split]
+            if not split_data:
+                continue
             x_split, _ = _xy(split_data, "rollout_loss_h")
             pred_loss = loss_model.predict(x_split)
             pred_reg = reg_model.predict(x_split)
@@ -152,7 +154,7 @@ def main() -> None:
                 fm = _evaluate(f_rows, loss_model.predict(fx), reg_model.predict(fx))
                 per_f_rows.append({"model": name, "split": split, "family": family, **fm})
 
-        val_metric = summary["models"][name]["val"]["mean_chosen_regret"]
+        val_metric = summary["models"][name].get("val", {}).get("mean_chosen_regret", float("inf"))
         if val_metric < best_val:
             best_val = val_metric
             best_name = name

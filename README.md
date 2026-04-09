@@ -131,6 +131,10 @@ For `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2` / `re
 | `marker`             | 2        | Standard Marker (phase-based, unit cost)           |
 | `blind_oracle`       | 2        | Blind Oracle: evict argmax predicted next-arrival  |
 | `predictive_marker`  | 2        | Predictive Marker (Lykouris & Vassilvitskii 2018)  |
+| `adaptive_query`     | 5        | AdaptiveQuery-b (Im et al. 2022 parsimonious)      |
+| `parsimonious_caching` | 5      | Alias of `adaptive_query`                           |
+| `robust_ftp_d_marker` | 4b      | RobustFtP-D style combiner (ICML 2021, MARKER fallback) |
+| `robust_ftp`         | 4b       | Alias of `robust_ftp_d_marker`                      |
 | `trust_and_doubt`   | 3        | TRUST&DOUBT (Antoniadis et al. 2020)               |
 | `atlas_v1`          | Exp      | Experimental confidence-aware policy with LRU fallback |
 | `atlas_v2`          | Exp      | Experimental confidence-aware policy with dynamic trust adaptation |
@@ -139,6 +143,7 @@ For `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2` / `re
 | `atlas_cga_v2`      | Exp      | Experimental hierarchical context-sharing calibration policy (CGA v2) |
 | `rest_v1`           | Exp      | Experimental ReST selective-trust/abstention gating policy |
 | `evict_value_v1`    | Exp      | Experimental direct safe-to-evict / eviction-value predictor |
+| `evict_value_v1_guarded` | Exp | Guard-style robust wrapper around `evict_value_v1` with temporary fallback mode |
 
 ---
 
@@ -183,6 +188,33 @@ for policy in marker blind_oracle predictive_marker; do
         --trace    data/example_unweighted.json \
         --capacity 3
 done
+```
+
+### Smoke test (Baseline 5 — Parsimonious AdaptiveQuery-b)
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy adaptive_query \
+    --trace data/example_unweighted.json \
+    --capacity 3 \
+    --adaptive-query-b 2 \
+    --adaptive-query-seed 0
+```
+
+### Baseline 5 first-check script
+
+```bash
+python scripts/run_parsimonious_first_check.py
+```
+
+### Smoke test (Baseline 4b — RobustFtP deterministic, MARKER fallback)
+
+```bash
+python -m lafc.runner.run_policy \
+    --policy robust_ftp_d_marker \
+    --trace data/example_unweighted.json \
+    --capacity 3 \
+    --derive-predicted-caches
 ```
 
 ### Smoke test (`atlas_v1`, experimental)
@@ -362,6 +394,12 @@ Typical workflow:
 2. `python scripts/train_evict_value_v1.py --horizon 8`
 3. `python scripts/run_evict_value_v1_first_check.py`
 
+Guarded robust wrapper variant:
+
+- `python -m lafc.runner.run_policy --policy evict_value_v1_guarded --trace data/example_atlas_v1.json --capacity 3 --evict-value-model-path models/evict_value_v1_hist_gb.pkl --guard-fallback-policy lru --guard-early-return-window 2 --guard-trigger-threshold 2 --guard-trigger-window 16 --guard-duration 8`
+
+See `docs/guarded_robust_wrapper.md` for design rationale and diagnostics.
+
 Wulver phase-1 dataset pipeline (large reusable candidate shards + split summaries):
 1. `python scripts/build_evict_value_dataset_wulver_v1.py --trace-glob "data/processed/*/trace.jsonl" --capacities "64,128,256" --horizons "8,16,32"`
 2. `python scripts/summarize_evict_value_wulver_splits.py --manifest data/derived/evict_value_v1_wulver/manifest.json`
@@ -369,22 +407,22 @@ Wulver phase-1 dataset pipeline (large reusable candidate shards + split summari
 
 ---
 
-## Decision-aligned eviction target experiments (text-only, v2)
+## Decision-aligned eviction target experiments (text-only)
 
-This repository includes a lightweight, text-only v2 package for decision-aligned eviction supervision:
+This repository includes a lightweight, text-only decision-aligned supervision package for candidate eviction scoring:
 
-- rollout-labeled candidate dataset (`evict_value_v2_rollout`)
-- pairwise ranking dataset (`evict_value_v2_pairwise`)
+- rollout loss/regret candidate dataset (`evict_value_decision_aligned`)
+- pairwise decision ranking dataset (`evict_value_pairwise`)
 
 Dataset builders:
 
-- `python scripts/build_evict_value_v2_rollout_dataset.py --trace-glob "data/example_*.json" --dataset examples --capacities 2,3,4 --horizons 4,8,16,32 --reference-policy lru --output-dir data/derived/evict_value_v2_rollout`
-- `python scripts/build_evict_value_v2_pairwise_dataset.py --candidate-csv data/derived/evict_value_v2_rollout/candidate_rows.csv --output-dir data/derived/evict_value_v2_pairwise`
+- `python scripts/build_evict_value_decision_aligned_dataset.py --trace-glob "data/example_*.json" --capacities 2,3,4 --horizons 4,8,16,32 --continuation-policy lru --output-dir data/derived/evict_value_decision_aligned`
+- `python scripts/build_evict_value_pairwise_dataset.py --candidate-csv data/derived/evict_value_decision_aligned/candidate_rows.csv --output-dir data/derived/evict_value_pairwise`
 
 First-check runners:
 
-- `python scripts/run_evict_value_v2_rollout_first_check.py --candidate-csv data/derived/evict_value_v2_rollout/candidate_rows.csv --output-dir analysis/evict_value_v2_rollout_first_check`
-- `python scripts/run_evict_value_v2_pairwise_first_check.py --pairwise-csv data/derived/evict_value_v2_pairwise/pairwise_rows.csv --output-dir analysis/evict_value_v2_pairwise_first_check`
+- `python scripts/run_evict_value_decision_aligned_first_check.py --candidate-csv data/derived/evict_value_decision_aligned/candidate_rows.csv --output-dir analysis/evict_value_decision_aligned_first_check`
+- `python scripts/run_evict_value_pairwise_first_check.py --pairwise-csv data/derived/evict_value_pairwise/pairwise_rows.csv --output-dir analysis/evict_value_pairwise_first_check`
 
 Outputs are text-only (`.csv`, `.json`, `.md`) and no binary model checkpoints are saved.
-See `docs/decision_aligned_eviction_targets.md` for caveats and conceptual framing.
+See `docs/decision_aligned_targets.md` for definitions, caveats, and extension notes.

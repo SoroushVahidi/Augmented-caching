@@ -9,7 +9,6 @@ from typing import Dict, List
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 
 
 def _read_rows(path: Path) -> List[Dict[str, object]]:
@@ -18,11 +17,11 @@ def _read_rows(path: Path) -> List[Dict[str, object]]:
     rows: List[Dict[str, object]] = []
     for row in raw:
         parsed: Dict[str, object] = dict(row)
-        parsed["request_t"] = int(float(parsed["request_t"]))
-        parsed["capacity"] = int(float(parsed["capacity"]))
-        parsed["horizon"] = int(float(parsed["horizon"]))
-        for key, value in list(parsed.items()):
-            if key.startswith(("delta_", "i_", "j_")) or key in {
+        parsed["request_t"] = int(parsed["request_t"])
+        parsed["capacity"] = int(parsed["capacity"])
+        parsed["horizon"] = int(parsed["horizon"])
+        for k, v in list(parsed.items()):
+            if k.startswith(("delta_", "i_", "j_")) or k in {
                 "rollout_loss_i",
                 "rollout_loss_j",
                 "rollout_regret_i",
@@ -31,7 +30,7 @@ def _read_rows(path: Path) -> List[Dict[str, object]]:
                 "label_i_better",
                 "is_tie",
             }:
-                parsed[key] = float(value)
+                parsed[k] = float(v)
         rows.append(parsed)
     return rows
 
@@ -55,35 +54,39 @@ def _xy(rows: List[Dict[str, object]]):
 def _decision_metrics(rows: List[Dict[str, object]], p_i_better: np.ndarray) -> Dict[str, float]:
     decisions: Dict[str, Dict[str, object]] = {}
     for row, p_i in zip(rows, p_i_better):
-        d = decisions.setdefault(str(row["decision_id"]), {"scores": {}, "regrets": {}})
+        d = decisions.setdefault(str(row["decision_id"]), {"scores": {}, "regrets": {}, "losses": {}})
         ci = str(row["candidate_i_page_id"])
         cj = str(row["candidate_j_page_id"])
         d["scores"][ci] = float(d["scores"].get(ci, 0.0) + p_i)
         d["scores"][cj] = float(d["scores"].get(cj, 0.0) + (1.0 - p_i))
         d["regrets"][ci] = float(row["rollout_regret_i"])
         d["regrets"][cj] = float(row["rollout_regret_j"])
+        d["losses"][ci] = float(row["rollout_loss_i"])
+        d["losses"][cj] = float(row["rollout_loss_j"])
 
     top1 = 0
     chosen_regrets: List[float] = []
+    chosen_loss_gaps: List[float] = []
     for d in decisions.values():
         chosen = min(d["scores"].keys(), key=lambda c: (-d["scores"][c], c))
         best = min(d["regrets"].keys(), key=lambda c: (d["regrets"][c], c))
         top1 += int(chosen == best)
         chosen_regrets.append(float(d["regrets"][chosen]))
+        chosen_loss_gaps.append(float(d["losses"][chosen] - min(d["losses"].values())))
 
-    denom = max(len(decisions), 1)
+    denom = max(1, len(decisions))
     return {
         "decision_count": float(len(decisions)),
         "top1_candidate_accuracy": float(top1 / denom),
         "mean_chosen_regret": float(np.mean(chosen_regrets) if chosen_regrets else 0.0),
+        "mean_regret_vs_best": float(np.mean(chosen_regrets) if chosen_regrets else 0.0),
+        "mean_loss_gap_vs_best": float(np.mean(chosen_loss_gaps) if chosen_loss_gaps else 0.0),
     }
 
 
 def _evaluate(rows: List[Dict[str, object]], pred_y: np.ndarray, p_i_better: np.ndarray) -> Dict[str, float]:
     y_true = np.asarray([int(float(r["label_i_better"])) for r in rows], dtype=int)
-    out = {
-        "pairwise_accuracy": float(accuracy_score(y_true, pred_y)),
-    }
+    out = {"pairwise_accuracy": float(np.mean(pred_y == y_true) if len(y_true) else 0.0)}
     out.update(_decision_metrics(rows, p_i_better))
     return out
 
@@ -93,6 +96,15 @@ def _slice_by(rows: List[Dict[str, object]], key: str) -> Dict[str, List[Dict[st
     for row in rows:
         out.setdefault(str(row[key]), []).append(row)
     return out
+
+
+def _write_csv(path: Path, rows: List[Dict[str, object]]) -> None:
+    if not rows:
+        return
+    with path.open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def _predict_with_single_class_fallback(
@@ -114,9 +126,9 @@ def _predict_with_single_class_fallback(
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="First-check for evict_value_v2 pairwise ranking")
-    ap.add_argument("--pairwise-csv", default="data/derived/evict_value_v2_pairwise/pairwise_rows.csv")
-    ap.add_argument("--output-dir", default="analysis/evict_value_v2_pairwise_first_check")
+    ap = argparse.ArgumentParser(description="First-check for decision-aligned pairwise labels")
+    ap.add_argument("--pairwise-csv", default="data/derived/evict_value_pairwise/pairwise_rows.csv")
+    ap.add_argument("--output-dir", default="analysis/evict_value_pairwise_first_check")
     ap.add_argument("--seed", type=int, default=7)
     args = ap.parse_args()
 
@@ -128,33 +140,30 @@ def main() -> None:
     x_train, y_train = _xy(splits["train"])
     clf = LogisticRegression(max_iter=600, random_state=args.seed)
 
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = Path(args.output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     metric_rows: List[Dict[str, object]] = []
     per_h_rows: List[Dict[str, object]] = []
     per_f_rows: List[Dict[str, object]] = []
-
-    summary: Dict[str, object] = {"task": "evict_value_v2_pairwise", "model": "logistic_regression_delta"}
+    summary: Dict[str, object] = {"task": "evict_value_pairwise", "model": "logistic_regression_delta"}
 
     for split in ["train", "val", "test"]:
-        if not splits[split]:
+        part = splits[split]
+        if not part:
             continue
-        x_split, _y_split = _xy(splits[split])
+        x_split, _ = _xy(part)
         pred, prob = _predict_with_single_class_fallback(
             clf=clf,
             x_train=x_train,
             y_train=y_train,
             x_eval=x_split,
         )
-        metrics = _evaluate(splits[split], pred, prob)
-        metric_rows.append({"split": split, **metrics})
-        summary[split] = metrics
+        m = _evaluate(part, pred, prob)
+        metric_rows.append({"split": split, **m})
+        summary[split] = m
 
-        by_h = _slice_by(splits[split], "horizon")
-        for horizon, h_rows in by_h.items():
-            if not h_rows:
-                continue
+        for horizon, h_rows in _slice_by(part, "horizon").items():
             hx, _ = _xy(h_rows)
             hp, hprob = _predict_with_single_class_fallback(
                 clf=clf,
@@ -165,10 +174,7 @@ def main() -> None:
             hm = _evaluate(h_rows, hp, hprob)
             per_h_rows.append({"split": split, "horizon": int(horizon), **hm})
 
-        by_f = _slice_by(splits[split], "family")
-        for family, f_rows in by_f.items():
-            if not f_rows:
-                continue
+        for family, f_rows in _slice_by(part, "family").items():
             fx, _ = _xy(f_rows)
             fp, fprob = _predict_with_single_class_fallback(
                 clf=clf,
@@ -179,32 +185,26 @@ def main() -> None:
             fm = _evaluate(f_rows, fp, fprob)
             per_f_rows.append({"split": split, "family": family, **fm})
 
-    def _write(path: Path, rows_to_write: List[Dict[str, object]]) -> None:
-        with path.open("w", newline="", encoding="utf-8") as fh:
-            writer = csv.DictWriter(fh, fieldnames=list(rows_to_write[0].keys()))
-            writer.writeheader()
-            writer.writerows(rows_to_write)
-
-    _write(output_dir / "metrics.csv", metric_rows)
-    _write(output_dir / "per_horizon_metrics.csv", per_h_rows)
-    _write(output_dir / "per_family_metrics.csv", per_f_rows)
-    (output_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    _write_csv(out_dir / "metrics.csv", metric_rows)
+    _write_csv(out_dir / "per_horizon_metrics.csv", per_h_rows)
+    _write_csv(out_dir / "per_family_metrics.csv", per_f_rows)
+    (out_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
     lines = [
-        "# evict_value_v2 pairwise first check",
-        "",
-        "Conservative first-check only. Pairwise ranking is still a surrogate for final miss cost.",
+        "# Decision-aligned pairwise first check",
         "",
         f"- Pairwise CSV: `{args.pairwise_csv}`",
         "",
-        "| Split | Pairwise acc | Top-1 acc | Mean chosen regret |",
-        "|---|---:|---:|---:|",
+        "| Split | Pairwise acc | Top-1 acc | Mean chosen regret | Mean regret vs best |",
+        "|---|---:|---:|---:|---:|",
     ]
     for row in metric_rows:
         lines.append(
-            f"| {row['split']} | {row['pairwise_accuracy']:.4f} | {row['top1_candidate_accuracy']:.4f} | {row['mean_chosen_regret']:.4f} |"
+            f"| {row['split']} | {row['pairwise_accuracy']:.4f} | {row['top1_candidate_accuracy']:.4f} | "
+            f"{row['mean_chosen_regret']:.4f} | {row['mean_regret_vs_best']:.4f} |"
         )
-    (output_dir / "experiment_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (out_dir / "experiment_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
     print(json.dumps(summary, indent=2))
 
 

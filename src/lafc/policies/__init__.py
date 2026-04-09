@@ -23,7 +23,10 @@ from lafc.policies.ml_gate_v2 import MLGateV2Policy
 from lafc.policies.evict_value_v1 import EvictValueV1Policy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
+from lafc.policies.adaptive_query import AdaptiveQueryPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
+from lafc.policies.robust_ftp_marker_combiner import RobustFtPDeterministicMarkerCombiner
+from lafc.policies.guard_wrapper import GuardWrapperPolicy, EvictValueV1GuardedPolicy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
 
 __all__ = [
@@ -36,6 +39,7 @@ __all__ = [
     "MarkerPolicy",
     "BlindOraclePolicy",
     "PredictiveMarkerPolicy",
+    "AdaptiveQueryPolicy",
     "AtlasV1Policy",
     "AtlasV2Policy",
     "AtlasV3Policy",
@@ -49,6 +53,9 @@ __all__ = [
     "BlindOracleLRUCombiner",
     "OfflineBeladyPolicy",
     "TrustAndDoubtPolicy",
+    "RobustFtPDeterministicMarkerCombiner",
+    "GuardWrapperPolicy",
+    "EvictValueV1GuardedPolicy",
     # Scaffolds (not yet implemented)
     "EquitablePolicy",
     "BlindOracleRandomizedCombiner",

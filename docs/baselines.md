@@ -102,6 +102,102 @@ Wei, A. (2020). **Better and Simpler Learning-Augmented Online Caching**. APPROX
 
 ---
 
+## Baseline 4b: RobustFtP-D with MARKER fallback (Chłędowski et al., 2021)
+
+### Paper citation
+
+Chłędowski, J., Polak, A., Szabucki, B., & Żołna, K. (2021).
+**Robust Learning-Augmented Caching: An Experimental Study**. ICML 2021, PMLR 139.
+
+### Implemented policy names
+
+- `robust_ftp_d_marker` (primary)
+- `robust_ftp` (alias)
+
+### Why this is separate from `blind_oracle_lru_combiner`
+
+The existing `blind_oracle_lru_combiner` is a Wei-2020-style interpreted
+combiner over **reuse-distance** predictor advice (BlindOracle expert + LRU).
+The ICML'21 RobustFtP baseline instead uses **policy predictions** and combines:
+
+1. a robust fallback policy (MARKER in the paper's main reported variants), and
+2. a predictor-following policy expert.
+
+So this repository now keeps both baselines explicitly to avoid confusion.
+
+### Exact implemented variant
+
+- Deterministic RobustFtP variant (RobustFtPD spirit) with MARKER fallback.
+- Combiner rule: follow the lower cumulative-miss expert so far (deterministic
+  tie-break to predictor expert), logging switch points and expert trajectories.
+- Predictor expert uses `metadata["predicted_cache"]` and on full-cache misses
+  evicts a page in `cache \\ predicted_cache` (deterministic tie-break).
+
+### Faithfulness assessment
+
+- **Mostly faithful with minor interpretation.**
+- High-level structure (robust expert + predictor-following expert + deterministic
+  switching) is paper-aligned.
+- Low-level tie-breaking and exact black-box combiner internals are interpreted
+  because the experiment section does not fully specify every implementation detail.
+
+### Diagnostics exposed
+
+- `robust_ftp_followed_predictor_steps`
+- `robust_ftp_followed_robust_steps`
+- `robust_ftp_switch_count`
+- `robust_ftp_switch_fraction`
+- `robust_ftp_shadow_predictor_total_misses`
+- `robust_ftp_shadow_robust_total_misses`
+- plus per-step decision log in `extra_diagnostics["robust_ftp"]["step_log"]`
+  and switch timestamps in `extra_diagnostics["robust_ftp"]["switch_points"]`.
+
+---
+
+## Baseline 5: Parsimonious Learning-Augmented Caching (Im et al., 2022)
+
+### Paper citation
+
+Im, S., Kumar, R., Petety, A., & Purohit, M. (2022).
+**Parsimonious Learning-Augmented Caching**. ICML 2022, PMLR 162.
+
+### Implemented policy names
+
+- `adaptive_query` (primary paper-faithful naming)
+- `parsimonious_caching` (CLI alias)
+
+### Exact implemented variant
+
+- Implemented algorithm: **AdaptiveQuery-b** (paper Section 5, Algorithm 3),
+  with the Section 5.3 robust modification used in Theorem 11:
+  switch to random unmarked eviction when chain depth exceeds `log k`.
+- Query budget behavior: on query-mode misses, sample up to `b` unmarked
+  pages uniformly at random without replacement, query only those pages, and
+  evict the sampled page with largest predicted next-arrival.
+- Randomness is seedable via CLI (`--adaptive-query-seed`).
+
+### Diagnostics exposed
+
+- `adaptive_query_queries_used`
+- `adaptive_query_fraction_misses_queried`
+- `adaptive_query_fraction_misses_fallback_random`
+- `adaptive_query_avg_queries_per_queried_miss`
+- `adaptive_query_query_mode_evictions`
+- `adaptive_query_random_mode_evictions`
+- `adaptive_query_max_chain_depth_seen`
+- plus parameter echoes (`adaptive_query_b`, `adaptive_query_seed`)
+
+### Interface adaptation note (important)
+
+The paper's query model assumes the algorithm can call `Q(p,t)` for any cached
+page at eviction time. This repository's standard trace interface provides
+`predicted_next` only for the currently requested page. To stay consistent with
+existing baselines and runner interfaces, `adaptive_query` interprets `Q(p,t)`
+as the most recently observed prediction for page `p` (default `∞` if unseen).
+This is a conservative adapter; it is documented explicitly in policy comments.
+
+---
+
 ## Implemented baselines
 
 - `lru`
@@ -110,6 +206,9 @@ Wei, A. (2020). **Better and Simpler Learning-Augmented Online Caching**. APPROX
 - `predictive_marker`
 - `trust_and_doubt` (Baseline 3 target)
 - `blind_oracle_lru_combiner` (Baseline 4 target)
+- `robust_ftp_d_marker` / `robust_ftp` (ICML'21 experimental robust switching)
+- `adaptive_query` / `parsimonious_caching` (Baseline 5 target)
+- `evict_value_v1_guarded` (experimental guard-style robust wrapper over `evict_value_v1`)
 
 ## Prediction interfaces supported
 

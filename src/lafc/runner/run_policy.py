@@ -11,8 +11,8 @@ python -m lafc.runner.run_policy \\
 
 Supported --policy values:
     lru, weighted_lru, advice_trusting, la_det,
-    marker, blind_oracle, predictive_marker,
-    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3, atlas_cga_v1, atlas_cga_v2, rest_v1, ml_gate_v1, ml_gate_v2, evict_value_v1
+    marker, blind_oracle, predictive_marker, adaptive_query, parsimonious_caching, robust_ftp_d_marker,
+    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3, atlas_cga_v1, atlas_cga_v2, rest_v1, ml_gate_v1, ml_gate_v2, evict_value_v1, evict_value_v1_guarded
 """
 
 from __future__ import annotations
@@ -41,6 +41,7 @@ from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
+from lafc.policies.adaptive_query import AdaptiveQueryPolicy
 from lafc.policies.atlas_v1 import AtlasV1Policy
 from lafc.policies.atlas_v2 import AtlasV2Policy
 from lafc.policies.atlas_v3 import AtlasV3Policy
@@ -52,6 +53,8 @@ from lafc.policies.ml_gate_v2 import MLGateV2Policy
 from lafc.policies.evict_value_v1 import EvictValueV1Policy
 from lafc.policies.weighted_lru import WeightedLRUPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
+from lafc.policies.robust_ftp_marker_combiner import RobustFtPDeterministicMarkerCombiner
+from lafc.policies.guard_wrapper import EvictValueV1GuardedPolicy
 from lafc.predictors.buckets import attach_perfect_buckets, maybe_corrupt_buckets
 from lafc.simulator.request_trace import load_trace
 from lafc.types import Page, PageId, Request, SimulationResult
@@ -75,6 +78,12 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "marker": MarkerPolicy(),
     "blind_oracle": BlindOraclePolicy(),
     "predictive_marker": PredictiveMarkerPolicy(),
+    # Baseline 5: Im et al. 2022 parsimonious adaptive querying.
+    "adaptive_query": AdaptiveQueryPolicy(),
+    "parsimonious_caching": AdaptiveQueryPolicy(),
+    # Chłędowski et al. 2021 robust practical switching baseline (deterministic).
+    "robust_ftp_d_marker": RobustFtPDeterministicMarkerCombiner(),
+    "robust_ftp": RobustFtPDeterministicMarkerCombiner(),
     # Baseline 4: Wei 2020 (unweighted paging)
     "blind_oracle_lru_combiner": BlindOracleLRUCombiner(),
     "offline_belady": OfflineBeladyPolicy(),
@@ -91,6 +100,7 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "ml_gate_v1": MLGateV1Policy(),
     "ml_gate_v2": MLGateV2Policy(),
     "evict_value_v1": EvictValueV1Policy(),
+    "evict_value_v1_guarded": EvictValueV1GuardedPolicy(),
 }
 
 
@@ -176,6 +186,8 @@ def run_policy(
             MarkerPolicy,
             BlindOraclePolicy,
             PredictiveMarkerPolicy,
+            AdaptiveQueryPolicy,
+            RobustFtPDeterministicMarkerCombiner,
             BlindOracleLRUCombiner,
             OfflineBeladyPolicy,
             TrustAndDoubtPolicy,
@@ -188,6 +200,7 @@ def run_policy(
             MLGateV1Policy,
             MLGateV2Policy,
             EvictValueV1Policy,
+            EvictValueV1GuardedPolicy,
         ),
     ):
         try:
@@ -277,6 +290,52 @@ def run_policy(
     if isinstance(policy, EvictValueV1Policy):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["evict_value_v1"] = {"summary": policy.diagnostics_summary()}
+    if isinstance(policy, EvictValueV1GuardedPolicy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["evict_value_v1_guarded"] = {
+            "summary": policy.diagnostics_summary(),
+            "step_log": [
+                {
+                    "t": s.t,
+                    "page_id": s.page_id,
+                    "mode_before": s.mode_before,
+                    "mode_after": s.mode_after,
+                    "hit": s.hit,
+                    "evicted": s.evicted,
+                    "base_hit": s.base_hit,
+                    "fallback_hit": s.fallback_hit,
+                    "early_return_detected": s.early_return_detected,
+                    "suspicious_count_window": s.suspicious_count_window,
+                    "guard_triggered": s.guard_triggered,
+                    "trigger_reason": s.trigger_reason,
+                }
+                for s in policy.step_log()
+            ],
+        }
+    if isinstance(policy, AdaptiveQueryPolicy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["adaptive_query"] = {"summary": policy.diagnostics_summary()}
+    if isinstance(policy, RobustFtPDeterministicMarkerCombiner):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["robust_ftp"] = {
+            "summary": policy.diagnostics_summary(),
+            "switch_points": policy.switch_points(),
+            "step_log": [
+                {
+                    "t": s.t,
+                    "page_id": s.page_id,
+                    "chosen_expert": s.chosen_expert,
+                    "switched": s.switched,
+                    "robust_misses_before": s.robust_misses_before,
+                    "predictor_misses_before": s.predictor_misses_before,
+                    "robust_misses_after": s.robust_misses_after,
+                    "predictor_misses_after": s.predictor_misses_after,
+                    "hit": s.hit,
+                    "evicted": s.evicted,
+                }
+                for s in policy.step_log()
+            ],
+        }
 
     # Experimental atlas_v2 diagnostics.
     if isinstance(policy, AtlasV2Policy):
@@ -499,6 +558,18 @@ def _save_metrics(result: SimulationResult, output_dir: str) -> None:
             rest = result.extra_diagnostics["rest_v1"]
             for key, value in rest.get("summary", {}).items():
                 metrics[f"rest_v1_{key}"] = value
+        if "adaptive_query" in result.extra_diagnostics:
+            aq = result.extra_diagnostics["adaptive_query"]
+            for key, value in aq.get("summary", {}).items():
+                metrics[f"adaptive_query_{key}"] = value
+        if "robust_ftp" in result.extra_diagnostics:
+            rftp = result.extra_diagnostics["robust_ftp"]
+            for key, value in rftp.get("summary", {}).items():
+                metrics[f"robust_ftp_{key}"] = value
+        if "evict_value_v1_guarded" in result.extra_diagnostics:
+            guarded = result.extra_diagnostics["evict_value_v1_guarded"]
+            for key, value in guarded.get("summary", {}).items():
+                metrics[f"evict_value_v1_guarded_{key}"] = value
 
 
     path = os.path.join(output_dir, "metrics.json")
@@ -534,36 +605,110 @@ def _save_combiner_decisions(result: SimulationResult, output_dir: str) -> None:
     if not result.extra_diagnostics:
         return
     step_log = result.extra_diagnostics.get("combiner_step_log")
-    if not step_log:
-        return
-
-    path = os.path.join(output_dir, "combiner_decisions.csv")
-    with open(path, "w", newline="", encoding="utf-8") as fh:
-        writer = csv.writer(fh)
-        writer.writerow(
-            [
-                "t",
-                "page_id",
-                "hit",
-                "evicted",
-                "chosen",
-                "bo_misses_before",
-                "lru_misses_before",
-            ]
-        )
-        for s in step_log:
+    if step_log:
+        path = os.path.join(output_dir, "combiner_decisions.csv")
+        with open(path, "w", newline="", encoding="utf-8") as fh:
+            writer = csv.writer(fh)
             writer.writerow(
                 [
-                    s["t"],
-                    s["page_id"],
-                    s["hit"],
-                    s["evicted"] or "",
-                    s["chosen"] or "",
-                    s["bo_misses_before"],
-                    s["lru_misses_before"],
+                    "t",
+                    "page_id",
+                    "hit",
+                    "evicted",
+                    "chosen",
+                    "bo_misses_before",
+                    "lru_misses_before",
                 ]
             )
-    logger.info("Combiner decisions saved to %s", path)
+            for s in step_log:
+                writer.writerow(
+                    [
+                        s["t"],
+                        s["page_id"],
+                        s["hit"],
+                        s["evicted"] or "",
+                        s["chosen"] or "",
+                        s["bo_misses_before"],
+                        s["lru_misses_before"],
+                    ]
+                )
+        logger.info("Combiner decisions saved to %s", path)
+
+    robust = result.extra_diagnostics.get("robust_ftp")
+    if robust and robust.get("step_log"):
+        robust_path = os.path.join(output_dir, "robust_ftp_decisions.csv")
+        with open(robust_path, "w", newline="", encoding="utf-8") as fh:
+            writer = csv.writer(fh)
+            writer.writerow(
+                [
+                    "t",
+                    "page_id",
+                    "chosen_expert",
+                    "switched",
+                    "robust_misses_before",
+                    "predictor_misses_before",
+                    "robust_misses_after",
+                    "predictor_misses_after",
+                    "hit",
+                    "evicted",
+                ]
+            )
+            for s in robust["step_log"]:
+                writer.writerow(
+                    [
+                        s["t"],
+                        s["page_id"],
+                        s["chosen_expert"],
+                        s["switched"],
+                        s["robust_misses_before"],
+                        s["predictor_misses_before"],
+                        s["robust_misses_after"],
+                        s["predictor_misses_after"],
+                        s["hit"],
+                        s["evicted"] or "",
+                    ]
+                )
+        logger.info("RobustFtP decisions saved to %s", robust_path)
+
+    guarded = result.extra_diagnostics.get("evict_value_v1_guarded")
+    if guarded and guarded.get("step_log"):
+        guarded_path = os.path.join(output_dir, "evict_value_v1_guarded_steps.csv")
+        with open(guarded_path, "w", newline="", encoding="utf-8") as fh:
+            writer = csv.writer(fh)
+            writer.writerow(
+                [
+                    "t",
+                    "page_id",
+                    "mode_before",
+                    "mode_after",
+                    "hit",
+                    "evicted",
+                    "base_hit",
+                    "fallback_hit",
+                    "early_return_detected",
+                    "suspicious_count_window",
+                    "guard_triggered",
+                    "trigger_reason",
+                ]
+            )
+            for s in guarded["step_log"]:
+                writer.writerow(
+                    [
+                        s["t"],
+                        s["page_id"],
+                        s["mode_before"],
+                        s["mode_after"],
+                        s["hit"],
+                        s["evicted"] or "",
+                        s["base_hit"],
+                        s["fallback_hit"],
+                        s["early_return_detected"],
+                        s["suspicious_count_window"],
+                        s["guard_triggered"],
+                        s["trigger_reason"] or "",
+                    ]
+                )
+        logger.info("Guarded EvictValue steps saved to %s", guarded_path)
 
 
 def _save_atlas_diagnostics(result: SimulationResult, output_dir: str) -> None:
@@ -885,6 +1030,53 @@ def main() -> None:
         help="Deterministic gate threshold: TRUST iff G[ctx] >= threshold (rest_v1).",
     )
     parser.add_argument(
+        "--adaptive-query-b",
+        type=int,
+        default=2,
+        help="Number of sampled query pages b per miss for adaptive_query / parsimonious_caching.",
+    )
+    parser.add_argument(
+        "--adaptive-query-seed",
+        type=int,
+        default=0,
+        help="RNG seed for adaptive_query / parsimonious_caching.",
+    )
+    parser.add_argument(
+        "--evict-value-model-path",
+        default="models/evict_value_v1_hist_gb.pkl",
+        help="Model artifact path for evict_value_v1 or evict_value_v1_guarded.",
+    )
+    parser.add_argument(
+        "--guard-fallback-policy",
+        choices=["lru", "marker"],
+        default="lru",
+        help="Fallback policy used by evict_value_v1_guarded.",
+    )
+    parser.add_argument(
+        "--guard-early-return-window",
+        type=int,
+        default=2,
+        help="Early-return detector window W for evict_value_v1_guarded.",
+    )
+    parser.add_argument(
+        "--guard-trigger-threshold",
+        type=int,
+        default=2,
+        help="Trigger threshold M: suspicious events needed inside trigger window.",
+    )
+    parser.add_argument(
+        "--guard-trigger-window",
+        type=int,
+        default=16,
+        help="Sliding request window size for counting suspicious events.",
+    )
+    parser.add_argument(
+        "--guard-duration",
+        type=int,
+        default=8,
+        help="Number of requests to stay in fallback mode after a trigger.",
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug logging.",
@@ -992,6 +1184,19 @@ def main() -> None:
                 )
     elif args.policy == "trust_and_doubt":
         policy = TrustAndDoubtPolicy(seed=args.trust_seed)
+    elif args.policy in {"adaptive_query", "parsimonious_caching"}:
+        policy = AdaptiveQueryPolicy(b=args.adaptive_query_b, seed=args.adaptive_query_seed)
+    elif args.policy == "evict_value_v1_guarded":
+        policy = EvictValueV1GuardedPolicy(
+            model_path=args.evict_value_model_path,
+            fallback_policy=args.guard_fallback_policy,
+            early_return_window=args.guard_early_return_window,
+            trigger_threshold=args.guard_trigger_threshold,
+            trigger_window=args.guard_trigger_window,
+            guard_duration=args.guard_duration,
+        )
+    elif args.policy == "evict_value_v1":
+        policy = EvictValueV1Policy(model_path=args.evict_value_model_path)
     else:
         policy = POLICY_REGISTRY[args.policy]
     result = run_policy(policy, requests, pages, args.capacity)

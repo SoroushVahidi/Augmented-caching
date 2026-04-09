@@ -82,6 +82,25 @@ def _evaluate(rows: List[Dict[str, object]], pred_label: np.ndarray, proba_i_bet
     return out
 
 
+def _predict_with_single_class_fallback(
+    *,
+    clf: LogisticRegression,
+    x_train: np.ndarray,
+    y_train: np.ndarray,
+    x_eval: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Return class predictions and P(i better) with a safe one-class fallback."""
+    classes = set(int(v) for v in y_train.tolist())
+    if len(classes) < 2:
+        only = int(next(iter(classes))) if classes else 0
+        pred = np.full(shape=(len(x_eval),), fill_value=only, dtype=int)
+        prob = np.full(shape=(len(x_eval),), fill_value=float(only), dtype=float)
+        return pred, prob
+
+    clf.fit(x_train, y_train)
+    return clf.predict(x_eval), clf.predict_proba(x_eval)[:, 1]
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="First-check baseline for pairwise eviction target")
     ap.add_argument("--data-dir", default="data/derived")
@@ -99,15 +118,24 @@ def main() -> None:
     x_test, _y_test, _ = _xy(test)
 
     clf = LogisticRegression(max_iter=600, random_state=args.seed)
-    clf.fit(x_train, y_train)
-
-    pred_train = clf.predict(x_train)
-    pred_val = clf.predict(x_val)
-    pred_test = clf.predict(x_test)
-
-    proba_train = clf.predict_proba(x_train)[:, 1]
-    proba_val = clf.predict_proba(x_val)[:, 1]
-    proba_test = clf.predict_proba(x_test)[:, 1]
+    pred_train, proba_train = _predict_with_single_class_fallback(
+        clf=clf,
+        x_train=x_train,
+        y_train=y_train,
+        x_eval=x_train,
+    )
+    pred_val, proba_val = _predict_with_single_class_fallback(
+        clf=clf,
+        x_train=x_train,
+        y_train=y_train,
+        x_eval=x_val,
+    )
+    pred_test, proba_test = _predict_with_single_class_fallback(
+        clf=clf,
+        x_train=x_train,
+        y_train=y_train,
+        x_eval=x_test,
+    )
 
     train_metrics = _evaluate(train, pred_train, proba_train)
     val_metrics = _evaluate(val, pred_val, proba_val)
