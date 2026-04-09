@@ -12,7 +12,7 @@ python -m lafc.runner.run_policy \\
 Supported --policy values:
     lru, weighted_lru, advice_trusting, la_det,
     marker, blind_oracle, predictive_marker, adaptive_query, parsimonious_caching, robust_ftp_d_marker,
-    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3, atlas_cga_v1, atlas_cga_v2, rest_v1, ml_gate_v1, ml_gate_v2, evict_value_v1, evict_value_v1_guarded, sentinel_robust_tripwire_v1
+    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3, atlas_cga_v1, atlas_cga_v2, rest_v1, ml_gate_v1, ml_gate_v2, evict_value_v1, evict_value_v1_guarded, sentinel_robust_tripwire_v1, sentinel_budgeted_guard_v2
 """
 
 from __future__ import annotations
@@ -55,6 +55,7 @@ from lafc.policies.weighted_lru import WeightedLRUPolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
 from lafc.policies.robust_ftp_marker_combiner import RobustFtPDeterministicMarkerCombiner
 from lafc.policies.guard_wrapper import EvictValueV1GuardedPolicy
+from lafc.policies.sentinel_budgeted_guard_v2 import SentinelBudgetedGuardV2Policy
 from lafc.policies.sentinel_robust_tripwire_v1 import SentinelRobustTripwireV1Policy
 from lafc.predictors.buckets import attach_perfect_buckets, maybe_corrupt_buckets
 from lafc.simulator.request_trace import load_trace
@@ -103,6 +104,7 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "evict_value_v1": EvictValueV1Policy(),
     "evict_value_v1_guarded": EvictValueV1GuardedPolicy(),
     "sentinel_robust_tripwire_v1": SentinelRobustTripwireV1Policy(),
+    "sentinel_budgeted_guard_v2": SentinelBudgetedGuardV2Policy(),
 }
 
 
@@ -204,6 +206,7 @@ def run_policy(
             EvictValueV1Policy,
             EvictValueV1GuardedPolicy,
             SentinelRobustTripwireV1Policy,
+            SentinelBudgetedGuardV2Policy,
         ),
     ):
         try:
@@ -328,6 +331,32 @@ def run_policy(
                     "used_predictor_override": s.used_predictor_override,
                     "risk_score": s.risk_score,
                     "suspicious_count_window": s.suspicious_count_window,
+                    "budget_before": s.budget_before,
+                    "budget_after": s.budget_after,
+                    "guard_remaining_after": s.guard_remaining_after,
+                    "robust_hit": s.robust_hit,
+                    "predictor_hit": s.predictor_hit,
+                    "chosen_hit": s.chosen_hit,
+                    "chosen_evicted": s.chosen_evicted,
+                }
+                for s in policy.step_log()
+            ],
+        }
+    if isinstance(policy, SentinelBudgetedGuardV2Policy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["sentinel_budgeted_guard_v2"] = {
+            "summary": policy.diagnostics_summary(),
+            "step_log": [
+                {
+                    "t": s.t,
+                    "page_id": s.page_id,
+                    "chosen_line": s.chosen_line,
+                    "forced_robust": s.forced_robust,
+                    "reentry_ready": s.reentry_ready,
+                    "used_predictor_override": s.used_predictor_override,
+                    "risk_score": s.risk_score,
+                    "suspicious_count_window": s.suspicious_count_window,
+                    "guard_memory_after": s.guard_memory_after,
                     "budget_before": s.budget_before,
                     "budget_after": s.budget_after,
                     "guard_remaining_after": s.guard_remaining_after,
@@ -601,6 +630,10 @@ def _save_metrics(result: SimulationResult, output_dir: str) -> None:
             sentinel = result.extra_diagnostics["sentinel_robust_tripwire_v1"]
             for key, value in sentinel.get("summary", {}).items():
                 metrics[f"sentinel_robust_tripwire_v1_{key}"] = value
+        if "sentinel_budgeted_guard_v2" in result.extra_diagnostics:
+            sentinel_v2 = result.extra_diagnostics["sentinel_budgeted_guard_v2"]
+            for key, value in sentinel_v2.get("summary", {}).items():
+                metrics[f"sentinel_budgeted_guard_v2_{key}"] = value
 
 
     path = os.path.join(output_dir, "metrics.json")
@@ -784,6 +817,54 @@ def _save_combiner_decisions(result: SimulationResult, output_dir: str) -> None:
                     ]
                 )
         logger.info("Sentinel tripwire steps saved to %s", sentinel_path)
+
+    sentinel_v2 = result.extra_diagnostics.get("sentinel_budgeted_guard_v2")
+    if sentinel_v2 and sentinel_v2.get("step_log"):
+        sentinel_v2_path = os.path.join(output_dir, "sentinel_budgeted_guard_v2_steps.csv")
+        with open(sentinel_v2_path, "w", newline="", encoding="utf-8") as fh:
+            writer = csv.writer(fh)
+            writer.writerow(
+                [
+                    "t",
+                    "page_id",
+                    "chosen_line",
+                    "forced_robust",
+                    "reentry_ready",
+                    "used_predictor_override",
+                    "risk_score",
+                    "suspicious_count_window",
+                    "guard_memory_after",
+                    "budget_before",
+                    "budget_after",
+                    "guard_remaining_after",
+                    "robust_hit",
+                    "predictor_hit",
+                    "chosen_hit",
+                    "chosen_evicted",
+                ]
+            )
+            for s in sentinel_v2["step_log"]:
+                writer.writerow(
+                    [
+                        s["t"],
+                        s["page_id"],
+                        s["chosen_line"],
+                        s["forced_robust"],
+                        s["reentry_ready"],
+                        s["used_predictor_override"],
+                        s["risk_score"],
+                        s["suspicious_count_window"],
+                        s["guard_memory_after"],
+                        s["budget_before"],
+                        s["budget_after"],
+                        s["guard_remaining_after"],
+                        s["robust_hit"],
+                        s["predictor_hit"],
+                        s["chosen_hit"],
+                        s["chosen_evicted"] or "",
+                    ]
+                )
+        logger.info("Sentinel budgeted guard v2 steps saved to %s", sentinel_v2_path)
 
 
 def _save_atlas_diagnostics(result: SimulationResult, output_dir: str) -> None:

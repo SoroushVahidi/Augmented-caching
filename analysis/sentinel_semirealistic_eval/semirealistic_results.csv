@@ -1,0 +1,37 @@
+trace,trace_note,capacity,requests,disagreement_steps,policy,misses,hits,hit_rate
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,3,240,14,sentinel_robust_tripwire_v1,127,113,0.4708333333333333
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,3,240,14,robust_ftp_d_marker,126,114,0.475
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,3,240,14,blind_oracle_lru_combiner,140,100,0.4166666666666667
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,3,240,14,rest_v1,139,101,0.42083333333333334
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,3,240,14,atlas_v3,139,101,0.42083333333333334
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,3,240,14,lru,139,101,0.42083333333333334
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,4,240,1,sentinel_robust_tripwire_v1,106,134,0.5583333333333333
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,4,240,1,robust_ftp_d_marker,107,133,0.5541666666666667
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,4,240,1,blind_oracle_lru_combiner,104,136,0.5666666666666667
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,4,240,1,rest_v1,103,137,0.5708333333333333
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,4,240,1,atlas_v3,103,137,0.5708333333333333
+semi::phase_locality_drift,Rotating hot sets with moderate transition overlap and rare off-hot requests.,4,240,1,lru,103,137,0.5708333333333333
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,3,240,63,sentinel_robust_tripwire_v1,158,82,0.3416666666666667
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,3,240,63,robust_ftp_d_marker,156,84,0.35
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,3,240,63,blind_oracle_lru_combiner,161,79,0.32916666666666666
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,3,240,63,rest_v1,160,80,0.3333333333333333
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,3,240,63,atlas_v3,160,80,0.3333333333333333
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,3,240,63,lru,160,80,0.3333333333333333
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,4,240,0,sentinel_robust_tripwire_v1,133,107,0.44583333333333336
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,4,240,0,robust_ftp_d_marker,133,107,0.44583333333333336
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,4,240,0,blind_oracle_lru_combiner,132,108,0.45
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,4,240,0,rest_v1,131,109,0.45416666666666666
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,4,240,0,atlas_v3,131,109,0.45416666666666666
+semi::locality_with_short_scans,Stable locality with periodic short scans that transiently perturb the cache.,4,240,0,lru,131,109,0.45416666666666666
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,3,240,34,sentinel_robust_tripwire_v1,152,88,0.36666666666666664
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,3,240,34,robust_ftp_d_marker,151,89,0.37083333333333335
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,3,240,34,blind_oracle_lru_combiner,159,81,0.3375
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,3,240,34,rest_v1,157,83,0.3458333333333333
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,3,240,34,atlas_v3,157,83,0.3458333333333333
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,3,240,34,lru,157,83,0.3458333333333333
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,4,240,10,sentinel_robust_tripwire_v1,134,106,0.44166666666666665
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,4,240,10,robust_ftp_d_marker,135,105,0.4375
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,4,240,10,blind_oracle_lru_combiner,130,110,0.4583333333333333
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,4,240,10,rest_v1,129,111,0.4625
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,4,240,10,atlas_v3,129,111,0.4625
+semi::daypart_popularity_mix,Daypart-like popularity shifts with repeats and long-tail traffic.,4,240,10,lru,129,111,0.4625
