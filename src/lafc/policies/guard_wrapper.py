@@ -249,6 +249,8 @@ class EvictValueV1GuardedPolicy(GuardWrapperPolicy):
         self,
         *,
         model_path: str = "models/evict_value_v1_hist_gb.pkl",
+        scorer_mode: str = "auto",
+        lightweight_config_path: str | None = None,
         history_window: int = 64,
         fallback_policy: str = "lru",
         early_return_window: int = 2,
@@ -256,7 +258,12 @@ class EvictValueV1GuardedPolicy(GuardWrapperPolicy):
         trigger_window: int = 16,
         guard_duration: int = 8,
     ) -> None:
-        base = EvictValueV1Policy(model_path=model_path, history_window=history_window)
+        base = EvictValueV1Policy(
+            model_path=model_path,
+            history_window=history_window,
+            scorer_mode=scorer_mode,
+            lightweight_config_path=lightweight_config_path,
+        )
         if fallback_policy == "lru":
             fallback = LRUPolicy()
         elif fallback_policy == "marker":

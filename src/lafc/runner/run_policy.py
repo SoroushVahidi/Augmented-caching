@@ -1047,6 +1047,17 @@ def main() -> None:
         help="Model artifact path for evict_value_v1 or evict_value_v1_guarded.",
     )
     parser.add_argument(
+        "--evict-value-scorer-mode",
+        choices=["auto", "artifact", "lightweight"],
+        default="auto",
+        help="Scorer mode for evict_value_v1 family (auto falls back to lightweight when artifact is missing).",
+    )
+    parser.add_argument(
+        "--evict-value-lightweight-config",
+        default="",
+        help="Optional JSON config path for evict_value_v1 lightweight scorer (text-only).",
+    )
+    parser.add_argument(
         "--guard-fallback-policy",
         choices=["lru", "marker"],
         default="lru",
@@ -1189,6 +1200,8 @@ def main() -> None:
     elif args.policy == "evict_value_v1_guarded":
         policy = EvictValueV1GuardedPolicy(
             model_path=args.evict_value_model_path,
+            scorer_mode=args.evict_value_scorer_mode,
+            lightweight_config_path=(args.evict_value_lightweight_config or None),
             fallback_policy=args.guard_fallback_policy,
             early_return_window=args.guard_early_return_window,
             trigger_threshold=args.guard_trigger_threshold,
@@ -1196,7 +1209,11 @@ def main() -> None:
             guard_duration=args.guard_duration,
         )
     elif args.policy == "evict_value_v1":
-        policy = EvictValueV1Policy(model_path=args.evict_value_model_path)
+        policy = EvictValueV1Policy(
+            model_path=args.evict_value_model_path,
+            scorer_mode=args.evict_value_scorer_mode,
+            lightweight_config_path=(args.evict_value_lightweight_config or None),
+        )
     else:
         policy = POLICY_REGISTRY[args.policy]
     result = run_policy(policy, requests, pages, args.capacity)
