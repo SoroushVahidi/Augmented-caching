@@ -135,6 +135,7 @@ For `atlas_v1` / `atlas_v2` / `atlas_v3` / `atlas_cga_v1` / `atlas_cga_v2` / `re
 | `parsimonious_caching` | 5      | Alias of `adaptive_query`                           |
 | `robust_ftp_d_marker` | 4b      | RobustFtP-D style combiner (ICML 2021, MARKER fallback) |
 | `robust_ftp`         | 4b       | Alias of `robust_ftp_d_marker`                      |
+| `offline_belady`     | Oracle   | Offline OPT baseline via true future (uniform paging) |
 | `trust_and_doubt`   | 3        | TRUST&DOUBT (Antoniadis et al. 2020)               |
 | `atlas_v1`          | Exp      | Experimental confidence-aware policy with LRU fallback |
 | `atlas_v2`          | Exp      | Experimental confidence-aware policy with dynamic trust adaptation |
@@ -215,6 +216,24 @@ python -m lafc.runner.run_policy \
     --trace data/example_unweighted.json \
     --capacity 3 \
     --derive-predicted-caches
+```
+
+### Offline baseline script (exact Belady for uniform paging)
+
+```bash
+python scripts/run_offline_belady.py \
+    --trace data/example_unweighted.json \
+    --capacity 3 \
+    --output-dir output/offline_belady_example
+```
+
+### Offline baseline script (general caching: variable sizes/costs, LP+rounding)
+
+```bash
+python scripts/run_offline_general_caching_approx.py \
+    --trace data/example_general_caching.json \
+    --capacity 4 \
+    --output-dir output/offline_general_caching_approx
 ```
 
 ### Smoke test (`atlas_v1`, experimental)
@@ -417,12 +436,18 @@ This repository includes a lightweight, text-only decision-aligned supervision p
 Dataset builders:
 
 - `python scripts/build_evict_value_decision_aligned_dataset.py --trace-glob "data/example_*.json" --capacities 2,3,4 --horizons 4,8,16,32 --continuation-policy lru --output-dir data/derived/evict_value_decision_aligned`
+- `python scripts/build_evict_value_decision_aligned_dataset.py --trace-glob "data/example_*.json,data/example_general_caching.json" --capacities 2,3 --horizons 24 --label-source offline_teacher --output-dir data/derived/evict_value_decision_aligned_offline_teacher`
+- `python scripts/build_offline_guided_eviction_dataset.py --trace-glob "data/example_*.json,data/example_general_caching.json" --capacities 2,3 --horizon 24 --output-dir data/derived/offline_teacher_supervision`
 - `python scripts/build_evict_value_pairwise_dataset.py --candidate-csv data/derived/evict_value_decision_aligned/candidate_rows.csv --output-dir data/derived/evict_value_pairwise`
 
 First-check runners:
 
 - `python scripts/run_evict_value_decision_aligned_first_check.py --candidate-csv data/derived/evict_value_decision_aligned/candidate_rows.csv --output-dir analysis/evict_value_decision_aligned_first_check`
 - `python scripts/run_evict_value_pairwise_first_check.py --pairwise-csv data/derived/evict_value_pairwise/pairwise_rows.csv --output-dir analysis/evict_value_pairwise_first_check`
+- `python scripts/run_offline_teacher_label_first_check.py --traces data/example_unweighted.json,data/example_general_caching.json --capacity 3 --horizon 24 --output-dir analysis/offline_teacher_first_check`
+- `python scripts/run_offline_teacher_vs_heuristic_experiment.py --trace-glob "data/example_*.json,data/example_general_caching.json" --capacities 2,3 --horizon 12 --output-dir analysis/offline_teacher_vs_heuristic`
 
 Outputs are text-only (`.csv`, `.json`, `.md`) and no binary model checkpoints are saved.
 See `docs/decision_aligned_targets.md` for definitions, caveats, and extension notes.
+See `docs/offline_teacher_supervision.md` for offline teacher labels (`exact_teacher_belady` vs `approx_teacher_lp`).
+See `docs/offline_teacher_vs_heuristic_experiment.md` for the controlled supervision comparison protocol.
