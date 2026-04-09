@@ -1,0 +1,72 @@
+{
+  "config": {
+    "trace_paths": [
+      "data/example.json",
+      "data/example_atlas_v1.json",
+      "data/example_general_caching.json",
+      "data/example_unweighted.json"
+    ],
+    "capacities": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "margin_threshold_grid": [
+      0.0,
+      0.01,
+      0.03,
+      0.05,
+      0.08,
+      0.12
+    ],
+    "max_requests_per_trace": 0,
+    "history_window": 64,
+    "fragility_window": 16,
+    "fallback_policy": "lru",
+    "trigger_rule": "top1_top2_margin_lt_threshold",
+    "scorer_path": "evict_value_v1_lightweight_surrogate_compatible",
+    "lightweight_config_path": null
+  },
+  "policy_totals": {
+    "pointwise": {
+      "total_misses": 223,
+      "total_hits": 125,
+      "hit_rate": 0.35919540229885055,
+      "avg_trigger_frequency": 0.0,
+      "workloads": 36
+    },
+    "hybrid": {
+      "total_misses": 223,
+      "total_hits": 125,
+      "hit_rate": 0.35919540229885055,
+      "avg_trigger_frequency": 0.0,
+      "workloads": 36
+    },
+    "lru": {
+      "total_misses": 223,
+      "total_hits": 125,
+      "hit_rate": 0.35919540229885055,
+      "avg_trigger_frequency": 1.0,
+      "workloads": 36
+    }
+  },
+  "hybrid_vs_pointwise": {
+    "wins": 0,
+    "ties": 36,
+    "losses": 0,
+    "average_rank": {
+      "hybrid": 1.0833333333333333,
+      "pointwise": 2.9166666666666665,
+      "lru": 2.0
+    }
+  }
+}
