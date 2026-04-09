@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from lafc.evict_value_dataset_v1 import EvictValueDatasetV1Config, build_evict_value_examples_v1
 from lafc.evict_value_features_v1 import EVICT_VALUE_V1_FEATURE_COLUMNS, compute_candidate_features_v1
 from lafc.evict_value_model_v1 import EvictValueV1Model
@@ -112,7 +114,62 @@ def test_evict_value_v1_policy_smoke_and_diagnostics(tmp_path: Path):
 
     summary = policy.diagnostics_summary()
     assert summary["model_name"] == "rf_test"
+    assert summary["scorer_mode"] == "artifact"
     assert summary["evictions"] >= 0
+
+
+def test_evict_value_v1_policy_lightweight_mode_without_artifact():
+    reqs, pages = load_trace("data/example_atlas_v1.json")
+    policy = EvictValueV1Policy(
+        model_path="models/definitely_missing_model.pkl",
+        scorer_mode="lightweight",
+    )
+    result = run_policy(policy, reqs, pages, capacity=2)
+    assert result.total_misses >= 0
+    summary = policy.diagnostics_summary()
+    assert summary["scorer_mode"] == "lightweight"
+    assert summary["artifact_found"] is False
+    assert summary["scorer"]["is_surrogate"] is True
+
+
+def test_evict_value_v1_policy_auto_mode_falls_back_without_artifact():
+    reqs, pages = load_trace("data/example_atlas_v1.json")
+    policy = EvictValueV1Policy(model_path="models/definitely_missing_model.pkl", scorer_mode="auto")
+    result = run_policy(policy, reqs, pages, capacity=2)
+    assert result.total_misses >= 0
+    summary = policy.diagnostics_summary()
+    assert summary["scorer_mode_requested"] == "auto"
+    assert summary["scorer_mode"] == "lightweight"
+
+
+def test_evict_value_v1_policy_artifact_mode_errors_if_missing():
+    reqs, pages = load_trace("data/example_atlas_v1.json")
+    policy = EvictValueV1Policy(model_path="models/definitely_missing_model.pkl", scorer_mode="artifact")
+    with pytest.raises(FileNotFoundError):
+        run_policy(policy, reqs, pages, capacity=2)
+
+
+def test_lightweight_comparison_includes_evict_value_v1(tmp_path: Path):
+    out_dir = tmp_path / "lw"
+    subprocess.run(
+        [
+            sys.executable,
+            "scripts/run_lightweight_baseline_comparison.py",
+            "--capacities",
+            "3",
+            "--max-requests",
+            "50",
+            "--policies",
+            "lru,evict_value_v1",
+            "--out-dir",
+            str(out_dir),
+        ],
+        check=True,
+    )
+    summary_rows = list(csv.DictReader((out_dir / "lightweight_results.csv").open("r", encoding="utf-8")))
+    ev_rows = [r for r in summary_rows if r["policy"] == "evict_value_v1"]
+    assert ev_rows
+    assert {r["scorer_mode"] for r in ev_rows} == {"lightweight"}
 
 
 def test_evict_value_v1_backward_compatibility_with_existing_policies():
