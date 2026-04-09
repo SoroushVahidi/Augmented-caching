@@ -1,0 +1,48 @@
+{
+  "trace_glob": "data/example_unweighted.json,data/example_atlas_v1.json,data/example_general_caching.json,data/example.json",
+  "trace_count": 4,
+  "capacities": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "horizon": 16,
+  "max_requests_per_trace": 0,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "pointwise_model_family": "ridge_regression_with_standard_scaler",
+  "pairwise_model_family": "logistic_regression_on_delta_features",
+  "aggregate_downstream": [
+    {
+      "supervision_style": "pairwise",
+      "workloads": 20,
+      "total_requests": 200,
+      "total_misses": 106,
+      "hit_rate": 0.47,
+      "delta_misses_vs_lru": -20,
+      "avg_rank": 1.1
+    },
+    {
+      "supervision_style": "pointwise",
+      "workloads": 20,
+      "total_requests": 200,
+      "total_misses": 104,
+      "hit_rate": 0.48,
+      "delta_misses_vs_lru": -22,
+      "avg_rank": 1.0
+    }
+  ],
+  "pairwise_vs_pointwise": {
+    "wins": 0,
+    "losses": 2,
+    "ties": 18,
+    "workloads_compared": 20
+  }
+}
