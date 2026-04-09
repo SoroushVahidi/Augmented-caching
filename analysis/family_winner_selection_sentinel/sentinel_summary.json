@@ -1,0 +1,123 @@
+{
+  "slices_total": 30,
+  "comparators": [
+    "robust_ftp_d_marker",
+    "blind_oracle_lru_combiner",
+    "rest_v1",
+    "atlas_v3",
+    "lru"
+  ],
+  "overall": {
+    "robust_ftp_d_marker": {
+      "wins": 0,
+      "ties": 30,
+      "losses": 0,
+      "mean_delta_misses": 0.0,
+      "max_loss_delta": 0,
+      "max_win_delta": 0
+    },
+    "blind_oracle_lru_combiner": {
+      "wins": 3,
+      "ties": 27,
+      "losses": 0,
+      "mean_delta_misses": -0.13333333333333333,
+      "max_loss_delta": 0,
+      "max_win_delta": -2
+    },
+    "rest_v1": {
+      "wins": 11,
+      "ties": 18,
+      "losses": 1,
+      "mean_delta_misses": -0.5666666666666667,
+      "max_loss_delta": 1,
+      "max_win_delta": -3
+    },
+    "atlas_v3": {
+      "wins": 8,
+      "ties": 21,
+      "losses": 1,
+      "mean_delta_misses": -0.3,
+      "max_loss_delta": 1,
+      "max_win_delta": -2
+    },
+    "lru": {
+      "wins": 18,
+      "ties": 12,
+      "losses": 0,
+      "mean_delta_misses": -1.1666666666666667,
+      "max_loss_delta": 0,
+      "max_win_delta": -3
+    }
+  },
+  "by_regime": {
+    "clean": {
+      "robust_ftp_d_marker": {
+        "wins": 0,
+        "ties": 15,
+        "losses": 0
+      },
+      "blind_oracle_lru_combiner": {
+        "wins": 0,
+        "ties": 15,
+        "losses": 0
+      },
+      "rest_v1": {
+        "wins": 6,
+        "ties": 9,
+        "losses": 0
+      },
+      "atlas_v3": {
+        "wins": 5,
+        "ties": 10,
+        "losses": 0
+      },
+      "lru": {
+        "wins": 9,
+        "ties": 6,
+        "losses": 0
+      }
+    },
+    "noisy": {
+      "robust_ftp_d_marker": {
+        "wins": 0,
+        "ties": 15,
+        "losses": 0
+      },
+      "blind_oracle_lru_combiner": {
+        "wins": 3,
+        "ties": 12,
+        "losses": 0
+      },
+      "rest_v1": {
+        "wins": 5,
+        "ties": 9,
+        "losses": 1
+      },
+      "atlas_v3": {
+        "wins": 3,
+        "ties": 11,
+        "losses": 1
+      },
+      "lru": {
+        "wins": 9,
+        "ties": 6,
+        "losses": 0
+      }
+    }
+  },
+  "override_activity": {
+    "mean_predictor_coverage": 0.2000000000000001,
+    "min_predictor_coverage": 0.2,
+    "max_predictor_coverage": 0.2,
+    "slices_with_nonzero_predictor_coverage": 30,
+    "mean_predictor_steps": 2.0,
+    "mean_guard_triggers": 0.0,
+    "slices_with_guard_triggers": 0
+  },
+  "robustness_signals": {
+    "vs_lru_non_inferior_slices": 30,
+    "vs_lru_loss_slices": 0,
+    "vs_robust_ftp_loss_slices": 0,
+    "vs_blind_oracle_lru_loss_slices": 0
+  }
+}

@@ -1,0 +1,7 @@
+trace,intended_case,capacity,requests,disagreement_steps,disagreement_fraction,sentinel_misses,robust_ftp_d_marker_misses,blind_oracle_lru_combiner_misses,lru_misses,sentinel_minus_robust_ftp_d_marker,sentinel_minus_blind_oracle_lru_combiner,sentinel_minus_lru,sentinel_vs_robust_ftp_d_marker,sentinel_predictor_steps,sentinel_predictor_coverage,sentinel_guard_triggers,helpful_override_steps,harmful_override_steps
+synthetic::predictor_disagreement_help,predictor_help,2,30,4,0.13333333333333333,15,16,18,17,-1,-3,-2,win,3.0,0.1,0.0,1,0
+synthetic::predictor_disagreement_help,predictor_help,3,30,4,0.13333333333333333,11,11,9,8,0,2,3,tie,3.0,0.1,0.0,1,1
+synthetic::predictor_disagreement_hurt,predictor_hurt,2,30,9,0.3,15,14,15,14,1,0,1,loss,1.0,0.03333333333333333,0.0,0,1
+synthetic::predictor_disagreement_hurt,predictor_hurt,3,30,2,0.06666666666666667,11,11,9,8,0,2,3,tie,1.0,0.03333333333333333,0.0,0,0
+synthetic::predictor_disagreement_mixed,mixed,2,30,4,0.13333333333333333,14,15,12,15,-1,2,-1,win,2.0,0.06666666666666667,0.0,1,0
+synthetic::predictor_disagreement_mixed,mixed,3,30,3,0.1,9,11,10,10,-2,-1,-1,win,3.0,0.1,0.0,2,0
