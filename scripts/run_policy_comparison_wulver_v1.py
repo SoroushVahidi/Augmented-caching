@@ -58,6 +58,14 @@ def main() -> None:
     ap.add_argument("--max-traces", type=int, default=None, help="Use only the first N rows of the manifest CSV.")
     ap.add_argument("--capacities", default="64", help="Comma-separated capacities (same pool as dataset phase).")
     ap.add_argument("--max-requests-per-trace", type=int, default=None)
+    ap.add_argument(
+        "--policies",
+        default="",
+        help=(
+            "Optional comma-separated policy names to run. "
+            "If empty, run all available policies (subject to model availability checks)."
+        ),
+    )
     ap.add_argument("--evict-value-model", type=Path, default=Path("models/evict_value_wulver_v1_best.pkl"))
     ap.add_argument("--out-csv", type=Path, default=Path("analysis/evict_value_wulver_v1_policy_comparison.csv"))
     ap.add_argument("--out-md", type=Path, default=Path("analysis/evict_value_wulver_v1_policy_comparison.md"))
@@ -67,6 +75,12 @@ def main() -> None:
     traces = _read_manifest_paths(args.trace_manifest, args.max_traces)
     rows_out: List[Dict[str, object]] = []
     policies = dict(POLICIES)
+    requested = [x.strip() for x in args.policies.split(",") if x.strip()]
+    if requested:
+        unknown = sorted([p for p in requested if p not in policies])
+        if unknown:
+            raise SystemExit(f"Unknown policy name(s): {', '.join(unknown)}")
+        policies = {k: policies[k] for k in requested}
     if not _ml_gate_models_present():
         policies.pop("ml_gate_v1", None)
         policies.pop("ml_gate_v2", None)

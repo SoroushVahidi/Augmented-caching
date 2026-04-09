@@ -1,0 +1,114 @@
+# Wulver heavy experiment: artifact-backed `evict_value_v1`
+
+This package is the first serious Wulver-scale run for the current main learned path:
+
+- learned method: `evict_value_v1` trained from artifact-backed candidate shards
+- baseline set: `lru`, `blind_oracle`, `predictive_marker`, `blind_oracle_lru_combiner`, `trust_and_doubt`, `rest_v1`
+- evaluation policy set also includes trained `evict_value_v1`
+
+The setup follows existing repo/Wulver conventions:
+
+- Slurm partition/qos: `general` + `standard`
+- CPU-only jobs (no GPU flags)
+- logs: `slurm/logs/%x-%j.out` and `.err`
+- configurable via environment variables passed to `sbatch --export=...`
+
+## Batch files added
+
+- `slurm/evict_value_v1_wulver_heavy_smoke.sbatch`
+  - quick end-to-end wiring check on a tiny slice
+- `slurm/evict_value_v1_wulver_heavy_train.sbatch`
+  - heavy dataset build + summary + artifact-backed model training
+- `slurm/evict_value_v1_wulver_heavy_eval.sbatch`
+  - broad policy comparison on held-out evaluation traces with trained model
+
+## Heavy experiment scope
+
+- trace manifest: `analysis/wulver_trace_manifest_full.csv`
+  - families: brightkite, citibike, wiki2018, twemcache, metakv, metacdn, cloudphysics
+- training capacities (default): `32,64,128,256`
+- training horizons (default): `4,8,16`
+- max requests per trace (default): `50000`
+- split mode: `trace_chunk` with deterministic seed (`SPLIT_SEED=7` by default)
+
+This is a broad but controlled scope: multiple real families and capacities without a huge uncontrolled sweep.
+
+## Submission order
+
+## 0) Optional smoke run first
+
+```bash
+sbatch slurm/evict_value_v1_wulver_heavy_smoke.sbatch
+```
+
+This validates environment, file paths, and policy wiring before committing full cluster time.
+
+## 1) Heavy training stage
+
+```bash
+sbatch --export=ALL,EXP_TAG=heavy_r1 \
+  slurm/evict_value_v1_wulver_heavy_train.sbatch
+```
+
+Optional explicit knobs:
+
+```bash
+sbatch --export=ALL,EXP_TAG=heavy_r1,TRACE_MANIFEST=analysis/wulver_trace_manifest_full.csv,CAPACITIES=32,64,128,256,HORIZONS=4,8,16,MAX_REQUESTS_PER_TRACE=50000,MAX_TRAIN_ROWS=800000,MAX_VAL_ROWS=250000,MAX_TEST_ROWS=250000 \
+  slurm/evict_value_v1_wulver_heavy_train.sbatch
+```
+
+## 2) Heavy evaluation stage (after training)
+
+Submit directly:
+
+```bash
+sbatch --export=ALL,EXP_TAG=heavy_r1 \
+  slurm/evict_value_v1_wulver_heavy_eval.sbatch
+```
+
+Or chain automatically after training:
+
+```bash
+TRAIN_JOB_ID=$(sbatch --parsable --export=ALL,EXP_TAG=heavy_r1 slurm/evict_value_v1_wulver_heavy_train.sbatch)
+sbatch --dependency=afterok:${TRAIN_JOB_ID} --export=ALL,EXP_TAG=heavy_r1 slurm/evict_value_v1_wulver_heavy_eval.sbatch
+```
+
+## Output layout
+
+For `EXP_TAG=heavy_r1`:
+
+- dataset artifacts:
+  - `data/derived/evict_value_v1_wulver_heavy_r1/manifest.json`
+  - `data/derived/evict_value_v1_wulver_heavy_r1/split_summary.csv`
+  - `data/derived/evict_value_v1_wulver_heavy_r1/dataset_summary_extended_heavy_r1.json`
+- training artifacts:
+  - `models/evict_value_wulver_v1_best.pkl` (latest canonical output from trainer)
+  - `models/evict_value_wulver_v1_best_heavy_r1.pkl` (tagged copy for reproducibility)
+  - `analysis/evict_value_wulver_v1_train_metrics_heavy_r1.json`
+  - `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv`
+  - `analysis/evict_value_wulver_v1_best_config_heavy_r1.json`
+- evaluation artifacts:
+  - `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`
+  - `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.md`
+- Slurm logs:
+  - `slurm/logs/evictv1-heavy-train-<jobid>.out/.err`
+  - `slurm/logs/evictv1-heavy-eval-<jobid>.out/.err`
+  - `slurm/logs/evictv1-heavy-smoke-<jobid>.out/.err`
+
+## Success checks
+
+- job status:
+  - `squeue -u $USER`
+  - `sacct -j <jobid> --format=JobID,State,Elapsed,MaxRSS`
+- training success:
+  - `models/evict_value_wulver_v1_best_<EXP_TAG>.pkl` exists
+  - `analysis/evict_value_wulver_v1_train_metrics_<EXP_TAG>.json` exists
+- evaluation success:
+  - `analysis/evict_value_wulver_v1_policy_comparison_<EXP_TAG>.csv` exists and has rows for all selected policies
+  - markdown report exists at matching `<EXP_TAG>.md`
+
+## Notes and assumptions
+
+- CPU-only by design: dataset generation, sklearn training, and policy simulation are CPU-bound in this repo.
+- `wiki2018` is a pageview-derived proxy family in this repo; interpret results accordingly.
+- The policy runner now supports a `--policies` filter so this heavy run can use the exact baseline set above.

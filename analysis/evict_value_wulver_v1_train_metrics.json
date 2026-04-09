@@ -1,244 +1,307 @@
 {
-  "manifest": "data/derived/evict_value_v1_wulver_multi/manifest.json",
+  "manifest": "data/derived/evict_value_v1_wulver_multi_full/manifest.json",
   "horizons": {
     "4": {
       "ridge": {
         "val": {
-          "mae": 2.505423548423677,
-          "rmse": 2.50542720487294,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.4690831556503198,
-          "mean_regret_vs_oracle": 0.0,
+          "mae": 0.9199739228848686,
+          "rmse": 1.0295727725405588,
+          "decision_count": 1824.0,
+          "top1_eviction_match": 0.7478070175438597,
+          "mean_regret_vs_oracle": 0.001644736842105263,
           "per_family_val": {
+            "cloudphysics": {
+              "mae": 1.7067924563542003,
+              "rmse": 1.846913629817313,
+              "decision_count": 521.0,
+              "top1_eviction_match": 0.11708253358925144,
+              "mean_regret_vs_oracle": 0.005758157389635317
+            },
             "wiki2018": {
-              "mae": 2.505423548423677,
-              "rmse": 2.50542720487294,
-              "decision_count": 469.0,
-              "top1_eviction_match": 0.4690831556503198,
+              "mae": 0.7637041985700316,
+              "rmse": 0.7701136402338962,
+              "decision_count": 1303.0,
+              "top1_eviction_match": 1.0,
               "mean_regret_vs_oracle": 0.0
             }
           }
         },
         "test": {
-          "mae": 2.505423548423677,
-          "rmse": 2.50542720487294,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.4690831556503198,
-          "mean_regret_vs_oracle": 0.0
+          "mae": 1.2542439635636018,
+          "rmse": 1.4503168049687667,
+          "decision_count": 2646.0,
+          "top1_eviction_match": 0.1923658352229781,
+          "mean_regret_vs_oracle": 0.035903250188964474
         }
       },
       "random_forest": {
         "val": {
-          "mae": 2.481094082484887,
-          "rmse": 2.488394445229494,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.9509594882729211,
-          "mean_regret_vs_oracle": 0.0,
+          "mae": 0.8583625613268046,
+          "rmse": 1.0594829312434015,
+          "decision_count": 1824.0,
+          "top1_eviction_match": 0.5169956140350878,
+          "mean_regret_vs_oracle": 0.0005482456140350877,
           "per_family_val": {
+            "cloudphysics": {
+              "mae": 2.142393214902635,
+              "rmse": 2.1790491410011494,
+              "decision_count": 521.0,
+              "top1_eviction_match": 0.33589251439539347,
+              "mean_regret_vs_oracle": 0.0019193857965451055
+            },
             "wiki2018": {
-              "mae": 2.481094082484887,
-              "rmse": 2.488394445229494,
-              "decision_count": 469.0,
-              "top1_eviction_match": 0.9509594882729211,
+              "mae": 0.6033417303337388,
+              "rmse": 0.6343461703565518,
+              "decision_count": 1303.0,
+              "top1_eviction_match": 0.5894090560245587,
               "mean_regret_vs_oracle": 0.0
             }
           }
         },
         "test": {
-          "mae": 2.481094082484887,
-          "rmse": 2.488394445229494,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.9509594882729211,
-          "mean_regret_vs_oracle": 0.0
+          "mae": 1.3583256511216815,
+          "rmse": 1.6055485828565366,
+          "decision_count": 2646.0,
+          "top1_eviction_match": 0.6156462585034014,
+          "mean_regret_vs_oracle": 0.006802721088435374
         }
       },
       "hist_gb": {
         "val": {
-          "mae": 2.407717378615806,
-          "rmse": 2.409253497239477,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.008528784648187633,
+          "mae": 0.8647290576274268,
+          "rmse": 1.0701434162914625,
+          "decision_count": 1824.0,
+          "top1_eviction_match": 0.5471491228070176,
           "mean_regret_vs_oracle": 0.0,
           "per_family_val": {
+            "cloudphysics": {
+              "mae": 2.1616315661694965,
+              "rmse": 2.2066639501491623,
+              "decision_count": 521.0,
+              "top1_eviction_match": 0.04030710172744722,
+              "mean_regret_vs_oracle": 0.0
+            },
             "wiki2018": {
-              "mae": 2.407717378615806,
-              "rmse": 2.409253497239477,
-              "decision_count": 469.0,
-              "top1_eviction_match": 0.008528784648187633,
+              "mae": 0.6071517525028661,
+              "rmse": 0.636830576027965,
+              "decision_count": 1303.0,
+              "top1_eviction_match": 0.7498081350729087,
               "mean_regret_vs_oracle": 0.0
             }
           }
         },
         "test": {
-          "mae": 2.407717378615806,
-          "rmse": 2.409253497239477,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.008528784648187633,
-          "mean_regret_vs_oracle": 0.0
+          "mae": 1.3656314006005763,
+          "rmse": 1.6214914784847438,
+          "decision_count": 2646.0,
+          "top1_eviction_match": 0.30423280423280424,
+          "mean_regret_vs_oracle": 0.006046863189720333
         }
       },
-      "winner_by_val_mean_regret": "ridge"
+      "winner_by_val_mean_regret": "hist_gb"
     },
     "8": {
       "ridge": {
         "val": {
-          "mae": 5.130634075618031,
-          "rmse": 5.130647220449176,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.4690831556503198,
-          "mean_regret_vs_oracle": 0.0,
+          "mae": 1.8323968306830676,
+          "rmse": 2.0378161843519225,
+          "decision_count": 1824.0,
+          "top1_eviction_match": 0.7423245614035088,
+          "mean_regret_vs_oracle": 0.0043859649122807015,
           "per_family_val": {
+            "cloudphysics": {
+              "mae": 3.365288209405938,
+              "rmse": 3.621795209717539,
+              "decision_count": 521.0,
+              "top1_eviction_match": 0.09788867562380038,
+              "mean_regret_vs_oracle": 0.015355086372360844
+            },
             "wiki2018": {
-              "mae": 5.130634075618031,
-              "rmse": 5.130647220449176,
-              "decision_count": 469.0,
-              "top1_eviction_match": 0.4690831556503198,
+              "mae": 1.5279498674152026,
+              "rmse": 1.5402006573475446,
+              "decision_count": 1303.0,
+              "top1_eviction_match": 1.0,
               "mean_regret_vs_oracle": 0.0
             }
           }
         },
         "test": {
-          "mae": 5.130634075618031,
-          "rmse": 5.130647220449176,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.4690831556503198,
-          "mean_regret_vs_oracle": 0.0
+          "mae": 2.4023048371473896,
+          "rmse": 2.7998274028866046,
+          "decision_count": 2646.0,
+          "top1_eviction_match": 0.19160997732426305,
+          "mean_regret_vs_oracle": 0.047619047619047616
         }
       },
       "random_forest": {
         "val": {
-          "mae": 4.944617039997218,
-          "rmse": 4.953222845319643,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.9509594882729211,
-          "mean_regret_vs_oracle": 0.0,
+          "mae": 1.7122546885760885,
+          "rmse": 2.095144488494091,
+          "decision_count": 1824.0,
+          "top1_eviction_match": 0.4928728070175439,
+          "mean_regret_vs_oracle": 0.001644736842105263,
           "per_family_val": {
+            "cloudphysics": {
+              "mae": 4.238113569876826,
+              "rmse": 4.2820150986787935,
+              "decision_count": 521.0,
+              "top1_eviction_match": 0.11900191938579655,
+              "mean_regret_vs_oracle": 0.005758157389635317
+            },
             "wiki2018": {
-              "mae": 4.944617039997218,
-              "rmse": 4.953222845319643,
-              "decision_count": 469.0,
-              "top1_eviction_match": 0.9509594882729211,
+              "mae": 1.2105948340495003,
+              "rmse": 1.2727200097245557,
+              "decision_count": 1303.0,
+              "top1_eviction_match": 0.6423637759017652,
               "mean_regret_vs_oracle": 0.0
             }
           }
         },
         "test": {
-          "mae": 4.944617039997218,
-          "rmse": 4.953222845319643,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.9509594882729211,
-          "mean_regret_vs_oracle": 0.0
+          "mae": 2.5940534461094216,
+          "rmse": 3.1132244223024874,
+          "decision_count": 2646.0,
+          "top1_eviction_match": 0.25056689342403626,
+          "mean_regret_vs_oracle": 0.012093726379440665
         }
       },
       "hist_gb": {
         "val": {
-          "mae": 4.896123074868242,
-          "rmse": 4.899432229899725,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.01279317697228145,
+          "mae": 1.7342032240163896,
+          "rmse": 2.140661996688048,
+          "decision_count": 1824.0,
+          "top1_eviction_match": 0.5707236842105263,
           "mean_regret_vs_oracle": 0.0,
           "per_family_val": {
+            "cloudphysics": {
+              "mae": 4.340329758394064,
+              "rmse": 4.410359757288185,
+              "decision_count": 521.0,
+              "top1_eviction_match": 0.05566218809980806,
+              "mean_regret_vs_oracle": 0.0
+            },
             "wiki2018": {
-              "mae": 4.896123074868242,
-              "rmse": 4.899432229899725,
-              "decision_count": 469.0,
-              "top1_eviction_match": 0.01279317697228145,
+              "mae": 1.2166014419878854,
+              "rmse": 1.2764557753377186,
+              "decision_count": 1303.0,
+              "top1_eviction_match": 0.7766692248656946,
               "mean_regret_vs_oracle": 0.0
             }
           }
         },
         "test": {
-          "mae": 4.896123074868242,
-          "rmse": 4.899432229899725,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.01279317697228145,
-          "mean_regret_vs_oracle": 0.0
+          "mae": 2.6382904712002184,
+          "rmse": 3.1924770278286694,
+          "decision_count": 2646.0,
+          "top1_eviction_match": 0.36659108087679515,
+          "mean_regret_vs_oracle": 0.012093726379440665
         }
       },
-      "winner_by_val_mean_regret": "ridge"
+      "winner_by_val_mean_regret": "hist_gb"
     },
     "16": {
       "ridge": {
         "val": {
-          "mae": 10.611053860189138,
-          "rmse": 10.611093079591125,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.4690831556503198,
-          "mean_regret_vs_oracle": 0.0,
+          "mae": 3.70488570282627,
+          "rmse": 4.1230216696410675,
+          "decision_count": 1824.0,
+          "top1_eviction_match": 0.7412280701754386,
+          "mean_regret_vs_oracle": 0.009868421052631578,
           "per_family_val": {
+            "cloudphysics": {
+              "mae": 6.8521416239252675,
+              "rmse": 7.3515889675995085,
+              "decision_count": 521.0,
+              "top1_eviction_match": 0.09404990403071017,
+              "mean_regret_vs_oracle": 0.0345489443378119
+            },
             "wiki2018": {
-              "mae": 10.611053860189138,
-              "rmse": 10.611093079591125,
-              "decision_count": 469.0,
-              "top1_eviction_match": 0.4690831556503198,
+              "mae": 3.0798104227997767,
+              "rmse": 3.105077488098112,
+              "decision_count": 1303.0,
+              "top1_eviction_match": 1.0,
               "mean_regret_vs_oracle": 0.0
             }
           }
         },
         "test": {
-          "mae": 10.611053860189138,
-          "rmse": 10.611093079591125,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.4690831556503198,
-          "mean_regret_vs_oracle": 0.0
+          "mae": 4.801456287531028,
+          "rmse": 5.629728920052112,
+          "decision_count": 2646.0,
+          "top1_eviction_match": 0.19160997732426305,
+          "mean_regret_vs_oracle": 0.05555555555555555
         }
       },
       "random_forest": {
         "val": {
-          "mae": 10.004001134321339,
-          "rmse": 10.016503026981386,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.0021321961620469083,
-          "mean_regret_vs_oracle": 0.0,
+          "mae": 3.447798752138458,
+          "rmse": 4.203831839022262,
+          "decision_count": 1824.0,
+          "top1_eviction_match": 0.40021929824561403,
+          "mean_regret_vs_oracle": 0.014802631578947368,
           "per_family_val": {
+            "cloudphysics": {
+              "mae": 8.524718925485296,
+              "rmse": 8.572006927586576,
+              "decision_count": 521.0,
+              "top1_eviction_match": 0.07293666026871401,
+              "mean_regret_vs_oracle": 0.05182341650671785
+            },
             "wiki2018": {
-              "mae": 10.004001134321339,
-              "rmse": 10.016503026981386,
-              "decision_count": 469.0,
-              "top1_eviction_match": 0.0021321961620469083,
+              "mae": 2.439473602044283,
+              "rmse": 2.5667830993809355,
+              "decision_count": 1303.0,
+              "top1_eviction_match": 0.5310821181887951,
               "mean_regret_vs_oracle": 0.0
             }
           }
         },
         "test": {
-          "mae": 10.004001134321339,
-          "rmse": 10.016503026981386,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.0021321961620469083,
-          "mean_regret_vs_oracle": 0.0
+          "mae": 5.081519145165812,
+          "rmse": 6.1840516244511345,
+          "decision_count": 2646.0,
+          "top1_eviction_match": 0.11413454270597127,
+          "mean_regret_vs_oracle": 0.02834467120181406
         }
       },
       "hist_gb": {
         "val": {
-          "mae": 9.791759156497427,
-          "rmse": 9.803085672400892,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.0042643923240938165,
+          "mae": 3.5309949763159465,
+          "rmse": 4.373803660531526,
+          "decision_count": 1824.0,
+          "top1_eviction_match": 0.6129385964912281,
           "mean_regret_vs_oracle": 0.0,
           "per_family_val": {
+            "cloudphysics": {
+              "mae": 8.953093355523167,
+              "rmse": 9.058491950021837,
+              "decision_count": 521.0,
+              "top1_eviction_match": 0.04222648752399232,
+              "mean_regret_vs_oracle": 0.0
+            },
             "wiki2018": {
-              "mae": 9.791759156497427,
-              "rmse": 9.803085672400892,
-              "decision_count": 469.0,
-              "top1_eviction_match": 0.0042643923240938165,
+              "mae": 2.4541141163918945,
+              "rmse": 2.5753497892875727,
+              "decision_count": 1303.0,
+              "top1_eviction_match": 0.8411358403683806,
               "mean_regret_vs_oracle": 0.0
             }
           }
         },
         "test": {
-          "mae": 9.791759156497427,
-          "rmse": 9.803085672400892,
-          "decision_count": 469.0,
-          "top1_eviction_match": 0.0042643923240938165,
-          "mean_regret_vs_oracle": 0.0
+          "mae": 5.275569781646653,
+          "rmse": 6.500262602652572,
+          "decision_count": 2646.0,
+          "top1_eviction_match": 0.2872260015117158,
+          "mean_regret_vs_oracle": 0.02305366591080877
         }
       },
-      "winner_by_val_mean_regret": "ridge"
+      "winner_by_val_mean_regret": "hist_gb"
     }
   },
   "best_overall": {
     "horizon": 4,
-    "model": "ridge",
+    "model": "hist_gb",
     "val_mean_regret": 0.0
   }
 }
