@@ -38,7 +38,8 @@ POLICIES = {
 
 
 def _ml_gate_models_present() -> bool:
-    return Path("models/ml_gate_v1_random_forest.pkl").exists() and Path("models/ml_gate_v2_random_forest.pkl").exists()
+    # Paths must match MLGateV1Policy / MLGateV2Policy defaults (see lafc.policies.ml_gate_*).
+    return Path("models/ml_gate_v1.pkl").exists() and Path("models/ml_gate_v2_random_forest.pkl").exists()
 
 
 def _read_manifest_paths(manifest_csv: Path, max_traces: int | None) -> List[Tuple[str, str, str]]:
