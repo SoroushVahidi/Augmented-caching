@@ -1,4 +1,4 @@
-"""Helpers for the experimental learned gate (v1)."""
+"""Feature helpers for learned-gate policies."""
 
 from .features import (
     ML_GATE_FEATURE_COLUMNS,
@@ -9,7 +9,7 @@ from .features import (
     lru_choice,
     predictor_choice,
 )
-from .model import LearnedGateModel
+from .features_v2 import ML_GATE_V2_FEATURE_COLUMNS, compute_gate_features_v2
 
 __all__ = [
     "ML_GATE_FEATURE_COLUMNS",
@@ -19,8 +19,6 @@ __all__ = [
     "compute_predictor_scores",
     "lru_choice",
     "predictor_choice",
-    "LearnedGateModel",
+    "ML_GATE_V2_FEATURE_COLUMNS",
+    "compute_gate_features_v2",
 ]
-
-from .features_v2 import ML_GATE_V2_FEATURE_COLUMNS, compute_gate_features_v2
-from .model_v2 import LearnedGateV2Model

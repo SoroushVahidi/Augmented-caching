@@ -20,6 +20,7 @@ output/
 
 # Trained model artifacts
 /models/*.pkl
+/analysis/family_winner_selection/models/*.pkl
 
 # Slurm job logs
 slurm/logs/
