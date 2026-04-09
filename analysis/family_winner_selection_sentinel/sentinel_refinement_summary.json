@@ -1,0 +1,66 @@
+{
+  "slices_total": 30,
+  "comparators": [
+    "robust_ftp_d_marker",
+    "blind_oracle_lru_combiner",
+    "rest_v1",
+    "atlas_v3",
+    "lru"
+  ],
+  "overall": {
+    "robust_ftp_d_marker": {
+      "wins": 0,
+      "ties": 30,
+      "losses": 0,
+      "mean_delta_misses": 0.0,
+      "max_loss_delta": 0,
+      "max_win_delta": 0
+    },
+    "blind_oracle_lru_combiner": {
+      "wins": 3,
+      "ties": 27,
+      "losses": 0,
+      "mean_delta_misses": -0.13333333333333333,
+      "max_loss_delta": 0,
+      "max_win_delta": -2
+    },
+    "rest_v1": {
+      "wins": 11,
+      "ties": 18,
+      "losses": 1,
+      "mean_delta_misses": -0.5666666666666667,
+      "max_loss_delta": 1,
+      "max_win_delta": -3
+    },
+    "atlas_v3": {
+      "wins": 8,
+      "ties": 21,
+      "losses": 1,
+      "mean_delta_misses": -0.3,
+      "max_loss_delta": 1,
+      "max_win_delta": -2
+    },
+    "lru": {
+      "wins": 18,
+      "ties": 12,
+      "losses": 0,
+      "mean_delta_misses": -1.1666666666666667,
+      "max_loss_delta": 0,
+      "max_win_delta": -3
+    }
+  },
+  "override_activity": {
+    "mean_predictor_coverage": 0.0,
+    "min_predictor_coverage": 0.0,
+    "max_predictor_coverage": 0.0,
+    "mean_predictor_steps": 0.0,
+    "slices_with_nonzero_predictor_coverage": 0,
+    "mean_guard_triggers": 0.0,
+    "slices_with_guard_triggers": 0
+  },
+  "decision": {
+    "wins_over_robust_ftp_d_marker": 0,
+    "losses_vs_robust_ftp_d_marker": 0,
+    "recommended_status": "keep_as_main_candidate_needing_refinement"
+  }
+}

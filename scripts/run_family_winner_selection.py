@@ -20,6 +20,7 @@ from lafc.policies.lru import LRUPolicy
 from lafc.policies.ml_gate_v2 import MLGateV2Policy
 from lafc.policies.rest_v1 import RestV1Policy
 from lafc.policies.robust_ftp_marker_combiner import RobustFtPDeterministicMarkerCombiner
+from lafc.policies.sentinel_robust_tripwire_v1 import SentinelRobustTripwireV1Policy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
 from lafc.predictors.offline_from_trace import attach_predicted_caches
 from lafc.runner.run_policy import run_policy
@@ -191,6 +192,7 @@ def _policy_factories(ml_gate_model_path: str) -> Dict[str, Callable[[], object]
         "ml_gate_v2": lambda: MLGateV2Policy(model_path=ml_gate_model_path),
         "trust_and_doubt": lambda: TrustAndDoubtPolicy(seed=7),
         "robust_ftp_d_marker": lambda: RobustFtPDeterministicMarkerCombiner(),
+        "sentinel_robust_tripwire_v1": lambda: SentinelRobustTripwireV1Policy(),
         "blind_oracle_lru_combiner": lambda: BlindOracleLRUCombiner(),
         "lru": lambda: LRUPolicy(),
     }
@@ -235,7 +237,7 @@ def run_experiment(capacities: List[int], max_requests: int, regimes: List[str],
                 results: Dict[str, RunRow] = {}
                 for policy_name, factory in factories.items():
                     run_requests = requests
-                    if policy_name in {"trust_and_doubt", "robust_ftp_d_marker"}:
+                    if policy_name in {"trust_and_doubt", "robust_ftp_d_marker", "sentinel_robust_tripwire_v1"}:
                         run_requests = attach_predicted_caches(requests, capacity=cap)
                     result = run_policy(factory(), run_requests, pages, cap)
                     results[policy_name] = RunRow(
