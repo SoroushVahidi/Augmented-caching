@@ -8,6 +8,11 @@ from glob import glob
 from pathlib import Path
 from typing import Dict, Iterable, List
 
+from lafc.offline.trace_inputs import load_trace_with_sizes
+from lafc.offline_teacher_supervision import (
+    OfflineTeacherLabelConfig,
+    build_offline_teacher_candidate_rows,
+)
 from lafc.evict_value_v2_rollout import EvictValueV2RolloutConfig, build_rollout_candidate_rows_v2
 from lafc.simulator.request_trace import load_trace
 
@@ -46,13 +51,14 @@ def _count_decisions(rows: Iterable[Dict[str, object]]) -> int:
     return len({str(r["decision_id"]) for r in rows})
 
 
-def _family_summary(rows: List[Dict[str, object]]) -> List[Dict[str, object]]:
+def _family_summary(rows: List[Dict[str, object]], *, label_source: str) -> List[Dict[str, object]]:
+    regret_key = "rollout_regret_h" if label_source == "heuristic" else "teacher_regret"
     by_family: Dict[str, Dict[str, float]] = {}
     for r in rows:
         family = str(r.get("family", "unknown"))
         slot = by_family.setdefault(family, {"rows": 0.0, "regret_sum": 0.0, "decisions": set()})
         slot["rows"] += 1.0
-        slot["regret_sum"] += float(r["rollout_regret_h"])
+        slot["regret_sum"] += float(r[regret_key])
         slot["decisions"].add(str(r["decision_id"]))
 
     out: List[Dict[str, object]] = []
@@ -75,6 +81,7 @@ def main() -> None:
     ap.add_argument("--dataset", default="mixed")
     ap.add_argument("--capacities", default="2,3,4")
     ap.add_argument("--horizons", default="4,8,16,32")
+    ap.add_argument("--label-source", choices=["heuristic", "offline_teacher"], default="heuristic")
     ap.add_argument("--continuation-policy", choices=["lru", "blind_oracle"], default="lru")
     ap.add_argument("--discount-gamma", type=float, default=0.0, help="Optional gamma in [0,1] for per-row discounted targets; 0 disables.")
     ap.add_argument("--max-rows", type=int, default=250000)
@@ -104,13 +111,32 @@ def main() -> None:
         before = len(rows)
         family = _trace_family(trace_path)
         for capacity in capacities:
-            candidate_rows = build_rollout_candidate_rows_v2(
-                requests=requests,
-                capacity=capacity,
-                trace_name=trace_path,
-                trace_family=family,
-                cfg=cfg,
-            )
+            if args.label_source == "heuristic":
+                candidate_rows = build_rollout_candidate_rows_v2(
+                    requests=requests,
+                    capacity=capacity,
+                    trace_name=trace_path,
+                    trace_family=family,
+                    cfg=cfg,
+                )
+            else:
+                try:
+                    full_requests, pages, sizes = load_trace_with_sizes(trace_path)
+                    if args.max_requests_per_trace > 0:
+                        full_requests = full_requests[: args.max_requests_per_trace]
+                except Exception:
+                    full_requests, pages = load_trace(trace_path)
+                    sizes = {pid: 1.0 for pid in pages}
+                teacher_cfg = OfflineTeacherLabelConfig(horizon=max(horizons))
+                candidate_rows = build_offline_teacher_candidate_rows(
+                    requests=full_requests,
+                    pages=pages,
+                    page_sizes=sizes,
+                    capacity=float(capacity),
+                    trace_name=trace_path,
+                    trace_family=family,
+                    cfg=teacher_cfg,
+                )
             if args.max_decisions_per_trace > 0:
                 decision_ids = sorted({str(r["decision_id"]) for r in candidate_rows})
                 rng.shuffle(decision_ids)
@@ -122,8 +148,12 @@ def main() -> None:
                     h = int(row["horizon"])
                     w = float(args.discount_gamma ** max(0, h - 1))
                     row["discount_weight"] = w
-                    row["rollout_loss_discounted"] = float(row["rollout_loss_h"]) * w
-                    row["rollout_regret_discounted"] = float(row["rollout_regret_h"]) * w
+                    if args.label_source == "heuristic":
+                        row["rollout_loss_discounted"] = float(row["rollout_loss_h"]) * w
+                        row["rollout_regret_discounted"] = float(row["rollout_regret_h"]) * w
+                    else:
+                        row["teacher_cost_discounted"] = float(row["teacher_cost"]) * w
+                        row["teacher_regret_discounted"] = float(row["teacher_regret"]) * w
                 if len(rows) >= args.max_rows:
                     break
                 rows.append(row)
@@ -139,11 +169,12 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     candidate_csv = out_dir / "candidate_rows.csv"
     _write_csv(candidate_csv, rows)
-    family_rows = _family_summary(rows)
+    family_rows = _family_summary(rows, label_source=args.label_source)
     _write_csv(out_dir / "family_summary.csv", family_rows)
 
     summary = {
         "dataset": args.dataset,
+        "label_source": args.label_source,
         "trace_glob": args.trace_glob,
         "capacities": capacities,
         "horizons": list(horizons),
