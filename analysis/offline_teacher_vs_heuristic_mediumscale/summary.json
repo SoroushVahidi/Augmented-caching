@@ -1,0 +1,62 @@
+{
+  "trace_glob": "data/example_unweighted.json,data/example_atlas_v1.json,data/example_general_caching.json,data/example.json",
+  "trace_count": 4,
+  "capacities": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "horizon": 16,
+  "max_requests_per_trace": 0,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "model_family": "ridge",
+  "rows_heuristic": 96,
+  "rows_offline_teacher": 110,
+  "disagreement": {
+    "decisions_common": 40,
+    "disagree_count": 17,
+    "disagree_rate": 0.425
+  },
+  "aggregate_downstream": [
+    {
+      "label_source": "heuristic",
+      "workloads": 20,
+      "total_requests": 200,
+      "total_misses": 104,
+      "hit_rate": 0.48,
+      "delta_misses_vs_lru": -22,
+      "avg_delta_misses_vs_lru_per_workload": -1.1,
+      "avg_rank": 1.0
+    },
+    {
+      "label_source": "offline_teacher",
+      "workloads": 20,
+      "total_requests": 200,
+      "total_misses": 122,
+      "hit_rate": 0.39,
+      "delta_misses_vs_lru": -4,
+      "avg_delta_misses_vs_lru_per_workload": -0.2,
+      "avg_rank": 2.0
+    }
+  ],
+  "teacher_vs_heuristic": {
+    "wins": 0,
+    "losses": 10,
+    "ties": 10,
+    "workloads_compared": 20
+  },
+  "gain_concentration": {
+    "mean_gain_disagreement": -0.2222222222222222,
+    "mean_gain_agreement": -0.45454545454545453,
+    "count_disagreement": 27,
+    "count_agreement": 33
+  }
+}
