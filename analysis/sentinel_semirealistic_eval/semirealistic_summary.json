@@ -1,0 +1,42 @@
+{
+  "suite": "sentinel_semirealistic_eval",
+  "trace_count": 3,
+  "capacities": [
+    3,
+    4
+  ],
+  "slice_count": 6,
+  "disagreement": {
+    "mean_steps": 20.333333333333332,
+    "min_steps": 0,
+    "max_steps": 63,
+    "slices_with_disagreement": 5
+  },
+  "sentinel_vs_robust": {
+    "wins": 2,
+    "ties": 1,
+    "losses": 3,
+    "mean_delta_misses": 0.3333333333333333
+  },
+  "sentinel_vs_others": {
+    "mean_delta_vs_blind_oracle_lru_combiner": -2.6666666666666665,
+    "mean_delta_vs_rest_v1": -1.5,
+    "mean_delta_vs_atlas_v3": -1.5,
+    "mean_delta_vs_lru": -1.5
+  },
+  "override_activity": {
+    "total_helpful_overrides": 3,
+    "total_harmful_overrides": 5,
+    "mean_predictor_steps": 3.5
+  },
+  "mean_misses_by_policy": {
+    "sentinel_robust_tripwire_v1": 135.0,
+    "robust_ftp_d_marker": 134.66666666666666,
+    "blind_oracle_lru_combiner": 137.66666666666666,
+    "rest_v1": 136.5,
+    "atlas_v3": 136.5,
+    "lru": 136.5
+  },
+  "best_policy_by_mean_misses": "robust_ftp_d_marker",
+  "is_robustness_preserving": false
+}
