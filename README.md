@@ -366,3 +366,25 @@ Wulver phase-1 dataset pipeline (large reusable candidate shards + split summari
 1. `python scripts/build_evict_value_dataset_wulver_v1.py --trace-glob "data/processed/*/trace.jsonl" --capacities "64,128,256" --horizons "8,16,32"`
 2. `python scripts/summarize_evict_value_wulver_splits.py --manifest data/derived/evict_value_v1_wulver/manifest.json`
 3. For cluster submission/runbook: `docs/evict_value_v1_wulver_runbook.md`
+
+---
+
+## Decision-aligned eviction target experiments (text-only, v2)
+
+This repository includes a lightweight, text-only v2 package for decision-aligned eviction supervision:
+
+- rollout-labeled candidate dataset (`evict_value_v2_rollout`)
+- pairwise ranking dataset (`evict_value_v2_pairwise`)
+
+Dataset builders:
+
+- `python scripts/build_evict_value_v2_rollout_dataset.py --trace-glob "data/example_*.json" --dataset examples --capacities 2,3,4 --horizons 4,8,16,32 --reference-policy lru --output-dir data/derived/evict_value_v2_rollout`
+- `python scripts/build_evict_value_v2_pairwise_dataset.py --candidate-csv data/derived/evict_value_v2_rollout/candidate_rows.csv --output-dir data/derived/evict_value_v2_pairwise`
+
+First-check runners:
+
+- `python scripts/run_evict_value_v2_rollout_first_check.py --candidate-csv data/derived/evict_value_v2_rollout/candidate_rows.csv --output-dir analysis/evict_value_v2_rollout_first_check`
+- `python scripts/run_evict_value_v2_pairwise_first_check.py --pairwise-csv data/derived/evict_value_v2_pairwise/pairwise_rows.csv --output-dir analysis/evict_value_v2_pairwise_first_check`
+
+Outputs are text-only (`.csv`, `.json`, `.md`) and no binary model checkpoints are saved.
+See `docs/decision_aligned_eviction_targets.md` for caveats and conceptual framing.
