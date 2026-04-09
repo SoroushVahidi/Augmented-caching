@@ -1,0 +1,95 @@
+{
+  "setup": {
+    "train_rows": 51,
+    "val_rows": 50,
+    "horizon": 8,
+    "traces": [
+      "file::example_unweighted",
+      "file::example_atlas_v1",
+      "stress::predictor_good_lru_bad",
+      "stress::predictor_bad_lru_good"
+    ],
+    "regimes": [
+      "clean",
+      "noisy"
+    ],
+    "capacities": [
+      2,
+      3
+    ],
+    "note": "artifact model trained on tiny subset; temporary artifact file deleted after evaluation"
+  },
+  "artifact_model": {
+    "type": "ridge_pipeline",
+    "val_mae_tiny": 1.6686337894938077
+  },
+  "slice_count": 16,
+  "pairwise": {
+    "evict_value_v1_artifact": {
+      "robust_ftp_d_marker": {
+        "mean_miss_delta": 0.1875,
+        "wins": 0,
+        "ties": 13,
+        "losses": 3,
+        "worst_delta": 1
+      },
+      "blind_oracle_lru_combiner": {
+        "mean_miss_delta": 0.0625,
+        "wins": 2,
+        "ties": 11,
+        "losses": 3,
+        "worst_delta": 1
+      },
+      "rest_v1": {
+        "mean_miss_delta": -0.625,
+        "wins": 8,
+        "ties": 7,
+        "losses": 1,
+        "worst_delta": 1
+      },
+      "lru": {
+        "mean_miss_delta": -1.3125,
+        "wins": 12,
+        "ties": 4,
+        "losses": 0,
+        "worst_delta": 0
+      }
+    },
+    "evict_value_v1_lightweight": {
+      "robust_ftp_d_marker": {
+        "mean_miss_delta": 2.5,
+        "wins": 0,
+        "ties": 0,
+        "losses": 16,
+        "worst_delta": 4
+      },
+      "blind_oracle_lru_combiner": {
+        "mean_miss_delta": 2.375,
+        "wins": 0,
+        "ties": 0,
+        "losses": 16,
+        "worst_delta": 4
+      },
+      "rest_v1": {
+        "mean_miss_delta": 1.6875,
+        "wins": 0,
+        "ties": 2,
+        "losses": 14,
+        "worst_delta": 3
+      },
+      "lru": {
+        "mean_miss_delta": 1,
+        "wins": 0,
+        "ties": 7,
+        "losses": 9,
+        "worst_delta": 3
+      }
+    }
+  },
+  "artifact_vs_lightweight": {
+    "mean_miss_delta_artifact_minus_lightweight": -2.3125,
+    "artifact_better_slices": 16,
+    "artifact_tie_slices": 0,
+    "artifact_worse_slices": 0
+  }
+}
