@@ -17,6 +17,16 @@ Examples:
 - `analysis/sentinel_budgeted_guard_v2/`
 - `analysis/hybrid_fallback_experiment/`
 
+### Manuscript bundle outputs (generated for LaTeX)
+
+When present, these are the curated submission-oriented copies (sources for tables/figures may still live under `analysis/`):
+
+- `tables/manuscript/` — CSV + `.tex` fragments
+- `figures/manuscript/` — PDF + PNG
+- `reports/manuscript_artifacts/` — manifest, narrative report, optional `latex_snippets/`
+
+See `docs/reproducibility_and_artifacts.md` for how these relate to exploratory campaign trees (for example large `analysis/pairwise_*_campaign/jobs/` directories).
+
 ### Stable helper artifacts
 
 These are often consumed by scripts or runbooks:

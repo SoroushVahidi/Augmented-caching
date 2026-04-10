@@ -41,10 +41,11 @@ See `analysis/README.md` for details and naming guidance.
 
 ## Manuscript-support docs to read first
 
-1. `docs/manuscript_evidence_map.md`
-2. `docs/manuscript_open_questions.md`
-3. `docs/baselines.md`
-4. `docs/framework.md`
+1. `docs/reproducibility_and_artifacts.md` (entry points, output locations, manuscript vs exploratory)
+2. `docs/manuscript_evidence_map.md`
+3. `docs/manuscript_open_questions.md`
+4. `docs/baselines.md`
+5. `docs/framework.md`
 
 ## Notes on scientific status
 

@@ -5,9 +5,11 @@ This directory contains reproducible entry points for data preparation, model tr
 ## Directory structure
 
 - `scripts/datasets/` — dataset ingestion/preprocessing drivers.
+- `scripts/paper/` — manuscript-facing bundle builders (tables/figures from checked-in analysis inputs).
 - root-level `build_*` — construct training/evaluation tables.
 - root-level `train_*` — train lightweight models and export metrics.
 - root-level `run_*` — execute experiments and write analysis artifacts.
+- `run_offline_general_caching_approx.py` — offline LP+rounding baseline for general caching (not `python -m lafc.runner.run_policy`).
 - root-level `search_*` / `analyze_*` — targeted analysis/proof-support tooling.
 
 ## Naming conventions

@@ -10,7 +10,7 @@ This repository includes:
 
 ## Project status (conservative snapshot)
 
-- **Most stable, manuscript-safe references:** classical baselines (`lru`, `marker`, `predictive_marker`), robust combiners (`robust_ftp_d_marker`, `blind_oracle_lru_combiner`), offline references (`offline_belady`, `offline_general_caching_approx`).
+- **Most stable, manuscript-safe references:** classical baselines (`lru`, `marker`, `predictive_marker`), robust combiners (`robust_ftp_d_marker`, `blind_oracle_lru_combiner`), and the unweighted offline reference `offline_belady` (via `python -m lafc.runner.run_policy`). For **general caching** (variable sizes/costs), the LP+rounding offline baseline is run separately; see `scripts/run_offline_general_caching_approx.py` and `docs/offline_general_caching_approx.md` (not a `--policy` value on the main simulator CLI).
 - **Main learned line in this repo:** `evict_value_v1` (candidate-level scoring) plus guarded/fallback variants.
 - **Research-active exploratory lines:** pairwise/ranking supervision, sentinel mechanisms, and theorem-development notes under `docs/pairwise_*`.
 
@@ -59,26 +59,30 @@ python scripts/run_evict_value_v1_first_check.py
 
 ## Policy families
 
-### Literature baselines and robust references
+### Literature baselines and robust references (`python -m lafc.runner.run_policy`)
 
-- `lru`, `weighted_lru`, `advice_trusting`, `la_det`
+- `lru`, `weighted_lru`, `advice_trusting`, `la_det`, `la_det_approx`, `la_det_faithful`
 - `marker`, `blind_oracle`, `predictive_marker`
 - `adaptive_query` (`parsimonious_caching` alias)
 - `trust_and_doubt`
 - `robust_ftp_d_marker` (`robust_ftp` alias)
 - `blind_oracle_lru_combiner`
-- `offline_belady`, `offline_general_caching_approx`
+- `offline_belady` (unweighted offline optimum on the trace; requires full lookahead via trace construction)
 
-### Experimental policies
+**General-caching offline baseline (separate entry point):** LP relaxation + deterministic rounding via `scripts/run_offline_general_caching_approx.py` (documented as the “offline general caching approx” family in `docs/offline_general_caching_approx.md`). The internal solver name is `offline_general_caching_lp_round`; it is **not** selected with `--policy` on `run_policy`.
+
+### Experimental policies (`run_policy` unless noted)
 
 - `atlas_v1`, `atlas_v2`, `atlas_v3`
-- `atlas_cga_v1`, `atlas_cga_v2`
+- `atlas_cga_v1` (`atlas_cga` alias), `atlas_cga_v2`
 - `rest_v1`
 - `ml_gate_v1`, `ml_gate_v2`
-- `evict_value_v1`, `evict_value_v1_guarded`, `evict_value_pairwise_v1`
+- `evict_value_v1`, `evict_value_v1_guarded` (artifact path via `--evict-value-model-path`)
 - `sentinel_robust_tripwire_v1`, `sentinel_budgeted_guard_v2`
 
-See `docs/baselines.md` and `docs/framework.md` for algorithm notes and positioning.
+**Learned pairwise line (scripts, not `run_policy`):** `evict_value_pairwise_v1` is trained/evaluated through `scripts/build_evict_value_pairwise_dataset.py`, `scripts/train_evict_value_pairwise_v1.py`, and `scripts/run_evict_value_pairwise_first_check.py` (and related `run_*pairwise*` tools). It does not appear in `POLICY_REGISTRY` because it requires a trained artifact.
+
+See `docs/baselines.md`, `docs/framework.md`, and `docs/reproducibility_and_artifacts.md` for algorithm notes, runnable entry points, and manuscript vs exploratory outputs.
 
 ---
 
@@ -161,6 +165,7 @@ See `analysis/README.md` for canonical vs legacy/exploratory organization.
 ## Repository guide
 
 - High-level map: `docs/repo_map.md`
+- Reproducibility, CLI entry points, manuscript vs exploratory artifacts: `docs/reproducibility_and_artifacts.md`
 - Analysis artifact organization: `analysis/README.md`
 - Script organization and naming conventions: `scripts/README.md`
 

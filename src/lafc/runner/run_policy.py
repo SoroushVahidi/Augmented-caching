@@ -9,10 +9,22 @@ python -m lafc.runner.run_policy \\
     --capacity 3 \\
     --output-dir output/
 
-Supported --policy values:
-    lru, weighted_lru, advice_trusting, la_det,
-    marker, blind_oracle, predictive_marker, adaptive_query, parsimonious_caching, robust_ftp_d_marker,
-    blind_oracle_lru_combiner, offline_belady, trust_and_doubt, atlas_v1, atlas_v2, atlas_v3, atlas_cga_v1, atlas_cga_v2, rest_v1, ml_gate_v1, ml_gate_v2, evict_value_v1, evict_value_v1_guarded, sentinel_robust_tripwire_v1, sentinel_budgeted_guard_v2
+``--policy`` must be a key of ``POLICY_REGISTRY`` (see this module). The CLI
+accepts JSON or CSV traces (see :mod:`lafc.simulator.request_trace`).
+
+Not covered here (separate scripts / artifact models):
+    * Offline general-caching LP baseline: ``scripts/run_offline_general_caching_approx.py``
+      (solver name ``offline_general_caching_lp_round``; not a ``--policy``).
+    * Pairwise learned policy ``evict_value_pairwise_v1``: train/eval scripts under
+      ``scripts/run_evict_value_pairwise_*.py`` and related ``build_*`` / ``train_*``.
+
+Supported ``--policy`` values (including aliases):
+    advice_trusting, adaptive_query, atlas_cga, atlas_cga_v1, atlas_cga_v2, atlas_v1,
+    atlas_v2, atlas_v3, blind_oracle, blind_oracle_lru_combiner, evict_value_v1,
+    evict_value_v1_guarded, la_det, la_det_approx, la_det_faithful, lru, marker,
+    ml_gate_v1, ml_gate_v2, offline_belady, parsimonious_caching, predictive_marker,
+    rest_v1, robust_ftp, robust_ftp_d_marker, sentinel_budgeted_guard_v2,
+    sentinel_robust_tripwire_v1, trust_and_doubt, weighted_lru
 """
 
 from __future__ import annotations
@@ -930,19 +942,23 @@ def main() -> None:
     logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(message)s")
 
     parser = argparse.ArgumentParser(
-        description="Run a weighted paging policy on a trace.",
+        description=(
+            "Run a cache simulation for one policy on a request trace.\n"
+            "Traces: JSON or CSV (see lafc.simulator.request_trace). "
+            "For offline general caching (sizes/costs), use scripts/run_offline_general_caching_approx.py."
+        ),
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument(
         "--policy",
         required=True,
-        choices=list(POLICY_REGISTRY.keys()),
-        help="Policy to run.",
+        choices=sorted(POLICY_REGISTRY.keys()),
+        help="Policy to run (must match POLICY_REGISTRY; use --help for the sorted list).",
     )
     parser.add_argument(
         "--trace",
         required=True,
-        help="Path to a JSON trace file.",
+        help="Path to a JSON or CSV trace file.",
     )
     parser.add_argument(
         "--capacity",
