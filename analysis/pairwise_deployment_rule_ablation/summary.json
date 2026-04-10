@@ -1,0 +1,128 @@
+{
+  "trace_glob": "data/example*.json",
+  "resolved_trace_count": 4,
+  "test_trace_count": 1,
+  "capacities": [
+    2,
+    3,
+    4
+  ],
+  "horizons": [
+    4,
+    8
+  ],
+  "shortlist_ms": [
+    2,
+    4,
+    8
+  ],
+  "split_by_trace": {
+    "data/example.json": "train",
+    "data/example_atlas_v1.json": "val",
+    "data/example_general_caching.json": "test",
+    "data/example_unweighted.json": "train"
+  },
+  "overall_online_mean_misses": {
+    "evict_value_pairwise_v1": 3.3333333333333335,
+    "evict_value_v1": 3.3333333333333335,
+    "lru": 3.3333333333333335,
+    "pairwise_guard_wrapper_lru": 3.3333333333333335,
+    "pairwise_lru_blackbox_combiner": 3.0,
+    "pairwise_shortlist_lru_m2": 3.3333333333333335,
+    "pairwise_shortlist_lru_m4": 3.3333333333333335,
+    "pairwise_shortlist_lru_m8": 3.3333333333333335,
+    "pairwise_shortlist_lru_mfull": 3.3333333333333335,
+    "pairwise_unguarded": 3.3333333333333335,
+    "predictive_marker": 3.3333333333333335,
+    "rest_v1": 3.3333333333333335,
+    "trust_and_doubt": 3.3333333333333335
+  },
+  "per_family_online_mean_misses": {
+    "general": {
+      "evict_value_pairwise_v1": 3.3333333333333335,
+      "evict_value_v1": 3.3333333333333335,
+      "lru": 3.3333333333333335,
+      "pairwise_guard_wrapper_lru": 3.3333333333333335,
+      "pairwise_lru_blackbox_combiner": 3.0,
+      "pairwise_shortlist_lru_m2": 3.3333333333333335,
+      "pairwise_shortlist_lru_m4": 3.3333333333333335,
+      "pairwise_shortlist_lru_m8": 3.3333333333333335,
+      "pairwise_shortlist_lru_mfull": 3.3333333333333335,
+      "pairwise_unguarded": 3.3333333333333335,
+      "predictive_marker": 3.3333333333333335,
+      "rest_v1": 3.3333333333333335,
+      "trust_and_doubt": 3.3333333333333335
+    }
+  },
+  "per_capacity_online_mean_misses": {
+    "2": {
+      "evict_value_pairwise_v1": 4.0,
+      "evict_value_v1": 4.0,
+      "lru": 4.0,
+      "pairwise_guard_wrapper_lru": 4.0,
+      "pairwise_lru_blackbox_combiner": 3.0,
+      "pairwise_shortlist_lru_m2": 4.0,
+      "pairwise_shortlist_lru_m4": 4.0,
+      "pairwise_shortlist_lru_m8": 4.0,
+      "pairwise_shortlist_lru_mfull": 4.0,
+      "pairwise_unguarded": 4.0,
+      "predictive_marker": 4.0,
+      "rest_v1": 4.0,
+      "trust_and_doubt": 4.0
+    },
+    "3": {
+      "evict_value_pairwise_v1": 3.0,
+      "evict_value_v1": 3.0,
+      "lru": 3.0,
+      "pairwise_guard_wrapper_lru": 3.0,
+      "pairwise_lru_blackbox_combiner": 3.0,
+      "pairwise_shortlist_lru_m2": 3.0,
+      "pairwise_shortlist_lru_m4": 3.0,
+      "pairwise_shortlist_lru_m8": 3.0,
+      "pairwise_shortlist_lru_mfull": 3.0,
+      "pairwise_unguarded": 3.0,
+      "predictive_marker": 3.0,
+      "rest_v1": 3.0,
+      "trust_and_doubt": 3.0
+    },
+    "4": {
+      "evict_value_pairwise_v1": 3.0,
+      "evict_value_v1": 3.0,
+      "lru": 3.0,
+      "pairwise_guard_wrapper_lru": 3.0,
+      "pairwise_lru_blackbox_combiner": 3.0,
+      "pairwise_shortlist_lru_m2": 3.0,
+      "pairwise_shortlist_lru_m4": 3.0,
+      "pairwise_shortlist_lru_m8": 3.0,
+      "pairwise_shortlist_lru_mfull": 3.0,
+      "pairwise_unguarded": 3.0,
+      "predictive_marker": 3.0,
+      "rest_v1": 3.0,
+      "trust_and_doubt": 3.0
+    }
+  },
+  "hard_slice_online_mean_misses": {},
+  "pairwise_disagreement_rate": {
+    "pairwise_vs_lru": 1.0,
+    "pairwise_vs_predictive_marker": 1.0
+  },
+  "pairwise_inversion_summary": {
+    "total_pair_count": 4,
+    "total_mistake_count": 0,
+    "overall_mistake_rate": 0.0,
+    "per_trace": [
+      {
+        "trace": "data/example_general_caching.json",
+        "pair_count": 4,
+        "mistake_count": 0,
+        "mistake_rate": 0.0
+      }
+    ],
+    "definition": "For each labeled pair (i,j), count a mistake when predicted preference p(i better than j)>=0.5 disagrees with rollout label_i_better."
+  },
+  "best_shortlist_variant": {
+    "policy": "pairwise_shortlist_lru_m2",
+    "mean_misses": 3.3333333333333335
+  },
+  "skipped_notes": []
+}

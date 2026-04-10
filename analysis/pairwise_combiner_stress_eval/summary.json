@@ -1,0 +1,56 @@
+{
+  "trace_glob": "data/example*.json",
+  "resolved_traces": [
+    "data/example.json",
+    "data/example_atlas_v1.json",
+    "data/example_general_caching.json",
+    "data/example_unweighted.json"
+  ],
+  "split_by_trace": {
+    "data/example_atlas_v1.json": "train",
+    "data/example_general_caching.json": "test",
+    "data/example_unweighted.json": "val",
+    "data/example.json": "train"
+  },
+  "split_counts": {
+    "train": 2,
+    "val": 1,
+    "test": 1
+  },
+  "capacities": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "horizons": [
+    4,
+    8,
+    12
+  ],
+  "max_requests_per_trace": 0,
+  "overall_online_mean_misses": {
+    "pairwise_unguarded": 3.2,
+    "pairwise_lru_blackbox_combiner": 3.0,
+    "pairwise_guard_wrapper_lru": 3.2,
+    "pairwise_shortlist_lru_m4": 3.2,
+    "pairwise_shortlist_lru_mfull": 3.2,
+    "evict_value_v1": 3.2,
+    "evict_value_pairwise_v1": 3.2,
+    "predictive_marker": 3.2,
+    "trust_and_doubt": 3.2,
+    "rest_v1": 3.2,
+    "lru": 3.2
+  },
+  "hard_slice_overlap_mean_misses": {},
+  "combiner_behavior_summary": {
+    "choose_pairwise_steps": 34,
+    "choose_lru_steps": 1,
+    "fraction_choose_pairwise": 0.9714285714285714,
+    "fraction_choose_lru": 0.02857142857142857,
+    "lru_choice_when_pairwise_would_hit": 0
+  },
+  "pairwise_inversion_rate_test": 0.0,
+  "missing_inputs": []
+}

@@ -1,0 +1,12 @@
+family,policy,mean_misses,count
+general,evict_value_pairwise_v1,3.2,5
+general,evict_value_v1,3.2,5
+general,lru,3.2,5
+general,pairwise_guard_wrapper_lru,3.2,5
+general,pairwise_lru_blackbox_combiner,3.0,5
+general,pairwise_shortlist_lru_m4,3.2,5
+general,pairwise_shortlist_lru_mfull,3.2,5
+general,pairwise_unguarded,3.2,5
+general,predictive_marker,3.2,5
+general,rest_v1,3.2,5
+general,trust_and_doubt,3.2,5
