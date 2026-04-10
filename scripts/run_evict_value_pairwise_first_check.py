@@ -2,209 +2,302 @@ from __future__ import annotations
 
 import argparse
 import csv
-import hashlib
 import json
 from pathlib import Path
-from typing import Dict, List
+from statistics import mean
+from typing import Dict, List, Tuple
 
 import numpy as np
+from sklearn.dummy import DummyClassifier
 from sklearn.linear_model import LogisticRegression
 
+from lafc.evict_value_features_v1 import EVICT_VALUE_V1_FEATURE_COLUMNS
+from lafc.evict_value_model_v1 import EvictValueV1Model
+from lafc.evict_value_pairwise_model_v1 import EvictValuePairwiseV1Model
+from lafc.metrics.cost import hit_rate
+from lafc.policies.evict_value_pairwise_v1 import EvictValuePairwiseV1Policy
+from lafc.policies.evict_value_v1 import EvictValueV1Policy
+from lafc.policies.lru import LRUPolicy
+from lafc.policies.predictive_marker import PredictiveMarkerPolicy
+from lafc.policies.rest_v1 import RestV1Policy
+from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
+from lafc.predictors.offline_from_trace import attach_predicted_caches
+from lafc.runner.run_policy import run_policy
+from lafc.simulator.request_trace import build_requests_from_lists, load_trace
 
-def _read_rows(path: Path) -> List[Dict[str, object]]:
+
+def _read_csv(path: Path) -> List[Dict[str, object]]:
     with path.open("r", encoding="utf-8") as fh:
         raw = list(csv.DictReader(fh))
-    rows: List[Dict[str, object]] = []
+    out: List[Dict[str, object]] = []
     for row in raw:
         parsed: Dict[str, object] = dict(row)
-        parsed["request_t"] = int(parsed["request_t"])
-        parsed["capacity"] = int(parsed["capacity"])
-        parsed["horizon"] = int(parsed["horizon"])
         for k, v in list(parsed.items()):
-            if k.startswith(("delta_", "i_", "j_")) or k in {
-                "rollout_loss_i",
-                "rollout_loss_j",
-                "rollout_regret_i",
-                "rollout_regret_j",
-                "rollout_regret_diff",
+            if k in {"request_t", "t", "capacity", "horizon", "candidate_count"}:
+                parsed[k] = int(float(v))
+            elif k.startswith(("delta_", "i_", "j_")) or k.startswith("rollout_") or k in {
                 "label_i_better",
-                "is_tie",
+                "candidate_is_rollout_optimal",
             }:
                 parsed[k] = float(v)
-        rows.append(parsed)
-    return rows
+        out.append(parsed)
+    return out
 
 
-def _trace_split(trace: str) -> str:
-    h = int(hashlib.md5(trace.encode("utf-8")).hexdigest(), 16) % 10
-    if h <= 5:
-        return "train"
-    if h <= 7:
-        return "val"
-    return "test"
+def _pointwise_offline_metrics(candidate_rows: List[Dict[str, object]], model_path: str) -> Dict[str, float]:
+    grouped: Dict[str, List[Dict[str, object]]] = {}
+    for row in candidate_rows:
+        grouped.setdefault(str(row["decision_id"]), []).append(row)
 
-
-def _xy(rows: List[Dict[str, object]]):
-    delta_cols = sorted(c for c in rows[0].keys() if c.startswith("delta_"))
-    x = np.asarray([[float(r[c]) for c in delta_cols] for r in rows], dtype=float)
-    y = np.asarray([int(float(r["label_i_better"])) for r in rows], dtype=int)
-    return x, y
-
-
-def _decision_metrics(rows: List[Dict[str, object]], p_i_better: np.ndarray) -> Dict[str, float]:
-    decisions: Dict[str, Dict[str, object]] = {}
-    for row, p_i in zip(rows, p_i_better):
-        d = decisions.setdefault(str(row["decision_id"]), {"scores": {}, "regrets": {}, "losses": {}})
-        ci = str(row["candidate_i_page_id"])
-        cj = str(row["candidate_j_page_id"])
-        d["scores"][ci] = float(d["scores"].get(ci, 0.0) + p_i)
-        d["scores"][cj] = float(d["scores"].get(cj, 0.0) + (1.0 - p_i))
-        d["regrets"][ci] = float(row["rollout_regret_i"])
-        d["regrets"][cj] = float(row["rollout_regret_j"])
-        d["losses"][ci] = float(row["rollout_loss_i"])
-        d["losses"][cj] = float(row["rollout_loss_j"])
-
+    model = EvictValueV1Model.load(model_path) if Path(model_path).exists() else None
     top1 = 0
-    chosen_regrets: List[float] = []
-    chosen_loss_gaps: List[float] = []
-    for d in decisions.values():
-        chosen = min(d["scores"].keys(), key=lambda c: (-d["scores"][c], c))
-        best = min(d["regrets"].keys(), key=lambda c: (d["regrets"][c], c))
-        top1 += int(chosen == best)
-        chosen_regrets.append(float(d["regrets"][chosen]))
-        chosen_loss_gaps.append(float(d["losses"][chosen] - min(d["losses"].values())))
-
-    denom = max(1, len(decisions))
+    regrets: List[float] = []
+    for items in grouped.values():
+        if model is not None:
+            scored = [(it, model.predict_loss_one({c: float(it[c]) for c in EVICT_VALUE_V1_FEATURE_COLUMNS})) for it in items]
+            chosen = min(scored, key=lambda x: (x[1], str(x[0]["candidate_page_id"])))[0]
+        else:
+            chosen = min(items, key=lambda x: (float(x.get("candidate_lru_score", 0.0)), str(x["candidate_page_id"])))
+        best = min(items, key=lambda x: (float(x["rollout_regret_h"]), str(x["candidate_page_id"])))
+        top1 += int(str(chosen["candidate_page_id"]) == str(best["candidate_page_id"]))
+        regrets.append(float(chosen["rollout_regret_h"]))
+    denom = max(len(grouped), 1)
     return {
-        "decision_count": float(len(decisions)),
-        "top1_candidate_accuracy": float(top1 / denom),
-        "mean_chosen_regret": float(np.mean(chosen_regrets) if chosen_regrets else 0.0),
-        "mean_regret_vs_best": float(np.mean(chosen_regrets) if chosen_regrets else 0.0),
-        "mean_loss_gap_vs_best": float(np.mean(chosen_loss_gaps) if chosen_loss_gaps else 0.0),
+        "decision_count": float(len(grouped)),
+        "top1": float(top1 / denom),
+        "pairwise_accuracy": 0.0,
+        "pairwise_acc": 0.0,
+        "mean_regret": float(np.mean(regrets) if regrets else 0.0),
     }
 
 
-def _evaluate(rows: List[Dict[str, object]], pred_y: np.ndarray, p_i_better: np.ndarray) -> Dict[str, float]:
-    y_true = np.asarray([int(float(r["label_i_better"])) for r in rows], dtype=int)
-    out = {"pairwise_accuracy": float(np.mean(pred_y == y_true) if len(y_true) else 0.0)}
-    out.update(_decision_metrics(rows, p_i_better))
+def _fit_or_load_pairwise_model(pairwise_rows: List[Dict[str, object]], model_path: str) -> Tuple[EvictValuePairwiseV1Model, str]:
+    if Path(model_path).exists():
+        return EvictValuePairwiseV1Model.load(model_path), "artifact"
+
+    delta_cols = sorted(c for c in pairwise_rows[0].keys() if c.startswith("delta_"))
+    x = np.asarray([[float(r[c]) for c in delta_cols] for r in pairwise_rows], dtype=float)
+    y = np.asarray([int(float(r["label_i_better"])) for r in pairwise_rows], dtype=int)
+    if len(set(int(v) for v in y.tolist())) < 2:
+        only = int(y[0]) if len(y) else 0
+        clf = DummyClassifier(strategy="constant", constant=only)
+    else:
+        clf = LogisticRegression(max_iter=600, random_state=7)
+    clf.fit(x, y)
+    return EvictValuePairwiseV1Model(model_name="logistic_regression_inline", estimator=clf, delta_feature_columns=delta_cols), "inline_fit"
+
+
+def _pairwise_offline_metrics(
+    pairwise_rows: List[Dict[str, object]],
+    pairwise_model: EvictValuePairwiseV1Model,
+) -> Dict[str, float]:
+    decisions: Dict[str, Dict[str, Dict[str, float]]] = {}
+    pair_correct = 0
+    for row in pairwise_rows:
+        did = str(row["decision_id"])
+        d = decisions.setdefault(did, {"wins": {}, "regret": {}})
+        ai = str(row["candidate_i_page_id"])
+        bi = str(row["candidate_j_page_id"])
+        af = {c.replace("i_", "", 1): float(row[c]) for c in row.keys() if c.startswith("i_")}
+        bf = {c.replace("j_", "", 1): float(row[c]) for c in row.keys() if c.startswith("j_")}
+        p = pairwise_model.predict_a_beats_b_proba(af, bf)
+        pred = int(p >= 0.5)
+        pair_correct += int(pred == int(float(row["label_i_better"])))
+        d["wins"][ai] = float(d["wins"].get(ai, 0.0) + p)
+        d["wins"][bi] = float(d["wins"].get(bi, 0.0) + (1.0 - p))
+        d["regret"][ai] = float(row["rollout_regret_i"])
+        d["regret"][bi] = float(row["rollout_regret_j"])
+
+    top1 = 0
+    regrets: List[float] = []
+    for d in decisions.values():
+        chosen = max(d["wins"].keys(), key=lambda c: (d["wins"][c], c))
+        best = min(d["regret"].keys(), key=lambda c: (d["regret"][c], c))
+        top1 += int(chosen == best)
+        regrets.append(float(d["regret"][chosen]))
+    denom = max(len(decisions), 1)
+    return {
+        "decision_count": float(len(decisions)),
+        "top1": float(top1 / denom),
+        "pairwise_accuracy": float(pair_correct / max(len(pairwise_rows), 1)),
+        "pairwise_acc": float(pair_correct / max(len(pairwise_rows), 1)),
+        "mean_regret": float(np.mean(regrets) if regrets else 0.0),
+    }
+
+
+def _make_stress_trace(page_ids: List[str], buckets: List[int], confs: List[float]):
+    recs = [{"bucket": b, "confidence": c} for b, c in zip(buckets, confs)]
+    return build_requests_from_lists(page_ids=page_ids, prediction_records=recs)
+
+
+def _stress_traces():
+    return {
+        "stress::predictor_good_lru_bad": _make_stress_trace(
+            ["A", "B", "C", "A", "D", "A", "B", "C", "A", "D"],
+            [0, 3, 3, 0, 3, 0, 3, 3, 0, 3],
+            [1.0] * 10,
+        ),
+        "stress::predictor_bad_lru_good": _make_stress_trace(
+            ["A", "B", "A", "C", "A", "D", "A", "E", "A", "F"],
+            [3, 0, 3, 0, 3, 0, 3, 0, 3, 0],
+            [1.0] * 10,
+        ),
+    }
+
+
+def _iter_traces():
+    for p in ["data/example_unweighted.json", "data/example_atlas_v1.json"]:
+        yield p, load_trace(p)
+    for n, payload in _stress_traces().items():
+        yield n, payload
+
+
+def _hard_slice_decision_ids(path: Path) -> set[str]:
+    if not path.exists():
+        return set()
+    out: set[str] = set()
+    with path.open("r", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            lost = any(int(float(row.get(k, 0))) > 0 for k in row.keys() if k.startswith("evict_value_v1_diff_vs_"))
+            if not lost:
+                continue
+            trace = str(row.get("trace_name", ""))
+            t = int(float(row.get("t", 0)))
+            cap = int(float(row.get("capacity", 0)))
+            out.add(f"{trace}|c{cap}|t{t}")
     return out
 
 
-def _slice_by(rows: List[Dict[str, object]], key: str) -> Dict[str, List[Dict[str, object]]]:
-    out: Dict[str, List[Dict[str, object]]] = {}
-    for row in rows:
-        out.setdefault(str(row[key]), []).append(row)
-    return out
-
-
-def _write_csv(path: Path, rows: List[Dict[str, object]]) -> None:
-    if not rows:
-        return
-    with path.open("w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
-        writer.writeheader()
-        writer.writerows(rows)
-
-
-def _predict_with_single_class_fallback(
-    *,
-    clf: LogisticRegression,
-    x_train: np.ndarray,
-    y_train: np.ndarray,
-    x_eval: np.ndarray,
-) -> tuple[np.ndarray, np.ndarray]:
-    classes = set(int(v) for v in y_train.tolist())
-    if len(classes) < 2:
-        only = int(next(iter(classes))) if classes else 0
-        pred = np.full(shape=(len(x_eval),), fill_value=only, dtype=int)
-        prob = np.full(shape=(len(x_eval),), fill_value=float(only), dtype=float)
-        return pred, prob
-
-    clf.fit(x_train, y_train)
-    return clf.predict(x_eval), clf.predict_proba(x_eval)[:, 1]
+def _decision_key_from_id(decision_id: str) -> str:
+    left = decision_id.split("|h", 1)[0]
+    return left
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="First-check for decision-aligned pairwise labels")
+    ap = argparse.ArgumentParser(description="Compare pointwise vs pairwise candidate-centric eviction learning")
+    ap.add_argument("--candidate-csv", default="data/derived/evict_value_decision_aligned/candidate_rows.csv")
     ap.add_argument("--pairwise-csv", default="data/derived/evict_value_pairwise/pairwise_rows.csv")
     ap.add_argument("--output-dir", default="analysis/evict_value_pairwise_first_check")
-    ap.add_argument("--seed", type=int, default=7)
+    ap.add_argument("--summary-md", default="analysis/evict_value_pairwise_first_check.md")
+    ap.add_argument("--pointwise-model", default="models/evict_value_v1_hist_gb.pkl")
+    ap.add_argument("--pairwise-model", default="models/evict_value_pairwise_v1_best.pkl")
     args = ap.parse_args()
 
-    rows = _read_rows(Path(args.pairwise_csv))
-    splits: Dict[str, List[Dict[str, object]]] = {"train": [], "val": [], "test": []}
-    for row in rows:
-        splits[_trace_split(str(row["trace"]))].append(row)
+    candidate_rows = _read_csv(Path(args.candidate_csv)) if Path(args.candidate_csv).exists() else []
+    pairwise_rows = _read_csv(Path(args.pairwise_csv)) if Path(args.pairwise_csv).exists() else []
 
-    x_train, y_train = _xy(splits["train"])
-    clf = LogisticRegression(max_iter=600, random_state=args.seed)
+    pairwise_model = None
+    pairwise_model_source = "missing"
+    if pairwise_rows:
+        pairwise_model, pairwise_model_source = _fit_or_load_pairwise_model(pairwise_rows, args.pairwise_model)
+
+    offline_rows: List[Dict[str, object]] = []
+    if candidate_rows:
+        offline_rows.append({"policy": "evict_value_v1", **_pointwise_offline_metrics(candidate_rows, args.pointwise_model)})
+    if pairwise_rows and pairwise_model is not None:
+        offline_rows.append({"policy": "evict_value_pairwise_v1", **_pairwise_offline_metrics(pairwise_rows, pairwise_model)})
+
+    hard_ids = _hard_slice_decision_ids(Path("analysis/evict_value_failure_slice_audit.csv"))
+    hard_slice_rows: List[Dict[str, object]] = []
+    if hard_ids and candidate_rows:
+        cand_subset = [r for r in candidate_rows if _decision_key_from_id(str(r["decision_id"])) in hard_ids]
+        if cand_subset:
+            hard_slice_rows.append({"policy": "evict_value_v1", **_pointwise_offline_metrics(cand_subset, args.pointwise_model)})
+    if hard_ids and pairwise_rows and pairwise_model is not None:
+        pair_subset = [r for r in pairwise_rows if _decision_key_from_id(str(r["decision_id"])) in hard_ids]
+        if pair_subset:
+            hard_slice_rows.append({"policy": "evict_value_pairwise_v1", **_pairwise_offline_metrics(pair_subset, pairwise_model)})
+
+    capacities = [2, 3, 4]
+    online_rows: List[Dict[str, object]] = []
+    for trace_name, (reqs, pages) in _iter_traces():
+        for cap in capacities:
+            td_reqs = attach_predicted_caches(reqs, capacity=cap)
+            policies = {
+                "evict_value_v1": run_policy(EvictValueV1Policy(model_path=args.pointwise_model), reqs, pages, cap),
+                "predictive_marker": run_policy(PredictiveMarkerPolicy(), reqs, pages, cap),
+                "trust_and_doubt": run_policy(TrustAndDoubtPolicy(seed=7), td_reqs, pages, cap),
+                "rest_v1": run_policy(RestV1Policy(), reqs, pages, cap),
+                "lru": run_policy(LRUPolicy(), reqs, pages, cap),
+                "evict_value_pairwise_v1": run_policy(
+                    EvictValuePairwiseV1Policy(model_path=args.pairwise_model if pairwise_model is not None else "missing.pkl"),
+                    reqs,
+                    pages,
+                    cap,
+                ),
+            }
+            for policy_name, result in policies.items():
+                online_rows.append(
+                    {
+                        "trace": trace_name,
+                        "capacity": cap,
+                        "policy": policy_name,
+                        "misses": result.total_misses,
+                        "hit_rate": hit_rate(result.events),
+                    }
+                )
+
+    by_policy = sorted({str(r["policy"]) for r in online_rows})
+    mean_misses = {
+        p: float(mean([float(r["misses"]) for r in online_rows if r["policy"] == p]))
+        for p in by_policy
+    }
 
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    metric_rows: List[Dict[str, object]] = []
-    per_h_rows: List[Dict[str, object]] = []
-    per_f_rows: List[Dict[str, object]] = []
-    summary: Dict[str, object] = {"task": "evict_value_pairwise", "model": "logistic_regression_delta"}
+    def _write(path: Path, rows: List[Dict[str, object]]) -> None:
+        if not rows:
+            return
+        with path.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
+            w.writeheader()
+            w.writerows(rows)
 
-    for split in ["train", "val", "test"]:
-        part = splits[split]
-        if not part:
-            continue
-        x_split, _ = _xy(part)
-        pred, prob = _predict_with_single_class_fallback(
-            clf=clf,
-            x_train=x_train,
-            y_train=y_train,
-            x_eval=x_split,
-        )
-        m = _evaluate(part, pred, prob)
-        metric_rows.append({"split": split, **m})
-        summary[split] = m
+    _write(out_dir / "policy_comparison.csv", online_rows)
+    _write(out_dir / "offline_metrics.csv", offline_rows)
+    _write(out_dir / "hard_slice_metrics.csv", hard_slice_rows)
+    _write(out_dir / "metrics.csv", offline_rows)
 
-        for horizon, h_rows in _slice_by(part, "horizon").items():
-            hx, _ = _xy(h_rows)
-            hp, hprob = _predict_with_single_class_fallback(
-                clf=clf,
-                x_train=x_train,
-                y_train=y_train,
-                x_eval=hx,
-            )
-            hm = _evaluate(h_rows, hp, hprob)
-            per_h_rows.append({"split": split, "horizon": int(horizon), **hm})
-
-        for family, f_rows in _slice_by(part, "family").items():
-            fx, _ = _xy(f_rows)
-            fp, fprob = _predict_with_single_class_fallback(
-                clf=clf,
-                x_train=x_train,
-                y_train=y_train,
-                x_eval=fx,
-            )
-            fm = _evaluate(f_rows, fp, fprob)
-            per_f_rows.append({"split": split, "family": family, **fm})
-
-    _write_csv(out_dir / "metrics.csv", metric_rows)
-    _write_csv(out_dir / "per_horizon_metrics.csv", per_h_rows)
-    _write_csv(out_dir / "per_family_metrics.csv", per_f_rows)
+    summary = {
+        "pairwise_model_source": pairwise_model_source,
+        "mean_misses": mean_misses,
+        "offline": offline_rows,
+        "hard_slice": hard_slice_rows,
+        "hard_slice_available": bool(hard_ids),
+    }
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
-    lines = [
-        "# Decision-aligned pairwise first check",
-        "",
-        f"- Pairwise CSV: `{args.pairwise_csv}`",
-        "",
-        "| Split | Pairwise acc | Top-1 acc | Mean chosen regret | Mean regret vs best |",
-        "|---|---:|---:|---:|---:|",
-    ]
-    for row in metric_rows:
+    lines: List[str] = []
+    lines.append("# evict_value pairwise first check")
+    lines.append("")
+    lines.append("## Online policy comparison (mean misses)")
+    for p in ["evict_value_v1", "evict_value_pairwise_v1", "predictive_marker", "trust_and_doubt", "rest_v1", "lru"]:
+        if p in mean_misses:
+            lines.append(f"- {p}: {mean_misses[p]:.3f}")
+    lines.append("")
+    lines.append("## Offline decision quality")
+    for row in offline_rows:
         lines.append(
-            f"| {row['split']} | {row['pairwise_accuracy']:.4f} | {row['top1_candidate_accuracy']:.4f} | "
-            f"{row['mean_chosen_regret']:.4f} | {row['mean_regret_vs_best']:.4f} |"
+            f"- {row['policy']}: top1={float(row['top1']):.4f}, pairwise_acc={float(row['pairwise_acc']):.4f}, mean_regret={float(row['mean_regret']):.4f}"
         )
-    (out_dir / "experiment_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    lines.append("")
+    lines.append("## Hard loss slice (evict_value_v1 losses in failure-slice audit)")
+    if not hard_ids:
+        lines.append("- Skipped: analysis/evict_value_failure_slice_audit.csv missing or empty.")
+    elif not hard_slice_rows:
+        lines.append("- Slice present but no overlapping decision rows in current offline dataset.")
+    else:
+        for row in hard_slice_rows:
+            lines.append(
+                f"- {row['policy']}: top1={float(row['top1']):.4f}, pairwise_acc={float(row['pairwise_acc']):.4f}, mean_regret={float(row['mean_regret']):.4f}"
+            )
+    lines.append("")
+    lines.append("## Bottleneck read")
+    lines.append("- If pairwise improves hard-slice top1/regret but not online misses, bottleneck likely feature coverage or horizon mismatch.")
+    lines.append("- If pairwise does not improve offline hard slices either, objective mismatch is likely not the only blocker.")
 
+    Path(args.summary_md).write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2))
 
 

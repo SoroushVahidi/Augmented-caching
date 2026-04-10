@@ -1,0 +1,3 @@
+policy,decision_count,top1,pairwise_accuracy,mean_regret
+evict_value_v1,4.0,1.0,0.0,0.0
+evict_value_pairwise_v1,4.0,1.0,1.0,0.0
