@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# NOT the KBS canonical heavy_r1 pipeline. For the submission-critical Wulver line
+# (heavy_r1 filenames + build_kbs inputs), use evict_value_v1_wulver_heavy_train.sbatch
+# and evict_value_v1_wulver_heavy_eval.sbatch — see docs/kbs_manuscript_submission_index.md
+#
 #SBATCH --job-name=evictv1-multi
 #SBATCH --partition=general
 #SBATCH --qos=standard

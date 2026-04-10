@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# KBS canonical Wulver train stage (EXP_TAG=heavy_r1). Pair with heavy_eval, then
+# scripts/paper/build_kbs_main_manuscript_artifacts.py — docs/kbs_manuscript_submission_index.md
+#
 #SBATCH --job-name=evictv1-heavy-train
 #SBATCH --partition=general
 #SBATCH --qos=standard

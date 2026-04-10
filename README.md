@@ -16,6 +16,17 @@ This repository includes:
 
 For evidence-strength caveats and what is still open, see `docs/manuscript_evidence_map.md` and `docs/manuscript_open_questions.md`.
 
+### KBS manuscript: canonical Wulver `heavy_r1` path
+
+For the **Knowledge-Based Systems** submission package, the repository treats **one** end-to-end line as authoritative for main **multi-trace Wulver** `evict_value_v1` numbers:
+
+1. **Runbook:** `docs/wulver_heavy_evict_value_experiment.md`
+2. **Cluster drivers:** `slurm/evict_value_v1_wulver_heavy_train.sbatch`, `slurm/evict_value_v1_wulver_heavy_eval.sbatch` (`EXP_TAG=heavy_r1`)
+3. **Exact input/output filenames:** `docs/evict_value_v1_kbs_canonical_artifacts.md`
+4. **LaTeX-oriented bundle:** `scripts/paper/build_kbs_main_manuscript_artifacts.py` → `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/`
+
+**Do not** treat the unsuffixed `analysis/evict_value_wulver_v1_policy_comparison.csv` as the main KBS comparison (it may include extra policies from non-heavy drivers). See `analysis/README.md` and `docs/kbs_manuscript_submission_index.md`.
+
 ---
 
 ## Installation
@@ -164,6 +175,7 @@ See `analysis/README.md` for canonical vs legacy/exploratory organization.
 
 ## Repository guide
 
+- KBS submission index (canonical `heavy_r1`, tables/figures, non-canonical notes): `docs/kbs_manuscript_submission_index.md`
 - High-level map: `docs/repo_map.md`
 - Reproducibility, CLI entry points, manuscript vs exploratory artifacts: `docs/reproducibility_and_artifacts.md`
 - Analysis artifact organization: `analysis/README.md`

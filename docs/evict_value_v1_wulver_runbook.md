@@ -1,5 +1,7 @@
 # evict_value_v1 Wulver dataset runbook (phase 1)
 
+**KBS manuscript note:** For the **canonical multi-trace `heavy_r1` train + eval + manuscript bundle**, use `docs/wulver_heavy_evict_value_experiment.md` and `docs/kbs_manuscript_submission_index.md`. This runbook describes **dataset-generation-focused** Slurm patterns (`evict_value_v1_wulver_dataset.sbatch` and array mode) that are **not** the same filenames as the `heavy_r1` analysis artifacts consumed by `scripts/paper/build_kbs_main_manuscript_artifacts.py`.
+
 ## 1) Optional local sanity check
 
 Run a small sample generation locally before cluster submission:

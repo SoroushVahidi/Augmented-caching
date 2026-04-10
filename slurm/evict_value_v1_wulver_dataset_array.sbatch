@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Sharded dataset build — not the KBS canonical heavy_r1 bundle by itself.
+# See docs/kbs_manuscript_submission_index.md
+#
 #SBATCH --job-name=evictv1-dsarr
 #SBATCH --partition=general
 #SBATCH --qos=standard

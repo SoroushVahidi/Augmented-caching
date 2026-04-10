@@ -10,7 +10,7 @@ This document is a concise orientation guide for external readers and manuscript
 - `docs/` — method notes, experiment protocols, theorem-development notes, and manuscript-support docs.
 - `analysis/` — generated text artifacts from experiments (`.csv`, `.json`, `.md`).
 - `data/` — small examples in git + raw/processed derived data roots.
-- `slurm/` — cluster batch templates for heavier runs.
+- `slurm/` — cluster batch templates for heavier runs. **KBS canonical Wulver pipeline:** `evict_value_v1_wulver_heavy_train.sbatch`, `evict_value_v1_wulver_heavy_eval.sbatch` (`EXP_TAG=heavy_r1`); index at `docs/kbs_manuscript_submission_index.md`.
 
 ## `src/lafc/` subpackages
 
@@ -25,6 +25,7 @@ This document is a concise orientation guide for external readers and manuscript
 
 ## `scripts/` families
 
+- `scripts/paper/` — KBS manuscript bundle (`build_kbs_main_manuscript_artifacts.py`); requires canonical `heavy_r1` analysis inputs.
 - `scripts/datasets/` — canonical dataset download/prepare wrappers.
 - `build_*` scripts — build training tables from traces.
 - `train_*` scripts — fit lightweight models and write metrics.

@@ -24,3 +24,6 @@
 - Tables: `tables/manuscript`
 - Figures: `figures/manuscript`
 - Manifest/report/LaTeX snippets: `reports/manuscript_artifacts`
+
+## Evidence completeness
+Regenerate this bundle after `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` exists (heavy eval). Older committed PDF/PNG under `figures/manuscript/` may predate a successful canonical run; see `docs/kbs_manuscript_submission_index.md`.

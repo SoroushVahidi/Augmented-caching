@@ -18,12 +18,15 @@ python -m lafc.runner.run_policy --policy <name> --trace <path> --capacity <k>
 
 | Goal | Typical commands | Default / typical output roots |
 |------|------------------|--------------------------------|
-| Pointwise learned eviction (`evict_value_v1`) | `scripts/build_evict_value_dataset_v1.py`, `scripts/train_evict_value_v1.py`, `scripts/run_evict_value_v1_first_check.py` | `analysis/evict_value_v1_*`, `models/` |
+| **KBS main Wulver `evict_value_v1` (`heavy_r1` only)** | `slurm/evict_value_v1_wulver_heavy_train.sbatch` then `slurm/evict_value_v1_wulver_heavy_eval.sbatch`; see `docs/wulver_heavy_evict_value_experiment.md` | `analysis/*_heavy_r1.*`, `models/evict_value_wulver_v1_best_heavy_r1.pkl`; then `scripts/paper/build_kbs_main_manuscript_artifacts.py` → `tables/manuscript/`, etc. |
+| Pointwise learned eviction (local / first-check) | `scripts/build_evict_value_dataset_v1.py`, `scripts/train_evict_value_v1.py`, `scripts/run_evict_value_v1_first_check.py` | `analysis/evict_value_v1_*`, `models/` |
 | Pairwise learned eviction (`evict_value_pairwise_v1`) | `scripts/build_evict_value_pairwise_dataset.py`, `scripts/train_evict_value_pairwise_v1.py`, `scripts/run_evict_value_pairwise_first_check.py` | `analysis/evict_value_pairwise_*`, `models/` |
 | Offline teacher vs heuristic | `scripts/run_offline_teacher_vs_heuristic_experiment.py` | `analysis/offline_teacher_vs_heuristic/` or `--output-dir` |
 | Pairwise vs pointwise | `scripts/run_pairwise_vs_pointwise_experiment.py` | `analysis/pairwise_vs_pointwise/` |
 | Datasets | `scripts/datasets/prepare_all.py` | `data/raw/<dataset>/`, `data/processed/<dataset>/` |
-| Manuscript table/figure bundle (from checked-in analysis inputs) | `scripts/paper/build_kbs_main_manuscript_artifacts.py` | `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/` |
+| Manuscript table/figure bundle | `scripts/paper/build_kbs_main_manuscript_artifacts.py` | `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/` |
+
+**Index:** `docs/kbs_manuscript_submission_index.md`.
 
 For **evict_value_v1** KBS evidence, inputs are **`heavy_r1` files only** (see `docs/evict_value_v1_kbs_canonical_artifacts.md` and `docs/wulver_heavy_evict_value_experiment.md`). The builder does **not** use the unsuffixed `analysis/evict_value_wulver_v1_policy_comparison.csv`.
 

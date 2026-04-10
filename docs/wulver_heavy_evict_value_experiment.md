@@ -1,5 +1,7 @@
 # Wulver heavy experiment: artifact-backed `evict_value_v1`
 
+**Submission index:** `docs/kbs_manuscript_submission_index.md` — links this runbook, canonical filenames, and non-canonical artifacts.
+
 This package is the first serious Wulver-scale run for the current main learned path:
 
 - learned method: `evict_value_v1` trained from artifact-backed candidate shards

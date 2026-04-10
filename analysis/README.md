@@ -2,6 +2,21 @@
 
 `analysis/` stores experiment outputs and manuscript-support artifacts.
 
+## KBS / Wulver `evict_value_v1`: canonical vs non-canonical root files
+
+For the **Knowledge-Based Systems** manuscript, **only** the **`heavy_r1`-suffixed** analysis files below are inputs to `scripts/paper/build_kbs_main_manuscript_artifacts.py` (see `docs/evict_value_v1_kbs_canonical_artifacts.md`). Other similarly named files may remain in this directory **for history**; do not treat them as interchangeable without checking provenance.
+
+| Canonical (KBS main Wulver line) | Non-canonical (historical / alternate drivers — do not cite as main KBS comparison) |
+|-----------------------------------|-------------------------------------------------------------------------------------|
+| `evict_value_wulver_v1_policy_comparison_heavy_r1.csv` | `evict_value_wulver_v1_policy_comparison.csv` |
+| `evict_value_wulver_v1_policy_comparison_heavy_r1.md` | `evict_value_wulver_v1_policy_comparison.md` |
+| `evict_value_wulver_v1_train_metrics_heavy_r1.json` | `evict_value_wulver_v1_train_metrics.json` |
+| `evict_value_wulver_v1_model_comparison_heavy_r1.csv` | `evict_value_wulver_v1_model_comparison.csv` |
+| `evict_value_wulver_v1_best_config_heavy_r1.json` | `evict_value_wulver_v1_best_config.json` |
+| `evict_value_v1_wulver_dataset_summary_heavy_r1.md` | `evict_value_v1_wulver_dataset_summary.md` |
+
+**We do not delete** non-canonical files here; they support older references and alternate experiment drivers.
+
 ## What is canonical vs exploratory?
 
 ### Canonical experiment-style outputs (preferred)

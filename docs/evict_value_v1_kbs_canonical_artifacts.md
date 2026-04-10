@@ -2,6 +2,8 @@
 
 This document fixes a single source of truth for the main Wulver evaluation and training evidence used with `scripts/paper/build_kbs_main_manuscript_artifacts.py`.
 
+**See also:** `docs/kbs_manuscript_submission_index.md` (reviewer-facing index), `analysis/README.md` (canonical vs non-canonical root filenames).
+
 ## Canonical pipeline
 
 1. `docs/wulver_heavy_evict_value_experiment.md`

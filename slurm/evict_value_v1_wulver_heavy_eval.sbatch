@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# KBS canonical Wulver eval stage — writes analysis/evict_value_wulver_v1_policy_comparison_${EXP_TAG}.csv
+# (use EXP_TAG=heavy_r1). docs/kbs_manuscript_submission_index.md
+#
 #SBATCH --job-name=evictv1-heavy-eval
 #SBATCH --partition=general
 #SBATCH --qos=standard

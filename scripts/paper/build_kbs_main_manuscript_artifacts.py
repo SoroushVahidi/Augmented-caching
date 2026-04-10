@@ -449,6 +449,10 @@ def main() -> None:
         f"- Tables: `{TABLES}`",
         f"- Figures: `{FIGURES}`",
         f"- Manifest/report/LaTeX snippets: `{REPORTS}`",
+        "",
+        "## Evidence completeness",
+        "This run succeeded only if every path listed under `inputs` in `manuscript_artifact_manifest.json` existed.",
+        "Committed tables/figures from an earlier run may not match canonical `heavy_r1` inputs if those inputs were added or renamed afterward; re-run this script after heavy eval produces `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`.",
     ]
     if skipped:
         report_lines.append("")
