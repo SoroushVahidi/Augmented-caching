@@ -1,0 +1,118 @@
+{
+  "trace_glob": "data/example*.json",
+  "resolved_trace_count": 4,
+  "capacities": [
+    2,
+    3,
+    4
+  ],
+  "horizons": [
+    4,
+    8
+  ],
+  "split_by_trace": {
+    "data/example.json": "train",
+    "data/example_atlas_v1.json": "val",
+    "data/example_general_caching.json": "test",
+    "data/example_unweighted.json": "train"
+  },
+  "split_counts": {
+    "train": {
+      "candidate_rows": 100,
+      "candidate_decisions": 44,
+      "pairwise_rows": 44,
+      "pairwise_decisions": 28,
+      "trace_count": 2
+    },
+    "val": {
+      "candidate_rows": 84,
+      "candidate_decisions": 32,
+      "pairwise_rows": 38,
+      "pairwise_decisions": 16,
+      "trace_count": 1
+    },
+    "test": {
+      "candidate_rows": 8,
+      "candidate_decisions": 4,
+      "pairwise_rows": 4,
+      "pairwise_decisions": 4,
+      "trace_count": 1
+    }
+  },
+  "model_winners": {
+    "pointwise": "rf",
+    "pairwise": "logistic"
+  },
+  "overall_online_mean_misses": {
+    "evict_value_pairwise_v1": 3.3333333333333335,
+    "evict_value_v1": 3.3333333333333335,
+    "lru": 3.3333333333333335,
+    "predictive_marker": 3.3333333333333335,
+    "rest_v1": 3.3333333333333335,
+    "trust_and_doubt": 3.3333333333333335
+  },
+  "offline_test": [
+    {
+      "policy": "evict_value_v1",
+      "decision_count": 4.0,
+      "top1": 1.0,
+      "pairwise_accuracy": 0.0,
+      "mean_regret": 0.0
+    },
+    {
+      "policy": "evict_value_pairwise_v1",
+      "decision_count": 4.0,
+      "top1": 1.0,
+      "pairwise_accuracy": 1.0,
+      "mean_regret": 0.0
+    }
+  ],
+  "hard_slice_test": [],
+  "per_family_online_mean_misses": {
+    "general": {
+      "evict_value_pairwise_v1": 3.3333333333333335,
+      "evict_value_v1": 3.3333333333333335,
+      "lru": 3.3333333333333335,
+      "predictive_marker": 3.3333333333333335,
+      "rest_v1": 3.3333333333333335,
+      "trust_and_doubt": 3.3333333333333335
+    }
+  },
+  "per_capacity_online_mean_misses": {
+    "2": {
+      "evict_value_pairwise_v1": 4.0,
+      "evict_value_v1": 4.0,
+      "lru": 4.0,
+      "predictive_marker": 4.0,
+      "rest_v1": 4.0,
+      "trust_and_doubt": 4.0
+    },
+    "3": {
+      "evict_value_pairwise_v1": 3.0,
+      "evict_value_v1": 3.0,
+      "lru": 3.0,
+      "predictive_marker": 3.0,
+      "rest_v1": 3.0,
+      "trust_and_doubt": 3.0
+    },
+    "4": {
+      "evict_value_pairwise_v1": 3.0,
+      "evict_value_v1": 3.0,
+      "lru": 3.0,
+      "predictive_marker": 3.0,
+      "rest_v1": 3.0,
+      "trust_and_doubt": 3.0
+    }
+  },
+  "per_horizon_offline_top1": {
+    "4": {
+      "pointwise_top1": 1.0,
+      "pairwise_top1": 1.0
+    },
+    "8": {
+      "pointwise_top1": 1.0,
+      "pairwise_top1": 1.0
+    }
+  },
+  "skipped_notes": []
+}

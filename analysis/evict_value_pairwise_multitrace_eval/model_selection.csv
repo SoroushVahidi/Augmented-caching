@@ -1,0 +1,10 @@
+family,model,split,metric,value
+pointwise,ridge,train,mae,0.30278244355936296
+pointwise,ridge,val,mae,0.4968044023636788
+pointwise,ridge,test,mae,0.542052518486476
+pointwise,rf,train,mae,0.10765453957806899
+pointwise,rf,val,mae,0.3061644971508417
+pointwise,rf,test,mae,0.4138288912884499
+pairwise,logistic,train,pairwise_accuracy,1.0
+pairwise,logistic,val,pairwise_accuracy,0.9473684210526315
+pairwise,logistic,test,pairwise_accuracy,1.0

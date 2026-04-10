@@ -67,6 +67,11 @@ def main() -> None:
     rng = random.Random(args.sample_seed)
     candidate_rows = _read_candidate_rows(Path(args.candidate_csv))
     pairwise_rows = build_pairwise_rows_from_candidate_rows(candidate_rows, include_ties=args.include_ties)
+    for row in pairwise_rows:
+        row["trace_name"] = row.get("trace", "")
+        row["t"] = int(float(row.get("request_t", 0)))
+        row["candidate_a"] = row.get("candidate_i_page_id", "")
+        row["candidate_b"] = row.get("candidate_j_page_id", "")
     rng.shuffle(pairwise_rows)
     if len(pairwise_rows) > args.max_rows:
         pairwise_rows = pairwise_rows[: args.max_rows]
