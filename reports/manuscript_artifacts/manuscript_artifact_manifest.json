@@ -1,7 +1,7 @@
 {
   "inputs": {
-    "policy_comparison": "analysis/evict_value_wulver_v1_policy_comparison.csv",
-    "policy_comparison_md": "analysis/evict_value_wulver_v1_policy_comparison.md",
+    "policy_comparison": "analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv",
+    "policy_comparison_md": "analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.md",
     "dataset_summary": "analysis/evict_value_v1_wulver_dataset_summary_heavy_r1.md",
     "train_model_comparison": "analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv",
     "train_metrics": "analysis/evict_value_wulver_v1_train_metrics_heavy_r1.json",
@@ -42,7 +42,8 @@
     ]
   },
   "notes": [
-    "Main quantitative evidence uses Wulver policy comparison CSV and heavy_r1 training artifacts.",
+    "All inputs are heavy_r1 artifacts from heavy_train + heavy_eval (docs/wulver_heavy_evict_value_experiment.md).",
+    "Unsuffixed analysis/evict_value_wulver_v1_policy_comparison.csv is not used; it may include extra policies from multi_phase or ad hoc runs.",
     "Guarded-variant ablation on the same heavy Wulver pool is not available as a dedicated artifact; Table/Figure 4 therefore uses model-family ablation within evict_value_v1."
   ]
 }

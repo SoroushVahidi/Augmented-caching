@@ -22,9 +22,11 @@ REPORTS = ROOT / "reports" / "manuscript_artifacts"
 LATEX = REPORTS / "latex_snippets"
 
 
+# Main Wulver quantitative evidence for KBS: heavy_r1 pipeline only (see docs/wulver_heavy_evict_value_experiment.md).
+# Policy comparison must come from slurm/evict_value_v1_wulver_heavy_eval.sbatch (or equivalent run with EXP_TAG=heavy_r1).
 EVIDENCE_FILES = {
-    "policy_comparison": ANALYSIS / "evict_value_wulver_v1_policy_comparison.csv",
-    "policy_comparison_md": ANALYSIS / "evict_value_wulver_v1_policy_comparison.md",
+    "policy_comparison": ANALYSIS / "evict_value_wulver_v1_policy_comparison_heavy_r1.csv",
+    "policy_comparison_md": ANALYSIS / "evict_value_wulver_v1_policy_comparison_heavy_r1.md",
     "dataset_summary": ANALYSIS / "evict_value_v1_wulver_dataset_summary_heavy_r1.md",
     "train_model_comparison": ANALYSIS / "evict_value_wulver_v1_model_comparison_heavy_r1.csv",
     "train_metrics": ANALYSIS / "evict_value_wulver_v1_train_metrics_heavy_r1.json",
@@ -413,7 +415,8 @@ def main() -> None:
         "inputs": {k: str(v) for k, v in EVIDENCE_FILES.items()},
         "outputs": created,
         "notes": [
-            "Main quantitative evidence uses Wulver policy comparison CSV and heavy_r1 training artifacts.",
+            "All paths in inputs are heavy_r1 artifacts from heavy_train + heavy_eval (docs/wulver_heavy_evict_value_experiment.md).",
+            "Unsuffixed analysis/evict_value_wulver_v1_policy_comparison.csv (if present) is not used; it may include extra policies (e.g. ml_gate, atlas_v3) from multi_phase or ad hoc runs.",
             "Guarded-variant ablation on the same heavy Wulver pool is not available as a dedicated artifact; Table/Figure 4 therefore uses model-family ablation within evict_value_v1.",
         ],
     }
@@ -423,7 +426,7 @@ def main() -> None:
         "# Manuscript artifact generation report",
         "",
         "## Strongest manuscript-safe basis selected",
-        "- Main comparison: `analysis/evict_value_wulver_v1_policy_comparison.csv` (multi-family, multi-capacity Wulver run).",
+        "- Main comparison: `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` (from heavy eval; baseline set per heavy runbook).",
         "- Main training/ablation: `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv` and `analysis/evict_value_wulver_v1_train_metrics_heavy_r1.json`.",
         "- Dataset coverage: `analysis/evict_value_v1_wulver_dataset_summary_heavy_r1.md` and `analysis/wulver_trace_manifest_full.csv`.",
         "",

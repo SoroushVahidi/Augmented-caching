@@ -1,0 +1,32 @@
+{
+  "job_label": "pairwise_pub_r1_t15_logistic_regret_diff_n0.2_s0",
+  "trace_start": 0,
+  "trace_count": 3,
+  "capacities": [
+    32
+  ],
+  "horizons": [
+    4
+  ],
+  "model_family": "logistic",
+  "label_variant": "regret_diff",
+  "label_noise": 0.2,
+  "rows": {
+    "candidate": 2256672,
+    "pairwise": 883908
+  },
+  "offline_test": null,
+  "online_mean_misses": {
+    "atlas_v3": 23539.0,
+    "blind_oracle": 33407.666666666664,
+    "evict_value_pairwise_v1": 23562.333333333332,
+    "evict_value_v1": 23539.0,
+    "evict_value_v1_guarded": 23539.0,
+    "lru": 23539.0,
+    "predictive_marker": 23702.666666666668,
+    "rest_v1": 23539.0,
+    "robust_ftp_d_marker": 23656.0,
+    "trust_and_doubt": 23952.0
+  },
+  "recommendation": "not_promising_enough"
+}

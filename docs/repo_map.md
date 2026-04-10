@@ -41,11 +41,12 @@ See `analysis/README.md` for details and naming guidance.
 
 ## Manuscript-support docs to read first
 
-1. `docs/reproducibility_and_artifacts.md` (entry points, output locations, manuscript vs exploratory)
-2. `docs/manuscript_evidence_map.md`
-3. `docs/manuscript_open_questions.md`
-4. `docs/baselines.md`
-5. `docs/framework.md`
+1. `docs/evict_value_v1_kbs_canonical_artifacts.md` (heavy_r1-only inputs for KBS tables/figures)
+2. `docs/reproducibility_and_artifacts.md` (entry points, output locations, manuscript vs exploratory)
+3. `docs/manuscript_evidence_map.md`
+4. `docs/manuscript_open_questions.md`
+5. `docs/baselines.md`
+6. `docs/framework.md`
 
 ## Notes on scientific status
 

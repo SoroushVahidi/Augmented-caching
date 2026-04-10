@@ -25,6 +25,8 @@ python -m lafc.runner.run_policy --policy <name> --trace <path> --capacity <k>
 | Datasets | `scripts/datasets/prepare_all.py` | `data/raw/<dataset>/`, `data/processed/<dataset>/` |
 | Manuscript table/figure bundle (from checked-in analysis inputs) | `scripts/paper/build_kbs_main_manuscript_artifacts.py` | `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/` |
 
+For **evict_value_v1** KBS evidence, inputs are **`heavy_r1` files only** (see `docs/evict_value_v1_kbs_canonical_artifacts.md` and `docs/wulver_heavy_evict_value_experiment.md`). The builder does **not** use the unsuffixed `analysis/evict_value_wulver_v1_policy_comparison.csv`.
+
 For heavier cluster runs, see `slurm/*.sbatch` and the Wulver runbooks under `docs/wulver_*.md` and `docs/evict_value_v1_wulver_runbook.md`.
 
 ## Manuscript-safe vs exploratory

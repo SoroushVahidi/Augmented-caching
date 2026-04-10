@@ -1,7 +1,7 @@
 # Manuscript artifact generation report
 
 ## Strongest manuscript-safe basis selected
-- Main comparison: `analysis/evict_value_wulver_v1_policy_comparison.csv` (multi-family, multi-capacity Wulver run).
+- Main comparison: `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` (heavy eval; see `docs/evict_value_v1_kbs_canonical_artifacts.md`).
 - Main training/ablation: `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv` and `analysis/evict_value_wulver_v1_train_metrics_heavy_r1.json`.
 - Dataset coverage: `analysis/evict_value_v1_wulver_dataset_summary_heavy_r1.md` and `analysis/wulver_trace_manifest_full.csv`.
 

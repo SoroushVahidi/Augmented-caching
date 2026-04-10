@@ -25,6 +25,8 @@ When present, these are the curated submission-oriented copies (sources for tabl
 - `figures/manuscript/` — PDF + PNG
 - `reports/manuscript_artifacts/` — manifest, narrative report, optional `latex_snippets/`
 
+**evict_value_v1 / KBS:** The generator `scripts/paper/build_kbs_main_manuscript_artifacts.py` reads **`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`** (and other `*_heavy_r1` training artifacts), not the unsuffixed `evict_value_wulver_v1_policy_comparison.csv`. See `docs/evict_value_v1_kbs_canonical_artifacts.md`.
+
 See `docs/reproducibility_and_artifacts.md` for how these relate to exploratory campaign trees (for example large `analysis/pairwise_*_campaign/jobs/` directories).
 
 ### Stable helper artifacts

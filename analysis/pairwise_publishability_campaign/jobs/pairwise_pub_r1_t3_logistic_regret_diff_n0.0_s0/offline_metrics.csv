@@ -1,0 +1,3 @@
+split,model_family,label_variant,label_noise,decision_count,pairwise_accuracy,top1_reconstruction,mean_chosen_regret,mean_regret_vs_best
+train,logistic,regret_diff,0.0,8956.0,0.8620185068375905,0.0,1.0,1.0
+val,logistic,regret_diff,0.0,8974.0,0.7945939402742976,0.0010028972587474928,0.963227100512592,0.963227100512592

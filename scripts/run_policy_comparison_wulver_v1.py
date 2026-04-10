@@ -67,8 +67,21 @@ def main() -> None:
         ),
     )
     ap.add_argument("--evict-value-model", type=Path, default=Path("models/evict_value_wulver_v1_best.pkl"))
-    ap.add_argument("--out-csv", type=Path, default=Path("analysis/evict_value_wulver_v1_policy_comparison.csv"))
-    ap.add_argument("--out-md", type=Path, default=Path("analysis/evict_value_wulver_v1_policy_comparison.md"))
+    ap.add_argument(
+        "--out-csv",
+        type=Path,
+        default=Path("analysis/evict_value_wulver_v1_policy_comparison.csv"),
+        help=(
+            "Output CSV path. For KBS / heavy_r1 use slurm/evict_value_v1_wulver_heavy_eval.sbatch "
+            "which writes analysis/evict_value_wulver_v1_policy_comparison_<EXP_TAG>.csv."
+        ),
+    )
+    ap.add_argument(
+        "--out-md",
+        type=Path,
+        default=Path("analysis/evict_value_wulver_v1_policy_comparison.md"),
+        help="Markdown summary path (pair --out-csv).",
+    )
     args = ap.parse_args()
 
     caps = [int(x.strip()) for x in args.capacities.split(",") if x.strip()]
