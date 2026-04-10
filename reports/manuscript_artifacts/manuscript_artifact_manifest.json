@@ -1,0 +1,48 @@
+{
+  "inputs": {
+    "policy_comparison": "analysis/evict_value_wulver_v1_policy_comparison.csv",
+    "policy_comparison_md": "analysis/evict_value_wulver_v1_policy_comparison.md",
+    "dataset_summary": "analysis/evict_value_v1_wulver_dataset_summary_heavy_r1.md",
+    "train_model_comparison": "analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv",
+    "train_metrics": "analysis/evict_value_wulver_v1_train_metrics_heavy_r1.json",
+    "best_config": "analysis/evict_value_wulver_v1_best_config_heavy_r1.json",
+    "trace_manifest": "analysis/wulver_trace_manifest_full.csv",
+    "baseline_doc": "docs/baselines.md"
+  },
+  "outputs": {
+    "tables": [
+      "tables/manuscript/table1_dataset_summary.csv",
+      "tables/manuscript/table1_dataset_summary.tex",
+      "tables/manuscript/table2_policy_roster.csv",
+      "tables/manuscript/table2_policy_roster.tex",
+      "tables/manuscript/table3_main_quantitative_comparison.csv",
+      "tables/manuscript/table3_main_quantitative_comparison.tex",
+      "tables/manuscript/table4_main_ablation.csv",
+      "tables/manuscript/table4_main_ablation.tex"
+    ],
+    "figures": [
+      "figures/manuscript/figure1_method_overview.pdf",
+      "figures/manuscript/figure1_method_overview.png",
+      "figures/manuscript/figure2_main_performance.pdf",
+      "figures/manuscript/figure2_main_performance.png",
+      "figures/manuscript/figure3_aggregate_improvement.pdf",
+      "figures/manuscript/figure3_aggregate_improvement.png",
+      "figures/manuscript/figure4_ablation.pdf",
+      "figures/manuscript/figure4_ablation.png"
+    ],
+    "latex_snippets": [
+      "reports/manuscript_artifacts/latex_snippets/figure1_snippet.tex",
+      "reports/manuscript_artifacts/latex_snippets/figure2_snippet.tex",
+      "reports/manuscript_artifacts/latex_snippets/figure3_snippet.tex",
+      "reports/manuscript_artifacts/latex_snippets/figure4_snippet.tex",
+      "reports/manuscript_artifacts/latex_snippets/table1_snippet.tex",
+      "reports/manuscript_artifacts/latex_snippets/table2_snippet.tex",
+      "reports/manuscript_artifacts/latex_snippets/table3_snippet.tex",
+      "reports/manuscript_artifacts/latex_snippets/table4_snippet.tex"
+    ]
+  },
+  "notes": [
+    "Main quantitative evidence uses Wulver policy comparison CSV and heavy_r1 training artifacts.",
+    "Guarded-variant ablation on the same heavy Wulver pool is not available as a dedicated artifact; Table/Figure 4 therefore uses model-family ablation within evict_value_v1."
+  ]
+}

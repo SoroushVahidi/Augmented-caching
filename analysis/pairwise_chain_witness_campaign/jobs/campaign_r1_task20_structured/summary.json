@@ -1,0 +1,12 @@
+{
+  "job_label": "campaign_r1_task20_structured",
+  "mode": "structured",
+  "seed": 159380,
+  "instances_checked": 25000,
+  "chains_checked": 377970,
+  "violations_found": 61517,
+  "lemma1_failures": 61517,
+  "lemma2_failures": 0,
+  "lemma3_failures": 0,
+  "any_counterexample": true
+}

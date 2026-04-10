@@ -1,0 +1,12 @@
+{
+  "job_label": "campaign_r1_task6_random",
+  "mode": "random",
+  "seed": 48514,
+  "instances_checked": 25000,
+  "chains_checked": 50243,
+  "violations_found": 9455,
+  "lemma1_failures": 6923,
+  "lemma2_failures": 2532,
+  "lemma3_failures": 0,
+  "any_counterexample": true
+}

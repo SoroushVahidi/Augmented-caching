@@ -1,0 +1,12 @@
+{
+  "job_label": "local_smoke_check",
+  "mode": "random",
+  "seed": 1,
+  "instances_checked": 10,
+  "chains_checked": 9,
+  "violations_found": 0,
+  "lemma1_failures": 0,
+  "lemma2_failures": 0,
+  "lemma3_failures": 0,
+  "any_counterexample": false
+}

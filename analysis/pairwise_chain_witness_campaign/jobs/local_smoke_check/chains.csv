@@ -1,0 +1,10 @@
+job_label,instance_id,chain_id,phase,damage_D,I_size,lemma1_chain_monotone,lemma2_head_bound,head_victim_e1,head_stale_set,I_set,a_values
+local_smoke_check,0,ph1_c0,1,1,1,True,True,p0,"p0,p1",p1,2
+local_smoke_check,0,ph1_c1,1,1,0,True,True,p1,p1,,2
+local_smoke_check,1,ph1_c0,1,1,0,True,True,p7,"p0,p7,p8",,20
+local_smoke_check,4,ph1_c0,1,1,0,True,True,p0,"p0,p4",,12
+local_smoke_check,4,ph4_c0,4,1,0,True,True,p1,"p1,p2",,8
+local_smoke_check,5,ph1_c0,1,1,0,True,True,p0,"p0,p6",,8
+local_smoke_check,6,ph1_c0,1,1,0,True,True,p1,"p1,p3",,18
+local_smoke_check,7,ph3_c0,3,1,0,True,True,p2,"p0,p2",,3
+local_smoke_check,9,ph1_c0,1,1,0,True,True,p4,p4,,1000000000000

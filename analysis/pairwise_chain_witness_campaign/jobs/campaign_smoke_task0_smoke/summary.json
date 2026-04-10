@@ -1,0 +1,12 @@
+{
+  "job_label": "campaign_smoke_task0_smoke",
+  "mode": "random",
+  "seed": 4242,
+  "instances_checked": 300,
+  "chains_checked": 668,
+  "violations_found": 135,
+  "lemma1_failures": 105,
+  "lemma2_failures": 30,
+  "lemma3_failures": 0,
+  "any_counterexample": true
+}
