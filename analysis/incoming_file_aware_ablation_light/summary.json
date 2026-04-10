@@ -1,0 +1,68 @@
+{
+  "traces": [
+    {
+      "trace": "data/example_unweighted.json",
+      "request_count": 10
+    },
+    {
+      "trace": "data/example_atlas_v1.json",
+      "request_count": 10
+    },
+    {
+      "trace": "data/example_general_caching.json",
+      "request_count": 7
+    },
+    {
+      "trace": "stress::predictor_good_lru_bad",
+      "request_count": 10
+    },
+    {
+      "trace": "stress::predictor_bad_lru_good",
+      "request_count": 10
+    },
+    {
+      "trace": "stress::mixed_regime",
+      "request_count": 10
+    }
+  ],
+  "capacities": [
+    2,
+    3,
+    4
+  ],
+  "horizon": 8,
+  "model_family": "HistGradientBoostingRegressor",
+  "base_feature_count": 26,
+  "incoming_aware_feature_count": 33,
+  "ranking": {
+    "base": {
+      "val": {
+        "decision_count": 8.0,
+        "top1_eviction_match": 0.75,
+        "mean_regret_vs_oracle": 0.125
+      },
+      "test": {
+        "decision_count": 8.0,
+        "top1_eviction_match": 0.5,
+        "mean_regret_vs_oracle": 0.0
+      }
+    },
+    "incoming_aware": {
+      "val": {
+        "decision_count": 8.0,
+        "top1_eviction_match": 0.375,
+        "mean_regret_vs_oracle": 0.375
+      },
+      "test": {
+        "decision_count": 8.0,
+        "top1_eviction_match": 0.5,
+        "mean_regret_vs_oracle": 0.0
+      }
+    }
+  },
+  "downstream_replay": {
+    "mean_base_misses": 5.555555555555555,
+    "mean_incoming_aware_misses": 5.555555555555555,
+    "mean_miss_delta_base_minus_aware": 0.0
+  }
+}
