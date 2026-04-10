@@ -1,0 +1,4 @@
+variant,feature_count,objective,val_decisions,val_top1_eviction_match,val_mean_regret,test_decisions,test_top1_eviction_match,test_mean_regret
+base_regression,26,replay_loss_regression,8,0.75,0.125,8,0.5,0.0
+history_regression,41,replay_loss_regression,8,0.875,0.0,8,0.375,0.125
+history_pairwise,41,pairwise_classifier,8,0.75,0.0,8,0.375,0.0

@@ -1,0 +1,86 @@
+{
+  "traces": [
+    {
+      "trace": "data/example_unweighted.json",
+      "request_count": 10
+    },
+    {
+      "trace": "data/example_atlas_v1.json",
+      "request_count": 10
+    },
+    {
+      "trace": "data/example_general_caching.json",
+      "request_count": 7
+    },
+    {
+      "trace": "stress::predictor_good_lru_bad",
+      "request_count": 10
+    },
+    {
+      "trace": "stress::predictor_bad_lru_good",
+      "request_count": 10
+    },
+    {
+      "trace": "stress::mixed_regime",
+      "request_count": 10
+    }
+  ],
+  "capacities": [
+    2,
+    3,
+    4
+  ],
+  "horizon": 8,
+  "model_family": "HistGradientBoostingRegressor",
+  "base_feature_count": 26,
+  "history_aware_feature_count": 41,
+  "history_aware_extra_columns": [
+    "hist_w8_candidate_request_rate",
+    "hist_w16_candidate_request_rate",
+    "hist_w32_candidate_request_rate",
+    "hist_w8_candidate_hit_rate",
+    "hist_w16_candidate_hit_rate",
+    "hist_candidate_last_seen_gap_norm",
+    "hist_candidate_last_hit_gap_norm",
+    "hist_candidate_interarrival_mean_norm",
+    "hist_candidate_interarrival_std_norm",
+    "hist_candidate_burst_max_norm",
+    "hist_candidate_recent_trend_w8_minus_w32",
+    "hist_global_unique_ratio_w16",
+    "hist_global_repeat_rate_w16",
+    "hist_global_hit_ratio_w16",
+    "hist_transition_prev_to_candidate_rate_w16"
+  ],
+  "ranking": {
+    "base": {
+      "val": {
+        "decision_count": 8.0,
+        "top1_eviction_match": 0.75,
+        "mean_regret_vs_oracle": 0.125
+      },
+      "test": {
+        "decision_count": 8.0,
+        "top1_eviction_match": 0.5,
+        "mean_regret_vs_oracle": 0.0
+      }
+    },
+    "history_aware": {
+      "val": {
+        "decision_count": 8.0,
+        "top1_eviction_match": 0.875,
+        "mean_regret_vs_oracle": 0.0
+      },
+      "test": {
+        "decision_count": 8.0,
+        "top1_eviction_match": 0.375,
+        "mean_regret_vs_oracle": 0.125
+      }
+    }
+  },
+  "downstream_replay": {
+    "mean_base_misses": 5.555555555555555,
+    "mean_history_aware_misses": 5.388888888888889,
+    "mean_miss_delta_base_minus_history": 0.16666666666666607,
+    "verdict": "helps"
+  }
+}
