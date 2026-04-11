@@ -174,14 +174,14 @@ def make_method_overview_two_panel_figure() -> plt.Figure:
     return fig
 
 
-# Main manuscript comparison policies (canonical heavy_r1 eval roster; no exploratory extras)
+# Main manuscript comparison policies — same roster and order as Table~3 in build_kbs_main_manuscript_artifacts.py.
 MAIN_PERF_POLICIES: Tuple[str, ...] = (
-    "evict_value_v1",
     "lru",
     "predictive_marker",
     "trust_and_doubt",
     "blind_oracle_lru_combiner",
     "rest_v1",
+    "evict_value_v1",
 )
 
 DELTA_POLICIES: Tuple[str, ...] = (
@@ -217,12 +217,6 @@ def make_main_performance_comparison_figure(policy_rows: List[Dict[str, str]]) -
     width = min(0.85 / max(n_p, 1), 0.13)
     fig, ax = plt.subplots(figsize=(11.5, 4.8))
     grays = ["#1a1a1a", "#3d3d3d", "#5c5c5c", "#7a7a7a", "#999999", "#b5b5b5"]
-    degenerate: List[str] = []
-    for fi, fam in enumerate(fams):
-        vals = [means.get((fam, p), np.nan) for p in MAIN_PERF_POLICIES]
-        clean = [v for v in vals if v == v]
-        if len(clean) >= 2 and (max(clean) - min(clean)) < 1e-6:
-            degenerate.append(fam)
 
     for i, pol in enumerate(MAIN_PERF_POLICIES):
         ys = [means.get((f, pol), np.nan) for f in fams]
@@ -242,10 +236,6 @@ def make_main_performance_comparison_figure(policy_rows: List[Dict[str, str]]) -
     ax.set_xticks(x)
     ax.set_xticklabels([f.replace("_", " ") for f in fams], fontsize=8, rotation=25, ha="right")
     ax.set_ylabel("Mean replay misses (lower is better)")
-    ttl = "Main end-to-end comparison by trace family (heavy_r1 policy comparison)"
-    if degenerate:
-        ttl += "\nNote: " + ", ".join(degenerate[:4]) + ("…" if len(degenerate) > 4 else "") + " show near-identical means across policies (tie/saturated regime)."
-    ax.set_title(ttl, fontsize=10)
     ax.legend(ncol=3, fontsize=7, frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.22))
     ax.grid(axis="y", linestyle=":", linewidth=0.65, alpha=0.9)
     fig.tight_layout(rect=[0, 0, 1, 0.88])
@@ -283,7 +273,6 @@ def make_improvement_vs_lru_figure(policy_rows: List[Dict[str, str]]) -> plt.Fig
     ax.set_xticks(x)
     ax.set_xticklabels([f.replace("_", " ") for f in fams], fontsize=8, rotation=25, ha="right")
     ax.set_ylabel("Δ mean misses vs LRU (negative ⇒ fewer misses than LRU)")
-    ax.set_title("Relative performance vs LRU by trace family (heavy_r1)", fontsize=10)
     ax.legend(ncol=3, fontsize=7, frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.20))
     ax.grid(axis="y", linestyle=":", linewidth=0.65, alpha=0.9)
     fig.tight_layout(rect=[0, 0, 1, 0.86])
@@ -382,6 +371,129 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
         ax.set_xticks([4, 8, 16])
         ax.set_xlabel(r"Horizon $H$", fontsize=10)
         ax.set_ylabel("Mean regret vs.\ oracle (lower is better)", fontsize=10)
+        ax.set_title(title, fontsize=10, pad=6)
+        ax.grid(True, axis="y", linestyle=":", linewidth=0.65, alpha=0.88, color="0.45")
+        ax.grid(True, axis="x", linestyle=":", linewidth=0.45, alpha=0.5, color="0.75")
+        ax.set_axisbelow(True)
+        _panel_label(ax, tag)
+
+    handles, labels = ax0.get_legend_handles_labels()
+    ax_leg = fig.add_subplot(gs[1])
+    ax_leg.set_axis_off()
+    ax_leg.patch.set_alpha(0)
+    leg = ax_leg.legend(
+        handles,
+        labels,
+        loc="center",
+        ncol=3,
+        frameon=True,
+        fancybox=False,
+        edgecolor="0.45",
+        facecolor="0.98",
+        fontsize=9,
+        title="Model family",
+        title_fontsize=9,
+        columnspacing=1.5,
+        handlelength=2.8,
+        handletextpad=0.55,
+        borderpad=0.5,
+        labelspacing=0.4,
+    )
+    leg.get_frame().set_linewidth(0.55)
+
+    return fig
+
+
+def make_offline_top1_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure:
+    """Two panels: validation vs test Top-1 error vs horizon (same CSV as regret ablation; lower better)."""
+    by_val: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
+    by_test: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
+    ref: Dict[Tuple[int, str], Tuple[float, float]] = {}
+    for r in train_rows:
+        h = int(r["horizon"])
+        m = str(r["model"])
+        v1 = float(r["val_top1"])
+        t1 = float(r["test_top1"])
+        by_val[m].append((h, v1))
+        by_test[m].append((h, t1))
+        ref[(h, m)] = (v1, t1)
+    for m in by_val:
+        by_val[m] = sorted(by_val[m], key=lambda t: t[0])
+    for m in by_test:
+        by_test[m] = sorted(by_test[m], key=lambda t: t[0])
+
+    for m, pts in by_val.items():
+        for h, v in pts:
+            if not np.isclose(v, ref[(h, m)][0], rtol=0.0, atol=1e-12):
+                raise ValueError(f"internal val_top1 mismatch for {m=} {h=}")
+    for m, pts in by_test.items():
+        for h, v in pts:
+            if not np.isclose(v, ref[(h, m)][1], rtol=0.0, atol=1e-12):
+                raise ValueError(f"internal test_top1 mismatch for {m=} {h=}")
+
+    styles = {"ridge": ("-", "o"), "random_forest": ("--", "s"), "hist_gb": ("-.", "^")}
+    colors = {"ridge": "#000000", "random_forest": "#555555", "hist_gb": "#222222"}
+    zorder = {"ridge": 2, "random_forest": 3, "hist_gb": 4}
+    plot_order = ("ridge", "random_forest", "hist_gb")
+    model_labels = {"ridge": "Ridge", "random_forest": "Random forest", "hist_gb": r"Hist.\ GB"}
+
+    fig = plt.figure(figsize=(11.2, 4.7))
+    gs = fig.add_gridspec(
+        2,
+        1,
+        height_ratios=[1.0, 0.24],
+        hspace=0.22,
+        left=0.085,
+        right=0.985,
+        top=0.93,
+        bottom=0.11,
+    )
+    gs_panels = gs[0].subgridspec(1, 2, wspace=0.36)
+    ax0 = fig.add_subplot(gs_panels[0, 0])
+    ax1 = fig.add_subplot(gs_panels[0, 1], sharex=ax0)
+    axes = (ax0, ax1)
+
+    def _panel_label(ax: plt.Axes, tag: str) -> None:
+        ax.text(
+            0.03,
+            0.97,
+            tag,
+            transform=ax.transAxes,
+            fontsize=10.5,
+            fontweight="bold",
+            va="top",
+            ha="left",
+            color="#111111",
+            zorder=15,
+        )
+
+    for ax, data, title, tag in (
+        (axes[0], by_val, "Validation Top-1", "(a)"),
+        (axes[1], by_test, "Test Top-1", "(b)"),
+    ):
+        for m in plot_order:
+            if m not in data:
+                continue
+            xs = [a for a, _ in data[m]]
+            ys = [b for _, b in data[m]]
+            ls, mk = styles[m]
+            ax.plot(
+                xs,
+                ys,
+                linestyle=ls,
+                marker=mk,
+                color=colors[m],
+                label=model_labels[m],
+                linewidth=1.65,
+                markersize=6.5,
+                markeredgecolor="0.95",
+                markeredgewidth=0.6,
+                zorder=zorder[m],
+                clip_on=False,
+            )
+        ax.set_xticks([4, 8, 16])
+        ax.set_xlabel(r"Horizon $H$", fontsize=10)
+        ax.set_ylabel("Top-1 error (lower is better)", fontsize=10)
         ax.set_title(title, fontsize=10, pad=6)
         ax.grid(True, axis="y", linestyle=":", linewidth=0.65, alpha=0.88, color="0.45")
         ax.grid(True, axis="x", linestyle=":", linewidth=0.45, alpha=0.5, color="0.75")

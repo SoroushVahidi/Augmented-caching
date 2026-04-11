@@ -16,13 +16,14 @@
 - Figure~4 (`figure4_ablation`): offline regret / top-1 panels from `model_comparison_heavy_r1.csv`.
 - Tables~1--4 (CSV + `.tex`) and matching `latex_snippets/*.tex` where applicable.
 - **Not built:** Figure~2, Figure~3 (require policy comparison CSV).
+- **Offline supplements:** Table~5 (`table5_offline_selection`) and Figure~5 (`figure5_offline_top1_ablation`) from training artifacts only.
 
 ## Stale / replaced content
 - Any previously committed Table~3 numeric body from a run **without** the canonical policy CSV should be treated as **invalid** once this report shows policy CSV absent.
 
 ## Canonical vs exploratory
 - Only paths under `EVIDENCE_FILES` in `build_kbs_main_manuscript_artifacts.py` drive this bundle.
-- Guarded/fallback and decision-quality **table5/figure5** were **not** created: no reproducible `*_heavy_r1` artifact found in-repo for those narratives.
+- When policy CSV is **absent**: offline-only **Table~5** / **Fig.~5** are generated from `model_comparison_heavy_r1` + `best_config_heavy_r1` (not end-to-end replay). When policy CSV is **present**: those files are omitted and snippet placeholders document that.
 
 ## Safe to cite now
 - Always: method schematic Fig.~1; offline ablation Table~4 / Fig.~4 (from `model_comparison_heavy_r1.csv`).

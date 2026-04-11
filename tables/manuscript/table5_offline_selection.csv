@@ -1,0 +1,2 @@
+horizon,model,val_mean_regret,test_mean_regret,val_top1,test_top1,selection_rule
+4,hist_gb,0.009142857142857144,0.00552655818237642,0.01742857142857143,0.031624194043598404,"minimize validation mean_regret_vs_oracle across (horizon, model)"

@@ -23,6 +23,7 @@ from manuscript_figure_common import (
     make_main_performance_comparison_figure,
     make_method_overview_two_panel_figure,
     make_offline_ablation_figure,
+    make_offline_top1_ablation_figure,
     save_figure_pdf_png,
 )
 
@@ -246,14 +247,14 @@ def _build_table1(policy_rows: Optional[List[Dict[str, str]]]) -> Tuple[Path, Pa
     cap_extra = ""
     if not policy_rows:
         cap_extra = (
-            " \\textit{Note:} per-trace capacities are taken from the canonical heavy\\_r1 dataset summary "
-            "(not from `policy\\_comparison\\_heavy\\_r1.csv`, which is absent); re-run the builder after eval to align caps with the live comparison."
+            " \\textit{Caveat:} the \\textbf{Main} column is unset until "
+            "\\texttt{evict\\_value\\_wulver\\_v1\\_policy\\_comparison\\_heavy\\_r1.csv} exists; "
+            "capacities follow the heavy\\_r1 dataset specification."
         )
     LATEX.joinpath("table1_snippet.tex").write_text(
         "\\begin{table*}[t]\n\\centering\n"
-        "\\caption{Traces used for Wulver heavy\\_r1 training and evaluation (ordered by family). "
-        "\\textbf{Main:} included in the intended main comparison roster. "
-        "Hint column: next-arrival style metadata available at prediction time."
+        "\\caption{Wulver traces used for heavy\\_r1 offline dataset construction (ordered by family). "
+        "Hint: next-arrival style metadata at prediction time."
         + cap_extra
         + "}\n"
         "\\label{tab:dataset-summary}\n"
@@ -622,8 +623,10 @@ def _figure2_main_performance_comparison(policy_rows: List[Dict[str, str]]) -> T
     LATEX.joinpath("figure2_snippet.tex").write_text(
         "\\begin{figure*}[t]\n\\centering\n"
         "\\includegraphics[width=0.98\\textwidth]{figures/manuscript/figure2_main_performance_comparison.pdf}\n"
-        "\\caption{End-to-end replay misses by trace family (mean over capacities in canonical heavy\\_r1 comparison; lower better). "
-        "Thick blue edge highlights \\texttt{evict\\_value\\_v1}. Families marked near-tie show identical means across policies within tolerance.}\n"
+        "\\caption{End-to-end replay misses by trace family (mean over capacities; \\textbf{lower is better}). "
+        "Policies match Table~\\ref{tab:main-comparison}. "
+        "Thick blue edge highlights \\texttt{evict\\_value\\_v1}. "
+        "Near-tie families: identical means across shown policies within numerical tolerance.}\n"
         "\\label{fig:main-performance}\n\\end{figure*}\n",
         encoding="utf-8",
     )
@@ -636,8 +639,10 @@ def _figure3_improvement_vs_lru(policy_rows: List[Dict[str, str]]) -> Tuple[Path
     LATEX.joinpath("figure3_snippet.tex").write_text(
         "\\begin{figure*}[t]\n\\centering\n"
         "\\includegraphics[width=0.98\\textwidth]{figures/manuscript/figure3_improvement_vs_lru.pdf}\n"
-        "\\caption{Difference in mean replay misses vs LRU by family: $\\Delta = \\mathrm{misses}_{\\mathrm{pol}} - \\mathrm{misses}_{\\mathrm{LRU}}$ "
-        "(negative means fewer misses than LRU). \\texttt{evict\\_value\\_v1} is highlighted.}\n"
+        "\\caption{Mean replay misses relative to LRU by family: "
+        "$\\Delta = \\mathrm{misses}_{\\mathrm{pol}} - \\mathrm{misses}_{\\mathrm{LRU}}$ "
+        "(negative $\\Rightarrow$ fewer misses than LRU). Same policy subset as Table~\\ref{tab:main-comparison}. "
+        "\\texttt{evict\\_value\\_v1} is highlighted.}\n"
         "\\label{fig:improvement-vs-lru}\n\\end{figure*}\n",
         encoding="utf-8",
     )
@@ -656,6 +661,93 @@ def _figure4_ablation(train_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
         encoding="utf-8",
     )
     return _save_fig(fig, "figure4_ablation")
+
+
+def _build_table5_offline_selection(train_rows: List[Dict[str, str]], best_cfg: dict) -> Tuple[Path, Path]:
+    """Single-row table: selected (horizon, model) from best_config + metrics from model_comparison (offline only)."""
+    h_sel = int(best_cfg["horizon"])
+    m_sel = str(best_cfg["model"])
+    rule = str(best_cfg.get("selection_rule", ""))
+    row = next((r for r in train_rows if int(r["horizon"]) == h_sel and str(r["model"]) == m_sel), None)
+    if row is None:
+        raise ValueError(f"No train_model_comparison row for best_config horizon={h_sel} model={m_sel}")
+    out = [
+        {
+            "horizon": h_sel,
+            "model": m_sel,
+            "val_mean_regret": float(row["val_mean_regret"]),
+            "test_mean_regret": float(row["test_mean_regret"]),
+            "val_top1": float(row["val_top1"]),
+            "test_top1": float(row["test_top1"]),
+            "selection_rule": rule,
+        }
+    ]
+    csv_path = TABLES / "table5_offline_selection.csv"
+    tex_path = TABLES / "table5_offline_selection.tex"
+    _write_csv(csv_path, out)
+    r = out[0]
+    lines = [
+        "\\begin{tabular}{@{}r l r r r r@{}}",
+        "\\toprule",
+        "Horizon & Model & Val.\\ regret & Test regret & Val.\\ Top-1 & Test Top-1 \\\\",
+        "\\midrule",
+        f"{r['horizon']} & {_latex_escape(str(r['model']))} & "
+        f"{r['val_mean_regret']:.4f} & {r['test_mean_regret']:.4f} & {r['val_top1']:.4f} & {r['test_top1']:.4f} \\\\",
+        "\\bottomrule",
+        "\\end{tabular}",
+    ]
+    tex_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    LATEX.joinpath("table5_snippet.tex").write_text(
+        "\\begin{table*}[t]\n\\centering\n"
+        "\\caption{\\textbf{Offline training only.} Horizon and model chosen by validation mean regret on heavy\\_r1 shards "
+        "(\\texttt{evict\\_value\\_wulver\\_v1\\_best\\_config\\_heavy\\_r1.json}); "
+        "metrics match the corresponding row of Table~\\ref{tab:offline-ablation}. "
+        "This is \\emph{not} an end-to-end cache replay comparison.}\n"
+        "\\label{tab:offline-selection}\n"
+        "\\input{tables/manuscript/table5_offline_selection.tex}\n\\end{table*}\n",
+        encoding="utf-8",
+    )
+    return csv_path, tex_path
+
+
+def _figure5_offline_top1_ablation(train_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
+    apply_manuscript_matplotlib_style()
+    fig = make_offline_top1_ablation_figure(train_rows)
+    LATEX.joinpath("figure5_snippet.tex").write_text(
+        "\\begin{figure*}[t]\n\\centering\n"
+        "\\includegraphics[width=0.94\\textwidth]{figures/manuscript/figure5_offline_top1_ablation.pdf}\n"
+        "\\caption{\\textbf{Offline training only.} Top-1 error vs.\\ horizon for three model families on heavy\\_r1 shards "
+        "(\\texttt{evict\\_value\\_wulver\\_v1\\_model\\_comparison\\_heavy\\_r1.csv}; same experiment as Table~\\ref{tab:offline-ablation}). "
+        "Does \\emph{not} depict policy-level replay misses.}\n"
+        "\\label{fig:offline-top1}\n\\end{figure*}\n",
+        encoding="utf-8",
+    )
+    return _save_fig(fig, "figure5_offline_top1_ablation")
+
+
+def _write_offline_supplement_placeholders() -> None:
+    """When canonical policy comparison exists, offline-only Fig.~5 / Tab.~5 are omitted to avoid duplicate narratives."""
+    LATEX.joinpath("figure5_snippet.tex").write_text(
+        "% Figure~5 (offline Top-1 ablation) omitted: use Fig.~2--3 and Table~3 for end-to-end results when policy CSV is present.\n",
+        encoding="utf-8",
+    )
+    LATEX.joinpath("table5_snippet.tex").write_text(
+        "% Table~5 (offline selection row) omitted: use Table~3 for quantitative comparison when policy CSV is present.\n",
+        encoding="utf-8",
+    )
+
+
+def _remove_offline_only_artifacts_from_disk() -> None:
+    for stem in ("table5_offline_selection",):
+        for ext in (".csv", ".tex"):
+            p = TABLES / f"{stem}{ext}"
+            if p.exists():
+                p.unlink()
+    for stem in ("figure5_offline_top1_ablation",):
+        for ext in (".pdf", ".png"):
+            p = FIGURES / f"{stem}{ext}"
+            if p.exists():
+                p.unlink()
 
 
 def _remove_legacy_figure_files() -> None:
@@ -717,12 +809,22 @@ def main() -> None:
         for pair in [f2, f3]:
             created["figures"] += [str(pair[0]), str(pair[1])]
         notes.append("Table~3 and Figures~2--3 rebuilt from canonical `policy_comparison_heavy_r1.csv`.")
+        _remove_offline_only_artifacts_from_disk()
+        _write_offline_supplement_placeholders()
+        notes.append("Offline-only Fig.~5 / Tab.~5 placeholders written; disk artifacts removed when policy CSV present.")
     else:
         t3 = _build_table3_unavailable()
         created["tables"] += [str(t3[0]), str(t3[1])]
         notes.append(
             "Table~3 not verified; Figures~2--3 not built: "
             "`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` missing."
+        )
+        t5 = _build_table5_offline_selection(train_rows, best_cfg)
+        f5 = _figure5_offline_top1_ablation(train_rows)
+        created["tables"] += [str(t5[0]), str(t5[1])]
+        created["figures"] += [str(f5[0]), str(f5[1])]
+        notes.append(
+            "Emitted offline-only supplements: Table~5 (`table5_offline_selection`) and Fig.~5 (`figure5_offline_top1_ablation`) from model_comparison + best_config."
         )
 
     notes.append(
@@ -785,6 +887,7 @@ def main() -> None:
     else:
         report_lines += [
             "- **Not built:** Figure~2, Figure~3 (require policy comparison CSV).",
+            "- **Offline supplements:** Table~5 (`table5_offline_selection`) and Figure~5 (`figure5_offline_top1_ablation`) from training artifacts only.",
         ]
     report_lines += [
         "",
@@ -793,7 +896,8 @@ def main() -> None:
         "",
         "## Canonical vs exploratory",
         "- Only paths under `EVIDENCE_FILES` in `build_kbs_main_manuscript_artifacts.py` drive this bundle.",
-        "- Guarded/fallback and decision-quality **table5/figure5** were **not** created: no reproducible `*_heavy_r1` artifact found in-repo for those narratives.",
+        "- When policy CSV is **absent**: offline-only **Table~5** / **Fig.~5** are generated from `model_comparison_heavy_r1` + `best_config_heavy_r1` (not end-to-end replay). "
+        "When policy CSV is **present**: those files are omitted and snippet placeholders document that.",
         "",
         "## Safe to cite now",
         "- Always: method schematic Fig.~1; offline ablation Table~4 / Fig.~4 (from `model_comparison_heavy_r1.csv`).",
