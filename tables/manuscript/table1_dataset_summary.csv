@@ -1,2 +1,8 @@
-status
-NOT_GENERATED: analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv missing — cannot derive trace/capacity roster for Table~1 from canonical evidence.
+trace,family,requests,capacities,hint,role,source,in_main_comparison,note,evidence_basis
+brightkite_50k,brightkite,50000,"32,64,128,256",Next-arr.,heavy_r1 eval,brightkite,--,Caps: heavy_r1 spec,manifest+dataset_summary
+citibike_202401_50k,citibike,50000,"32,64,128,256",Next-arr.,heavy_r1 eval,citibike,--,Caps: heavy_r1 spec,manifest+dataset_summary
+cloudphysics_alibaba_block_head_50k,cloudphysics,50000,"32,64,128,256",Next-arr.,heavy_r1 eval,cloudphysics,--,Caps: heavy_r1 spec,manifest+dataset_summary
+metacdn_cdn_202303_head_50k,metacdn,50000,"32,64,128,256",Next-arr.,heavy_r1 eval,metacdn,--,Caps: heavy_r1 spec,manifest+dataset_summary
+metakv_kvcache_202206_head_50k,metakv,50000,"32,64,128,256",Next-arr.,heavy_r1 eval,metakv,--,Caps: heavy_r1 spec,manifest+dataset_summary
+twemcache_cluster26_sample100_50k,twemcache,50000,"32,64,128,256",Next-arr.,heavy_r1 eval,twemcache,--,Caps: heavy_r1 spec,manifest+dataset_summary
+wiki2018_pageviews_en_50k,wiki2018,50000,"32,64,128,256",Next-arr.,heavy_r1 eval,wiki2018,--,Caps: heavy_r1 spec,manifest+dataset_summary

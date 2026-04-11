@@ -1,2 +1,2 @@
-status
-NOT_GENERATED: missing policy_comparison_heavy_r1.csv
+status,detail,action
+NOT_VERIFIED,Canonical file analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv is absent.,"Run heavy_r1 eval, then rebuild manuscript artifacts."

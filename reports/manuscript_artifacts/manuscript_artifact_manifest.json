@@ -21,12 +21,12 @@
   },
   "outputs": {
     "tables": [
+      "tables/manuscript/table1_dataset_summary.csv",
+      "tables/manuscript/table1_dataset_summary.tex",
       "tables/manuscript/table2_policy_roster.csv",
       "tables/manuscript/table2_policy_roster.tex",
       "tables/manuscript/table4_main_ablation.csv",
       "tables/manuscript/table4_main_ablation.tex",
-      "tables/manuscript/table1_dataset_summary.csv",
-      "tables/manuscript/table1_dataset_summary.tex",
       "tables/manuscript/table3_main_quantitative_comparison.csv",
       "tables/manuscript/table3_main_quantitative_comparison.tex"
     ],
@@ -49,7 +49,10 @@
   },
   "notes": [
     "Optional `policy_comparison_heavy_r1.md` missing; CSV is the quantitative source of truth.",
-    "SKIPPED Table~1/3 and Figure~2/3: `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` not found.",
+    "Table~1 evidence: table1_capacities_from_dataset_summary_md_not_verified_against_eval_csv.",
+    "Table~3 not verified; Figures~2--3 not built: `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` missing.",
     "No dedicated canonical heavy_r1 artifact for guarded/fallback A/B or decision-quality diagnostics; see exploratory folders under `analysis/` only with explicit non-canonical caveats."
-  ]
+  ],
+  "table1_evidence_basis": "table1_capacities_from_dataset_summary_md_not_verified_against_eval_csv",
+  "policy_comparison_present": false
 }
