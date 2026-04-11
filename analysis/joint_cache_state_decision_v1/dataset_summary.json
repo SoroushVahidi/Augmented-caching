@@ -1,0 +1,33 @@
+{
+  "total_decisions": 29,
+  "trace_paths": [
+    "data/example_unweighted.json",
+    "data/example_atlas_v1.json",
+    "data/example_general_caching.json"
+  ],
+  "trace_decision_counts": {
+    "data/example_unweighted.json": 11,
+    "data/example_atlas_v1.json": 16,
+    "data/example_general_caching.json": 2
+  },
+  "capacities": [
+    2,
+    3,
+    4
+  ],
+  "horizon": 8,
+  "history_window": 64,
+  "split_counts": {
+    "train": 23,
+    "val": 4,
+    "test": 2
+  },
+  "mean_candidates_per_decision": 2.4482758620689653,
+  "outputs": {
+    "decision_states_jsonl": "data/derived/experiments/joint_cache_state_decision_v1/decision_states.jsonl",
+    "report_md": "analysis/joint_cache_state_decision_v1/report.md",
+    "dataset_summary_json": "analysis/joint_cache_state_decision_v1/dataset_summary.json",
+    "sample_json": "analysis/joint_cache_state_decision_v1/sample_decisions.json"
+  },
+  "note": "Experimental/non-canonical artifact; no training executed."
+}

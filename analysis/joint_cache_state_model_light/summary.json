@@ -1,0 +1,79 @@
+{
+  "dataset": "data/derived/experiments/joint_cache_state_decision_v1/decision_states.jsonl",
+  "train_decisions": 23,
+  "val_decisions": 4,
+  "test_decisions": 2,
+  "offline": [
+    {
+      "split": "train",
+      "model": "evict_value_v1_lightweight",
+      "decisions": 23.0,
+      "top1": 0.5652173913043478,
+      "mean_regret": 0.5217391304347826
+    },
+    {
+      "split": "train",
+      "model": "history_pairwise_light",
+      "decisions": 23.0,
+      "top1": 0.6956521739130435,
+      "mean_regret": 0.08695652173913043
+    },
+    {
+      "split": "train",
+      "model": "joint_softmax",
+      "decisions": 23.0,
+      "top1": 1.0,
+      "mean_regret": 0.0
+    },
+    {
+      "split": "val",
+      "model": "evict_value_v1_lightweight",
+      "decisions": 4.0,
+      "top1": 0.25,
+      "mean_regret": 0.75
+    },
+    {
+      "split": "val",
+      "model": "history_pairwise_light",
+      "decisions": 4.0,
+      "top1": 0.75,
+      "mean_regret": 0.25
+    },
+    {
+      "split": "val",
+      "model": "joint_softmax",
+      "decisions": 4.0,
+      "top1": 0.75,
+      "mean_regret": 0.25
+    },
+    {
+      "split": "test",
+      "model": "evict_value_v1_lightweight",
+      "decisions": 2.0,
+      "top1": 0.5,
+      "mean_regret": 0.5
+    },
+    {
+      "split": "test",
+      "model": "history_pairwise_light",
+      "decisions": 2.0,
+      "top1": 0.0,
+      "mean_regret": 0.5
+    },
+    {
+      "split": "test",
+      "model": "joint_softmax",
+      "decisions": 2.0,
+      "top1": 0.0,
+      "mean_regret": 0.5
+    }
+  ],
+  "downstream_replay_mean_misses": {
+    "evict_value_v1_lightweight": 6.111111111111111,
+    "history_pairwise_light": 5.222222222222222,
+    "joint_softmax": 5.222222222222222
+  },
+  "joint_minus_pairwise_mean_misses": 0.0,
+  "assessment": "not_better_than_pairwise",
+  "note": "Conservative readout on compact in-repo traces only; no canonical heavy_r1 pipeline changes."
+}
