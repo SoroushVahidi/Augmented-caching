@@ -45,23 +45,25 @@ def _box_axes(
     fs: float = 7.0,
     face: str = "#f2f2f2",
     edge: str = "#222222",
+    wrap: int = 26,
 ) -> None:
     p = FancyBboxPatch(
         (x, y),
         w,
         h,
-        boxstyle="round,pad=0.012",
-        linewidth=1.0,
+        boxstyle="round,pad=0.014",
+        linewidth=1.05,
         edgecolor=edge,
         facecolor=face,
         transform=ax.transAxes,
         clip_on=False,
     )
     ax.add_patch(p)
+    display = textwrap.fill(txt, wrap)
     ax.text(
         x + w / 2,
         y + h / 2,
-        textwrap.fill(txt, 28),
+        display,
         ha="center",
         va="center",
         fontsize=fs,
@@ -76,8 +78,8 @@ def _arrow(ax: plt.Axes, x1: float, y1: float, x2: float, y2: float) -> None:
             (x1, y1),
             (x2, y2),
             arrowstyle="->",
-            mutation_scale=11,
-            linewidth=1.0,
+            mutation_scale=12,
+            linewidth=1.05,
             color="#222222",
             transform=ax.transAxes,
             clip_on=False,
@@ -85,73 +87,103 @@ def _arrow(ax: plt.Axes, x1: float, y1: float, x2: float, y2: float) -> None:
     )
 
 
+def _stack_boxes_vertical(
+    ax: plt.Axes,
+    labels: Tuple[str, ...],
+    *,
+    x: float,
+    w: float,
+    y_lo: float,
+    y_hi: float,
+    gap: float,
+    fs: float,
+    wrap: int,
+    face: str = "#f2f2f2",
+) -> None:
+    """Equal-height boxes with vertical arrows (transAxes coordinates)."""
+    n = len(labels)
+    if n == 0:
+        return
+    total_gap = gap * max(0, n - 1)
+    bh = (y_hi - y_lo - total_gap) / n
+    y = y_lo
+    xc = x + w / 2
+    for i, lab in enumerate(labels):
+        _box_axes(ax, x, y, w, bh, lab, fs=fs, face=face, wrap=wrap)
+        if i < n - 1:
+            _arrow(ax, xc, y + bh, xc, y + bh + gap)
+        y += bh + gap
+
+
 def make_method_overview_two_panel_figure() -> plt.Figure:
-    """Two-panel method figure: offline supervised construction + online guarded deployment."""
-    fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(14.2, 6.4), constrained_layout=False)
+    """Two-panel method figure: offline supervised construction + online guarded deployment.
+
+    Compact labels and larger type for manuscript insertion at column/page width; details belong in the caption.
+    """
+    # Width tuned for two-column figure* or single-column with legible type (not tiny embedded prose).
+    fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(11.8, 5.85), constrained_layout=False)
     for ax in (ax_a, ax_b):
         ax.axis("off")
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1)
 
-    ax_a.set_title("A. Offline training / supervised target construction", fontsize=11, fontweight="bold", pad=12)
-    # Vertical pipeline (top → bottom)
-    boxes_a = [
-        (0.12, 0.82, 0.76, 0.09, "Trace replay (fixed request sequence)"),
-        (0.12, 0.69, 0.76, 0.09, "Label full-cache misses; enumerate eviction candidates"),
-        (0.12, 0.56, 0.76, 0.09, "Extract candidate features (predicted caches, ranks, horizons)"),
-        (0.12, 0.43, 0.76, 0.11, "Horizon-H counterfactual replay vs oracle to build eviction-value targets"),
-        (0.12, 0.27, 0.76, 0.11, "Fit supervised model (ridge / RF / HistGB) for eviction-value prediction"),
-    ]
-    for x, y, w, h, t in boxes_a:
-        _box_axes(ax_a, x, y, w, h, t, fs=7.2)
-    for y0, y1 in [(0.82, 0.78), (0.69, 0.65), (0.56, 0.52), (0.43, 0.39)]:
-        _arrow(ax_a, 0.5, y0, 0.5, y1)
-    ax_a.text(
-        0.5,
-        0.08,
-        "Selection uses validation mean regret vs oracle on heavy_r1 shards (canonical train_metrics / best_config).",
-        ha="center",
-        va="top",
-        fontsize=7.5,
-        color="#333333",
-        transform=ax_a.transAxes,
+    title_fs, box_fs, wrap = 10.5, 9.75, 20
+    ax_a.set_title(
+        "A. Offline training / supervised target construction",
+        fontsize=title_fs,
+        fontweight="bold",
+        pad=10,
+        color="#111111",
+    )
+    ax_b.set_title(
+        "B. Online deployment (guarded eviction-value policy)",
+        fontsize=title_fs,
+        fontweight="bold",
+        pad=10,
+        color="#111111",
     )
 
-    ax_b.set_title("B. Online deployment (guarded eviction-value policy)", fontsize=11, fontweight="bold", pad=12)
-    _box_axes(ax_b, 0.08, 0.86, 0.84, 0.07, "Request arrives", fs=7.2)
-    _arrow(ax_b, 0.5, 0.86, 0.5, 0.80)
-    _box_axes(ax_b, 0.08, 0.71, 0.84, 0.07, "Hit? → standard recency / metadata update", fs=7.0)
-    _box_axes(ax_b, 0.08, 0.61, 0.84, 0.07, "Miss & cache not full → insert (no eviction)", fs=7.0)
-    _arrow(ax_b, 0.5, 0.71, 0.5, 0.68)
-    _arrow(ax_b, 0.5, 0.61, 0.5, 0.56)
-    _box_axes(ax_b, 0.08, 0.44, 0.84, 0.10, "Miss & cache full → build candidate features → predict losses → choose min predicted-loss victim", fs=6.8)
-    _arrow(ax_b, 0.5, 0.56, 0.5, 0.54)
-    _arrow(ax_b, 0.5, 0.44, 0.5, 0.40)
-    _box_axes(
+    bx, bw, gap = 0.10, 0.80, 0.022
+    # Content region below subplot title (transAxes).
+    _stack_boxes_vertical(
+        ax_a,
+        (
+            "Trace replay",
+            "Full-cache miss labeling",
+            "Candidate feature extraction",
+            "Counterfactual target construction",
+            "Fit eviction-value model",
+        ),
+        x=bx,
+        w=bw,
+        y_lo=0.07,
+        y_hi=0.90,
+        gap=gap,
+        fs=box_fs,
+        wrap=wrap,
+    )
+
+    _stack_boxes_vertical(
         ax_b,
-        0.08,
-        0.26,
-        0.84,
-        0.11,
-        "Guard: if repeated early-return mistakes are suspicious → temporary fallback mode (e.g., LRU-like) until trust recovers",
-        fs=6.8,
-        face="#e8e8e8",
+        (
+            "Request arrives",
+            "Hit: update state",
+            "Miss, not full: insert",
+            "Miss, full: score candidates",
+            "Guarded fallback if unsafe",
+            "Evict and update",
+        ),
+        x=bx,
+        w=bw,
+        y_lo=0.06,
+        y_hi=0.90,
+        gap=gap,
+        fs=box_fs,
+        wrap=wrap,
+        face="#ededed",
     )
-    _arrow(ax_b, 0.5, 0.40, 0.5, 0.37)
-    _arrow(ax_b, 0.5, 0.26, 0.5, 0.22)
-    _box_axes(ax_b, 0.08, 0.10, 0.84, 0.08, "Evict chosen victim; update cache state", fs=7.2)
-    _arrow(ax_b, 0.5, 0.22, 0.5, 0.18)
-    ax_b.text(
-        0.5,
-        0.03,
-        "Grayscale-safe schematic; not quantitative results.",
-        ha="center",
-        va="top",
-        fontsize=7.5,
-        color="#333333",
-        transform=ax_b.transAxes,
-    )
-    fig.subplots_adjust(left=0.04, right=0.98, top=0.90, bottom=0.06, wspace=0.22)
+
+    fig.subplots_adjust(left=0.05, right=0.98, top=0.92, bottom=0.05, wspace=0.26)
     return fig
 
 
@@ -305,16 +337,17 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
     plot_order = ("ridge", "random_forest", "hist_gb")
 
     # Wider canvas + dedicated bottom strip for a shared legend (no legend inside data axes).
-    fig = plt.figure(figsize=(11.0, 4.75))
+    # No figure-level suptitle: descriptive text belongs in the manuscript caption, not in the graphic.
+    fig = plt.figure(figsize=(11.0, 4.55))
     gs = fig.add_gridspec(
         2,
         1,
-        height_ratios=[1.0, 0.26],
-        hspace=0.22,
+        height_ratios=[1.0, 0.22],
+        hspace=0.20,
         left=0.08,
         right=0.99,
-        top=0.90,
-        bottom=0.09,
+        top=0.94,
+        bottom=0.10,
     )
     gs_panels = gs[0].subgridspec(1, 2, wspace=0.38)
     ax0 = fig.add_subplot(gs_panels[0, 0])
@@ -360,7 +393,7 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
         ax.set_xticks([4, 8, 16])
         ax.set_xlabel(r"Horizon $H$", fontsize=10)
         ax.set_ylabel("Mean regret vs.\ oracle (lower is better)", fontsize=10)
-        ax.set_title(title, fontsize=10.5, pad=9)
+        ax.set_title(title, fontsize=10.5, pad=8)
         ax.grid(True, axis="y", linestyle=":", linewidth=0.65, alpha=0.88, color="0.45")
         ax.grid(True, axis="x", linestyle=":", linewidth=0.45, alpha=0.5, color="0.75")
         ax.set_axisbelow(True)
@@ -381,15 +414,15 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
         facecolor="0.97",
         fontsize=9,
         title="Model",
-        title_fontsize=9,
-        columnspacing=1.5,
-        handlelength=2.8,
-        handletextpad=0.55,
-        borderpad=0.55,
+        title_fontsize=8.75,
+        columnspacing=1.35,
+        handlelength=2.6,
+        handletextpad=0.5,
+        borderpad=0.45,
+        labelspacing=0.35,
     )
     leg.get_frame().set_linewidth(0.6)
 
-    fig.suptitle("Offline eviction-value training ablation (heavy_r1 shards)", fontsize=10.8, y=0.97)
     return fig
 
 
