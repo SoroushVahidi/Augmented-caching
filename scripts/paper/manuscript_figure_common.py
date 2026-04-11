@@ -118,33 +118,20 @@ def _stack_boxes_vertical(
 def make_method_overview_two_panel_figure() -> plt.Figure:
     """Two-panel method figure: offline supervised construction + online guarded deployment.
 
-    Compact labels and larger type for manuscript insertion at column/page width; details belong in the caption.
+    Short panel titles only; full wording belongs in the LaTeX caption. Box labels are minimal schematic text.
     """
-    # Width tuned for two-column figure* or single-column with legible type (not tiny embedded prose).
-    fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(11.8, 5.85), constrained_layout=False)
+    fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(11.2, 5.45), constrained_layout=False)
     for ax in (ax_a, ax_b):
         ax.axis("off")
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1)
 
-    title_fs, box_fs, wrap = 10.5, 9.75, 20
-    ax_a.set_title(
-        "A. Offline training / supervised target construction",
-        fontsize=title_fs,
-        fontweight="bold",
-        pad=10,
-        color="#111111",
-    )
-    ax_b.set_title(
-        "B. Online deployment (guarded eviction-value policy)",
-        fontsize=title_fs,
-        fontweight="bold",
-        pad=10,
-        color="#111111",
-    )
+    # Short titles — manuscript describes panels fully in the caption.
+    title_fs, box_fs, wrap = 10.0, 10.25, 22
+    ax_a.set_title("(a) Offline training", fontsize=title_fs, fontweight="bold", pad=8, color="#111111")
+    ax_b.set_title("(b) Online deployment", fontsize=title_fs, fontweight="bold", pad=8, color="#111111")
 
-    bx, bw, gap = 0.10, 0.80, 0.022
-    # Content region below subplot title (transAxes).
+    bx, bw, gap = 0.10, 0.80, 0.024
     _stack_boxes_vertical(
         ax_a,
         (
@@ -156,8 +143,8 @@ def make_method_overview_two_panel_figure() -> plt.Figure:
         ),
         x=bx,
         w=bw,
-        y_lo=0.07,
-        y_hi=0.90,
+        y_lo=0.08,
+        y_hi=0.91,
         gap=gap,
         fs=box_fs,
         wrap=wrap,
@@ -175,15 +162,15 @@ def make_method_overview_two_panel_figure() -> plt.Figure:
         ),
         x=bx,
         w=bw,
-        y_lo=0.06,
-        y_hi=0.90,
+        y_lo=0.07,
+        y_hi=0.91,
         gap=gap,
         fs=box_fs,
         wrap=wrap,
         face="#ededed",
     )
 
-    fig.subplots_adjust(left=0.05, right=0.98, top=0.92, bottom=0.05, wspace=0.26)
+    fig.subplots_adjust(left=0.06, right=0.98, top=0.90, bottom=0.06, wspace=0.28)
     return fig
 
 
@@ -330,26 +317,26 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
             if not np.isclose(v, ref[(h, m)][1], rtol=0.0, atol=1e-12):
                 raise ValueError(f"internal test_mean_regret mismatch for {m=} {h=}")
 
-    styles = {"ridge": ("-", "o"), "random_forest": ("--", "s"), "hist_gb": (":", "^")}
-    colors = {"ridge": "#1a1a1a", "random_forest": "#5a5a5a", "hist_gb": "#2a2a2a"}
+    # Distinct line styles + markers for grayscale print; white marker edges improve separation.
+    styles = {"ridge": ("-", "o"), "random_forest": ("--", "s"), "hist_gb": ("-.", "^")}
+    colors = {"ridge": "#000000", "random_forest": "#555555", "hist_gb": "#222222"}
     zorder = {"ridge": 2, "random_forest": 3, "hist_gb": 4}
-    # Plot order: back to front so hist_gb reads on top
     plot_order = ("ridge", "random_forest", "hist_gb")
+    model_labels = {"ridge": "Ridge", "random_forest": "Random forest", "hist_gb": r"Hist.\ GB"}
 
-    # Wider canvas + dedicated bottom strip for a shared legend (no legend inside data axes).
-    # No figure-level suptitle: descriptive text belongs in the manuscript caption, not in the graphic.
-    fig = plt.figure(figsize=(11.0, 4.55))
+    # Shared legend below panels only — no figure suptitle; captions live in LaTeX.
+    fig = plt.figure(figsize=(11.2, 4.7))
     gs = fig.add_gridspec(
         2,
         1,
-        height_ratios=[1.0, 0.22],
-        hspace=0.20,
-        left=0.08,
-        right=0.99,
-        top=0.94,
-        bottom=0.10,
+        height_ratios=[1.0, 0.24],
+        hspace=0.22,
+        left=0.085,
+        right=0.985,
+        top=0.93,
+        bottom=0.11,
     )
-    gs_panels = gs[0].subgridspec(1, 2, wspace=0.38)
+    gs_panels = gs[0].subgridspec(1, 2, wspace=0.36)
     ax0 = fig.add_subplot(gs_panels[0, 0])
     ax1 = fig.add_subplot(gs_panels[0, 1], sharex=ax0)
     axes = (ax0, ax1)
@@ -360,7 +347,7 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
             0.97,
             tag,
             transform=ax.transAxes,
-            fontsize=11,
+            fontsize=10.5,
             fontweight="bold",
             va="top",
             ha="left",
@@ -369,8 +356,8 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
         )
 
     for ax, data, title, tag in (
-        (axes[0], by_val, "Validation mean regret (offline)", "(a)"),
-        (axes[1], by_test, "Test mean regret (offline)", "(b)"),
+        (axes[0], by_val, "Validation regret", "(a)"),
+        (axes[1], by_test, "Test regret", "(b)"),
     ):
         for m in plot_order:
             if m not in data:
@@ -384,16 +371,18 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
                 linestyle=ls,
                 marker=mk,
                 color=colors[m],
-                label=m,
-                linewidth=1.55,
-                markersize=6.0,
+                label=model_labels[m],
+                linewidth=1.65,
+                markersize=6.5,
+                markeredgecolor="0.95",
+                markeredgewidth=0.6,
                 zorder=zorder[m],
                 clip_on=False,
             )
         ax.set_xticks([4, 8, 16])
         ax.set_xlabel(r"Horizon $H$", fontsize=10)
         ax.set_ylabel("Mean regret vs.\ oracle (lower is better)", fontsize=10)
-        ax.set_title(title, fontsize=10.5, pad=8)
+        ax.set_title(title, fontsize=10, pad=6)
         ax.grid(True, axis="y", linestyle=":", linewidth=0.65, alpha=0.88, color="0.45")
         ax.grid(True, axis="x", linestyle=":", linewidth=0.45, alpha=0.5, color="0.75")
         ax.set_axisbelow(True)
@@ -410,18 +399,18 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
         ncol=3,
         frameon=True,
         fancybox=False,
-        edgecolor="0.5",
-        facecolor="0.97",
+        edgecolor="0.45",
+        facecolor="0.98",
         fontsize=9,
-        title="Model",
-        title_fontsize=8.75,
-        columnspacing=1.35,
-        handlelength=2.6,
-        handletextpad=0.5,
-        borderpad=0.45,
-        labelspacing=0.35,
+        title="Model family",
+        title_fontsize=9,
+        columnspacing=1.5,
+        handlelength=2.8,
+        handletextpad=0.55,
+        borderpad=0.5,
+        labelspacing=0.4,
     )
-    leg.get_frame().set_linewidth(0.6)
+    leg.get_frame().set_linewidth(0.55)
 
     return fig
 

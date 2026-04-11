@@ -139,6 +139,11 @@ def _latex_escape(s: str) -> str:
     return s.replace("_", "\\_")
 
 
+def _tex_escape_amp_under(s: str) -> str:
+    """Escape `&` and `_` for Booktabs tabular cells (no mathtext)."""
+    return s.replace("_", "\\_").replace("&", "\\&")
+
+
 def _parse_heavy_r1_capacities_from_dataset_summary_md(path: Path) -> List[int]:
     """Read capacity list from `evict_value_v1_wulver_dataset_summary_heavy_r1.md` (## Rows by capacity)."""
     caps: List[int] = []
@@ -276,69 +281,70 @@ def _policy_evidence_ok() -> bool:
 
 
 def _build_table2_policy_roster() -> Tuple[Path, Path]:
+    # Display labels only in the manuscript table; internal policy id kept in CSV for traceability.
     rows = [
         {
             "policy": "lru",
-            "category": "classical",
             "label": "LRU",
-            "role": "reference",
-            "note": "Recency baseline",
+            "category": "Classical",
+            "role": "Reference",
+            "note": "Recency baseline.",
         },
         {
             "policy": "predictive_marker",
-            "category": "robust LA",
             "label": "PredMk",
-            "role": "baseline",
-            "note": "Prediction-aware marker",
+            "category": "LA robust",
+            "role": "Baseline",
+            "note": "Prediction-aware marker policy.",
         },
         {
             "policy": "trust_and_doubt",
-            "category": "robust LA",
-            "label": "T\\&D",
-            "role": "baseline",
-            "note": "Adaptive trust/doubt",
+            "label": "T&D",
+            "category": "LA robust",
+            "role": "Baseline",
+            "note": "Adaptive trust/doubt controller.",
         },
         {
             "policy": "blind_oracle_lru_combiner",
-            "category": "combiner",
             "label": "BO/LRU",
-            "role": "baseline",
-            "note": "BO/LRU combiner",
+            "category": "Combiner",
+            "role": "Baseline",
+            "note": "Blind-oracle/LRU follow-the-leader style combiner.",
         },
         {
             "policy": "rest_v1",
-            "category": "heuristic",
             "label": "REST",
-            "role": "baseline",
-            "note": "Selective trust + fallback",
+            "category": "Heuristic",
+            "role": "Baseline",
+            "note": "Selective trust policy with fallback behavior.",
         },
         {
             "policy": "evict_value_v1",
-            "category": "proposed",
             "label": "EV",
-            "role": "ours",
-            "note": "Learned eviction-value policy",
+            "category": "Proposed",
+            "role": "Ours",
+            "note": "Learned eviction-value policy with optional guard.",
         },
     ]
     csv_path = TABLES / "table2_policy_roster.csv"
     tex_path = TABLES / "table2_policy_roster.tex"
     _write_csv(csv_path, rows)
     lines = [
-        "\\begin{tabular}{@{}l l l l p{3.25cm}@{}}",
+        "\\begin{tabular}{@{}l l p{2.05cm} p{5.75cm}@{}}",
         "\\toprule",
-        "Policy & Category & Label & Role & Note \\\\",
+        "Label & Category & Role & Note \\\\",
         "\\midrule",
     ]
     for r in rows:
         lines.append(
-            f"\\texttt{{{_latex_escape(str(r['policy']))}}} & "
-            f"{_latex_escape(str(r['category']))} & {r['label']} & {_latex_escape(str(r['role']))} & {_latex_escape(str(r['note']))} \\\\"
+            f"{_tex_escape_amp_under(str(r['label']))} & {_tex_escape_amp_under(str(r['category']))} & "
+            f"{_tex_escape_amp_under(str(r['role']))} & {_tex_escape_amp_under(str(r['note']))} \\\\"
         )
     lines += ["\\bottomrule", "\\end{tabular}"]
     tex_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     LATEX.joinpath("table2_snippet.tex").write_text(
         "\\begin{table*}[t]\n\\centering\n"
-        "\\caption{Main comparison policies (labels align with Table~\\ref{tab:main-comparison}).}\n"
+        "\\caption{Main policies used in the empirical comparison.}\n"
         "\\label{tab:policy-roster}\n"
         "\\input{tables/manuscript/table2_policy_roster.tex}\n\\end{table*}\n",
         encoding="utf-8",
@@ -555,7 +561,7 @@ def _build_table4_ablation(train_rows: List[Dict[str, str]], best_cfg: Optional[
     lines = [
         "\\begin{tabular}{@{}r l r r r r@{}}",
         "\\toprule",
-        "Horizon & Model & Val.\\ regret $\\downarrow$ & Test regret $\\downarrow$ & Val.\\ Top-1 $\\downarrow$ & Test Top-1 $\\downarrow$ \\\\",
+        "Horizon & Model & Val.\\ regret & Test regret & Val.\\ Top-1 & Test Top-1 \\\\",
         "\\midrule",
     ]
     for r in rows:
@@ -579,9 +585,9 @@ def _build_table4_ablation(train_rows: List[Dict[str, str]], best_cfg: Optional[
         )
     LATEX.joinpath("table4_snippet.tex").write_text(
         "\\begin{table*}[t]\n\\centering\n"
-        "\\caption{Offline eviction-value ablation on heavy\\_r1 shards "
-        "(\\texttt{evict\\_value\\_wulver\\_v1\\_model\\_comparison\\_heavy\\_r1.csv}). "
-        "All metrics: \\textbf{lower is better}. "
+        "\\caption{Offline ablation across replay horizons and model families on heavy\\_r1 shards "
+        "(same evidence as Figure~\\ref{fig:offline-ablation}). "
+        "\\textbf{Lower is better} for all columns. "
         "Bold: best per column within each horizon; underline: second-best."
         + sel
         + "}\n"
@@ -600,10 +606,10 @@ def _figure1_method_overview() -> Tuple[Path, Path]:
     apply_manuscript_matplotlib_style()
     fig = make_method_overview_two_panel_figure()
     LATEX.joinpath("figure1_snippet.tex").write_text(
-        "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.98\\textwidth]{figures/manuscript/figure1_method_overview.pdf}\n"
-        "\\caption{Offline supervised construction of eviction-value targets and online guarded deployment. "
-        "Panel~A: trace replay, counterfactual horizon-$H$ targets, and model fitting. "
-        "Panel~B: cache-state update rules including optional guard-triggered fallback when early mistakes look suspicious.}\n"
+        "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.96\\textwidth]{figures/manuscript/figure1_method_overview.pdf}\n"
+        "\\caption{Conceptual overview of the eviction-value pipeline. "
+        "\\textbf{(a)}~Offline replay, supervised targets, and model fitting. "
+        "\\textbf{(b)}~Online cache updates with candidate scoring and optional guarded fallback.}\n"
         "\\label{fig:method-overview}\n\\end{figure*}\n",
         encoding="utf-8",
     )
@@ -642,10 +648,10 @@ def _figure4_ablation(train_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
     apply_manuscript_matplotlib_style()
     fig = make_offline_ablation_figure(train_rows)
     LATEX.joinpath("figure4_snippet.tex").write_text(
-        "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.96\\textwidth]{figures/manuscript/figure4_ablation.pdf}\n"
-        "\\caption{Offline eviction-value training ablation across replay horizons and model families on heavy\\_r1 shards "
-        "(\\texttt{analysis/evict\\_value\\_wulver\\_v1\\_model\\_comparison\\_heavy\\_r1.csv}). "
-        "(a)~validation and (b)~test mean regret vs oracle (lower is better).}\n"
+        "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.94\\textwidth]{figures/manuscript/figure4_ablation.pdf}\n"
+        "\\caption{Visual summary of the offline ablation (Table~\\ref{tab:offline-ablation}): mean regret vs.\\ oracle across horizons for three model families "
+        "(canonical \\texttt{evict\\_value\\_wulver\\_v1\\_model\\_comparison\\_heavy\\_r1.csv}). "
+        "\\textbf{(a)}~validation; \\textbf{(b)}~test. Lower is better.}\n"
         "\\label{fig:offline-ablation}\n\\end{figure*}\n",
         encoding="utf-8",
     )

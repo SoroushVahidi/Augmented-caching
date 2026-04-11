@@ -1,7 +1,7 @@
-policy,category,label,role,note
-lru,classical,LRU,reference,Recency baseline
-predictive_marker,robust LA,PredMk,baseline,Prediction-aware marker
-trust_and_doubt,robust LA,T\&D,baseline,Adaptive trust/doubt
-blind_oracle_lru_combiner,combiner,BO/LRU,baseline,BO/LRU combiner
-rest_v1,heuristic,REST,baseline,Selective trust + fallback
-evict_value_v1,proposed,EV,ours,Learned eviction-value policy
+policy,label,category,role,note
+lru,LRU,Classical,Reference,Recency baseline.
+predictive_marker,PredMk,LA robust,Baseline,Prediction-aware marker policy.
+trust_and_doubt,T&D,LA robust,Baseline,Adaptive trust/doubt controller.
+blind_oracle_lru_combiner,BO/LRU,Combiner,Baseline,Blind-oracle/LRU follow-the-leader style combiner.
+rest_v1,REST,Heuristic,Baseline,Selective trust policy with fallback behavior.
+evict_value_v1,EV,Proposed,Ours,Learned eviction-value policy with optional guard.

@@ -1,12 +1,12 @@
-\begin{tabular}{@{}l l l l p{3.25cm}@{}}
+\begin{tabular}{@{}l l p{2.05cm} p{5.75cm}@{}}
 \toprule
-Policy & Category & Label & Role & Note \\
+Label & Category & Role & Note \\
 \midrule
-\texttt{lru} & classical & LRU & reference & Recency baseline \\
-\texttt{predictive\_marker} & robust LA & PredMk & baseline & Prediction-aware marker \\
-\texttt{trust\_and\_doubt} & robust LA & T\&D & baseline & Adaptive trust/doubt \\
-\texttt{blind\_oracle\_lru\_combiner} & combiner & BO/LRU & baseline & BO/LRU combiner \\
-\texttt{rest\_v1} & heuristic & REST & baseline & Selective trust + fallback \\
-\texttt{evict\_value\_v1} & proposed & EV & ours & Learned eviction-value policy \\
+LRU & Classical & Reference & Recency baseline. \\
+PredMk & LA robust & Baseline & Prediction-aware marker policy. \\
+T\&D & LA robust & Baseline & Adaptive trust/doubt controller. \\
+BO/LRU & Combiner & Baseline & Blind-oracle/LRU follow-the-leader style combiner. \\
+REST & Heuristic & Baseline & Selective trust policy with fallback behavior. \\
+EV & Proposed & Ours & Learned eviction-value policy with optional guard. \\
 \bottomrule
 \end{tabular}
