@@ -14,3 +14,11 @@ Run from repository root:
 export PYTHONPATH="${PYTHONPATH:-$(pwd)/src}"
 python scripts/paper/build_kbs_main_manuscript_artifacts.py
 ```
+
+Quick preflight:
+
+```bash
+test -f analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
+```
+
+If preflight fails, finish the heavy eval job first (`slurm/evict_value_v1_wulver_heavy_eval.sbatch` with `EXP_TAG=heavy_r1`).

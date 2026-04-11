@@ -9,6 +9,7 @@ This directory contains reproducible entry points for data preparation, model tr
 - root-level `build_*` — construct training/evaluation tables.
 - root-level `train_*` — train lightweight models and export metrics.
 - root-level `run_*` — execute experiments and write analysis artifacts.
+- `scripts/experiments/` — exploratory lightweight ablations (incoming-aware/history-aware/history-objective/joint-state).
 - `run_offline_general_caching_approx.py` — offline LP+rounding baseline for general caching (not `python -m lafc.runner.run_policy`).
 - root-level `search_*` / `analyze_*` — targeted analysis/proof-support tooling.
 
@@ -37,3 +38,17 @@ These remain supported for research and scaling experiments; they are **not** th
 - **Pairwise / chain-witness / publishability campaigns:** `scripts/run_pairwise_*.py`, `scripts/aggregate_pairwise_*.py`, `slurm/pairwise_*_campaign_*.sbatch` — empirical and theorem-support outputs under `analysis/pairwise_*_campaign/`; exploratory for the main `evict_value_v1` Wulver story unless explicitly cross-referenced in `docs/manuscript_evidence_map.md`.
 
 **Canonical KBS Wulver index:** `docs/kbs_manuscript_submission_index.md`.
+
+## Lightweight exploratory ablations (easy-to-find index)
+
+These scripts and outputs are intentionally grouped as exploratory:
+
+| Family | Script | Default output |
+|---|---|---|
+| Incoming-aware | `scripts/experiments/run_incoming_file_aware_ablation.py` | `analysis/incoming_file_aware_ablation_light/` |
+| History-aware | `scripts/experiments/run_history_context_ablation.py` | `analysis/history_context_ablation_light/` |
+| History-objective | `scripts/experiments/run_history_objective_ablation.py` | `analysis/history_objective_ablation_light/` |
+| Joint cache-state model | `scripts/experiments/run_joint_cache_state_lightweight_eval.py` | `analysis/joint_cache_state_model_light/` |
+| Joint-state reasoning | `scripts/experiments/run_joint_state_reasoning_ablation.py` | `analysis/joint_state_reasoning_light/` |
+
+Canonical/non-canonical boundary doc: `docs/lightweight_exploratory_ablations.md`.

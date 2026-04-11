@@ -28,6 +28,16 @@ Files may remain under `analysis/` for history and reproducibility of older or b
 
 - **Slurm:** `evict_value_v1_wulver_multi_phase.sbatch`, `evict_value_v1_wulver_dataset.sbatch`, `evict_value_v1_wulver_dataset_array.sbatch` — see comments in each file; useful for scaling tests or dataset-only builds, not interchangeable with the KBS canonical filenames without explicit verification.
 - **Docs / analysis:** `docs/pairwise_*`, `analysis/pairwise_*_campaign/` — theorem development and campaign outputs; interpret per `docs/manuscript_evidence_map.md`.
+- **Lightweight ablations:** incoming-aware/history-aware/history-objective/joint-state outputs under `analysis/*_light/`; indexed in `docs/lightweight_exploratory_ablations.md`.
+
+## Once heavy eval finishes: handoff commands
+
+```bash
+test -f analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
+python scripts/paper/build_kbs_main_manuscript_artifacts.py
+```
+
+If the first command fails, the heavy eval stage is not complete yet.
 
 ## Open dependency (repository hygiene only)
 
