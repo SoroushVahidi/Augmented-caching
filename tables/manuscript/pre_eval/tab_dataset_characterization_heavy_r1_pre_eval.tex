@@ -1,0 +1,98 @@
+% Requires \usepackage{booktabs,longtable}
+\begin{longtable}{llrrr}
+\caption{Heavy\_r1 supervised shards derived from \texttt{data/derived/evict\_value\_v1\_wulver\_heavy\_r1/manifest.json}: split mode \texttt{trace\_chunk}, chunk size 4096, 7 traces, 594 shards. Row and decision counts are identical across prediction horizons $H \in \{4,8,16\}$ in \texttt{split\_summary.csv}; this table lists one row per (split, family, capacity). Offline training/eval splits only; not online policy outcomes.}\label{tab:pre-eval-dataset-heavy-r1}\\
+\toprule
+Split & Family & Cap & Rows & Decisions \\
+\midrule
+\endfirsthead
+\multicolumn{5}{c}{{\tablename\ \thetable{} --- continued from previous page}} \\
+\toprule
+Split & Family & Cap & Rows & Decisions \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{{Continued on next page}} \\
+\endfoot
+\bottomrule
+\endlastfoot
+test & brightkite & 32 & 106,016 & 3,313 \\
+test & brightkite & 64 & 190,912 & 2,983 \\
+test & brightkite & 128 & 344,704 & 2,693 \\
+test & brightkite & 256 & 617,984 & 2,414 \\
+test & citibike & 32 & 63,424 & 1,982 \\
+test & citibike & 64 & 120,960 & 1,890 \\
+test & citibike & 128 & 217,728 & 1,701 \\
+test & citibike & 256 & 365,824 & 1,429 \\
+test & cloudphysics & 32 & 257,856 & 8,058 \\
+test & cloudphysics & 64 & 510,144 & 7,971 \\
+test & cloudphysics & 128 & 1,002,496 & 7,832 \\
+test & cloudphysics & 256 & 1,962,752 & 7,667 \\
+test & metakv & 32 & 96,096 & 3,003 \\
+test & metakv & 64 & 189,760 & 2,965 \\
+test & metakv & 128 & 365,824 & 2,858 \\
+test & metakv & 256 & 637,184 & 2,489 \\
+test & twemcache & 32 & 122,816 & 3,838 \\
+test & twemcache & 64 & 219,904 & 3,436 \\
+test & twemcache & 128 & 100,224 & 783 \\
+test & twemcache & 256 & 158,976 & 621 \\
+test & wiki2018 & 32 & 131,072 & 4,096 \\
+test & wiki2018 & 64 & 262,144 & 4,096 \\
+test & wiki2018 & 128 & 524,288 & 4,096 \\
+test & wiki2018 & 256 & 1,048,576 & 4,096 \\
+train & brightkite & 32 & 377,088 & 11,784 \\
+train & brightkite & 64 & 688,384 & 10,756 \\
+train & brightkite & 128 & 1,287,168 & 10,056 \\
+train & brightkite & 256 & 2,451,968 & 9,578 \\
+train & citibike & 32 & 521,408 & 16,294 \\
+train & citibike & 64 & 985,536 & 15,399 \\
+train & citibike & 128 & 1,769,344 & 13,823 \\
+train & citibike & 256 & 3,017,984 & 11,789 \\
+train & cloudphysics & 32 & 1,189,984 & 37,187 \\
+train & cloudphysics & 64 & 2,345,984 & 36,656 \\
+train & cloudphysics & 128 & 4,613,504 & 36,043 \\
+train & cloudphysics & 256 & 9,057,536 & 35,381 \\
+train & metacdn & 32 & 560,608 & 17,519 \\
+train & metacdn & 64 & 1,093,824 & 17,091 \\
+train & metacdn & 128 & 2,120,576 & 16,567 \\
+train & metacdn & 256 & 4,108,032 & 16,047 \\
+train & metakv & 32 & 818,528 & 25,579 \\
+train & metakv & 64 & 1,636,288 & 25,567 \\
+train & metakv & 128 & 3,271,040 & 25,555 \\
+train & metakv & 256 & 6,541,824 & 25,554 \\
+train & twemcache & 32 & 555,808 & 17,369 \\
+train & twemcache & 64 & 974,720 & 15,230 \\
+train & twemcache & 128 & 427,008 & 3,336 \\
+train & twemcache & 256 & 663,040 & 2,590 \\
+train & wiki2018 & 32 & 1,336,832 & 41,776 \\
+train & wiki2018 & 64 & 2,671,616 & 41,744 \\
+train & wiki2018 & 128 & 5,335,040 & 41,680 \\
+train & wiki2018 & 256 & 10,637,312 & 41,552 \\
+val & brightkite & 32 & 94,368 & 2,949 \\
+val & brightkite & 64 & 175,360 & 2,740 \\
+val & brightkite & 128 & 333,056 & 2,602 \\
+val & brightkite & 256 & 642,560 & 2,510 \\
+val & citibike & 32 & 53,952 & 1,686 \\
+val & citibike & 64 & 103,104 & 1,611 \\
+val & citibike & 128 & 188,416 & 1,472 \\
+val & citibike & 256 & 298,752 & 1,167 \\
+val & cloudphysics & 32 & 127,872 & 3,996 \\
+val & cloudphysics & 64 & 248,576 & 3,884 \\
+val & cloudphysics & 128 & 479,360 & 3,745 \\
+val & cloudphysics & 256 & 935,168 & 3,653 \\
+val & metacdn & 32 & 378,528 & 11,829 \\
+val & metacdn & 64 & 733,504 & 11,461 \\
+val & metacdn & 128 & 1,422,848 & 11,116 \\
+val & metacdn & 256 & 2,736,640 & 10,690 \\
+val & metakv & 32 & 302,400 & 9,450 \\
+val & metakv & 64 & 604,480 & 9,445 \\
+val & metakv & 128 & 1,208,704 & 9,443 \\
+val & metakv & 256 & 2,417,408 & 9,443 \\
+val & twemcache & 32 & 62,848 & 1,964 \\
+val & twemcache & 64 & 110,336 & 1,724 \\
+val & twemcache & 128 & 52,864 & 413 \\
+val & twemcache & 256 & 81,920 & 320 \\
+val & wiki2018 & 32 & 131,072 & 4,096 \\
+val & wiki2018 & 64 & 262,144 & 4,096 \\
+val & wiki2018 & 128 & 524,288 & 4,096 \\
+val & wiki2018 & 256 & 1,048,576 & 4,096 \\
+\end{longtable}
