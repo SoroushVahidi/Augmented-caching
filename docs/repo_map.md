@@ -31,12 +31,14 @@ This document is a concise orientation guide for external readers and manuscript
 - `train_*` scripts — fit lightweight models and write metrics.
 - `run_*` scripts — first-checks, ablations, and experiment reports.
 - `search_*` / `analyze_*` scripts — theorem/proof or counterexample support utilities.
+- `scripts/experiments/` — lightweight ablation runners (incoming-aware, history-aware, history-objective, joint-state).
 
 ## `analysis/` organization conventions
 
 - **Experiment directories** (preferred): one directory per experiment with `report.md`, `results.csv`, `summary.json`.
 - **Legacy root-level artifacts**: older single-file outputs kept for history and manuscript traceability.
 - **Manifests/audits**: stable helper artifacts (for example Wulver trace manifests and failure-slice audits).
+- **Exploratory lightweight ablations**: grouped under `analysis/*_light/` (see `docs/lightweight_exploratory_ablations.md`).
 
 See `analysis/README.md` for details and naming guidance.
 
@@ -44,10 +46,11 @@ See `analysis/README.md` for details and naming guidance.
 
 1. `docs/evict_value_v1_kbs_canonical_artifacts.md` (heavy_r1-only inputs for KBS tables/figures)
 2. `docs/reproducibility_and_artifacts.md` (entry points, output locations, manuscript vs exploratory)
-3. `docs/manuscript_evidence_map.md`
-4. `docs/manuscript_open_questions.md`
-5. `docs/baselines.md`
-6. `docs/framework.md`
+3. `docs/lightweight_exploratory_ablations.md` (non-canonical lightweight branch index)
+4. `docs/manuscript_evidence_map.md`
+5. `docs/manuscript_open_questions.md`
+6. `docs/baselines.md`
+7. `docs/framework.md`
 
 ## Notes on scientific status
 

@@ -28,6 +28,21 @@ python -m lafc.runner.run_policy --policy <name> --trace <path> --capacity <k>
 
 **Index:** `docs/kbs_manuscript_submission_index.md`.
 
+## After heavy eval completes: minimal canonical command set
+
+```bash
+# confirm canonical policy comparison exists
+test -f analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
+
+# build manuscript tables/figures/manifest from heavy_r1 evidence only
+python scripts/paper/build_kbs_main_manuscript_artifacts.py
+```
+
+Expected generated paths:
+- `tables/manuscript/`
+- `figures/manuscript/`
+- `reports/manuscript_artifacts/`
+
 For **evict_value_v1** KBS evidence, inputs are **`heavy_r1` files only** (see `docs/evict_value_v1_kbs_canonical_artifacts.md` and `docs/wulver_heavy_evict_value_experiment.md`). The builder does **not** use the unsuffixed `analysis/evict_value_wulver_v1_policy_comparison.csv`.
 
 For heavier cluster runs, see `slurm/*.sbatch` and the Wulver runbooks under `docs/wulver_*.md` and `docs/evict_value_v1_wulver_runbook.md`.
@@ -46,6 +61,7 @@ These are **not** by themselves scientific claims; they summarize repository-gen
 
 - `docs/pairwise_*` (theorem sketches, audits, attacks) — development artifacts; not finished proofs.
 - Large per-job trees under `analysis/pairwise_*_campaign/jobs/` — empirical campaign outputs; may include large binary artifacts (for example trained checkpoints). Prefer citing aggregate CSV/JSON summaries when possible.
+- Lightweight ablations under `analysis/*_light/` (incoming-aware, history-aware, history-objective, joint-state): indexed in `docs/lightweight_exploratory_ablations.md`; these are non-canonical for the main KBS Wulver line.
 
 **Stable helper files** (referenced by scripts and audits; keep under version control when small):
 

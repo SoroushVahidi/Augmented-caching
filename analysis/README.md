@@ -19,6 +19,17 @@ For the **Knowledge-Based Systems** manuscript, **only** the **`heavy_r1`-suffix
 
 ## What is canonical vs exploratory?
 
+### Canonical KBS Wulver manuscript-safe artifacts (strict)
+
+Treat **only** these as canonical for the main Wulver `evict_value_v1` paper line:
+- `analysis/*_heavy_r1.*` files listed in `docs/evict_value_v1_kbs_canonical_artifacts.md`
+- manuscript bundle outputs generated from those files:
+  - `tables/manuscript/`
+  - `figures/manuscript/`
+  - `reports/manuscript_artifacts/`
+
+If `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` is missing, the canonical line is incomplete.
+
 ### Canonical experiment-style outputs (preferred)
 
 These live in dedicated subdirectories and usually include:
@@ -55,6 +66,17 @@ These are often consumed by scripts or runbooks:
 
 Files such as `*_first_check.csv`, `*_first_check.md`, and older model-comparison tables remain for traceability.
 New experiments should prefer dedicated subdirectories.
+
+### Exploratory lightweight ablations (grouped, non-canonical)
+
+These are useful and intentionally retained, but they are **not** the main KBS Wulver path:
+- `analysis/incoming_file_aware_ablation_light/` (incoming-aware)
+- `analysis/history_context_ablation_light/` (history-aware)
+- `analysis/history_objective_ablation_light/` (history-objective / history-pairwise-style objective)
+- `analysis/joint_cache_state_model_light/` (joint cache-state modeling)
+- `analysis/joint_state_reasoning_light/` (joint-state reasoning)
+
+Script index for these families: `docs/lightweight_exploratory_ablations.md`.
 
 ## Naming conventions (for new runs)
 

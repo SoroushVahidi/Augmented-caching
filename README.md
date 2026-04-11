@@ -16,7 +16,7 @@ This repository includes:
 
 For evidence-strength caveats and what is still open, see `docs/manuscript_evidence_map.md` and `docs/manuscript_open_questions.md`.
 
-### KBS manuscript: canonical Wulver `heavy_r1` path
+### KBS manuscript: canonical Wulver `heavy_r1` path (**main paper path**)
 
 For the **Knowledge-Based Systems** submission package, the repository treats **one** end-to-end line as authoritative for main **multi-trace Wulver** `evict_value_v1` numbers:
 
@@ -26,6 +26,23 @@ For the **Knowledge-Based Systems** submission package, the repository treats **
 4. **LaTeX-oriented bundle:** `scripts/paper/build_kbs_main_manuscript_artifacts.py` → `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/`
 
 **Do not** treat the unsuffixed `analysis/evict_value_wulver_v1_policy_comparison.csv` as the main KBS comparison (it may include extra policies from non-heavy drivers). See `analysis/README.md` and `docs/kbs_manuscript_submission_index.md`.
+
+### One-screen canonical checklist (after heavy eval completes)
+
+Use this exact sequence to avoid mixing canonical and exploratory artifacts:
+
+```bash
+# 1) verify canonical heavy_r1 eval output exists
+test -f analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
+
+# 2) build manuscript bundle from heavy_r1-only evidence
+python scripts/paper/build_kbs_main_manuscript_artifacts.py
+
+# 3) inspect generated submission artifacts
+ls tables/manuscript figures/manuscript reports/manuscript_artifacts
+```
+
+If step (1) fails, run/finish the heavy eval job from `docs/wulver_heavy_evict_value_experiment.md` first.
 
 ---
 
@@ -115,6 +132,8 @@ python scripts/datasets/prepare_all.py --dataset <brightkite|citibike|spec_cpu20
 
 ## Reproducing main experiment families
 
+> **Scope note:** sections A–D below are useful experiment entry points, but they are **not** the canonical KBS Wulver `heavy_r1` manuscript pipeline unless explicitly labeled as such.
+
 ### A) `evict_value_v1` first check
 
 ```bash
@@ -180,6 +199,7 @@ See `analysis/README.md` for canonical vs legacy/exploratory organization.
 - Reproducibility, CLI entry points, manuscript vs exploratory artifacts: `docs/reproducibility_and_artifacts.md`
 - Analysis artifact organization: `analysis/README.md`
 - Script organization and naming conventions: `scripts/README.md`
+- Lightweight exploratory ablations index (incoming-aware/history-aware/history-pairwise/joint-state): `docs/lightweight_exploratory_ablations.md`
 
 ---
 
@@ -188,4 +208,3 @@ See `analysis/README.md` for canonical vs legacy/exploratory organization.
 ```bash
 pytest tests/ -v
 ```
-
