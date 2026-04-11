@@ -1,34 +1,24 @@
 # Manuscript artifact generation report
 
-## Strongest manuscript-safe basis selected
-- Main comparison: `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` (heavy eval; see `docs/evict_value_v1_kbs_canonical_artifacts.md`).
-- Main training/ablation: `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv` and `analysis/evict_value_wulver_v1_train_metrics_heavy_r1.json`.
-- Dataset coverage: `analysis/evict_value_v1_wulver_dataset_summary_heavy_r1.md` and `analysis/wulver_trace_manifest_full.csv`.
+## Evidence status
+- Policy comparison CSV present: **False** (`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`).
+- Core inputs (train comparison, dataset summary, manifest, baselines, train_metrics, best_config): **OK**.
 
-## Created tables
-- Table 1: dataset/trace summary.
-- Table 2: policy roster.
-- Table 3: main quantitative comparison (bold best, underline second-best).
-- Table 4: model-family/horizon ablation for evict_value_v1.
+## Refreshed in this run
+- Figure~1 (`figure1_method_overview`): two-panel offline/online method schematic.
+- Figure~4 (`figure4_ablation`): **two-panel** (validation / test mean regret vs horizon) from `model_comparison_heavy_r1.csv`. Layout update: panel labels `(a)`/`(b)` placed upper-left **consistently**; legend on panel~(b) only, **upper-right** with light frame (fixes prior `(b)` vs legend overlap). Plotted coordinates **numerically match** the current `tables/manuscript/table4_main_ablation.*` source fields (`val_mean_regret`, `test_mean_regret`) for horizons {4, 8, 16} and models `ridge`, `random_forest`, `hist_gb` (verified against `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv`).
+- Table~2 (policy roster), Table~4 (offline ablation) + LaTeX snippets.
+- **Not refreshed:** Table~1, Table~3, Figure~2, Figure~3 — replaced with explicit unavailable stubs; **do not cite** main quantitative results until policy CSV exists.
 
-## Created figures (committed without full main-bundle run)
-- Figure 1: method overview schematic (`figures/manuscript/figure1_method_overview.pdf`; vector + PNG from `scripts/paper/regenerate_evidence_aligned_manuscript_figures.py`).
-- Figure 4: offline training ablation (`figures/manuscript/figure4_ablation.pdf`; from `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv`).
+## Canonical vs exploratory
+- Only paths under `EVIDENCE_FILES` in `build_kbs_main_manuscript_artifacts.py` drive this bundle.
+- Guarded/fallback and decision-quality **table5/figure5** were **not** created: no reproducible `*_heavy_r1` artifact found in-repo for those narratives.
 
-## Figures produced only after canonical policy CSV exists
-- Figure 2: family-level main performance comparison (`build_kbs_main_manuscript_artifacts.py`).
-- Figure 3: aggregate improvement vs LRU (same builder).
-
-## Skipped or constrained items
-- Guarded/fallback ablation specifically on the same heavy Wulver artifact pool was not found as a dedicated canonical artifact; main ablation uses in-pool model-family/horizon evidence instead.
+## Safe to cite now
+- Always: method schematic Fig.~1, offline ablation Table~4 / Fig.~4 (from `model_comparison_heavy_r1.csv`).
+- Policy-level claims: **only if** policy CSV was present for this run (see Evidence status).
 
 ## Output roots
 - Tables: `tables/manuscript`
 - Figures: `figures/manuscript`
-- Manifest/report/LaTeX snippets: `reports/manuscript_artifacts`
-
-## Evidence completeness
-Regenerate this bundle after `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` exists (heavy eval). Older committed PDF/PNG under `figures/manuscript/` may predate a successful canonical run; see `docs/kbs_manuscript_submission_index.md`.
-
-## Latest offline regeneration (no new experiments)
-When `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.{csv,md}` are **absent**, only the following can be rebuilt from committed inputs: **Figure 1**, **Figure 4** (`scripts/paper/regenerate_evidence_aligned_manuscript_figures.py`), **Table 2** (static roster), **Table 4** (`model_comparison_heavy_r1.csv`). **Table 1** and **Table 3** require the policy-comparison CSV; **Figure 2** and **Figure 3** require the same (via `build_kbs_main_manuscript_artifacts.py`). **Table 1** / **Table 3** files already in `tables/manuscript/` are **not** refreshed in that situation and should not be treated as verified against missing policy evidence.
+- Snippets: `reports/manuscript_artifacts/latex_snippets`

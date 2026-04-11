@@ -19,7 +19,7 @@ if str(_SCRIPT_DIR) not in sys.path:
 
 from manuscript_figure_common import (  # noqa: E402
     apply_manuscript_matplotlib_style,
-    make_method_overview_figure,
+    make_method_overview_two_panel_figure,
     make_offline_ablation_figure,
     repo_root,
     save_figure_pdf_png,
@@ -34,7 +34,7 @@ def main() -> None:
     train_rows = list(csv.DictReader(train_csv.open(encoding="utf-8")))
     out = root / "figures" / "manuscript"
     apply_manuscript_matplotlib_style()
-    f1 = make_method_overview_figure()
+    f1 = make_method_overview_two_panel_figure()
     save_figure_pdf_png(f1, out, "figure1_method_overview")
     f4 = make_offline_ablation_figure(train_rows)
     save_figure_pdf_png(f4, out, "figure4_ablation")

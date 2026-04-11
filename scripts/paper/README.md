@@ -6,7 +6,7 @@
 
 | Script | Purpose | Manuscript-safe? |
 |--------|---------|------------------|
-| `build_kbs_main_manuscript_artifacts.py` | Reads **`analysis/*_heavy_r1.*`** inputs from the Wulver heavy train/eval pipeline (see `docs/wulver_heavy_evict_value_experiment.md`), writes `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/`. | **Yes** — only when every path in `EVIDENCE_FILES` inside the script exists (including `evict_value_wulver_v1_policy_comparison_heavy_r1.csv`). |
+| `build_kbs_main_manuscript_artifacts.py` | Reads canonical **`_heavy_r1`** artifacts; always refreshes Fig.~1, Fig.~4, Table~2, Table~4. If `evict_value_wulver_v1_policy_comparison_heavy_r1.csv` is present, also rebuilds Table~1, Table~3, Fig.~2 (`figure2_main_performance_comparison`), Fig.~3 (`figure3_improvement_vs_lru`); otherwise writes **explicit unavailable stubs** for policy-dependent outputs (see `manuscript_artifact_report.md`). | **Yes** for refreshed items; policy stubs are **not** citable as main results. |
 | `regenerate_evidence_aligned_manuscript_figures.py` | Regenerates **Figure 1** (method schematic) and **Figure 4** (offline training ablation) as vector PDF + PNG using `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv`. Does **not** require policy-comparison CSV. | **Yes** for those figures only. |
 | `build_kbs_manuscript_pre_eval_artifacts.py` | Tables + same Figure 1/4 assets as above, plus dataset `longtable` inputs, without reading policy comparison. | **Yes** (offline / schematic evidence only). |
 

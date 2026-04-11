@@ -29,7 +29,7 @@ The manuscript builder reads exactly these paths (see `EVIDENCE_FILES` in `scrip
 ## Generated manuscript outputs (from the builder)
 
 - `tables/manuscript/table{1-4}_*.{csv,tex}`
-- `figures/manuscript/figure{1-4}_*.{pdf,png}`
+- `figures/manuscript/figure1_method_overview.{pdf,png}`, `figure2_main_performance_comparison.{pdf,png}`, `figure3_improvement_vs_lru.{pdf,png}`, `figure4_ablation.{pdf,png}`
 - `reports/manuscript_artifacts/{manuscript_artifact_manifest.json,manuscript_artifact_report.md,latex_snippets/*.tex}`
 
 ## Unsuffixed files: not canonical for KBS main results

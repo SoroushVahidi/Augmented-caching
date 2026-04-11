@@ -16,7 +16,7 @@ Use **only** this pipeline for primary **multi-trace Wulver** `evict_value_v1` c
 | Exact filenames | `docs/evict_value_v1_kbs_canonical_artifacts.md` |
 | Reviewer index | `docs/kbs_manuscript_submission_index.md` |
 
-**Preflight:** the manuscript builder requires **`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`**. If it is missing, the canonical eval stage is incomplete—finish or rerun heavy eval per the runbook (do not substitute unsuffixed `analysis/evict_value_wulver_v1_policy_comparison.csv`).
+**Preflight (full main quantitative bundle):** **`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`** must exist to refresh Table~1, Table~3, and Figures~2–3. The builder still runs without it: it refreshes offline/schematic artifacts and writes **explicit unavailable stubs** for policy-dependent tables/figures (see `reports/manuscript_artifacts/manuscript_artifact_report.md`). Do not substitute the unsuffixed `analysis/evict_value_wulver_v1_policy_comparison.csv` for canonical KBS claims.
 
 ---
 

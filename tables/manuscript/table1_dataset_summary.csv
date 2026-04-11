@@ -1,8 +1,2 @@
-trace_name,family,request_count,capacities_used,hint_type,role
-brightkite_50k,brightkite,50000,"32,64,128",next-arrival-derived metadata,main Wulver evaluation
-citibike_202401_50k,citibike,50000,"32,64,128",next-arrival-derived metadata,main Wulver evaluation
-cloudphysics_alibaba_block_head_50k,cloudphysics,50000,"32,64,128",next-arrival-derived metadata,main Wulver evaluation
-metacdn_cdn_202303_head_50k,metacdn,50000,"32,64,128",next-arrival-derived metadata,main Wulver evaluation
-metakv_kvcache_202206_head_50k,metakv,50000,"32,64,128",next-arrival-derived metadata,main Wulver evaluation
-twemcache_cluster26_sample100_50k,twemcache,50000,"32,64,128",next-arrival-derived metadata,main Wulver evaluation
-wiki2018_pageviews_en_50k,wiki2018,50000,"32,64,128",next-arrival-derived metadata,main Wulver evaluation
+status
+NOT_GENERATED: analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv missing — cannot derive trace/capacity roster for Table~1 from canonical evidence.

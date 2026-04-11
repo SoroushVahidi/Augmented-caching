@@ -22,7 +22,7 @@ if str(_SCRIPT_DIR) not in sys.path:
 
 from manuscript_figure_common import (
     apply_manuscript_matplotlib_style,
-    make_method_overview_figure,
+    make_method_overview_two_panel_figure,
     make_offline_ablation_figure,
     save_figure_pdf_png,
 )
@@ -64,14 +64,14 @@ def _write_csv(path: Path, rows: List[Dict[str, object]]) -> None:
 def build_method_overview_figure() -> Tuple[Path, Path]:
     """Schematic only; writes the same asset as `figure1_method_overview` under figures/manuscript/."""
     apply_manuscript_matplotlib_style()
-    fig = make_method_overview_figure()
+    fig = make_method_overview_two_panel_figure()
     pdf, png = save_figure_pdf_png(fig, FIGURES_MAIN, "figure1_method_overview")
     snippet = REPORT / "snippet_fig_method_overview_pre_eval.tex"
     snippet.write_text(
         "\\begin{figure*}[t]\n\\centering\n"
         "\\includegraphics[width=0.95\\textwidth]{figures/manuscript/figure1_method_overview.pdf}\n"
-        "\\caption{Eviction-value prediction pipeline for \\texttt{evict\\_value\\_v1} (schematic only; not online policy metrics).}\n"
-        "\\label{fig:method-evict-value-pipeline}\n\\end{figure*}\n",
+        "\\caption{Same method figure as `latex\\_snippets/figure1\\_snippet.tex` (optional duplicate for drafts).}\n"
+        "\\end{figure*}\n",
         encoding="utf-8",
     )
     return pdf, png
