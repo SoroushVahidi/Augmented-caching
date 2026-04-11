@@ -11,11 +11,13 @@
 - Table 3: main quantitative comparison (bold best, underline second-best).
 - Table 4: model-family/horizon ablation for evict_value_v1.
 
-## Created figures
-- Figure 1: method overview schematic.
-- Figure 2: family-level main performance comparison.
-- Figure 3: aggregate improvement vs LRU.
-- Figure 4: ablation plot (val/test mean regret).
+## Created figures (committed without full main-bundle run)
+- Figure 1: method overview schematic (`figures/manuscript/figure1_method_overview.pdf`; vector + PNG from `scripts/paper/regenerate_evidence_aligned_manuscript_figures.py`).
+- Figure 4: offline training ablation (`figures/manuscript/figure4_ablation.pdf`; from `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv`).
+
+## Figures produced only after canonical policy CSV exists
+- Figure 2: family-level main performance comparison (`build_kbs_main_manuscript_artifacts.py`).
+- Figure 3: aggregate improvement vs LRU (same builder).
 
 ## Skipped or constrained items
 - Guarded/fallback ablation specifically on the same heavy Wulver artifact pool was not found as a dedicated canonical artifact; main ablation uses in-pool model-family/horizon evidence instead.

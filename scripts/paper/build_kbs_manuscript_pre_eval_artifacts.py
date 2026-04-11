@@ -10,17 +10,26 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-import textwrap
-from collections import defaultdict
+import sys
 from pathlib import Path
 from typing import Dict, List, Tuple
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+
+from manuscript_figure_common import (
+    apply_manuscript_matplotlib_style,
+    make_method_overview_figure,
+    make_offline_ablation_figure,
+    save_figure_pdf_png,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 TABLES = ROOT / "tables" / "manuscript" / "pre_eval"
-FIGURES = ROOT / "figures" / "manuscript" / "pre_eval"
+FIGURES_MAIN = ROOT / "figures" / "manuscript"
 REPORT = ROOT / "reports" / "manuscript_artifacts" / "pre_eval"
 
 DEFAULT_MANIFEST = ROOT / "data" / "derived" / "evict_value_v1_wulver_heavy_r1" / "manifest.json"
@@ -29,7 +38,7 @@ DEFAULT_TRAIN_CMP = ROOT / "analysis" / "evict_value_wulver_v1_model_comparison_
 
 
 def _ensure_dirs() -> None:
-    for p in (TABLES, FIGURES, REPORT):
+    for p in (TABLES, FIGURES_MAIN, REPORT):
         p.mkdir(parents=True, exist_ok=True)
 
 
@@ -53,46 +62,16 @@ def _write_csv(path: Path, rows: List[Dict[str, object]]) -> None:
 
 
 def build_method_overview_figure() -> Tuple[Path, Path]:
-    """Schematic only; no empirical data."""
-    fig, ax = plt.subplots(figsize=(10, 3.4))
-    ax.axis("off")
-
-    def box(x: float, y: float, w: float, h: float, txt: str) -> None:
-        p = FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02", linewidth=1.2, edgecolor="black", facecolor="white")
-        ax.add_patch(p)
-        ax.text(x + w / 2, y + h / 2, textwrap.fill(txt, 22), ha="center", va="center", fontsize=10)
-
-    box(0.02, 0.35, 0.16, 0.32, "Request arrives")
-    box(0.24, 0.35, 0.20, 0.32, "Candidate feature builder")
-    box(0.50, 0.35, 0.20, 0.32, "Eviction-value predictor")
-    box(0.76, 0.35, 0.20, 0.32, "Evict min predicted loss")
-    ax.add_patch(FancyArrowPatch((0.18, 0.51), (0.24, 0.51), arrowstyle="->", mutation_scale=12, linewidth=1.2))
-    ax.add_patch(FancyArrowPatch((0.44, 0.51), (0.50, 0.51), arrowstyle="->", mutation_scale=12, linewidth=1.2))
-    ax.add_patch(FancyArrowPatch((0.70, 0.51), (0.76, 0.51), arrowstyle="->", mutation_scale=12, linewidth=1.2))
-    ax.text(
-        0.50,
-        0.16,
-        "Trained model: HistGradientBoosting (heavy_r1 offline selection)",
-        ha="center",
-        va="center",
-        fontsize=10,
-    )
-    fig.tight_layout()
-    stem = "fig_method_overview_evict_value_v1_pre_eval"
-    pdf = FIGURES / f"{stem}.pdf"
-    png = FIGURES / f"{stem}.png"
-    fig.savefig(pdf, bbox_inches="tight")
-    fig.savefig(png, dpi=300, bbox_inches="tight")
-    plt.close(fig)
+    """Schematic only; writes the same asset as `figure1_method_overview` under figures/manuscript/."""
+    apply_manuscript_matplotlib_style()
+    fig = make_method_overview_figure()
+    pdf, png = save_figure_pdf_png(fig, FIGURES_MAIN, "figure1_method_overview")
     snippet = REPORT / "snippet_fig_method_overview_pre_eval.tex"
     snippet.write_text(
         "\\begin{figure*}[t]\n\\centering\n"
-        "\\includegraphics[width=0.95\\textwidth]{figures/manuscript/pre_eval/"
-        + stem
-        + ".pdf}\n"
-        "\\caption{Eviction-value \\texttt{evict\\_value\\_v1} decision pipeline (method overview; not performance data).}\n"
-        "\\label{fig:pre-eval-method-overview}\n"
-        "\\end{figure*}\n",
+        "\\includegraphics[width=0.95\\textwidth]{figures/manuscript/figure1_method_overview.pdf}\n"
+        "\\caption{Eviction-value prediction pipeline for \\texttt{evict\\_value\\_v1} (schematic only; not online policy metrics).}\n"
+        "\\label{fig:method-evict-value-pipeline}\n\\end{figure*}\n",
         encoding="utf-8",
     )
     return pdf, png
@@ -213,44 +192,9 @@ def build_training_ablation(train_csv: Path) -> Tuple[Path, Path, Path, Path]:
     lines += ["\\bottomrule", "\\end{tabular}"]
     tex_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    by_model_val: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
-    by_model_test: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
-    for r in train_rows:
-        h = int(r["horizon"])
-        m = str(r["model"])
-        by_model_val[m].append((h, float(r["val_mean_regret"])))
-        by_model_test[m].append((h, float(r["test_mean_regret"])))
-
-    styles = {
-        "ridge": ("-", "o"),
-        "random_forest": ("--", "s"),
-        "hist_gb": (":", "^"),
-    }
-    fig, axes = plt.subplots(1, 2, figsize=(10.2, 3.8), sharex=True)
-    for m in sorted(by_model_val):
-        xs = [x for x, _ in sorted(by_model_val[m])]
-        ys = [y for _, y in sorted(by_model_val[m])]
-        ls, mk = styles.get(m, ("-", "o"))
-        axes[0].plot(xs, ys, linestyle=ls, marker=mk, color="black", label=m, linewidth=1.2, markersize=5)
-    for m in sorted(by_model_test):
-        xs = [x for x, _ in sorted(by_model_test[m])]
-        ys = [y for _, y in sorted(by_model_test[m])]
-        ls, mk = styles.get(m, ("-", "o"))
-        axes[1].plot(xs, ys, linestyle=ls, marker=mk, color="black", label=m, linewidth=1.2, markersize=5)
-    axes[0].set_title("Validation mean regret (offline)")
-    axes[1].set_title("Test mean regret (offline)")
-    for ax in axes:
-        ax.set_xlabel("Horizon")
-        ax.set_ylabel("Mean regret")
-        ax.grid(True, linestyle=":", linewidth=0.6)
-    axes[1].legend(frameon=False, fontsize=8, loc="upper left")
-    fig.tight_layout()
-    stem = "fig_training_ablation_regret_heavy_r1_pre_eval"
-    pdf = FIGURES / f"{stem}.pdf"
-    png = FIGURES / f"{stem}.png"
-    fig.savefig(pdf, bbox_inches="tight")
-    fig.savefig(png, dpi=300, bbox_inches="tight")
-    plt.close(fig)
+    apply_manuscript_matplotlib_style()
+    fig = make_offline_ablation_figure(train_rows)
+    pdf, png = save_figure_pdf_png(fig, FIGURES_MAIN, "figure4_ablation")
 
     (REPORT / "snippet_tab_training_ablation_pre_eval.tex").write_text(
         "\\begin{table}[t]\n\\centering\n"
@@ -263,12 +207,9 @@ def build_training_ablation(train_csv: Path) -> Tuple[Path, Path, Path, Path]:
     )
     (REPORT / "snippet_fig_training_ablation_pre_eval.tex").write_text(
         "\\begin{figure*}[t]\n\\centering\n"
-        "\\includegraphics[width=0.9\\textwidth]{figures/manuscript/pre_eval/"
-        + stem
-        + ".pdf}\n"
-        "\\caption{Offline mean regret vs horizon by model family (heavy\\_r1 training selection; not simulator policy comparison).}\n"
-        "\\label{fig:pre-eval-training-ablation}\n"
-        "\\end{figure*}\n",
+        "\\includegraphics[width=0.9\\textwidth]{figures/manuscript/figure4_ablation.pdf}\n"
+        "\\caption{Offline ablation of model family and horizon for eviction-value training (heavy\\_r1 shards; not online misses).}\n"
+        "\\label{fig:offline-training-ablation}\n\\end{figure*}\n",
         encoding="utf-8",
     )
     return csv_path, tex_path, pdf, png
@@ -286,18 +227,12 @@ def main() -> None:
     if missing:
         raise FileNotFoundError(f"Missing required inputs: {missing}")
 
-    plt.rcParams.update(
-        {
-            "font.size": 10,
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42,
-        }
-    )
+    apply_manuscript_matplotlib_style()
 
     build_method_overview_figure()
     build_dataset_table(args.manifest, args.split_summary)
     build_training_ablation(args.train_model_comparison)
-    print("Wrote pre-eval manuscript assets under tables/manuscript/pre_eval, figures/manuscript/pre_eval, reports/manuscript_artifacts/pre_eval")
+    print("Wrote pre-eval tables under tables/manuscript/pre_eval; figures under figures/manuscript/; snippets under reports/manuscript_artifacts/pre_eval")
 
 
 if __name__ == "__main__":

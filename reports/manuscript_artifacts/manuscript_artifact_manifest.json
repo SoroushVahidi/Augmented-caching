@@ -23,12 +23,14 @@
     "figures": [
       "figures/manuscript/figure1_method_overview.pdf",
       "figures/manuscript/figure1_method_overview.png",
+      "figures/manuscript/figure4_ablation.pdf",
+      "figures/manuscript/figure4_ablation.png"
+    ],
+    "figures_after_policy_eval": [
       "figures/manuscript/figure2_main_performance.pdf",
       "figures/manuscript/figure2_main_performance.png",
       "figures/manuscript/figure3_aggregate_improvement.pdf",
-      "figures/manuscript/figure3_aggregate_improvement.png",
-      "figures/manuscript/figure4_ablation.pdf",
-      "figures/manuscript/figure4_ablation.png"
+      "figures/manuscript/figure3_aggregate_improvement.png"
     ],
     "latex_snippets": [
       "reports/manuscript_artifacts/latex_snippets/figure1_snippet.tex",
@@ -42,8 +44,8 @@
     ]
   },
   "notes": [
-    "All inputs are heavy_r1 artifacts from heavy_train + heavy_eval (docs/wulver_heavy_evict_value_experiment.md).",
-    "Unsuffixed analysis/evict_value_wulver_v1_policy_comparison.csv is not used; it may include extra policies from multi_phase or ad hoc runs.",
-    "Guarded-variant ablation on the same heavy Wulver pool is not available as a dedicated artifact; Table/Figure 4 therefore uses model-family ablation within evict_value_v1."
+    "Full `build_kbs_main_manuscript_artifacts.py` run requires policy_comparison_heavy_r1 and regenerates figures 1–4.",
+    "Figures 2–3 (online policy comparison) are not committed when canonical policy CSV is absent; see commented figure2/figure3 LaTeX snippets.",
+    "Shared drawing code: scripts/paper/manuscript_figure_common.py; offline regen: scripts/paper/regenerate_evidence_aligned_manuscript_figures.py."
   ]
 }

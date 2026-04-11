@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import sys
 import textwrap
 from collections import defaultdict
 from pathlib import Path
@@ -9,9 +10,20 @@ from statistics import mean
 from typing import Dict, List, Tuple
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+import numpy as np
 
 from lafc.evict_value_wulver_v1 import load_trace_from_any
+
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+
+from manuscript_figure_common import (
+    apply_manuscript_matplotlib_style,
+    make_method_overview_figure,
+    make_offline_ablation_figure,
+    save_figure_pdf_png,
+)
 
 
 ROOT = Path(".")
@@ -243,35 +255,16 @@ def _build_table4_ablation(train_rows: List[Dict[str, str]]) -> Tuple[Path, Path
 
 
 def _save_fig(fig: plt.Figure, stem: str) -> Tuple[Path, Path]:
-    pdf = FIGURES / f"{stem}.pdf"
-    png = FIGURES / f"{stem}.png"
-    fig.savefig(pdf, bbox_inches="tight")
-    fig.savefig(png, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-    return pdf, png
+    return save_figure_pdf_png(fig, FIGURES, stem)
 
 
 def _figure1_method_overview() -> Tuple[Path, Path]:
-    fig, ax = plt.subplots(figsize=(10, 3.4))
-    ax.axis("off")
-
-    def box(x: float, y: float, w: float, h: float, txt: str) -> None:
-        p = FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02", linewidth=1.2, edgecolor="black", facecolor="white")
-        ax.add_patch(p)
-        ax.text(x + w / 2, y + h / 2, textwrap.fill(txt, 22), ha="center", va="center", fontsize=10)
-
-    box(0.02, 0.35, 0.16, 0.32, "Request arrives")
-    box(0.24, 0.35, 0.20, 0.32, "Candidate feature builder")
-    box(0.50, 0.35, 0.20, 0.32, "Eviction-value predictor")
-    box(0.76, 0.35, 0.20, 0.32, "Evict min predicted loss")
-    ax.add_patch(FancyArrowPatch((0.18, 0.51), (0.24, 0.51), arrowstyle="->", mutation_scale=12, linewidth=1.2))
-    ax.add_patch(FancyArrowPatch((0.44, 0.51), (0.50, 0.51), arrowstyle="->", mutation_scale=12, linewidth=1.2))
-    ax.add_patch(FancyArrowPatch((0.70, 0.51), (0.76, 0.51), arrowstyle="->", mutation_scale=12, linewidth=1.2))
-    ax.text(0.50, 0.16, "Artifact-backed model path used in main Wulver evaluation", ha="center", va="center", fontsize=10)
-    fig.tight_layout()
+    apply_manuscript_matplotlib_style()
+    fig = make_method_overview_figure()
     LATEX.joinpath("figure1_snippet.tex").write_text(
         "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.95\\textwidth]{figures/manuscript/figure1_method_overview.pdf}\n"
-        "\\caption{Eviction-value prediction pipeline used in the main method.}\n\\end{figure*}\n",
+        "\\caption{Eviction-value prediction pipeline for \\texttt{evict\\_value\\_v1} (schematic only; not online policy metrics).}\n"
+        "\\label{fig:method-evict-value-pipeline}\n\\end{figure*}\n",
         encoding="utf-8",
     )
     return _save_fig(fig, "figure1_method_overview")
@@ -303,7 +296,8 @@ def _figure2_main_comparison(policy_rows: List[Dict[str, str]]) -> Tuple[Path, P
     fig.tight_layout()
     LATEX.joinpath("figure2_snippet.tex").write_text(
         "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.95\\textwidth]{figures/manuscript/figure2_main_performance.pdf}\n"
-        "\\caption{Main policy comparison on Wulver trace families (mean misses across capacities).}\n\\end{figure*}\n",
+        "\\caption{Main policy comparison on Wulver trace families (mean misses across capacities).}\n"
+        "\\label{fig:main-policy-comparison}\n\\end{figure*}\n",
         encoding="utf-8",
     )
     return _save_fig(fig, "figure2_main_performance")
@@ -336,47 +330,20 @@ def _figure3_aggregate_improvement(policy_rows: List[Dict[str, str]]) -> Tuple[P
     fig.tight_layout()
     LATEX.joinpath("figure3_snippet.tex").write_text(
         "\\begin{figure}[t]\n\\centering\n\\includegraphics[width=\\columnwidth]{figures/manuscript/figure3_aggregate_improvement.pdf}\n"
-        "\\caption{Aggregate relative miss reduction versus LRU.}\n\\end{figure}\n",
+        "\\caption{Aggregate relative miss reduction versus LRU.}\n"
+        "\\label{fig:aggregate-vs-lru}\n\\end{figure}\n",
         encoding="utf-8",
     )
     return _save_fig(fig, "figure3_aggregate_improvement")
 
 
 def _figure4_ablation(train_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
-    by_model_val: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
-    by_model_test: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
-    for r in train_rows:
-        h = int(r["horizon"])
-        m = str(r["model"])
-        by_model_val[m].append((h, float(r["val_mean_regret"])))
-        by_model_test[m].append((h, float(r["test_mean_regret"])))
-    fig, axes = plt.subplots(1, 2, figsize=(10.2, 3.8), sharex=True)
-    styles = {
-        "ridge": ("-", "o"),
-        "random_forest": ("--", "s"),
-        "hist_gb": (":", "^"),
-    }
-    for m in sorted(by_model_val):
-        xs = [x for x, _ in sorted(by_model_val[m])]
-        ys = [y for _, y in sorted(by_model_val[m])]
-        ls, mk = styles.get(m, ("-", "o"))
-        axes[0].plot(xs, ys, linestyle=ls, marker=mk, color="black", label=m, linewidth=1.2, markersize=5)
-    for m in sorted(by_model_test):
-        xs = [x for x, _ in sorted(by_model_test[m])]
-        ys = [y for _, y in sorted(by_model_test[m])]
-        ls, mk = styles.get(m, ("-", "o"))
-        axes[1].plot(xs, ys, linestyle=ls, marker=mk, color="black", label=m, linewidth=1.2, markersize=5)
-    axes[0].set_title("Validation mean regret")
-    axes[1].set_title("Test mean regret")
-    for ax in axes:
-        ax.set_xlabel("Horizon")
-        ax.set_ylabel("Mean regret")
-        ax.grid(True, linestyle=":", linewidth=0.6)
-    axes[1].legend(frameon=False, fontsize=8, loc="upper left")
-    fig.tight_layout()
+    apply_manuscript_matplotlib_style()
+    fig = make_offline_ablation_figure(train_rows)
     LATEX.joinpath("figure4_snippet.tex").write_text(
         "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.9\\textwidth]{figures/manuscript/figure4_ablation.pdf}\n"
-        "\\caption{Ablation of model family and horizon for eviction-value training.}\n\\end{figure*}\n",
+        "\\caption{Offline ablation of model family and horizon for eviction-value training (heavy\\_r1 shards; not online misses).}\n"
+        "\\label{fig:offline-training-ablation}\n\\end{figure*}\n",
         encoding="utf-8",
     )
     return _save_fig(fig, "figure4_ablation")
@@ -390,6 +357,9 @@ def main() -> None:
 
     policy_rows = _read_csv(EVIDENCE_FILES["policy_comparison"])
     train_rows = _read_csv(EVIDENCE_FILES["train_model_comparison"])
+
+    apply_manuscript_matplotlib_style()
+    plt.rcParams.update({"xtick.labelsize": 9, "ytick.labelsize": 9, "legend.fontsize": 8})
 
     created: Dict[str, List[str]] = {"tables": [], "figures": [], "latex_snippets": []}
     skipped: List[Dict[str, str]] = []
@@ -463,18 +433,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    import numpy as np
-
-    plt.rcParams.update(
-        {
-            "font.size": 10,
-            "axes.titlesize": 11,
-            "axes.labelsize": 10,
-            "legend.fontsize": 8,
-            "xtick.labelsize": 9,
-            "ytick.labelsize": 9,
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42,
-        }
-    )
     main()
