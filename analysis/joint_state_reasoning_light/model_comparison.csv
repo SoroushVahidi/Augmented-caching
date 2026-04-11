@@ -1,0 +1,4 @@
+variant,objective,state_type,feature_count,val_decisions,val_top1_eviction_match,val_mean_regret,test_decisions,test_top1_eviction_match,test_mean_regret
+base_regression,replay_loss_regression,independent_candidate,26,8,0.75,0.125,8,0.5,0.0
+history_pairwise,pairwise_classifier,independent_candidate,41,8,0.75,0.0,8,0.375,0.0
+joint_state_softmax,direct_victim_softmax_ce,joint_decision_state,21,8,0.625,0.375,8,0.375,0.375
