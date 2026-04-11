@@ -10,7 +10,9 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
-#SBATCH --time=24:00:00
+# Full manifest (7 traces × 4 capacities × 7 policies, 50k req/trace) exceeded 24h on job 908326 (TIMEOUT).
+# Wulver allows up to 72h; keep one job so outputs stay a single canonical heavy_r1 CSV/MD pair.
+#SBATCH --time=72:00:00
 #SBATCH --output=slurm/logs/%x-%j.out
 #SBATCH --error=slurm/logs/%x-%j.err
 #

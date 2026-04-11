@@ -63,6 +63,8 @@ sbatch --export=ALL,EXP_TAG=heavy_r1,TRACE_MANIFEST=analysis/wulver_trace_manife
 
 ## 2) Heavy evaluation stage (after training)
 
+The eval driver requests **72 hours** walltime (`slurm/evict_value_v1_wulver_heavy_eval.sbatch`). A **24 hour** eval was observed to **TIMEOUT** before writing the canonical `..._policy_comparison_heavy_r1.{csv,md}` files; do not shorten this without measuring.
+
 Submit directly:
 
 ```bash
