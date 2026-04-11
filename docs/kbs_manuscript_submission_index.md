@@ -1,5 +1,7 @@
 # KBS manuscript: submission index (`evict_value_v1` / Wulver)
 
+**Navigation hub (canonical workflow + builder + table/figure paths):** `docs/kbs_manuscript_workflow.md`.
+
 Single entry point for reviewers and authors: what is **canonical** for the main Wulver learned-eviction story, what is **exploratory**, and where tables/figures come from.
 
 ## Canonical evidence path (use for main quantitative claims)

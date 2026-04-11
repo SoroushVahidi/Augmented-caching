@@ -2,6 +2,8 @@
 
 This index makes lightweight branches easy to find **without** confusing them with the canonical Wulver `heavy_r1` manuscript path.
 
+Full manuscript navigation (Slurm, builder, `tables/manuscript/`): `docs/kbs_manuscript_workflow.md`.
+
 ## Canonical boundary
 
 The **only** main-paper Wulver `evict_value_v1` path is:

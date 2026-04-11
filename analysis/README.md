@@ -2,6 +2,8 @@
 
 `analysis/` stores experiment outputs and manuscript-support artifacts.
 
+**Navigation:** For the finalized **KBS** manuscript (`heavy_r1` Wulver line, builder command, `tables/manuscript/` / `figures/manuscript/`), start at **`docs/kbs_manuscript_workflow.md`**.
+
 ## KBS / Wulver `evict_value_v1`: canonical vs non-canonical root files
 
 For the **Knowledge-Based Systems** manuscript, **only** the **`heavy_r1`-suffixed** analysis files below are inputs to `scripts/paper/build_kbs_main_manuscript_artifacts.py` (see `docs/evict_value_v1_kbs_canonical_artifacts.md`). Other similarly named files may remain in this directory **for history**; do not treat them as interchangeable without checking provenance.
@@ -15,7 +17,7 @@ For the **Knowledge-Based Systems** manuscript, **only** the **`heavy_r1`-suffix
 | `evict_value_wulver_v1_best_config_heavy_r1.json` | `evict_value_wulver_v1_best_config.json` |
 | `evict_value_v1_wulver_dataset_summary_heavy_r1.md` | `evict_value_v1_wulver_dataset_summary.md` |
 
-**We do not delete** non-canonical files here; they support older references and alternate experiment drivers.
+**We do not delete** non-canonical files here; they support older references and alternate experiment drivers. Treat unsuffixed names as **stale or alternate-driver** for KBS main claims unless proven identical to the `*_heavy_r1` file.
 
 ## What is canonical vs exploratory?
 
@@ -77,6 +79,14 @@ These are useful and intentionally retained, but they are **not** the main KBS W
 - `analysis/joint_state_reasoning_light/` (joint-state reasoning)
 
 Script index for these families: `docs/lightweight_exploratory_ablations.md`.
+
+### Pairwise / ranking campaigns and large `jobs/` trees (exploratory)
+
+Outputs under `analysis/pairwise_*_campaign/` (including per-task `jobs/<label>/`) are **campaign artifacts** for publishability, chain-witness, or related studies. They are **not** the canonical `heavy_r1` Wulver `evict_value_v1` comparison unless explicitly cross-walked in manuscript docs. Slurm: `slurm/pairwise_*_campaign_*.sbatch`. See `docs/manuscript_evidence_map.md`, `docs/wulver_pairwise_publishability_campaign.md`, `docs/wulver_pairwise_chain_witness_campaign.md`.
+
+### Theorem / proof / audit support (exploratory)
+
+Scripts such as `scripts/search_*`, `scripts/analyze_*`, and docs such as `docs/pairwise_theory_roadmap.md` / `analysis/pairwise_inversion_examples.md` support **development and audits**, not the canonical KBS Wulver table inputs. Cite separately from `*_heavy_r1` analysis files.
 
 ## Naming conventions (for new runs)
 

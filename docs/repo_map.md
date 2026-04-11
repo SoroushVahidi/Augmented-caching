@@ -2,6 +2,10 @@
 
 This document is a concise orientation guide for external readers and manuscript reviewers.
 
+## KBS manuscript workflow (submission path)
+
+For **Knowledge-Based Systems** and the canonical Wulver **`heavy_r1`** `evict_value_v1` line (Slurm drivers, evidence files, `build_kbs_main_manuscript_artifacts.py`, `tables/manuscript/`, `figures/manuscript/`), use **`docs/kbs_manuscript_workflow.md`** as the single entry point. Reviewer index: `docs/kbs_manuscript_submission_index.md`.
+
 ## Top-level layout
 
 - `src/lafc/` — core library implementation (policies, simulator, runners, datasets, offline solvers).
@@ -44,13 +48,15 @@ See `analysis/README.md` for details and naming guidance.
 
 ## Manuscript-support docs to read first
 
-1. `docs/evict_value_v1_kbs_canonical_artifacts.md` (heavy_r1-only inputs for KBS tables/figures)
-2. `docs/reproducibility_and_artifacts.md` (entry points, output locations, manuscript vs exploratory)
-3. `docs/lightweight_exploratory_ablations.md` (non-canonical lightweight branch index)
-4. `docs/manuscript_evidence_map.md`
-5. `docs/manuscript_open_questions.md`
-6. `docs/baselines.md`
-7. `docs/framework.md`
+1. `docs/kbs_manuscript_workflow.md` (canonical `heavy_r1` path + builder + outputs + “not canonical” pointers)
+2. `docs/evict_value_v1_kbs_canonical_artifacts.md` (heavy_r1-only inputs for KBS tables/figures)
+3. `docs/reproducibility_and_artifacts.md` (entry points, output locations, manuscript vs exploratory)
+4. `docs/kbs_manuscript_submission_index.md` (reviewer-facing index)
+5. `docs/lightweight_exploratory_ablations.md` (non-canonical lightweight branch index)
+6. `docs/manuscript_evidence_map.md`
+7. `docs/manuscript_open_questions.md`
+8. `docs/baselines.md`
+9. `docs/framework.md`
 
 ## Notes on scientific status
 

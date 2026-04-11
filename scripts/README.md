@@ -37,7 +37,7 @@ These remain supported for research and scaling experiments; they are **not** th
 - **`slurm/evict_value_v1_wulver_dataset.sbatch`** / **`evict_value_v1_wulver_dataset_array.sbatch`** — dataset generation only.
 - **Pairwise / chain-witness / publishability campaigns:** `scripts/run_pairwise_*.py`, `scripts/aggregate_pairwise_*.py`, `slurm/pairwise_*_campaign_*.sbatch` — empirical and theorem-support outputs under `analysis/pairwise_*_campaign/`; exploratory for the main `evict_value_v1` Wulver story unless explicitly cross-referenced in `docs/manuscript_evidence_map.md`.
 
-**Canonical KBS Wulver index:** `docs/kbs_manuscript_submission_index.md`.
+**Canonical KBS Wulver workflow:** `docs/kbs_manuscript_workflow.md` (also `docs/kbs_manuscript_submission_index.md`).
 
 ## Lightweight exploratory ablations (easy-to-find index)
 

@@ -1,5 +1,7 @@
 # Manuscript evidence map (TIST support package)
 
+**Navigation:** This file is a **claim-by-claim evidence table** (including exploratory pairwise lines). For the **canonical KBS Wulver `heavy_r1`** `evict_value_v1` pipeline and submission tables/figures, use **`docs/kbs_manuscript_workflow.md`** instead.
+
 This table tracks what the repository currently supports versus what still needs to be established.  
 Legend for evidence strength: **strong** = directly supported by multiple in-repo artifacts with consistent interpretation; **medium** = supported but narrow or partially conflicting; **weak** = exploratory or insufficient for manuscript-level claim.
 

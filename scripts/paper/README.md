@@ -1,5 +1,7 @@
 # Paper / manuscript scripts
 
+**Primary doc:** `docs/kbs_manuscript_workflow.md` — canonical `heavy_r1` inputs, this builder, and output directories (`tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/`).
+
 ## KBS main bundle (canonical `heavy_r1` evidence)
 
 | Script | Purpose | Manuscript-safe? |

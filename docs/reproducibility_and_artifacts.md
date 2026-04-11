@@ -1,5 +1,7 @@
 # Reproducibility: entry points, artifacts, and manuscript vs exploratory outputs
 
+**KBS manuscript (canonical `heavy_r1`, builder, tables/figures):** start at `docs/kbs_manuscript_workflow.md`.
+
 This document orients readers who need to **rerun** experiments or **cite** outputs without overstating what the repository proves.
 
 ## Primary simulator CLI

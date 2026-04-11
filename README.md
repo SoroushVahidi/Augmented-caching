@@ -18,6 +18,8 @@ For evidence-strength caveats and what is still open, see `docs/manuscript_evide
 
 ### KBS manuscript: canonical Wulver `heavy_r1` path (**main paper path**)
 
+**Start here (navigation hub):** `docs/kbs_manuscript_workflow.md` — canonical Slurm path, builder command, `tables/manuscript/` + `figures/manuscript/` outputs, and explicit separation from exploratory branches.
+
 For the **Knowledge-Based Systems** submission package, the repository treats **one** end-to-end line as authoritative for main **multi-trace Wulver** `evict_value_v1` numbers:
 
 1. **Runbook:** `docs/wulver_heavy_evict_value_experiment.md`
@@ -194,12 +196,14 @@ See `analysis/README.md` for canonical vs legacy/exploratory organization.
 
 ## Repository guide
 
-- KBS submission index (canonical `heavy_r1`, tables/figures, non-canonical notes): `docs/kbs_manuscript_submission_index.md`
+- **KBS manuscript workflow (canonical `heavy_r1`, builder, tables/figures):** `docs/kbs_manuscript_workflow.md`
+- KBS submission index (reviewer-facing, same line): `docs/kbs_manuscript_submission_index.md`
 - High-level map: `docs/repo_map.md`
 - Reproducibility, CLI entry points, manuscript vs exploratory artifacts: `docs/reproducibility_and_artifacts.md`
 - Analysis artifact organization: `analysis/README.md`
 - Script organization and naming conventions: `scripts/README.md`
-- Lightweight exploratory ablations index (incoming-aware/history-aware/history-pairwise/joint-state): `docs/lightweight_exploratory_ablations.md`
+- Lightweight exploratory ablations index (incoming-aware/history-aware/history-objective/joint-state): `docs/lightweight_exploratory_ablations.md`
+- Hygiene / doc-change log (navigation only): `docs/kbs_repository_hygiene_report.md`
 
 ---
 
