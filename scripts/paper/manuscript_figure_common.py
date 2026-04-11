@@ -304,7 +304,22 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
     # Plot order: back to front so hist_gb reads on top
     plot_order = ("ridge", "random_forest", "hist_gb")
 
-    fig, axes = plt.subplots(1, 2, figsize=(10.2, 4.35), sharex=True, sharey=False)
+    # Wider canvas + dedicated bottom strip for a shared legend (no legend inside data axes).
+    fig = plt.figure(figsize=(11.0, 4.75))
+    gs = fig.add_gridspec(
+        2,
+        1,
+        height_ratios=[1.0, 0.26],
+        hspace=0.22,
+        left=0.08,
+        right=0.99,
+        top=0.90,
+        bottom=0.09,
+    )
+    gs_panels = gs[0].subgridspec(1, 2, wspace=0.38)
+    ax0 = fig.add_subplot(gs_panels[0, 0])
+    ax1 = fig.add_subplot(gs_panels[0, 1], sharex=ax0)
+    axes = (ax0, ax1)
 
     def _panel_label(ax: plt.Axes, tag: str) -> None:
         ax.text(
@@ -343,32 +358,38 @@ def make_offline_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.Figure
                 clip_on=False,
             )
         ax.set_xticks([4, 8, 16])
-        ax.set_xlabel(r"Horizon $H$")
-        ax.set_ylabel("Mean regret vs.\ oracle (lower is better)")
-        ax.set_title(title, fontsize=10.5, pad=8)
+        ax.set_xlabel(r"Horizon $H$", fontsize=10)
+        ax.set_ylabel("Mean regret vs.\ oracle (lower is better)", fontsize=10)
+        ax.set_title(title, fontsize=10.5, pad=9)
         ax.grid(True, axis="y", linestyle=":", linewidth=0.65, alpha=0.88, color="0.45")
         ax.grid(True, axis="x", linestyle=":", linewidth=0.45, alpha=0.5, color="0.75")
         ax.set_axisbelow(True)
         _panel_label(ax, tag)
 
-    leg = axes[1].legend(
-        loc="upper right",
+    handles, labels = ax0.get_legend_handles_labels()
+    ax_leg = fig.add_subplot(gs[1])
+    ax_leg.set_axis_off()
+    ax_leg.patch.set_alpha(0)
+    leg = ax_leg.legend(
+        handles,
+        labels,
+        loc="center",
+        ncol=3,
         frameon=True,
         fancybox=False,
-        framealpha=0.94,
-        edgecolor="0.55",
-        facecolor="0.98",
-        borderpad=0.6,
-        labelspacing=0.35,
-        handlelength=2.6,
+        edgecolor="0.5",
+        facecolor="0.97",
         fontsize=9,
         title="Model",
         title_fontsize=9,
+        columnspacing=1.5,
+        handlelength=2.8,
+        handletextpad=0.55,
+        borderpad=0.55,
     )
-    leg.set_zorder(20)
+    leg.get_frame().set_linewidth(0.6)
 
-    fig.suptitle("Offline eviction-value training ablation (heavy_r1 shards)", fontsize=10.8, y=1.01)
-    fig.tight_layout(rect=[0.02, 0.02, 0.98, 0.94], pad=1.4, w_pad=2.0)
+    fig.suptitle("Offline eviction-value training ablation (heavy_r1 shards)", fontsize=10.8, y=0.97)
     return fig
 
 

@@ -6,7 +6,7 @@
 
 ## Refreshed in this run
 - Figure~1 (`figure1_method_overview`): two-panel offline/online method schematic.
-- Figure~4 (`figure4_ablation`): **two-panel** (validation / test mean regret vs horizon) from `model_comparison_heavy_r1.csv`. Layout update: panel labels `(a)`/`(b)` placed upper-left **consistently**; legend on panel~(b) only, **upper-right** with light frame (fixes prior `(b)` vs legend overlap). Plotted coordinates **numerically match** the current `tables/manuscript/table4_main_ablation.*` source fields (`val_mean_regret`, `test_mean_regret`) for horizons {4, 8, 16} and models `ridge`, `random_forest`, `hist_gb` (verified against `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv`).
+- Figure~4 (`figure4_ablation`): **two-panel** (validation / test mean regret vs horizon) from `model_comparison_heavy_r1.csv`. **Shared legend** in a **dedicated row below both panels** (GridSpec) so **no legend overlays data** in panel~(b). Panel labels `(a)`/`(b)` upper-left. Plotted coordinates **numerically match** `table4_main_ablation` / `model_comparison_heavy_r1.csv` (`val_mean_regret`, `test_mean_regret`; horizons {4, 8, 16}; models `ridge`, `random_forest`, `hist_gb`).
 - Table~2 (policy roster), Table~4 (offline ablation) + LaTeX snippets.
 - **Not refreshed:** Table~1, Table~3, Figure~2, Figure~3 — replaced with explicit unavailable stubs; **do not cite** main quantitative results until policy CSV exists.
 
