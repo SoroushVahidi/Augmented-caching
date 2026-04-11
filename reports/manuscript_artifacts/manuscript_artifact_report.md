@@ -29,3 +29,6 @@
 
 ## Evidence completeness
 Regenerate this bundle after `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` exists (heavy eval). Older committed PDF/PNG under `figures/manuscript/` may predate a successful canonical run; see `docs/kbs_manuscript_submission_index.md`.
+
+## Latest offline regeneration (no new experiments)
+When `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.{csv,md}` are **absent**, only the following can be rebuilt from committed inputs: **Figure 1**, **Figure 4** (`scripts/paper/regenerate_evidence_aligned_manuscript_figures.py`), **Table 2** (static roster), **Table 4** (`model_comparison_heavy_r1.csv`). **Table 1** and **Table 3** require the policy-comparison CSV; **Figure 2** and **Figure 3** require the same (via `build_kbs_main_manuscript_artifacts.py`). **Table 1** / **Table 3** files already in `tables/manuscript/` are **not** refreshed in that situation and should not be treated as verified against missing policy evidence.
