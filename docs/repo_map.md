@@ -61,6 +61,8 @@ See `analysis/README.md` for details and naming guidance.
 11. `docs/internal_prior_work_audit_eviction_value.md` (internal prior-work coverage + bibliography-gap audit; non-canonical)
 12. `docs/internal_current_project_decisions.md` (internal record of current agreed framing decisions; non-canonical)
 13. `docs/internal_novelty_positioning_eviction_value.md` (internal novelty-positioning guardrails for related-work and claim scope; non-canonical)
+14. `docs/internal_prior_work_matrix_eviction_value.md` (internal comparison matrix for eviction-value related-work and safest novelty scope; non-canonical)
+15. `docs/internal_bibliography_gap_report.md` (internal bibliography coverage update for closest learned-eviction references; non-canonical)
 
 ## Notes on scientific status
 
