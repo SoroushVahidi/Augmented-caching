@@ -4,7 +4,12 @@ This document is a concise orientation guide for external readers and manuscript
 
 ## KBS manuscript workflow (submission path)
 
-For **Knowledge-Based Systems** and the canonical Wulver **`heavy_r1`** `evict_value_v1` line (Slurm drivers, evidence files, `build_kbs_main_manuscript_artifacts.py`, `tables/manuscript/`, `figures/manuscript/`), use **`docs/kbs_manuscript_workflow.md`** as the single entry point. Reviewer index: `docs/kbs_manuscript_submission_index.md`.
+For **Knowledge-Based Systems** and the canonical Wulver **`heavy_r1`** `evict_value_v1` line (Slurm drivers, evidence files, `build_kbs_main_manuscript_artifacts.py`, `tables/manuscript/`, `figures/manuscript/`):
+
+- **Checklist (scripts, paths, do-not-cite):** [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md)
+- **Narrative workflow:** `docs/kbs_manuscript_workflow.md`
+- **Reviewer index:** `docs/kbs_manuscript_submission_index.md`
+- **All documentation index:** `docs/README.md`
 
 ## Top-level layout
 

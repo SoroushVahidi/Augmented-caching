@@ -2,7 +2,25 @@
 
 `analysis/` stores experiment outputs and manuscript-support artifacts.
 
-**Navigation:** For the finalized **KBS** manuscript (`heavy_r1` Wulver line, builder command, `tables/manuscript/` / `figures/manuscript/`), start at **`docs/kbs_manuscript_workflow.md`**.
+**Navigation:** For the finalized **KBS** manuscript (`heavy_r1` Wulver line, builder command, `tables/manuscript/` / `figures/manuscript/`), start at **[`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md)** and **`docs/kbs_manuscript_workflow.md`**.
+
+---
+
+## How this directory is organized (taxonomy)
+
+| Kind | Typical location | Citable as KBS main Wulver evidence? |
+|------|------------------|--------------------------------------|
+| **Canonical `heavy_r1`** | Root-level `*_heavy_r1.{csv,json,md}` per `docs/evict_value_v1_kbs_canonical_artifacts.md` | **Yes** — when using those exact filenames |
+| **Wiring / smoke** | `*_heavy_smoke.*` (e.g. policy comparison smoke CSV) | **No** — Slurm smoke only; not the full manifest eval |
+| **Legacy / alternate drivers** | Unsuffixed `evict_value_wulver_v1_*` at repo root of `analysis/` | **No** for KBS main claims (extra policies / wrong driver) |
+| **Stable experiment dirs** | `analysis/<name>/` with `report.md`, `summary.json`, CSVs | **Only** if that experiment is explicitly claimed in the paper |
+| **Exploratory campaigns** | `analysis/pairwise_*_campaign/` (large `jobs/` trees) | **No** unless cross-walked from manuscript text |
+| **Lightweight ablations** | `analysis/*_light/` | **No** — see `docs/lightweight_exploratory_ablations.md` |
+| **Manifests / audits** | `analysis/wulver_trace_manifest*.csv`, `analysis/evict_value_failure_slice_*` | Helper / audit — cite role explicitly |
+
+**We do not delete** legacy or exploratory files; they remain for provenance and older references.
+
+---
 
 ## KBS / Wulver `evict_value_v1`: canonical vs non-canonical root files
 
