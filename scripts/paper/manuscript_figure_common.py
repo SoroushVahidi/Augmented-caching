@@ -666,6 +666,65 @@ def make_continuation_policy_agreement_figure(
     return fig
 
 
+def make_guard_wrapper_schematic_figure() -> plt.Figure:
+    """High-level control flow for ``evict_value_v1_guarded`` (GuardWrapperPolicy).
+
+    Content is aligned with ``docs/guarded_robust_wrapper.md`` and
+    ``src/lafc/policies/guard_wrapper.py`` (early-return detector, sliding window,
+    fallback duration, dual-shadow updates). Not a robustness guarantee figure.
+    """
+    fig, ax = plt.subplots(figsize=(7.35, 5.35))
+    ax.axis("off")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+
+    ax.text(
+        0.5,
+        0.97,
+        r"Guarded \texttt{evict\_value\_v1} (optional control layer)",
+        fontsize=11,
+        fontweight="bold",
+        ha="center",
+        va="top",
+        color="#111111",
+    )
+    ax.text(
+        0.5,
+        0.905,
+        "Practical fallback mechanism from repository code; not a theorem-backed guarantee.",
+        fontsize=7.8,
+        ha="center",
+        va="top",
+        color="#333333",
+        style="italic",
+    )
+
+    bx, bw, gap = 0.10, 0.80, 0.028
+    fs, wrap = 7.9, 28
+    _stack_boxes_vertical(
+        ax,
+        (
+            "Full-cache miss: must evict a resident page.",
+            r"Base policy (\texttt{evict\_value\_v1}) scores each candidate; chooses a victim (argmin predicted loss).",
+            "Safety signal on the base path: if the base victim is requested again within W requests, record one suspicious event; keep suspicious timestamps inside a sliding window of T requests (defaults W=2, T=16, M=2 in CLI).",
+            "Trigger while in base mode: if suspicious count in the window reaches M, enter guard mode for the next D requests (default D=8). Otherwise follow the base eviction.",
+            r"While guarding: visible cache follows fallback policy (\texttt{lru} or \texttt{marker}); each request still advances both base and fallback shadows (implementation detail for consistent switching).",
+            "After D guarded requests expire, automatically return to base mode.",
+        ),
+        x=bx,
+        w=bw,
+        y_lo=0.06,
+        y_hi=0.84,
+        gap=gap,
+        fs=fs,
+        wrap=wrap,
+        face="#f4f4f4",
+    )
+
+    fig.subplots_adjust(left=0.04, right=0.96, top=0.94, bottom=0.04)
+    return fig
+
+
 def make_target_construction_concept_figure() -> plt.Figure:
     """Single-panel schematic for eviction-value label construction."""
     fig, ax = plt.subplots(figsize=(11.0, 5.4))

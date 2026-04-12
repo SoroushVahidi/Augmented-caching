@@ -1,8 +1,8 @@
 # Reference usage note (repository-derived)
 
-## Finding: no `refs(1).bib` in the repository
+## Finding: minimal `.bib` for Related Work Table~6
 
-A glob search for `*.bib` under the repo root returned **no files**. There is **no** committed BibTeX database to split mechanically.
+The repository now includes **`refs/related_work_table6.bib`** (keys cited by `tables/manuscript/table6_related_work_learned_caching.tex`). There is still **no** single authoritative project-wide `.bib` for the full paper; merge or extend as needed for camera-ready.
 
 **Practical substitute for “refs (1).bib”:** canonical **paper-to-code** citations live in **`docs/baselines.md`** (and scattered mentions in `docs/framework.md`, `README.md`). The groups below are derived from those docs plus which policies appear in the **KBS manuscript bundle** (`TABLE3_POLICIES` in `scripts/paper/build_kbs_main_manuscript_artifacts.py`).
 

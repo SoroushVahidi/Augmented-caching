@@ -10,6 +10,10 @@
 | `regenerate_evidence_aligned_manuscript_figures.py` | Regenerates **Figure 1** (method schematic) and **Figure 4** (offline training ablation) as vector PDF + PNG using `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv`. Does **not** require policy-comparison CSV. | **Yes** for those figures only. |
 | `build_kbs_manuscript_pre_eval_artifacts.py` | Tables + same Figure 1/4 assets as above, plus dataset `longtable` inputs, without reading policy comparison. | **Yes** (offline / schematic evidence only). |
 
+**Related Work (manual):** `tables/manuscript/table6_related_work_learned_caching.tex` and `reports/manuscript_artifacts/latex_snippets/related_work_table6_intro.tex` are **author-maintained** LaTeX for journal positioning; they are **not** emitted by `build_kbs_main_manuscript_artifacts.py`. Bibliography keys live in `refs/related_work_table6.bib`.
+
+**Guard wrapper schematic:** `scripts/paper/build_guard_wrapper_manuscript_figure.py` writes `figures/manuscript/figure6_guard_wrapper_evict_value_v1.{pdf,png}` plus `reports/manuscript_artifacts/latex_snippets/figure6_guard_wrapper_snippet.tex` (optional explanatory figure; not part of canonical `heavy_r1` quantitative bundle).
+
 **Not manuscript-primary:** other tooling under `scripts/` that emits `analysis/` for pairwise campaigns, theorem checks, or ad hoc comparisons — see `scripts/README.md` (“Exploratory and non-canonical drivers”).
 
 Run from repository root:

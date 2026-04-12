@@ -5,8 +5,7 @@
 
 ## 1) Scope and bibliography file used
 
-- Repository scan found no pre-existing `.bib` files.
-- For the current manuscript path, we added a single root bibliography file: `refs.bib` (consistent with prior repo note recommending a root-level or `paper/refs.bib` location).
+- A **partial** manuscript bibliography now exists as **`refs/related_work_table6.bib`** (keys for Related Work Table~6 and LA-caching anchors used there). A single authoritative project-wide `refs.bib` for the full paper may still be absent—merge as needed.
 
 ## 2) Status of the six priority papers
 
