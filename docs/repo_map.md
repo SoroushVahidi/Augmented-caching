@@ -59,6 +59,8 @@ See `analysis/README.md` for details and naming guidance.
 9. `docs/framework.md`
 10. `docs/internal_research_summary_eviction_value.md` (internal working-state note; not manuscript text, not canonical evidence)
 11. `docs/internal_prior_work_audit_eviction_value.md` (internal prior-work coverage + bibliography-gap audit; non-canonical)
+12. `docs/internal_current_project_decisions.md` (internal record of current agreed framing decisions; non-canonical)
+13. `docs/internal_novelty_positioning_eviction_value.md` (internal novelty-positioning guardrails for related-work and claim scope; non-canonical)
 
 ## Notes on scientific status
 
