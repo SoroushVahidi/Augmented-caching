@@ -1,0 +1,4 @@
+protocol,horizon,train_rows,test_rows,decision_count,top1_eviction_match,mean_chosen_regret
+lru,8,80,8,3.0,0.0,0.3333333333333333
+blind_oracle,8,80,8,3.0,0.6666666666666666,0.0
+fifo,8,80,8,3.0,0.0,1.0
