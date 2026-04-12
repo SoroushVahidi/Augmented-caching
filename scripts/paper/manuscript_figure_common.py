@@ -601,8 +601,8 @@ def make_continuation_policy_agreement_figure(
     horizons = [int(r["horizon"]) for r in summary_rows]
     policy_to_idx = {p: i for i, p in enumerate(policies)}
 
-    fig = plt.figure(figsize=(10.4, 4.9))
-    gs = fig.add_gridspec(1, 2, width_ratios=[1.05, 1.0], wspace=0.32, left=0.08, right=0.98, top=0.9, bottom=0.18)
+    fig = plt.figure(figsize=(11.2, 5.4), constrained_layout=True)
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.06, 1.0], wspace=0.38)
     ax0 = fig.add_subplot(gs[0, 0])
     ax1 = fig.add_subplot(gs[0, 1])
 
@@ -610,14 +610,19 @@ def make_continuation_policy_agreement_figure(
     x = np.arange(len(policies), dtype=float)
     ax0.bar(x - width / 2, top1, width=width, color="#0b3d91", edgecolor="0.1", label="Top-1 eviction match")
     ax0.bar(x + width / 2, regrets, width=width, color="#5c5c5c", edgecolor="0.1", label="Mean regret")
+    max_metric = max(max(top1, default=0.0), max(regrets, default=0.0))
+    label_offset = 0.018 + 0.06 * max_metric
     for idx, (xi, h, reg) in enumerate(zip(x, horizons, regrets)):
-        ax0.text(xi, max(0.02, reg + 0.01), f"H={h}", ha="center", va="bottom", fontsize=7.5, color="0.2")
+        ax0.text(xi, reg + label_offset, f"H={h}", ha="center", va="bottom", fontsize=7.0, color="0.18")
     ax0.set_xticks(x)
-    ax0.set_xticklabels([p.replace("_", " ") for p in policies], rotation=20, ha="right")
+    ax0.set_xticklabels([p.replace("_", " ") for p in policies], rotation=28, ha="right")
     ax0.set_ylabel("Metric value")
-    ax0.set_title("(a) Offline continuation metrics", fontsize=10, fontweight="bold", pad=6)
+    ax0.set_ylim(0, max_metric + label_offset + 0.06)
+    ax0.set_title("(a) Offline continuation metrics", fontsize=10.5, fontweight="bold", pad=8)
     ax0.grid(axis="y", linestyle=":", linewidth=0.6, alpha=0.85)
-    ax0.legend(fontsize=8, frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.10), ncol=2)
+    ax0.tick_params(axis="x", labelsize=8.5, pad=2)
+    ax0.tick_params(axis="y", labelsize=8.5)
+    handles, labels = ax0.get_legend_handles_labels()
 
     mat = np.full((len(policies), len(policies)), np.nan)
     np.fill_diagonal(mat, 1.0)
@@ -633,16 +638,30 @@ def make_continuation_policy_agreement_figure(
     im = ax1.imshow(mat, cmap="Blues", vmin=0.0, vmax=1.0)
     ax1.set_xticks(np.arange(len(policies)))
     ax1.set_yticks(np.arange(len(policies)))
-    ax1.set_xticklabels([p.replace("_", " ") for p in policies], rotation=25, ha="right")
+    ax1.set_xticklabels([p.replace("_", " ") for p in policies], rotation=30, ha="right")
     ax1.set_yticklabels([p.replace("_", " ") for p in policies])
+    ax1.tick_params(axis="both", labelsize=8.5, pad=3)
     for i in range(len(policies)):
         for j in range(len(policies)):
             if np.isnan(mat[i, j]):
                 continue
             ax1.text(j, i, f"{mat[i, j]:.2f}", ha="center", va="center", color="#0b0b0b", fontsize=8)
-    ax1.set_title("(b) Label agreement", fontsize=10, fontweight="bold", pad=6)
-    cbar = fig.colorbar(im, ax=ax1, fraction=0.046, pad=0.04)
+    ax1.set_title("(b) Label agreement", fontsize=10.5, fontweight="bold", pad=8)
+    cbar = fig.colorbar(im, ax=ax1, fraction=0.048, pad=0.032)
     cbar.ax.set_ylabel("Top-1 agreement", rotation=270, labelpad=12)
+    cbar.ax.tick_params(labelsize=8.3)
+
+    fig.legend(
+        handles,
+        labels,
+        ncol=2,
+        frameon=False,
+        fontsize=8.7,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.02),
+        columnspacing=1.5,
+        handletextpad=0.6,
+    )
 
     return fig
 
