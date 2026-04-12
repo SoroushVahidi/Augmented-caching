@@ -345,7 +345,8 @@ def _build_table2_policy_roster() -> Tuple[Path, Path]:
     tex_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     LATEX.joinpath("table2_snippet.tex").write_text(
         "\\begin{table*}[t]\n\\centering\n"
-        "\\caption{Main policies used in the empirical comparison.}\n"
+        "\\caption{Policies in the planned main replay comparison (numeric results require "
+        "\\texttt{evict\\_value\\_wulver\\_v1\\_policy\\_comparison\\_heavy\\_r1.csv}).}\n"
         "\\label{tab:policy-roster}\n"
         "\\input{tables/manuscript/table2_policy_roster.tex}\n\\end{table*}\n",
         encoding="utf-8",
@@ -610,7 +611,8 @@ def _figure1_method_overview() -> Tuple[Path, Path]:
         "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.96\\textwidth]{figures/manuscript/figure1_method_overview.pdf}\n"
         "\\caption{Conceptual overview of the eviction-value pipeline. "
         "\\textbf{(a)}~Offline replay, supervised targets, and model fitting. "
-        "\\textbf{(b)}~Online cache updates with candidate scoring and optional guarded fallback.}\n"
+        "\\textbf{(b)}~Online cache updates with candidate scoring; an optional guard/fallback path exists in code "
+        "(\\texttt{evict\\_value\\_v1\\_guarded}) but is \\emph{not} part of the canonical heavy\\_r1 quantitative bundle here.}\n"
         "\\label{fig:method-overview}\n\\end{figure*}\n",
         encoding="utf-8",
     )
