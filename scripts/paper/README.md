@@ -35,3 +35,18 @@ python scripts/paper/regenerate_evidence_aligned_manuscript_figures.py
 # or full pre-eval bundle (tables + figures 1 and 4):
 python scripts/paper/build_kbs_manuscript_pre_eval_artifacts.py
 ```
+
+## Supplemental manuscript-style figures (exploratory)
+
+Additional offline- and concept-focused figures derived from existing lightweight artifacts:
+
+```bash
+export PYTHONPATH="${PYTHONPATH:-$(pwd)/src}"
+python scripts/paper/build_additional_eviction_value_figures.py
+```
+
+Outputs:
+
+- `figures/manuscript/figure6_regret_vs_top1_alignment.{pdf,png}` (offline alignment from `analysis/evict_value_wulver_v1_model_comparison.csv`)
+- `figures/manuscript/figure7_continuation_policy_agreement.{pdf,png}` (continuation summary and label agreement from `analysis/continuation_policy_light/`)
+- `figures/manuscript/figure8_target_construction_concept.{pdf,png}` (schematic; no external artifacts)

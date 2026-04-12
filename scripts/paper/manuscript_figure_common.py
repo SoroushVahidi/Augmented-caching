@@ -527,6 +527,165 @@ def make_offline_top1_ablation_figure(train_rows: List[Dict[str, str]]) -> plt.F
     return fig
 
 
+def make_regret_vs_top1_alignment_figure(train_rows: List[Dict[str, str]]) -> plt.Figure:
+    """Scatter panels showing how lower regret aligns with higher Top-1 eviction match."""
+    plot_order = ("ridge", "random_forest", "hist_gb")
+    colors = {"ridge": "#0b3d91", "random_forest": "#4d4d4d", "hist_gb": "#8c8c8c"}
+    markers = {"ridge": "o", "random_forest": "s", "hist_gb": "^"}
+
+    val_pts: List[Tuple[float, float, str, int]] = []
+    test_pts: List[Tuple[float, float, str, int]] = []
+    for r in train_rows:
+        h = int(r["horizon"])
+        m = str(r["model"])
+        val_pts.append((float(r["val_top1"]), float(r["val_mean_regret"]), m, h))
+        test_pts.append((float(r["test_top1"]), float(r["test_mean_regret"]), m, h))
+
+    def _panel(ax: plt.Axes, pts: List[Tuple[float, float, str, int]], title: str, tag: str) -> None:
+        for m in plot_order:
+            sub = [p for p in pts if p[2] == m]
+            if not sub:
+                continue
+            xs = [p[0] for p in sub]
+            ys = [p[1] for p in sub]
+            hs = [p[3] for p in sub]
+            ax.scatter(
+                xs,
+                ys,
+                label=m.replace("_", " ").title(),
+                color=colors[m],
+                marker=markers[m],
+                s=[34 + 6 * (hh / 4.0) for hh in hs],
+                alpha=0.9,
+                edgecolors="0.15",
+                linewidths=0.8,
+            )
+            for x, y, h in zip(xs, ys, hs):
+                ax.text(x + 0.004, y + 0.0009, f"H={h}", fontsize=7.5, color="0.15")
+
+        ax.set_xlabel("Top-1 eviction match (higher is better)")
+        ax.set_ylabel("Mean regret vs. oracle (lower is better)")
+        ax.set_title(title, fontsize=10, pad=6)
+        ax.grid(True, linestyle=":", linewidth=0.65, alpha=0.88, color="0.6")
+        ax.set_xlim(0.0, 1.02)
+        ax.set_ylim(bottom=-0.002)
+        ax.text(0.02, 0.98, tag, transform=ax.transAxes, ha="left", va="top", fontsize=10.5, fontweight="bold")
+
+    fig, axes = plt.subplots(1, 2, figsize=(11.2, 4.8), sharey=True)
+    _panel(axes[0], val_pts, "Validation alignment", "(a)")
+    _panel(axes[1], test_pts, "Test alignment", "(b)")
+
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(
+        handles,
+        labels,
+        ncol=3,
+        frameon=False,
+        fontsize=9,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.02),
+        columnspacing=1.6,
+        handlelength=2.6,
+    )
+    fig.subplots_adjust(left=0.08, right=0.99, top=0.90, bottom=0.12, wspace=0.16)
+    return fig
+
+
+def make_continuation_policy_agreement_figure(
+    summary_rows: List[Dict[str, str]], agreement_rows: List[Dict[str, str]]
+) -> plt.Figure:
+    """Two-panel continuation-policy view: offline accuracy/regret plus pairwise label agreement."""
+    policies = [r["protocol"] for r in summary_rows]
+    top1 = [float(r["top1_eviction_match"]) for r in summary_rows]
+    regrets = [float(r["mean_chosen_regret"]) for r in summary_rows]
+    horizons = [int(r["horizon"]) for r in summary_rows]
+    policy_to_idx = {p: i for i, p in enumerate(policies)}
+
+    fig = plt.figure(figsize=(10.4, 4.9))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.05, 1.0], wspace=0.32, left=0.08, right=0.98, top=0.9, bottom=0.18)
+    ax0 = fig.add_subplot(gs[0, 0])
+    ax1 = fig.add_subplot(gs[0, 1])
+
+    width = 0.36
+    x = np.arange(len(policies), dtype=float)
+    ax0.bar(x - width / 2, top1, width=width, color="#0b3d91", edgecolor="0.1", label="Top-1 eviction match")
+    ax0.bar(x + width / 2, regrets, width=width, color="#5c5c5c", edgecolor="0.1", label="Mean regret")
+    for idx, (xi, h, reg) in enumerate(zip(x, horizons, regrets)):
+        ax0.text(xi, max(0.02, reg + 0.01), f"H={h}", ha="center", va="bottom", fontsize=7.5, color="0.2")
+    ax0.set_xticks(x)
+    ax0.set_xticklabels([p.replace("_", " ") for p in policies], rotation=20, ha="right")
+    ax0.set_ylabel("Metric value")
+    ax0.set_title("(a) Offline continuation metrics", fontsize=10, fontweight="bold", pad=6)
+    ax0.grid(axis="y", linestyle=":", linewidth=0.6, alpha=0.85)
+    ax0.legend(fontsize=8, frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.10), ncol=2)
+
+    mat = np.full((len(policies), len(policies)), np.nan)
+    np.fill_diagonal(mat, 1.0)
+    for row in agreement_rows:
+        a = row["policy_a"]
+        b = row["policy_b"]
+        if a not in policy_to_idx or b not in policy_to_idx:
+            continue
+        i, j = policy_to_idx[a], policy_to_idx[b]
+        mat[i, j] = float(row["top1_label_agreement"])
+        mat[j, i] = float(row["top1_label_agreement"])
+
+    im = ax1.imshow(mat, cmap="Blues", vmin=0.0, vmax=1.0)
+    ax1.set_xticks(np.arange(len(policies)))
+    ax1.set_yticks(np.arange(len(policies)))
+    ax1.set_xticklabels([p.replace("_", " ") for p in policies], rotation=25, ha="right")
+    ax1.set_yticklabels([p.replace("_", " ") for p in policies])
+    for i in range(len(policies)):
+        for j in range(len(policies)):
+            if np.isnan(mat[i, j]):
+                continue
+            ax1.text(j, i, f"{mat[i, j]:.2f}", ha="center", va="center", color="#0b0b0b", fontsize=8)
+    ax1.set_title("(b) Label agreement", fontsize=10, fontweight="bold", pad=6)
+    cbar = fig.colorbar(im, ax=ax1, fraction=0.046, pad=0.04)
+    cbar.ax.set_ylabel("Top-1 agreement", rotation=270, labelpad=12)
+
+    return fig
+
+
+def make_target_construction_concept_figure() -> plt.Figure:
+    """Single-panel schematic for eviction-value label construction."""
+    fig, ax = plt.subplots(figsize=(11.0, 5.4))
+    ax.axis("off")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+
+    _box_axes(ax, 0.05, 0.65, 0.26, 0.18, "Trace segment\nrequests 0…t+H")
+    _box_axes(ax, 0.37, 0.65, 0.26, 0.18, "Replay to step t\ncollect candidate set")
+    _box_axes(ax, 0.69, 0.65, 0.26, 0.18, "Counterfactual rollouts\nper candidate eviction")
+
+    _arrow(ax, 0.31, 0.74, 0.37, 0.74)
+    _arrow(ax, 0.63, 0.74, 0.69, 0.74)
+
+    _box_axes(ax, 0.05, 0.30, 0.26, 0.18, "Oracle losses\n(next H requests)")
+    _box_axes(ax, 0.37, 0.30, 0.26, 0.18, "Eviction-value labels\n(regret vs. best)")
+    _box_axes(ax, 0.69, 0.30, 0.26, 0.18, "Supervised model fit\n(eviction-value head)")
+
+    _arrow(ax, 0.18, 0.48, 0.18, 0.65)
+    _arrow(ax, 0.50, 0.48, 0.50, 0.65)
+    _arrow(ax, 0.82, 0.48, 0.82, 0.65)
+
+    _arrow(ax, 0.31, 0.39, 0.37, 0.39)
+    _arrow(ax, 0.63, 0.39, 0.69, 0.39)
+
+    ax.text(
+        0.03,
+        0.95,
+        "Eviction-value training target construction",
+        fontsize=12,
+        fontweight="bold",
+        ha="left",
+        va="top",
+        color="#111111",
+    )
+    fig.subplots_adjust(left=0.02, right=0.98, top=0.94, bottom=0.05)
+    return fig
+
+
 def save_figure_pdf_png(fig: plt.Figure, out_dir: Path, stem: str) -> Tuple[Path, Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
     pdf = out_dir / f"{stem}.pdf"
