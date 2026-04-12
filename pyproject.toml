@@ -13,7 +13,7 @@ dependencies = ["pulp>=3.3.0", "numpy>=1.24", "scikit-learn>=1.3"]
 keywords = ["caching", "paging", "learning-augmented", "online-algorithms"]
 
 [project.optional-dependencies]
-dev = ["pytest>=7"]
+dev = ["pytest>=7", "matplotlib>=3.7"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
