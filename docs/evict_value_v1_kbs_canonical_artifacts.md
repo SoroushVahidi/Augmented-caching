@@ -42,4 +42,4 @@ The following are **legacy or alternate-driver** outputs and must **not** be tre
 
 ## Missing heavy_r1 policy comparison
 
-If `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` is absent, run the heavy eval stage (after successful training) per `docs/wulver_heavy_evict_value_experiment.md`. The manuscript builder will fail with a missing-file error until this file exists.
+If `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` is absent, run the heavy eval stage (after successful training) per `docs/wulver_heavy_evict_value_experiment.md`. `scripts/paper/build_kbs_main_manuscript_artifacts.py` still runs, but writes **explicit stubs** for Table~3 and Fig.~2–3 and omits the main replay figures until this file exists (see `reports/manuscript_artifacts/manuscript_artifact_report.md`).

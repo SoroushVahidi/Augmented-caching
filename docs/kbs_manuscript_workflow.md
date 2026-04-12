@@ -20,6 +20,8 @@ Use **only** this pipeline for primary **multi-trace Wulver** `evict_value_v1` c
 
 **Preflight (full main quantitative bundle):** **`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`** must exist to refresh Table~1, Table~3, and Figures~2–3. The builder still runs without it: it refreshes offline/schematic artifacts and writes **explicit unavailable stubs** for policy-dependent tables/figures (see `reports/manuscript_artifacts/manuscript_artifact_report.md`). Do not substitute the unsuffixed `analysis/evict_value_wulver_v1_policy_comparison.csv` for canonical KBS claims.
 
+**End-to-end evidence gap (what is missing vs what already helps):** [`../reports/manuscript_artifacts/end_to_end_evidence_gap_report.md`](../reports/manuscript_artifacts/end_to_end_evidence_gap_report.md).
+
 ---
 
 ## 2. Build tables, figures, and submission manifest (after heavy eval)
