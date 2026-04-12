@@ -57,6 +57,8 @@ See `analysis/README.md` for details and naming guidance.
 7. `docs/manuscript_open_questions.md`
 8. `docs/baselines.md`
 9. `docs/framework.md`
+10. `docs/internal_research_summary_eviction_value.md` (internal working-state note; not manuscript text, not canonical evidence)
+11. `docs/internal_prior_work_audit_eviction_value.md` (internal prior-work coverage + bibliography-gap audit; non-canonical)
 
 ## Notes on scientific status
 

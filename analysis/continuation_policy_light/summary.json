@@ -1,0 +1,67 @@
+{
+  "experiment": "continuation_policy_light",
+  "horizon": 8,
+  "capacities": [
+    2,
+    3
+  ],
+  "trace_count": 4,
+  "max_requests_per_trace": 300,
+  "summary": [
+    {
+      "protocol": "lru",
+      "horizon": 8,
+      "train_rows": 80,
+      "test_rows": 8,
+      "decision_count": 3.0,
+      "top1_eviction_match": 0.0,
+      "mean_chosen_regret": 0.3333333333333333
+    },
+    {
+      "protocol": "blind_oracle",
+      "horizon": 8,
+      "train_rows": 80,
+      "test_rows": 8,
+      "decision_count": 3.0,
+      "top1_eviction_match": 0.6666666666666666,
+      "mean_chosen_regret": 0.0
+    },
+    {
+      "protocol": "fifo",
+      "horizon": 8,
+      "train_rows": 80,
+      "test_rows": 8,
+      "decision_count": 3.0,
+      "top1_eviction_match": 0.0,
+      "mean_chosen_regret": 1.0
+    }
+  ],
+  "downstream_replay_mean_delta_vs_lru": {
+    "lru": -1.5,
+    "blind_oracle": -1.5,
+    "fifo": -1.5
+  },
+  "label_agreement": [
+    {
+      "policy_a": "blind_oracle",
+      "policy_b": "fifo",
+      "common_decisions": 38,
+      "top1_label_agreement": 0.6578947368421053,
+      "mean_abs_regret_diff": 0.2727272727272727
+    },
+    {
+      "policy_a": "blind_oracle",
+      "policy_b": "lru",
+      "common_decisions": 38,
+      "top1_label_agreement": 0.631578947368421,
+      "mean_abs_regret_diff": 0.2159090909090909
+    },
+    {
+      "policy_a": "fifo",
+      "policy_b": "lru",
+      "common_decisions": 38,
+      "top1_label_agreement": 0.9210526315789473,
+      "mean_abs_regret_diff": 0.10227272727272728
+    }
+  ]
+}

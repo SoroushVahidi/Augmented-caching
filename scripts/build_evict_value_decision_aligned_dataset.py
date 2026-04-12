@@ -82,7 +82,7 @@ def main() -> None:
     ap.add_argument("--capacities", default="2,3,4")
     ap.add_argument("--horizons", default="4,8,16,32")
     ap.add_argument("--label-source", choices=["heuristic", "offline_teacher"], default="heuristic")
-    ap.add_argument("--continuation-policy", choices=["lru", "blind_oracle"], default="lru")
+    ap.add_argument("--continuation-policy", choices=["lru", "blind_oracle", "fifo"], default="lru")
     ap.add_argument("--discount-gamma", type=float, default=0.0, help="Optional gamma in [0,1] for per-row discounted targets; 0 disables.")
     ap.add_argument("--max-rows", type=int, default=250000)
     ap.add_argument("--max-requests-per-trace", type=int, default=0)

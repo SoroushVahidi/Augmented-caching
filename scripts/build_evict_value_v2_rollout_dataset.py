@@ -77,7 +77,7 @@ def main() -> None:
     ap.add_argument("--dataset", default="mixed")
     ap.add_argument("--capacities", default="2,3,4")
     ap.add_argument("--horizons", default="4,8,16,32")
-    ap.add_argument("--reference-policy", default="lru", choices=["lru", "blind_oracle"])
+    ap.add_argument("--reference-policy", default="lru", choices=["lru", "blind_oracle", "fifo"])
     ap.add_argument("--max-rows", type=int, default=250000)
     ap.add_argument("--max-requests-per-trace", type=int, default=0)
     ap.add_argument("--max-decisions-per-trace", type=int, default=0)
