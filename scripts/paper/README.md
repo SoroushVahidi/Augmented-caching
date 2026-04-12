@@ -14,6 +14,8 @@
 
 **Guard wrapper schematic:** `scripts/paper/build_guard_wrapper_manuscript_figure.py` writes `figures/manuscript/figure6_guard_wrapper_evict_value_v1.{pdf,png}` plus `reports/manuscript_artifacts/latex_snippets/figure6_guard_wrapper_snippet.tex` (optional explanatory figure; not part of canonical `heavy_r1` quantitative bundle).
 
+**Caption / snippet quality audit:** `reports/manuscript_artifacts/manuscript_artifact_quality_audit.md`.
+
 **Not manuscript-primary:** other tooling under `scripts/` that emits `analysis/` for pairwise campaigns, theorem checks, or ad hoc comparisons — see `scripts/README.md` (“Exploratory and non-canonical drivers”).
 
 Run from repository root:
@@ -54,3 +56,4 @@ Outputs:
 - `figures/manuscript/figure6_regret_vs_top1_alignment.{pdf,png}` (offline alignment from `analysis/evict_value_wulver_v1_model_comparison.csv`)
 - `figures/manuscript/figure7_continuation_policy_agreement.{pdf,png}` (continuation summary and label agreement from `analysis/continuation_policy_light/`)
 - `figures/manuscript/figure8_target_construction_concept.{pdf,png}` (schematic; no external artifacts)
+- `reports/manuscript_artifacts/latex_snippets/{figure6_regret_vs_top1_alignment,figure7_continuation_policy_agreement,figure8_target_construction_concept}_snippet.tex` (optional `figure*` floats; renumber labels/stems in the paper if needed)

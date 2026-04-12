@@ -37,8 +37,8 @@ def main() -> None:
         r"On full-cache misses the base learned policy scores residents. "
         r"A lightweight \emph{early-return} detector tracks whether the base victim is quickly re-requested; "
         r"suspicious events in a bounded time window can trigger a fixed-duration fallback to \texttt{lru} or \texttt{marker}. "
-        r"Both policies are stepped each request for consistent shadow state (see \path{src/lafc/policies/guard_wrapper.py}). "
-        r"This is an empirical control layer described in-repository; it is not asserted as a competitive robustness theorem."
+        r"Both policies are stepped each request so the wrapper can switch modes with consistent shadow state. "
+        r"This is a practical empirical control layer; it is not asserted as a competitive robustness theorem."
     )
     snippet = (
         "\\begin{figure}[t]\n\\centering\n"

@@ -46,17 +46,21 @@
       "reports/manuscript_artifacts/latex_snippets/figure3_snippet.tex",
       "reports/manuscript_artifacts/latex_snippets/figure4_snippet.tex",
       "reports/manuscript_artifacts/latex_snippets/figure5_snippet.tex",
+      "reports/manuscript_artifacts/latex_snippets/figure6_guard_wrapper_snippet.tex",
+      "reports/manuscript_artifacts/latex_snippets/related_work_table6_intro.tex",
       "reports/manuscript_artifacts/latex_snippets/table1_snippet.tex",
       "reports/manuscript_artifacts/latex_snippets/table2_snippet.tex",
       "reports/manuscript_artifacts/latex_snippets/table3_snippet.tex",
       "reports/manuscript_artifacts/latex_snippets/table4_snippet.tex",
-      "reports/manuscript_artifacts/latex_snippets/table5_snippet.tex"
+      "reports/manuscript_artifacts/latex_snippets/table5_snippet.tex",
+      "reports/manuscript_artifacts/latex_snippets/table6_related_work_float.tex"
     ]
   },
   "notes": [
     "Optional `policy_comparison_heavy_r1.md` missing; CSV is the quantitative source of truth.",
     "Table~1 evidence: table1_capacities_from_dataset_summary_md_not_verified_against_eval_csv.",
     "Table~3 not verified; Figures~2--3 not built: `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` missing.",
+    "Figure~2 / Figure~3 `latex_snippets` refreshed as comment-only stubs (no PDFs emitted).",
     "Emitted offline-only supplements: Table~5 (`table5_offline_selection`) and Fig.~5 (`figure5_offline_top1_ablation`) from model_comparison + best_config.",
     "No dedicated canonical heavy_r1 artifact for guarded/fallback A/B or decision-quality diagnostics; see exploratory folders under `analysis/` only with explicit non-canonical caveats."
   ],
