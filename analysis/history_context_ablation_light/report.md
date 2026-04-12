@@ -28,13 +28,13 @@
 - `hist_transition_prev_to_candidate_rate_w16`
 
 ## Candidate-ranking quality
-- Base test top1 match: 0.5000
-- History-aware test top1 match: 0.3750
+- Base test top1 match: 0.6667
+- History-aware test top1 match: 0.6667
 - Base test mean regret: 0.0000
-- History-aware test mean regret: 0.1250
+- History-aware test mean regret: 0.0000
 
 ## Downstream replay misses
-- Mean base misses: 5.556
-- Mean history-aware misses: 5.389
+- Mean base misses: 5.667
+- Mean history-aware misses: 5.500
 - Mean miss delta (base - history-aware): 0.167
 - Verdict on richer history features in this lightweight run: **helps**.
