@@ -1,0 +1,14 @@
+{
+  "trace_files": [
+    "outputs/pilot/20260413_branch_trace_seed/branch_traces.jsonl",
+    "outputs/pilot/20260413_learned_branch_scorer/branch_traces.jsonl"
+  ],
+  "rows": 8640,
+  "unique_examples": 420,
+  "split_counts": {
+    "train": 6032,
+    "val": 1256,
+    "test": 1352
+  },
+  "target_notes": "Approximate one-step continuation value from next observed same-branch snapshot; fallback no-change if unavailable."
+}
