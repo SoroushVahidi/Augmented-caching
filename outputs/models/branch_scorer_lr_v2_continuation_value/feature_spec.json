@@ -1,0 +1,14 @@
+{
+  "feature_names": [
+    "raw_score",
+    "depth",
+    "expansions",
+    "verifications",
+    "remaining_budget",
+    "post_verify_score",
+    "score_delta",
+    "survived_pruning_steps"
+  ],
+  "target_name": "target_expand_better_than_baseline",
+  "notes": "v2 continuation-value approximation with episode-level split"
+}
