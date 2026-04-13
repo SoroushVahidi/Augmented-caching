@@ -1,0 +1,49 @@
+{
+  "provider": "synthetic_offline",
+  "model": "none",
+  "pilot_size": 60,
+  "budget": 8,
+  "branch_count": 5,
+  "min_expand": 2,
+  "methods": [
+    "fixed_width_beam",
+    "adaptive_score_plus_progress",
+    "adaptive_relative_rank",
+    "adaptive_learned_branch_score"
+  ],
+  "learned_model_path": "outputs/models/branch_scorer_lr_v1",
+  "metrics": {
+    "fixed_width_beam": {
+      "accuracy": 0.23333333333333334,
+      "avg_actions": 8,
+      "avg_expansions": 24,
+      "avg_verifications": 8.516666666666667,
+      "avg_surviving_branches": 4.983333333333333,
+      "budget_exhaustion_rate": 0
+    },
+    "adaptive_score_plus_progress": {
+      "accuracy": 0.23333333333333334,
+      "avg_actions": 8,
+      "avg_expansions": 8,
+      "avg_verifications": 2.85,
+      "avg_surviving_branches": 4.733333333333333,
+      "budget_exhaustion_rate": 0
+    },
+    "adaptive_relative_rank": {
+      "accuracy": 0.3,
+      "avg_actions": 8,
+      "avg_expansions": 8,
+      "avg_verifications": 2.466666666666667,
+      "avg_surviving_branches": 4.65,
+      "budget_exhaustion_rate": 0
+    },
+    "adaptive_learned_branch_score": {
+      "accuracy": 0.2,
+      "avg_actions": 8,
+      "avg_expansions": 8,
+      "avg_verifications": 2.8666666666666667,
+      "avg_surviving_branches": 4.733333333333333,
+      "budget_exhaustion_rate": 0
+    }
+  }
+}
