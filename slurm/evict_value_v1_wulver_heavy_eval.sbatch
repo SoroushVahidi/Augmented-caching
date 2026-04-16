@@ -58,6 +58,9 @@ if [[ ! -f "${EVICT_VALUE_MODEL}" ]]; then
   exit 2
 fi
 
+log "Preflight: load evict_value artifact (pickle/joblib)"
+python -c "from pathlib import Path; from lafc.evict_value_model_v1 import EvictValueV1Model; p=Path('${EVICT_VALUE_MODEL}'); EvictValueV1Model.load(p); print('preflight ok', p)"
+
 log "=== Wulver heavy evaluation start ==="
 log "job_id=${SLURM_JOB_ID:-?} host=$(hostname) cpus=${SLURM_CPUS_PER_TASK:-?} mem=${SLURM_MEM_PER_NODE:-?}"
 log "exp_tag=${EXP_TAG} capacities=${EVAL_CAPACITIES} max_requests=${EVAL_MAX_REQUESTS}"
