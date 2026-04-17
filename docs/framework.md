@@ -2,8 +2,6 @@
 
 ## Status
 
-For the **authoritative list of policy names** accepted by `python -m lafc.runner.run_policy`, see `POLICY_REGISTRY` in `src/lafc/runner/run_policy.py` and `docs/reproducibility_and_artifacts.md` (includes aliases and notes policies that are script-only, such as `evict_value_pairwise_v1`).
-
 This framework is **experimental** and currently implements seven framework policies:
 - `atlas_v1` (first version),
 - `atlas_v2` (confidence-aware, dynamically trust-adaptive iteration),

@@ -1,0 +1,10 @@
+baseline,W,T,L
+atlas_v3,1,0,3
+blind_oracle,4,0,0
+evict_value_v1,1,0,3
+evict_value_v1_guarded,1,0,3
+lru,1,0,3
+predictive_marker,4,0,0
+rest_v1,1,0,3
+robust_ftp_d_marker,4,0,0
+trust_and_doubt,4,0,0

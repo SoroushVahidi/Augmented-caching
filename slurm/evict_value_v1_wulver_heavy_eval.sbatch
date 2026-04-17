@@ -1,8 +1,4 @@
 #!/bin/bash
-#
-# KBS canonical Wulver eval stage — writes analysis/evict_value_wulver_v1_policy_comparison_${EXP_TAG}.csv
-# (use EXP_TAG=heavy_r1). docs/kbs_manuscript_submission_index.md
-#
 #SBATCH --job-name=evictv1-heavy-eval
 #SBATCH --partition=general
 #SBATCH --qos=standard
@@ -10,9 +6,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
-# Full manifest (7 traces × 4 capacities × 7 policies, 50k req/trace) exceeded 24h on job 908326 (TIMEOUT).
-# Wulver allows up to 72h; keep one job so outputs stay a single canonical heavy_r1 CSV/MD pair.
-#SBATCH --time=72:00:00
+#SBATCH --time=24:00:00
 #SBATCH --output=slurm/logs/%x-%j.out
 #SBATCH --error=slurm/logs/%x-%j.err
 #
@@ -57,9 +51,6 @@ if [[ ! -f "${EVICT_VALUE_MODEL}" ]]; then
   log "ERROR: missing evict_value model: ${EVICT_VALUE_MODEL}"
   exit 2
 fi
-
-log "Preflight: load evict_value artifact (pickle/joblib)"
-python -c "from pathlib import Path; from lafc.evict_value_model_v1 import EvictValueV1Model; p=Path('${EVICT_VALUE_MODEL}'); EvictValueV1Model.load(p); print('preflight ok', p)"
 
 log "=== Wulver heavy evaluation start ==="
 log "job_id=${SLURM_JOB_ID:-?} host=$(hostname) cpus=${SLURM_CPUS_PER_TASK:-?} mem=${SLURM_MEM_PER_NODE:-?}"

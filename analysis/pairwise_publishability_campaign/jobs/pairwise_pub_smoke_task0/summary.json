@@ -1,0 +1,34 @@
+{
+  "job_label": "pairwise_pub_smoke_task0",
+  "trace_start": 0,
+  "trace_count": 2,
+  "capacities": [
+    32,
+    64
+  ],
+  "horizons": [
+    4,
+    8
+  ],
+  "model_family": "logistic",
+  "label_variant": "head_pair",
+  "label_noise": 0.1,
+  "rows": {
+    "candidate": 1018816,
+    "pairwise": 1477197
+  },
+  "offline_test": null,
+  "online_mean_misses": {
+    "atlas_v3": 2737.5,
+    "blind_oracle": 5862.5,
+    "evict_value_pairwise_v1": 2747.0,
+    "evict_value_v1": 2737.5,
+    "evict_value_v1_guarded": 2737.5,
+    "lru": 2737.5,
+    "predictive_marker": 2789.5,
+    "rest_v1": 2737.5,
+    "robust_ftp_d_marker": 2769.0,
+    "trust_and_doubt": 2877.5
+  },
+  "recommendation": "not_promising_enough"
+}

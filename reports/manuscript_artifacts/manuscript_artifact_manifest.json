@@ -1,7 +1,7 @@
 {
   "inputs": {
-    "policy_comparison": "analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv",
-    "policy_comparison_md": "analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.md",
+    "policy_comparison": "analysis/evict_value_wulver_v1_policy_comparison.csv",
+    "policy_comparison_md": "analysis/evict_value_wulver_v1_policy_comparison.md",
     "dataset_summary": "analysis/evict_value_v1_wulver_dataset_summary_heavy_r1.md",
     "train_model_comparison": "analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv",
     "train_metrics": "analysis/evict_value_wulver_v1_train_metrics_heavy_r1.json",
@@ -9,61 +9,40 @@
     "trace_manifest": "analysis/wulver_trace_manifest_full.csv",
     "baseline_doc": "docs/baselines.md"
   },
-  "inputs_present": {
-    "policy_comparison": false,
-    "policy_comparison_md": false,
-    "dataset_summary": true,
-    "train_model_comparison": true,
-    "train_metrics": true,
-    "best_config": true,
-    "trace_manifest": true,
-    "baseline_doc": true
-  },
   "outputs": {
     "tables": [
       "tables/manuscript/table1_dataset_summary.csv",
       "tables/manuscript/table1_dataset_summary.tex",
       "tables/manuscript/table2_policy_roster.csv",
       "tables/manuscript/table2_policy_roster.tex",
-      "tables/manuscript/table4_main_ablation.csv",
-      "tables/manuscript/table4_main_ablation.tex",
       "tables/manuscript/table3_main_quantitative_comparison.csv",
       "tables/manuscript/table3_main_quantitative_comparison.tex",
-      "tables/manuscript/table5_offline_selection.csv",
-      "tables/manuscript/table5_offline_selection.tex"
+      "tables/manuscript/table4_main_ablation.csv",
+      "tables/manuscript/table4_main_ablation.tex"
     ],
     "figures": [
       "figures/manuscript/figure1_method_overview.pdf",
       "figures/manuscript/figure1_method_overview.png",
+      "figures/manuscript/figure2_main_performance.pdf",
+      "figures/manuscript/figure2_main_performance.png",
+      "figures/manuscript/figure3_aggregate_improvement.pdf",
+      "figures/manuscript/figure3_aggregate_improvement.png",
       "figures/manuscript/figure4_ablation.pdf",
-      "figures/manuscript/figure4_ablation.png",
-      "figures/manuscript/figure5_offline_top1_ablation.pdf",
-      "figures/manuscript/figure5_offline_top1_ablation.png"
+      "figures/manuscript/figure4_ablation.png"
     ],
     "latex_snippets": [
       "reports/manuscript_artifacts/latex_snippets/figure1_snippet.tex",
       "reports/manuscript_artifacts/latex_snippets/figure2_snippet.tex",
       "reports/manuscript_artifacts/latex_snippets/figure3_snippet.tex",
       "reports/manuscript_artifacts/latex_snippets/figure4_snippet.tex",
-      "reports/manuscript_artifacts/latex_snippets/figure5_snippet.tex",
-      "reports/manuscript_artifacts/latex_snippets/figure6_guard_wrapper_snippet.tex",
-      "reports/manuscript_artifacts/latex_snippets/related_work_table6_intro.tex",
       "reports/manuscript_artifacts/latex_snippets/table1_snippet.tex",
       "reports/manuscript_artifacts/latex_snippets/table2_snippet.tex",
       "reports/manuscript_artifacts/latex_snippets/table3_snippet.tex",
-      "reports/manuscript_artifacts/latex_snippets/table4_snippet.tex",
-      "reports/manuscript_artifacts/latex_snippets/table5_snippet.tex",
-      "reports/manuscript_artifacts/latex_snippets/table6_related_work_float.tex"
+      "reports/manuscript_artifacts/latex_snippets/table4_snippet.tex"
     ]
   },
   "notes": [
-    "Optional `policy_comparison_heavy_r1.md` missing; CSV is the quantitative source of truth.",
-    "Table~1 evidence: table1_capacities_from_dataset_summary_md_not_verified_against_eval_csv.",
-    "Table~3 not verified; Figures~2--3 not built: `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` missing.",
-    "Figure~2 / Figure~3 `latex_snippets` refreshed as comment-only stubs (no PDFs emitted).",
-    "Emitted offline-only supplements: Table~5 (`table5_offline_selection`) and Fig.~5 (`figure5_offline_top1_ablation`) from model_comparison + best_config.",
-    "No dedicated canonical heavy_r1 artifact for guarded/fallback A/B or decision-quality diagnostics; see exploratory folders under `analysis/` only with explicit non-canonical caveats."
-  ],
-  "table1_evidence_basis": "table1_capacities_from_dataset_summary_md_not_verified_against_eval_csv",
-  "policy_comparison_present": false
+    "Main quantitative evidence uses Wulver policy comparison CSV and heavy_r1 training artifacts.",
+    "Guarded-variant ablation on the same heavy Wulver pool is not available as a dedicated artifact; Table/Figure 4 therefore uses model-family ablation within evict_value_v1."
+  ]
 }

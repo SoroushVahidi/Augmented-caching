@@ -1,3 +1,0 @@
-scorer,feature_count,val_decisions,val_top1_eviction_match,val_mean_regret,test_decisions,test_top1_eviction_match,test_mean_regret
-base_v1_features,26,4,0.75,0.25,3,0.6666666666666666,0.0
-history_aware_v1,41,4,0.75,0.0,3,0.6666666666666666,0.0

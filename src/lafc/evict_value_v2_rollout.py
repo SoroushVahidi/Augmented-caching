@@ -32,8 +32,6 @@ def _choose_victim(order: collections.OrderedDict[PageId, None], future_reqs: Se
         return candidates[0]
     if policy == "blind_oracle":
         return max(candidates, key=lambda p: (_next_use_distance(p, future_reqs, step_idx), -candidates.index(p)))
-    if policy == "fifo":
-        return candidates[0]
     raise ValueError(f"Unsupported reference policy: {policy}")
 
 
@@ -51,8 +49,7 @@ def simulate_rollout_misses(
     for step_idx, req in enumerate(future_reqs):
         pid = req.page_id
         if pid in order:
-            if reference_policy != "fifo":
-                order.move_to_end(pid)
+            order.move_to_end(pid)
             continue
 
         misses += 1

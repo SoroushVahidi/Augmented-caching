@@ -1,8 +1,4 @@
 #!/bin/bash
-#
-# Dataset-generation helper only — not a full heavy_r1 train/eval/manuscript pipeline.
-# KBS canonical path: docs/wulver_heavy_evict_value_experiment.md
-#
 #SBATCH --job-name=evictv1-dsgen
 #SBATCH --partition=general
 #SBATCH --qos=standard

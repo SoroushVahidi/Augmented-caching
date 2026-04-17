@@ -1,6 +1,0 @@
-% --- Paste into Related Work (recommended: after LA-caching / robust-prediction primer, before method details) ---
-% Not a standalone LaTeX document.
-Related work on learning-augmented caching spans competitive paging under machine-learned advice, robust controllers that integrate \emph{untrusted} predictions, and systems that learn eviction or replacement from strong supervision signals (including imitation and preference learning).
-Table~\ref{tab:related-learned-caching} summarizes \emph{representative} neighboring lines at a deliberately coarse granularity: it is meant to clarify positioning (supervision target, decision object, and robustness mechanism) rather than subsume each paper's full technical contribution.
-We emphasize a narrow contrast for \texttt{evict\_value\_v1}: \textbf{candidate-level} scoring trained on \textbf{explicit finite-horizon counterfactual miss counts} under the v1 label construction used here, evaluated by trace replay against strong baselines---without implying that prior learned policies are incorrect or exhaustive of the design space.
-% --- End paste ---

@@ -2,30 +2,16 @@ from __future__ import annotations
 
 import csv
 import json
-import sys
+import textwrap
 from collections import defaultdict
 from pathlib import Path
 from statistics import mean
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import matplotlib.pyplot as plt
-import numpy as np
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 from lafc.evict_value_wulver_v1 import load_trace_from_any
-
-_SCRIPT_DIR = Path(__file__).resolve().parent
-if str(_SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(_SCRIPT_DIR))
-
-from manuscript_figure_common import (
-    apply_manuscript_matplotlib_style,
-    make_improvement_vs_lru_figure,
-    make_main_performance_comparison_figure,
-    make_method_overview_two_panel_figure,
-    make_offline_ablation_figure,
-    make_offline_top1_ablation_figure,
-    save_figure_pdf_png,
-)
 
 
 ROOT = Path(".")
@@ -35,9 +21,10 @@ FIGURES = ROOT / "figures" / "manuscript"
 REPORTS = ROOT / "reports" / "manuscript_artifacts"
 LATEX = REPORTS / "latex_snippets"
 
+
 EVIDENCE_FILES = {
-    "policy_comparison": ANALYSIS / "evict_value_wulver_v1_policy_comparison_heavy_r1.csv",
-    "policy_comparison_md": ANALYSIS / "evict_value_wulver_v1_policy_comparison_heavy_r1.md",
+    "policy_comparison": ANALYSIS / "evict_value_wulver_v1_policy_comparison.csv",
+    "policy_comparison_md": ANALYSIS / "evict_value_wulver_v1_policy_comparison.md",
     "dataset_summary": ANALYSIS / "evict_value_v1_wulver_dataset_summary_heavy_r1.md",
     "train_model_comparison": ANALYSIS / "evict_value_wulver_v1_model_comparison_heavy_r1.csv",
     "train_metrics": ANALYSIS / "evict_value_wulver_v1_train_metrics_heavy_r1.json",
@@ -45,63 +32,6 @@ EVIDENCE_FILES = {
     "trace_manifest": ANALYSIS / "wulver_trace_manifest_full.csv",
     "baseline_doc": ROOT / "docs" / "baselines.md",
 }
-
-# Main quantitative comparison (canonical heavy_r1 eval; excludes exploratory-only policies)
-# Baselines first, proposed method last (manuscript table row order).
-TABLE3_POLICIES: Tuple[str, ...] = (
-    "lru",
-    "predictive_marker",
-    "trust_and_doubt",
-    "blind_oracle_lru_combiner",
-    "rest_v1",
-    "evict_value_v1",
-)
-
-SHORT_POLICY_LABEL = {
-    "lru": "LRU",
-    "evict_value_v1": "EV",
-    "predictive_marker": "PredMk",
-    "trust_and_doubt": "T\\&D",
-    "blind_oracle_lru_combiner": "BO/LRU",
-    "rest_v1": "REST",
-}
-
-# Canonical column order + display names for Table~3 (internal family keys → manuscript headers).
-FAMILY_DISPLAY_ORDER: Tuple[str, ...] = (
-    "brightkite",
-    "citibike",
-    "cloudphysics",
-    "metacdn",
-    "metakv",
-    "twemcache",
-    "wiki2018",
-)
-FAMILY_MANUSCRIPT_NAME: Dict[str, str] = {
-    "brightkite": "BrightKite",
-    "citibike": "CitiBike",
-    "cloudphysics": "CloudPhysics",
-    "metacdn": "MetaCDN",
-    "metakv": "MetaKV",
-    "twemcache": "Twemcache",
-    "wiki2018": "Wiki2018",
-}
-
-# Compact column headers for Table~3 (full names in caption).
-FAMILY_HEADER_CODE: Dict[str, str] = {
-    "brightkite": "BK",
-    "citibike": "CB",
-    "cloudphysics": "CP",
-    "metacdn": "MC",
-    "metakv": "MK",
-    "twemcache": "TC",
-    "wiki2018": "W18",
-}
-
-MODEL_SORT_ORDER: Tuple[str, ...] = ("hist_gb", "random_forest", "ridge")
-
-
-def _model_order_key(model: str) -> int:
-    return MODEL_SORT_ORDER.index(model) if model in MODEL_SORT_ORDER else 99
 
 
 def _ensure_dirs() -> None:
@@ -132,229 +62,99 @@ def _fmt_cell(v: float, best: float, second: float) -> str:
     return txt
 
 
-def _fmt_cell_lower_better(v: float, best: float, second: float) -> str:
-    return _fmt_cell(v, best, second)
-
-
-def _latex_escape(s: str) -> str:
-    return s.replace("_", "\\_")
-
-
-def _tex_escape_amp_under(s: str) -> str:
-    """Escape `&` and `_` for Booktabs tabular cells (no mathtext)."""
-    return s.replace("_", "\\_").replace("&", "\\&")
-
-
-def _parse_heavy_r1_capacities_from_dataset_summary_md(path: Path) -> List[int]:
-    """Read capacity list from `evict_value_v1_wulver_dataset_summary_heavy_r1.md` (## Rows by capacity)."""
-    caps: List[int] = []
-    in_section = False
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if line.strip().startswith("## Rows by capacity"):
-            in_section = True
-            continue
-        if in_section:
-            if line.startswith("## ") and not line.strip().startswith("## Rows by capacity"):
-                break
-            s = line.strip()
-            if s.startswith("- "):
-                key = s[2:].split(":", 1)[0].strip()
-                try:
-                    caps.append(int(key))
-                except ValueError:
-                    pass
-    return sorted(set(caps))
-
-
-def _manifest_rows_ordered() -> List[Dict[str, str]]:
-    rows = _read_csv(EVIDENCE_FILES["trace_manifest"])
-
-    def sort_key(r: Dict[str, str]) -> Tuple[int, str]:
-        fam = str(r["trace_family"])
-        idx = FAMILY_DISPLAY_ORDER.index(fam) if fam in FAMILY_DISPLAY_ORDER else 99
-        return (idx, str(r["trace_name"]))
-
-    return sorted(rows, key=sort_key)
-
-
-def _table1_rows(policy_rows: Optional[List[Dict[str, str]]]) -> Tuple[List[Dict[str, object]], str]:
-    """Build dataset summary rows from canonical manifest; merge per-trace capacities from policy CSV when present."""
-    caps_default = _parse_heavy_r1_capacities_from_dataset_summary_md(EVIDENCE_FILES["dataset_summary"])
-    if not caps_default:
-        caps_default = [32, 64, 128, 256]
-
-    traces_from_policy: Dict[str, set] = defaultdict(set)
-    if policy_rows:
-        for r in policy_rows:
-            traces_from_policy[str(r["trace_name"])].add(int(float(r["capacity"])))
-
+def _build_table1_dataset_summary(policy_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
+    traces: Dict[str, Dict[str, object]] = {}
+    for r in policy_rows:
+        t = str(r["trace_name"])
+        traces.setdefault(
+            t,
+            {
+                "trace_name": t,
+                "family": str(r["trace_family"]),
+                "path": str(r["path"]),
+                "capacities": set(),
+            },
+        )
+        traces[t]["capacities"].add(int(float(r["capacity"])))
     out_rows: List[Dict[str, object]] = []
-    for man in _manifest_rows_ordered():
-        tname = str(man["trace_name"])
-        path = str(man["path"])
-        family = str(man["trace_family"])
-        reqs, _pages, _src = load_trace_from_any(path)
-        src = str(man.get("dataset_source", "") or "").strip() or "—"
-        if policy_rows and tname in traces_from_policy:
-            caps = ",".join(str(c) for c in sorted(traces_from_policy[tname]))
-            in_main = "yes"
-            basis = "manifest+policy_csv"
-            note = "Wulver pool"
-        else:
-            caps = ",".join(str(c) for c in caps_default)
-            in_main = "yes" if policy_rows else "--"
-            basis = "manifest+dataset_summary"
-            note = "Caps: heavy_r1 spec" if not policy_rows else "Wulver pool"
-
+    for t, rec in sorted(traces.items()):
+        reqs, _pages, _src = load_trace_from_any(str(rec["path"]))
         out_rows.append(
             {
-                "trace": tname,
-                "family": family,
-                "requests": len(reqs),
-                "capacities": caps,
-                "hint": "Next-arr.",
-                "role": "heavy_r1 eval",
-                "source": src,
-                "in_main_comparison": in_main,
-                "note": note,
-                "evidence_basis": basis,
+                "trace_name": t,
+                "family": rec["family"],
+                "request_count": len(reqs),
+                "capacities_used": ",".join(str(c) for c in sorted(rec["capacities"])),
+                "hint_type": "next-arrival-derived metadata",
+                "role": "main Wulver evaluation",
             }
         )
-
-    ver = "table1_capacities_from_policy_csv" if policy_rows else "table1_capacities_from_dataset_summary_md_not_verified_against_eval_csv"
-    return out_rows, ver
-
-
-def _build_table1(policy_rows: Optional[List[Dict[str, str]]]) -> Tuple[Path, Path, str]:
-    out_rows, ver = _table1_rows(policy_rows)
     csv_path = TABLES / "table1_dataset_summary.csv"
     tex_path = TABLES / "table1_dataset_summary.tex"
     _write_csv(csv_path, out_rows)
     lines = [
-        "\\begin{tabular}{@{}l l r l l l l l@{}}",
+        "\\begin{tabular}{l l r l l l}",
         "\\toprule",
-        "Trace & Family & Req. & Caps. & Hint & Role & Src. & Main \\\\",
+        "Trace & Family & Requests & Capacities & Hint type & Role \\\\",
         "\\midrule",
     ]
     for r in out_rows:
         lines.append(
-            f"{_latex_escape(str(r['trace']))} & {_latex_escape(str(r['family']))} & {r['requests']} & "
-            f"{_latex_escape(str(r['capacities']))} & {_latex_escape(str(r['hint']))} & {_latex_escape(str(r['role']))} & "
-            f"{_latex_escape(str(r['source']))} & {_latex_escape(str(r['in_main_comparison']))} \\\\"
+            f"{r['trace_name']} & {r['family']} & {r['request_count']} & {r['capacities_used']} & {r['hint_type']} & {r['role']} \\\\"
         )
     lines += ["\\bottomrule", "\\end{tabular}"]
     tex_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    cap_extra = ""
-    if not policy_rows:
-        cap_extra = (
-            " \\textit{Caveat:} the \\textbf{Main} column is unset until the end-to-end "
-            "replay comparison table is available; capacities follow the heavy\\_r1 dataset specification."
-        )
     LATEX.joinpath("table1_snippet.tex").write_text(
-        "\\begin{table*}[t]\n\\centering\n"
-        "\\caption{Wulver traces used for heavy\\_r1 offline dataset construction (ordered by family). "
-        "Hint: next-arrival style metadata at prediction time."
-        + cap_extra
-        + "}\n"
-        "\\label{tab:dataset-summary}\n"
+        "\\begin{table*}[t]\n\\centering\n\\caption{Dataset/trace summary used in the main Wulver evaluation.}\n"
         "\\input{tables/manuscript/table1_dataset_summary.tex}\n\\end{table*}\n",
         encoding="utf-8",
     )
-    return csv_path, tex_path, ver
-
-
-def _core_evidence_ok() -> List[str]:
-    """Paths required for any partial build."""
-    keys = [
-        "train_model_comparison",
-        "dataset_summary",
-        "trace_manifest",
-        "baseline_doc",
-        "train_metrics",
-        "best_config",
-    ]
-    return [k for k in keys if not EVIDENCE_FILES[k].exists()]
-
-
-def _policy_evidence_ok() -> bool:
-    return EVIDENCE_FILES["policy_comparison"].exists()
+    return csv_path, tex_path
 
 
 def _build_table2_policy_roster() -> Tuple[Path, Path]:
-    # Display labels only in the manuscript table; internal policy id kept in CSV for traceability.
     rows = [
-        {
-            "policy": "lru",
-            "label": "LRU",
-            "category": "Classical",
-            "role": "Reference",
-            "note": "Recency baseline.",
-        },
-        {
-            "policy": "predictive_marker",
-            "label": "PredMk",
-            "category": "LA robust",
-            "role": "Baseline",
-            "note": "Prediction-aware marker policy.",
-        },
-        {
-            "policy": "trust_and_doubt",
-            "label": "T&D",
-            "category": "LA robust",
-            "role": "Baseline",
-            "note": "Adaptive trust/doubt controller.",
-        },
-        {
-            "policy": "blind_oracle_lru_combiner",
-            "label": "BO/LRU",
-            "category": "Combiner",
-            "role": "Baseline",
-            "note": "Blind-oracle/LRU follow-the-leader style combiner.",
-        },
-        {
-            "policy": "rest_v1",
-            "label": "REST",
-            "category": "Heuristic",
-            "role": "Baseline",
-            "note": "Selective trust policy with fallback behavior.",
-        },
-        {
-            "policy": "evict_value_v1",
-            "label": "EV",
-            "category": "Proposed",
-            "role": "Ours",
-            "note": "Learned eviction-value policy with optional guard.",
-        },
+        {"policy": "lru", "category": "classical baseline", "description": "recency eviction baseline", "role": "reference", "faithfulness_note": "canonical"},
+        {"policy": "blind_oracle", "category": "predictor baseline", "description": "evict furthest predicted reuse", "role": "stress comparator", "faithfulness_note": "interpreted per docs"},
+        {"policy": "predictive_marker", "category": "robust baseline", "description": "marker with prediction-aware tie bias", "role": "strong robust baseline", "faithfulness_note": "canonical"},
+        {"policy": "trust_and_doubt", "category": "robust baseline", "description": "adaptive trust/doubt with predicted caches", "role": "strong robust baseline", "faithfulness_note": "paper-aligned with documented interpretation"},
+        {"policy": "blind_oracle_lru_combiner", "category": "robust combiner", "description": "shadow BO/LRU follow-the-leader combiner", "role": "strong robust baseline", "faithfulness_note": "interpreted details documented"},
+        {"policy": "rest_v1", "category": "robust heuristic", "description": "selective trust policy with fallback behavior", "role": "strong robust baseline", "faithfulness_note": "repo method"},
+        {"policy": "evict_value_v1", "category": "learned method", "description": "predict eviction regret/value and evict minimum-score candidate", "role": "proposed main method", "faithfulness_note": "artifact-backed trained model"},
     ]
     csv_path = TABLES / "table2_policy_roster.csv"
     tex_path = TABLES / "table2_policy_roster.tex"
     _write_csv(csv_path, rows)
     lines = [
-        "\\begin{tabular}{@{}l l p{2.05cm} p{5.75cm}@{}}",
+        "\\begin{tabular}{l l p{4.5cm} l p{3.4cm}}",
         "\\toprule",
-        "Label & Category & Role & Note \\\\",
+        "Policy & Category & Description & Role & Note \\\\",
         "\\midrule",
     ]
     for r in rows:
         lines.append(
-            f"{_tex_escape_amp_under(str(r['label']))} & {_tex_escape_amp_under(str(r['category']))} & "
-            f"{_tex_escape_amp_under(str(r['role']))} & {_tex_escape_amp_under(str(r['note']))} \\\\"
+            f"{r['policy']} & {r['category']} & {r['description']} & {r['role']} & {r['faithfulness_note']} \\\\"
         )
     lines += ["\\bottomrule", "\\end{tabular}"]
     tex_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     LATEX.joinpath("table2_snippet.tex").write_text(
-        "\\begin{table*}[t]\n\\centering\n"
-        "\\caption{Policies in the planned main replay comparison (numeric results require "
-        "\\texttt{evict\\_value\\_wulver\\_v1\\_policy\\_comparison\\_heavy\\_r1.csv}).}\n"
-        "\\label{tab:policy-roster}\n"
+        "\\begin{table*}[t]\n\\centering\n\\caption{Policy roster used in the main comparison.}\n"
         "\\input{tables/manuscript/table2_policy_roster.tex}\n\\end{table*}\n",
         encoding="utf-8",
     )
     return csv_path, tex_path
 
 
-def _aggregate_main(policy_rows: List[Dict[str, str]]) -> Tuple[List[str], List[Dict[str, object]], List[str]]:
-    use_policies = list(TABLE3_POLICIES)
+def _aggregate_main(policy_rows: List[Dict[str, str]]) -> Tuple[List[str], List[Dict[str, object]]]:
+    use_policies = [
+        "evict_value_v1",
+        "lru",
+        "blind_oracle",
+        "predictive_marker",
+        "trust_and_doubt",
+        "blind_oracle_lru_combiner",
+        "rest_v1",
+    ]
     fam_pol: Dict[Tuple[str, str], List[float]] = defaultdict(list)
     for r in policy_rows:
         p = str(r["policy"])
@@ -362,28 +162,10 @@ def _aggregate_main(policy_rows: List[Dict[str, str]]) -> Tuple[List[str], List[
             continue
         fam = str(r["trace_family"])
         fam_pol[(fam, p)].append(float(r["misses"]))
-    families_raw = sorted({k[0] for k in fam_pol.keys()})
-    families: List[str] = []
-    for f in FAMILY_DISPLAY_ORDER:
-        if f in families_raw:
-            families.append(f)
-    for f in families_raw:
-        if f not in families:
-            families.append(f)
-
-    degenerate: List[str] = []
-    for fam in families:
-        means = []
-        for pol in use_policies:
-            k = (fam, pol)
-            if k in fam_pol:
-                means.append(mean(fam_pol[k]))
-        if len(means) >= 2 and (max(means) - min(means)) < 1e-6:
-            degenerate.append(FAMILY_MANUSCRIPT_NAME.get(fam, fam))
-
-    rows_out: List[Dict[str, object]] = []
+    families = sorted({k[0] for k in fam_pol.keys()})
+    rows: List[Dict[str, object]] = []
     for p in use_policies:
-        row: Dict[str, object] = {"policy": p, "label": SHORT_POLICY_LABEL.get(p, p)}
+        row: Dict[str, object] = {"policy": p}
         vals = []
         for fam in families:
             v = mean(fam_pol[(fam, p)]) if (fam, p) in fam_pol else float("nan")
@@ -391,129 +173,38 @@ def _aggregate_main(policy_rows: List[Dict[str, str]]) -> Tuple[List[str], List[
             if v == v:
                 vals.append(v)
         row["overall_mean"] = mean(vals) if vals else float("nan")
-        rows_out.append(row)
-
-    lru_overall = next(float(r["overall_mean"]) for r in rows_out if r["policy"] == "lru")
-    for r in rows_out:
-        om = float(r["overall_mean"])
-        r["delta_vs_lru"] = om - lru_overall if om == om else float("nan")
-        wins = 0
-        if r["policy"] != "lru":
-            for fam in families:
-                lp = mean(fam_pol[(fam, "lru")])
-                pp = mean(fam_pol[(fam, r["policy"])]) if (fam, r["policy"]) in fam_pol else float("nan")
-                if pp == pp and lp == lp and pp < lp - 1e-9:
-                    wins += 1
-        r["families_better_than_lru"] = wins
-
-    return families, rows_out, degenerate
+        rows.append(row)
+    return families, rows
 
 
 def _build_table3_main_comparison(policy_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
-    families, rows, degenerate = _aggregate_main(policy_rows)
+    families, rows = _aggregate_main(policy_rows)
     csv_path = TABLES / "table3_main_quantitative_comparison.csv"
     tex_path = TABLES / "table3_main_quantitative_comparison.tex"
     _write_csv(csv_path, rows)
-
-    n_f = len(families)
-    col_spec = "l" + "r" * (n_f + 3)
-    fam_heads = [FAMILY_HEADER_CODE.get(f, f[:3]) for f in families]
-    head = [""] + fam_heads + ["All", r"$\Delta_{\mathrm{LRU}}$", "Win"]
-    lines = [
-        f"\\begin{{tabular}}{{{col_spec}}}",
-        "\\toprule",
-        " & ".join(head) + " \\\\",
-        "\\midrule",
-    ]
-    metric_cols = list(families) + ["overall_mean"]
-    col_best = {c: min(float(r[c]) for r in rows if float(r[c]) == float(r[c])) for c in metric_cols}
-    col_second: Dict[str, float] = {}
-    for c in metric_cols:
+    cols = families + ["overall_mean"]
+    col_spec = "l" + "r" * len(cols)
+    lines = [f"\\begin{{tabular}}{{{col_spec}}}", "\\toprule", "Policy & " + " & ".join([*families, "Overall"]) + " \\\\", "\\midrule"]
+    col_best = {c: min(float(r[c]) for r in rows if float(r[c]) == float(r[c])) for c in cols}
+    col_second = {}
+    for c in cols:
         uniq = sorted({float(r[c]) for r in rows if float(r[c]) == float(r[c])})
         col_second[c] = uniq[1] if len(uniq) > 1 else uniq[0]
     for r in rows:
-        cells = [str(r["label"])]
-        for c in families:
-            v = float(r[c])
-            cells.append(_fmt_cell_lower_better(v, col_best[c], col_second[c]))
-        om = float(r["overall_mean"])
-        cells.append(_fmt_cell_lower_better(om, col_best["overall_mean"], col_second["overall_mean"]))
-        dv = float(r["delta_vs_lru"])
-        cells.append(f"{dv:+.2f}")
-        cells.append(str(int(r["families_better_than_lru"])))
-        lines.append(" & ".join(cells) + " \\\\")
+        vals = [_fmt_cell(float(r[c]), col_best[c], col_second[c]) for c in cols]
+        lines.append(f"{r['policy']} & " + " & ".join(vals) + " \\\\")
     lines += ["\\bottomrule", "\\end{tabular}"]
     tex_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-    fam_legend = (
-        "Column codes: "
-        + "; ".join(f"{FAMILY_HEADER_CODE.get(f, f)}={FAMILY_MANUSCRIPT_NAME.get(f, f)}" for f in families)
-        + "."
-    )
-    tie_note = ""
-    if degenerate:
-        tie_note = (
-            " Near-tie columns (identical mean misses across policies within numerical tolerance): "
-            + ", ".join(degenerate)
-            + "."
-        )
-    cap = (
-        "\\begin{table*}[t]\n\\centering\n"
-        "\\caption{Main quantitative comparison: mean replay misses by trace family (\\textbf{lower is better}). "
-        "Bold: best; underline: second-best in each numeric column. "
-        r"$\Delta_{\mathrm{LRU}}$ is overall mean misses (across listed families) minus LRU's overall mean. "
-        r"\textbf{Win:} number of families where the policy strictly beats LRU (lower misses)."
-        + " "
-        + fam_legend
-        + tie_note
-        + "}\n"
-        "\\label{tab:main-comparison}\n"
-        "\\input{tables/manuscript/table3_main_quantitative_comparison.tex}\n\\end{table*}\n"
-    )
-    LATEX.joinpath("table3_snippet.tex").write_text(cap, encoding="utf-8")
-    return csv_path, tex_path
-
-
-def _build_table3_unavailable() -> Tuple[Path, Path]:
-    csv_path = TABLES / "table3_main_quantitative_comparison.csv"
-    tex_path = TABLES / "table3_main_quantitative_comparison.tex"
-    _write_csv(
-        csv_path,
-        [
-            {
-                "status": "NOT_VERIFIED",
-                "detail": "Canonical file analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv is absent.",
-                "action": "Run heavy_r1 eval, then rebuild manuscript artifacts.",
-            }
-        ],
-    )
-    tex_path.write_text(
-        "\\begin{tabular}{@{}l p{10.5cm}@{}}\n"
-        "\\toprule\n"
-        "\\textbf{Status} & \\textbf{Reason} \\\\\n"
-        "\\midrule\n"
-        "Not regenerated & "
-        "Canonical policy comparison "
-        "\\texttt{evict\\_value\\_wulver\\_v1\\_policy\\_comparison\\_heavy\\_r1.csv} was not found. "
-        "Do not copy numbers from exploratory or unsuffixed policy-comparison CSVs. \\\\\n"
-        "\\bottomrule\n"
-        "\\end{tabular}\n",
-        encoding="utf-8",
-    )
     LATEX.joinpath("table3_snippet.tex").write_text(
-        "\\begin{table*}[t]\n\\centering\n"
-        "\\caption{\\textbf{Main quantitative comparison unavailable.} "
-        "Regenerate manuscript tables after the canonical Wulver replay evaluation completes "
-        "(\\texttt{heavy\\_r1} policy-comparison artifact).}\n"
-        "\\label{tab:main-comparison-unavailable}\n"
+        "\\begin{table*}[t]\n\\centering\n\\caption{Main quantitative comparison (mean misses; lower is better). Bold: best, underline: second-best per column.}\n"
         "\\input{tables/manuscript/table3_main_quantitative_comparison.tex}\n\\end{table*}\n",
         encoding="utf-8",
     )
     return csv_path, tex_path
 
 
-def _build_table4_ablation(train_rows: List[Dict[str, str]], best_cfg: Optional[dict]) -> Tuple[Path, Path]:
-    rows: List[Dict[str, object]] = []
+def _build_table4_ablation(train_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
+    rows = []
     for r in train_rows:
         rows.append(
             {
@@ -525,428 +216,258 @@ def _build_table4_ablation(train_rows: List[Dict[str, str]], best_cfg: Optional[
                 "test_top1": float(r["test_top1"]),
             }
         )
-    rows = sorted(rows, key=lambda x: (x["horizon"], _model_order_key(str(x["model"]))))
+    rows = sorted(rows, key=lambda x: (x["horizon"], x["model"]))
     csv_path = TABLES / "table4_main_ablation.csv"
     tex_path = TABLES / "table4_main_ablation.tex"
     _write_csv(csv_path, rows)
-
-    by_h: Dict[int, List[Dict[str, object]]] = defaultdict(list)
-    for r in rows:
-        by_h[int(r["horizon"])].append(r)
-
-    metric_keys = ("val_mean_regret", "test_mean_regret", "val_top1", "test_top1")
-    best_m: Dict[Tuple[int, str, str], bool] = {}
-    second_m: Dict[Tuple[int, str, str], bool] = {}
-    for h, lst in by_h.items():
-        for key in metric_keys:
-            vals = sorted({float(x[key]) for x in lst})
-            bst = vals[0]
-            snd = vals[1] if len(vals) > 1 else vals[0]
-            for x in lst:
-                m = str(x["model"])
-                v = float(x[key])
-                if abs(v - bst) <= 1e-9:
-                    best_m[(h, m, key)] = True
-                elif len(vals) > 1 and abs(v - snd) <= 1e-9:
-                    second_m[(h, m, key)] = True
-
-    dec = 4
-
-    def _cell(h: int, m: str, key: str, v: float) -> str:
-        s = f"{v:.{dec}f}"
-        if best_m.get((h, m, key)):
-            return f"\\textbf{{{s}}}"
-        if second_m.get((h, m, key)):
-            return f"\\underline{{{s}}}"
-        return s
-
     lines = [
-        "\\begin{tabular}{@{}r l r r r r@{}}",
+        "\\begin{tabular}{r l r r r r}",
         "\\toprule",
-        "Horizon & Model & Val.\\ regret & Test regret & Val.\\ Top-1 & Test Top-1 \\\\",
+        "Horizon & Model & Val regret & Test regret & Val top1 & Test top1 \\\\",
         "\\midrule",
     ]
     for r in rows:
-        h = int(r["horizon"])
-        m = str(r["model"])
         lines.append(
-            f"{h} & {_latex_escape(m)} & "
-            f"{_cell(h, m, 'val_mean_regret', float(r['val_mean_regret']))} & "
-            f"{_cell(h, m, 'test_mean_regret', float(r['test_mean_regret']))} & "
-            f"{_cell(h, m, 'val_top1', float(r['val_top1']))} & "
-            f"{_cell(h, m, 'test_top1', float(r['test_top1']))} \\\\"
+            f"{r['horizon']} & {r['model']} & {r['val_mean_regret']:.4f} & {r['test_mean_regret']:.4f} & {r['val_top1']:.4f} & {r['test_top1']:.4f} \\\\"
         )
     lines += ["\\bottomrule", "\\end{tabular}"]
     tex_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    sel = ""
-    if best_cfg:
-        bm = str(best_cfg.get("model", ""))
-        sel = (
-            " Selected offline configuration: "
-            f"horizon {best_cfg.get('horizon')}, model \\texttt{{{_latex_escape(bm)}}} "
-            "(minimum validation mean regret on held-out shards)."
-        )
     LATEX.joinpath("table4_snippet.tex").write_text(
-        "\\begin{table*}[t]\n\\centering\n"
-        "\\caption{Offline ablation across replay horizons and model families on heavy\\_r1 shards "
-        "(same evidence as Figure~\\ref{fig:offline-ablation}). "
-        "\\textbf{Lower is better} for all columns. "
-        "Bold: best per column within each horizon; underline: second-best."
-        + sel
-        + "}\n"
-        "\\label{tab:offline-ablation}\n"
-        "\\input{tables/manuscript/table4_main_ablation.tex}\n\\end{table*}\n",
+        "\\begin{table}[t]\n\\centering\n\\caption{Main ablation of eviction-value model family/horizon choices.}\n"
+        "\\input{tables/manuscript/table4_main_ablation.tex}\n\\end{table}\n",
         encoding="utf-8",
     )
     return csv_path, tex_path
 
 
 def _save_fig(fig: plt.Figure, stem: str) -> Tuple[Path, Path]:
-    return save_figure_pdf_png(fig, FIGURES, stem)
+    pdf = FIGURES / f"{stem}.pdf"
+    png = FIGURES / f"{stem}.png"
+    fig.savefig(pdf, bbox_inches="tight")
+    fig.savefig(png, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    return pdf, png
 
 
 def _figure1_method_overview() -> Tuple[Path, Path]:
-    apply_manuscript_matplotlib_style()
-    fig = make_method_overview_two_panel_figure()
+    fig, ax = plt.subplots(figsize=(10, 3.4))
+    ax.axis("off")
+
+    def box(x: float, y: float, w: float, h: float, txt: str) -> None:
+        p = FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02", linewidth=1.2, edgecolor="black", facecolor="white")
+        ax.add_patch(p)
+        ax.text(x + w / 2, y + h / 2, textwrap.fill(txt, 22), ha="center", va="center", fontsize=10)
+
+    box(0.02, 0.35, 0.16, 0.32, "Request arrives")
+    box(0.24, 0.35, 0.20, 0.32, "Candidate feature builder")
+    box(0.50, 0.35, 0.20, 0.32, "Eviction-value predictor")
+    box(0.76, 0.35, 0.20, 0.32, "Evict min predicted loss")
+    ax.add_patch(FancyArrowPatch((0.18, 0.51), (0.24, 0.51), arrowstyle="->", mutation_scale=12, linewidth=1.2))
+    ax.add_patch(FancyArrowPatch((0.44, 0.51), (0.50, 0.51), arrowstyle="->", mutation_scale=12, linewidth=1.2))
+    ax.add_patch(FancyArrowPatch((0.70, 0.51), (0.76, 0.51), arrowstyle="->", mutation_scale=12, linewidth=1.2))
+    ax.text(0.50, 0.16, "Artifact-backed model path used in main Wulver evaluation", ha="center", va="center", fontsize=10)
+    fig.tight_layout()
     LATEX.joinpath("figure1_snippet.tex").write_text(
-        "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.96\\textwidth]{figures/manuscript/figure1_method_overview.pdf}\n"
-        "\\caption{Conceptual overview of the eviction-value pipeline. "
-        "\\textbf{(a)}~Offline replay, supervised targets, and model fitting. "
-        "\\textbf{(b)}~Online cache updates with candidate scoring. "
-        "An optional guarded variant (\\texttt{evict\\_value\\_v1\\_guarded}) adds a practical fallback layer; "
-        "primary quantitative results in this submission use the unguarded policy unless explicitly stated.}\n"
-        "\\label{fig:method-overview}\n\\end{figure*}\n",
+        "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.95\\textwidth]{figures/manuscript/figure1_method_overview.pdf}\n"
+        "\\caption{Eviction-value prediction pipeline used in the main method.}\n\\end{figure*}\n",
         encoding="utf-8",
     )
     return _save_fig(fig, "figure1_method_overview")
 
 
-def _figure2_main_performance_comparison(policy_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
-    apply_manuscript_matplotlib_style()
-    fig = make_main_performance_comparison_figure(policy_rows)
+def _figure2_main_comparison(policy_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
+    focus = ["evict_value_v1", "lru", "predictive_marker", "trust_and_doubt", "rest_v1"]
+    fam_pol: Dict[Tuple[str, str], List[float]] = defaultdict(list)
+    for r in policy_rows:
+        p = str(r["policy"])
+        if p not in focus:
+            continue
+        fam = str(r["trace_family"])
+        fam_pol[(fam, p)].append(float(r["misses"]))
+    fams = sorted({k[0] for k in fam_pol})
+    x = np.arange(len(fams))
+    width = 0.15
+    fig, ax = plt.subplots(figsize=(11, 4.4))
+    colors = ["#111111", "#444444", "#777777", "#999999", "#bbbbbb"]
+    for i, p in enumerate(focus):
+        vals = [mean(fam_pol[(f, p)]) for f in fams]
+        ax.bar(x + (i - 2) * width, vals, width=width, label=p, color=colors[i], edgecolor="black", linewidth=0.6)
+    ax.set_xticks(x)
+    ax.set_xticklabels([textwrap.fill(f, 10) for f in fams], fontsize=9)
+    ax.set_ylabel("Mean misses")
+    ax.set_title("Main performance comparison by trace family")
+    ax.legend(ncol=3, fontsize=8, frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.18))
+    ax.grid(axis="y", linestyle=":", linewidth=0.6)
+    fig.tight_layout()
     LATEX.joinpath("figure2_snippet.tex").write_text(
-        "\\begin{figure*}[t]\n\\centering\n"
-        "\\includegraphics[width=0.98\\textwidth]{figures/manuscript/figure2_main_performance_comparison.pdf}\n"
-        "\\caption{End-to-end replay misses by trace family (mean over capacities; \\textbf{lower is better}). "
-        "Policies match Table~\\ref{tab:main-comparison}. "
-        "Thick blue edge highlights \\texttt{evict\\_value\\_v1}. "
-        "Near-tie families: identical means across shown policies within numerical tolerance.}\n"
-        "\\label{fig:main-performance}\n\\end{figure*}\n",
+        "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.95\\textwidth]{figures/manuscript/figure2_main_performance.pdf}\n"
+        "\\caption{Main policy comparison on Wulver trace families (mean misses across capacities).}\n\\end{figure*}\n",
         encoding="utf-8",
     )
-    return _save_fig(fig, "figure2_main_performance_comparison")
+    return _save_fig(fig, "figure2_main_performance")
 
 
-def _figure3_improvement_vs_lru(policy_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
-    apply_manuscript_matplotlib_style()
-    fig = make_improvement_vs_lru_figure(policy_rows)
+def _figure3_aggregate_improvement(policy_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
+    policies = ["evict_value_v1", "predictive_marker", "trust_and_doubt", "rest_v1", "blind_oracle_lru_combiner"]
+    by_pol: Dict[str, List[float]] = defaultdict(list)
+    for r in policy_rows:
+        p = str(r["policy"])
+        if p in policies or p == "lru":
+            by_pol[p].append(float(r["misses"]))
+    lru_mean = mean(by_pol["lru"])
+    rows = []
+    for p in policies:
+        pm = mean(by_pol[p])
+        rel = (lru_mean - pm) / lru_mean * 100.0
+        rows.append((p, rel))
+    rows = sorted(rows, key=lambda x: x[1], reverse=True)
+    fig, ax = plt.subplots(figsize=(8.2, 3.8))
+    y = np.arange(len(rows))
+    vals = [r[1] for r in rows]
+    ax.barh(y, vals, color="white", edgecolor="black", hatch="//", linewidth=0.8)
+    ax.set_yticks(y)
+    ax.set_yticklabels([r[0] for r in rows], fontsize=9)
+    ax.set_xlabel("Relative miss reduction vs LRU (%)")
+    ax.set_title("Aggregate improvement vs LRU")
+    ax.axvline(0.0, color="black", linewidth=0.8)
+    ax.grid(axis="x", linestyle=":", linewidth=0.6)
+    fig.tight_layout()
     LATEX.joinpath("figure3_snippet.tex").write_text(
-        "\\begin{figure*}[t]\n\\centering\n"
-        "\\includegraphics[width=0.98\\textwidth]{figures/manuscript/figure3_improvement_vs_lru.pdf}\n"
-        "\\caption{Mean replay misses relative to LRU by family: "
-        "$\\Delta = \\mathrm{misses}_{\\mathrm{pol}} - \\mathrm{misses}_{\\mathrm{LRU}}$ "
-        "(negative $\\Rightarrow$ fewer misses than LRU). Same policy subset as Table~\\ref{tab:main-comparison}. "
-        "\\texttt{evict\\_value\\_v1} is highlighted.}\n"
-        "\\label{fig:improvement-vs-lru}\n\\end{figure*}\n",
+        "\\begin{figure}[t]\n\\centering\n\\includegraphics[width=\\columnwidth]{figures/manuscript/figure3_aggregate_improvement.pdf}\n"
+        "\\caption{Aggregate relative miss reduction versus LRU.}\n\\end{figure}\n",
         encoding="utf-8",
     )
-    return _save_fig(fig, "figure3_improvement_vs_lru")
+    return _save_fig(fig, "figure3_aggregate_improvement")
 
 
 def _figure4_ablation(train_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
-    apply_manuscript_matplotlib_style()
-    fig = make_offline_ablation_figure(train_rows)
+    by_model_val: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
+    by_model_test: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
+    for r in train_rows:
+        h = int(r["horizon"])
+        m = str(r["model"])
+        by_model_val[m].append((h, float(r["val_mean_regret"])))
+        by_model_test[m].append((h, float(r["test_mean_regret"])))
+    fig, axes = plt.subplots(1, 2, figsize=(10.2, 3.8), sharex=True)
+    styles = {
+        "ridge": ("-", "o"),
+        "random_forest": ("--", "s"),
+        "hist_gb": (":", "^"),
+    }
+    for m in sorted(by_model_val):
+        xs = [x for x, _ in sorted(by_model_val[m])]
+        ys = [y for _, y in sorted(by_model_val[m])]
+        ls, mk = styles.get(m, ("-", "o"))
+        axes[0].plot(xs, ys, linestyle=ls, marker=mk, color="black", label=m, linewidth=1.2, markersize=5)
+    for m in sorted(by_model_test):
+        xs = [x for x, _ in sorted(by_model_test[m])]
+        ys = [y for _, y in sorted(by_model_test[m])]
+        ls, mk = styles.get(m, ("-", "o"))
+        axes[1].plot(xs, ys, linestyle=ls, marker=mk, color="black", label=m, linewidth=1.2, markersize=5)
+    axes[0].set_title("Validation mean regret")
+    axes[1].set_title("Test mean regret")
+    for ax in axes:
+        ax.set_xlabel("Horizon")
+        ax.set_ylabel("Mean regret")
+        ax.grid(True, linestyle=":", linewidth=0.6)
+    axes[1].legend(frameon=False, fontsize=8, loc="upper left")
+    fig.tight_layout()
     LATEX.joinpath("figure4_snippet.tex").write_text(
-        "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.94\\textwidth]{figures/manuscript/figure4_ablation.pdf}\n"
-        "\\caption{Visual summary of the offline ablation (Table~\\ref{tab:offline-ablation}): mean regret vs.\\ oracle across horizons for three model families "
-        "on the heavy\\_r1 training-run comparison. "
-        "\\textbf{(a)}~validation; \\textbf{(b)}~test. Lower is better.}\n"
-        "\\label{fig:offline-ablation}\n\\end{figure*}\n",
+        "\\begin{figure*}[t]\n\\centering\n\\includegraphics[width=0.9\\textwidth]{figures/manuscript/figure4_ablation.pdf}\n"
+        "\\caption{Ablation of model family and horizon for eviction-value training.}\n\\end{figure*}\n",
         encoding="utf-8",
     )
     return _save_fig(fig, "figure4_ablation")
 
 
-def _build_table5_offline_selection(train_rows: List[Dict[str, str]], best_cfg: dict) -> Tuple[Path, Path]:
-    """Single-row table: selected (horizon, model) from best_config + metrics from model_comparison (offline only)."""
-    h_sel = int(best_cfg["horizon"])
-    m_sel = str(best_cfg["model"])
-    rule = str(best_cfg.get("selection_rule", ""))
-    row = next((r for r in train_rows if int(r["horizon"]) == h_sel and str(r["model"]) == m_sel), None)
-    if row is None:
-        raise ValueError(f"No train_model_comparison row for best_config horizon={h_sel} model={m_sel}")
-    out = [
-        {
-            "horizon": h_sel,
-            "model": m_sel,
-            "val_mean_regret": float(row["val_mean_regret"]),
-            "test_mean_regret": float(row["test_mean_regret"]),
-            "val_top1": float(row["val_top1"]),
-            "test_top1": float(row["test_top1"]),
-            "selection_rule": rule,
-        }
-    ]
-    csv_path = TABLES / "table5_offline_selection.csv"
-    tex_path = TABLES / "table5_offline_selection.tex"
-    _write_csv(csv_path, out)
-    r = out[0]
-    lines = [
-        "\\begin{tabular}{@{}r l r r r r@{}}",
-        "\\toprule",
-        "Horizon & Model & Val.\\ regret & Test regret & Val.\\ Top-1 & Test Top-1 \\\\",
-        "\\midrule",
-        f"{r['horizon']} & {_latex_escape(str(r['model']))} & "
-        f"{r['val_mean_regret']:.4f} & {r['test_mean_regret']:.4f} & {r['val_top1']:.4f} & {r['test_top1']:.4f} \\\\",
-        "\\bottomrule",
-        "\\end{tabular}",
-    ]
-    tex_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    LATEX.joinpath("table5_snippet.tex").write_text(
-        "\\begin{table*}[t]\n\\centering\n"
-        "\\caption{\\textbf{Offline training only.} Horizon and model chosen by validation mean regret on heavy\\_r1 shards; "
-        "metrics match the corresponding row of Table~\\ref{tab:offline-ablation}. "
-        "This is \\emph{not} an end-to-end cache replay comparison.}\n"
-        "\\label{tab:offline-selection}\n"
-        "\\input{tables/manuscript/table5_offline_selection.tex}\n\\end{table*}\n",
-        encoding="utf-8",
-    )
-    return csv_path, tex_path
-
-
-def _figure5_offline_top1_ablation(train_rows: List[Dict[str, str]]) -> Tuple[Path, Path]:
-    apply_manuscript_matplotlib_style()
-    fig = make_offline_top1_ablation_figure(train_rows)
-    LATEX.joinpath("figure5_snippet.tex").write_text(
-        "\\begin{figure*}[t]\n\\centering\n"
-        "\\includegraphics[width=0.94\\textwidth]{figures/manuscript/figure5_offline_top1_ablation.pdf}\n"
-        "\\caption{\\textbf{Offline training only.} Top-1 error vs.\\ horizon for three model families on heavy\\_r1 shards "
-        "(same offline experiment as Table~\\ref{tab:offline-ablation}). "
-        "Does \\emph{not} depict policy-level replay misses.}\n"
-        "\\label{fig:offline-top1}\n\\end{figure*}\n",
-        encoding="utf-8",
-    )
-    return _save_fig(fig, "figure5_offline_top1_ablation")
-
-
-def _write_figure2_figure3_policy_missing_stubs() -> None:
-    """Comment-only snippets so Fig.~2--3 are never left as stale active floats from an older run."""
-    LATEX.joinpath("figure2_snippet.tex").write_text(
-        "% Figure~2 not built: canonical policy comparison CSV is absent for this run.\n"
-        "% After `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` exists, run:\n"
-        "%   python scripts/paper/build_kbs_main_manuscript_artifacts.py\n"
-        "%\n"
-        "% \\begin{figure*}[t]\n"
-        "% \\centering\n"
-        "% \\includegraphics[width=0.98\\textwidth]{figures/manuscript/figure2_main_performance_comparison.pdf}\n"
-        "% \\caption{End-to-end replay misses by trace family (mean over capacities; \\textbf{lower is better}). "
-        "Policies match Table~\\ref{tab:main-comparison}.}\n"
-        "% \\label{fig:main-performance}\n"
-        "% \\end{figure*}\n",
-        encoding="utf-8",
-    )
-    LATEX.joinpath("figure3_snippet.tex").write_text(
-        "% Figure~3 not built: same gate as Figure~2 (canonical policy comparison CSV).\n"
-        "% Regenerate with: python scripts/paper/build_kbs_main_manuscript_artifacts.py\n"
-        "%\n"
-        "% \\begin{figure*}[t]\n"
-        "% \\centering\n"
-        "% \\includegraphics[width=0.98\\textwidth]{figures/manuscript/figure3_improvement_vs_lru.pdf}\n"
-        "% \\caption{Mean replay misses relative to LRU by family (same policy subset as Table~\\ref{tab:main-comparison}).}\n"
-        "% \\label{fig:improvement-vs-lru}\n"
-        "% \\end{figure*}\n",
-        encoding="utf-8",
-    )
-
-
-def _write_offline_supplement_placeholders() -> None:
-    """When canonical policy comparison exists, offline-only Fig.~5 / Tab.~5 are omitted to avoid duplicate narratives."""
-    LATEX.joinpath("figure5_snippet.tex").write_text(
-        "% Figure~5 (offline Top-1 ablation) omitted when end-to-end replay results are present; use main performance figures and Table~3 instead.\n",
-        encoding="utf-8",
-    )
-    LATEX.joinpath("table5_snippet.tex").write_text(
-        "% Table~5 (offline selection row) omitted when end-to-end replay results are present; use Table~3 instead.\n",
-        encoding="utf-8",
-    )
-
-
-def _remove_offline_only_artifacts_from_disk() -> None:
-    for stem in ("table5_offline_selection",):
-        for ext in (".csv", ".tex"):
-            p = TABLES / f"{stem}{ext}"
-            if p.exists():
-                p.unlink()
-    for stem in ("figure5_offline_top1_ablation",):
-        for ext in (".pdf", ".png"):
-            p = FIGURES / f"{stem}{ext}"
-            if p.exists():
-                p.unlink()
-
-
-def _remove_legacy_figure_files() -> None:
-    legacy = [
-        "figure2_main_performance.pdf",
-        "figure2_main_performance.png",
-        "figure3_aggregate_improvement.pdf",
-        "figure3_aggregate_improvement.png",
-    ]
-    for name in legacy:
-        p = FIGURES / name
-        if p.exists():
-            p.unlink()
-
-
 def main() -> None:
     _ensure_dirs()
-    _remove_legacy_figure_files()
-    missing_core = _core_evidence_ok()
-    if missing_core:
-        raise FileNotFoundError(f"Missing core evidence files: {missing_core}")
+    missing = [k for k, p in EVIDENCE_FILES.items() if not p.exists()]
+    if missing:
+        raise FileNotFoundError(f"Missing required evidence files: {missing}")
 
+    policy_rows = _read_csv(EVIDENCE_FILES["policy_comparison"])
     train_rows = _read_csv(EVIDENCE_FILES["train_model_comparison"])
-    best_cfg = json.loads(EVIDENCE_FILES["best_config"].read_text(encoding="utf-8"))
-    policy_ok = _policy_evidence_ok()
-    policy_rows: Optional[List[Dict[str, str]]] = (
-        _read_csv(EVIDENCE_FILES["policy_comparison"]) if policy_ok else None
-    )
-
-    apply_manuscript_matplotlib_style()
-    plt.rcParams.update({"xtick.labelsize": 8, "ytick.labelsize": 8, "legend.fontsize": 7})
 
     created: Dict[str, List[str]] = {"tables": [], "figures": [], "latex_snippets": []}
-    notes: List[str] = []
+    skipped: List[Dict[str, str]] = []
 
-    if not EVIDENCE_FILES["policy_comparison_md"].exists():
-        notes.append("Optional `policy_comparison_heavy_r1.md` missing; CSV is the quantitative source of truth.")
-
-    t1_csv, t1_tex, table1_ver_tag = _build_table1(policy_rows)
-    created["tables"] += [str(t1_csv), str(t1_tex)]
-    notes.append(f"Table~1 evidence: {table1_ver_tag}.")
-
+    t1 = _build_table1_dataset_summary(policy_rows)
     t2 = _build_table2_policy_roster()
-    t4 = _build_table4_ablation(train_rows, best_cfg)
-    for pair in [t2, t4]:
+    t3 = _build_table3_main_comparison(policy_rows)
+    t4 = _build_table4_ablation(train_rows)
+    for pair in [t1, t2, t3, t4]:
         created["tables"] += [str(pair[0]), str(pair[1])]
 
     f1 = _figure1_method_overview()
+    f2 = _figure2_main_comparison(policy_rows)
+    f3 = _figure3_aggregate_improvement(policy_rows)
     f4 = _figure4_ablation(train_rows)
-    for pair in [f1, f4]:
+    for pair in [f1, f2, f3, f4]:
         created["figures"] += [str(pair[0]), str(pair[1])]
-
-    if policy_ok:
-        assert policy_rows is not None
-        t3 = _build_table3_main_comparison(policy_rows)
-        created["tables"] += [str(t3[0]), str(t3[1])]
-        f2 = _figure2_main_performance_comparison(policy_rows)
-        f3 = _figure3_improvement_vs_lru(policy_rows)
-        for pair in [f2, f3]:
-            created["figures"] += [str(pair[0]), str(pair[1])]
-        notes.append("Table~3 and Figures~2--3 rebuilt from canonical `policy_comparison_heavy_r1.csv`.")
-        _remove_offline_only_artifacts_from_disk()
-        _write_offline_supplement_placeholders()
-        notes.append("Offline-only Fig.~5 / Tab.~5 placeholders written; disk artifacts removed when policy CSV present.")
-    else:
-        t3 = _build_table3_unavailable()
-        created["tables"] += [str(t3[0]), str(t3[1])]
-        _write_figure2_figure3_policy_missing_stubs()
-        notes.append(
-            "Table~3 not verified; Figures~2--3 not built: "
-            "`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` missing."
-        )
-        notes.append("Figure~2 / Figure~3 `latex_snippets` refreshed as comment-only stubs (no PDFs emitted).")
-        t5 = _build_table5_offline_selection(train_rows, best_cfg)
-        f5 = _figure5_offline_top1_ablation(train_rows)
-        created["tables"] += [str(t5[0]), str(t5[1])]
-        created["figures"] += [str(f5[0]), str(f5[1])]
-        notes.append(
-            "Emitted offline-only supplements: Table~5 (`table5_offline_selection`) and Fig.~5 (`figure5_offline_top1_ablation`) from model_comparison + best_config."
-        )
-
-    notes.append(
-        "No dedicated canonical heavy_r1 artifact for guarded/fallback A/B or decision-quality diagnostics; "
-        "see exploratory folders under `analysis/` only with explicit non-canonical caveats."
-    )
 
     for p in sorted(LATEX.glob("*.tex")):
         created["latex_snippets"].append(str(p))
 
     manifest = {
         "inputs": {k: str(v) for k, v in EVIDENCE_FILES.items()},
-        "inputs_present": {k: EVIDENCE_FILES[k].exists() for k in EVIDENCE_FILES},
         "outputs": created,
-        "notes": notes,
-        "table1_evidence_basis": table1_ver_tag,
-        "policy_comparison_present": policy_ok,
+        "notes": [
+            "Main quantitative evidence uses Wulver policy comparison CSV and heavy_r1 training artifacts.",
+            "Guarded-variant ablation on the same heavy Wulver pool is not available as a dedicated artifact; Table/Figure 4 therefore uses model-family ablation within evict_value_v1.",
+        ],
     }
     (REPORTS / "manuscript_artifact_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
     report_lines = [
         "# Manuscript artifact generation report",
         "",
-        "## Evidence status",
-        f"- Policy comparison CSV present: **{policy_ok}** (`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`).",
-        "- Core inputs (train comparison, dataset summary, manifest, baselines, train_metrics, best_config): **OK**.",
+        "## Strongest manuscript-safe basis selected",
+        "- Main comparison: `analysis/evict_value_wulver_v1_policy_comparison.csv` (multi-family, multi-capacity Wulver run).",
+        "- Main training/ablation: `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv` and `analysis/evict_value_wulver_v1_train_metrics_heavy_r1.json`.",
+        "- Dataset coverage: `analysis/evict_value_v1_wulver_dataset_summary_heavy_r1.md` and `analysis/wulver_trace_manifest_full.csv`.",
         "",
-        "## Manuscript table readiness",
-        f"- **Table~1 (dataset summary):** regenerated from `wulver_trace_manifest_full.csv` + live request counts (`load_trace_from_any`). "
-        f"Evidence tag: `{table1_ver_tag}`.",
-    ]
-    if policy_ok:
-        report_lines += [
-            "  - **Manuscript-safe:** yes (capacities aligned to policy CSV rows).",
-        ]
-    else:
-        report_lines += [
-            "  - **Manuscript-safe:** usable as a trace roster; **Main** column is `--` until policy CSV exists to confirm the eval run roster. "
-            "Capacities listed from `evict_value_v1_wulver_dataset_summary_heavy_r1.md` (not from a policy comparison file).",
-        ]
-    report_lines += [
-        "- **Table~2 (policy roster):** compact roster; manuscript-safe.",
-        "- **Table~3 (main quantitative comparison):** "
-        + (
-            "**verified** against canonical `policy_comparison_heavy_r1.csv`."
-            if policy_ok
-            else "**not** generated — `.tex` marks missing canonical evidence; **do not** cite numeric misses from older commits."
-        ),
-        "- **Table~4 (offline ablation):** from `evict_value_wulver_v1_model_comparison_heavy_r1.csv`; manuscript-safe.",
+        "## Created tables",
+        "- Table 1: dataset/trace summary.",
+        "- Table 2: policy roster.",
+        "- Table 3: main quantitative comparison (bold best, underline second-best).",
+        "- Table 4: model-family/horizon ablation for evict_value_v1.",
         "",
-        "## Refreshed in this run",
-        "- Figure~1 (`figure1_method_overview`): two-panel offline/online method schematic.",
-        "- Figure~4 (`figure4_ablation`): offline regret / top-1 panels from `model_comparison_heavy_r1.csv`.",
-        "- Tables~1--4 (CSV + `.tex`) and matching `latex_snippets/*.tex` where applicable.",
-    ]
-    if policy_ok:
-        report_lines += [
-            "- Figure~2 (`figure2_main_performance_comparison`), Figure~3 (`figure3_improvement_vs_lru`) from canonical policy CSV.",
-        ]
-    else:
-        report_lines += [
-            "- **Not built:** Figure~2, Figure~3 (require policy comparison CSV).",
-            "- **Offline supplements:** Table~5 (`table5_offline_selection`) and Figure~5 (`figure5_offline_top1_ablation`) from training artifacts only.",
-        ]
-    report_lines += [
+        "## Created figures",
+        "- Figure 1: method overview schematic.",
+        "- Figure 2: family-level main performance comparison.",
+        "- Figure 3: aggregate improvement vs LRU.",
+        "- Figure 4: ablation plot (val/test mean regret).",
         "",
-        "## Stale / replaced content",
-        "- Any previously committed Table~3 numeric body from a run **without** the canonical policy CSV should be treated as **invalid** once this report shows policy CSV absent.",
-        "",
-        "## Canonical vs exploratory",
-        "- Only paths under `EVIDENCE_FILES` in `build_kbs_main_manuscript_artifacts.py` drive this bundle.",
-        "- When policy CSV is **absent**: offline-only **Table~5** / **Fig.~5** are generated from `model_comparison_heavy_r1` + `best_config_heavy_r1` (not end-to-end replay). "
-        "When policy CSV is **present**: those files are omitted and snippet placeholders document that.",
-        "",
-        "## Safe to cite now",
-        "- Always: method schematic Fig.~1; offline ablation Table~4 / Fig.~4 (from `model_comparison_heavy_r1.csv`).",
-        "- Table~1 trace list: **yes**, with the capacity caveat above if policy CSV is absent.",
-        "- Table~2 roster: **yes**.",
-        "- Main quantitative numbers (Table~3 / Figs.~2--3): **only if** policy CSV was present for this run.",
+        "## Skipped or constrained items",
+        "- Guarded/fallback ablation specifically on the same heavy Wulver artifact pool was not found as a dedicated canonical artifact; main ablation uses in-pool model-family/horizon evidence instead.",
         "",
         "## Output roots",
         f"- Tables: `{TABLES}`",
         f"- Figures: `{FIGURES}`",
-        f"- Snippets: `{LATEX}`",
+        f"- Manifest/report/LaTeX snippets: `{REPORTS}`",
     ]
+    if skipped:
+        report_lines.append("")
+        report_lines.append("### Detailed skipped list")
+        for s in skipped:
+            report_lines.append(f"- {s['item']}: {s['reason']}")
     (REPORTS / "manuscript_artifact_report.md").write_text("\n".join(report_lines) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":
+    import numpy as np
+
+    plt.rcParams.update(
+        {
+            "font.size": 10,
+            "axes.titlesize": 11,
+            "axes.labelsize": 10,
+            "legend.fontsize": 8,
+            "xtick.labelsize": 9,
+            "ytick.labelsize": 9,
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
+        }
+    )
     main()
