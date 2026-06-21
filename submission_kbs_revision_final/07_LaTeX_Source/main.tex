@@ -184,13 +184,12 @@ Recent-activity features & Summarize short-window request activity and local wor
 \end{tabular}
 \end{table}
 
-\FloatBarrier
 \subsection{Guarded Fallback Mechanism}
 \label{subsec:guarded_fallback_mechanism}
 
-A learned eviction scorer can improve decision quality when its candidate rankings are well aligned with future reuse, but its behavior may deteriorate when the workload changes or when local predictive context becomes unreliable. For this reason, the learned scorer is not treated as sufficient by itself. We therefore describe a lightweight fallback mechanism, an optional guard intended to preserve a conservative decision path when recent online behavior suggests that the learned policy is making locally unsafe choices; we treat this guard as an implementation safeguard and a candidate design for future empirical validation rather than as a demonstrated component of the present results (see Limitations).
+A learned eviction scorer can improve decision quality when its candidate rankings are well aligned with future reuse, but its behavior may deteriorate when the workload changes or when local predictive context becomes unreliable. We therefore describe a lightweight optional guard that can temporarily delegate to a conservative fallback when recent online behavior suggests locally unsafe learned decisions; we treat this guard as an implementation safeguard for future empirical study rather than as a demonstrated component of the present results (see Limitations).
 
-The guard is based on a simple signal: repeated \emph{very-early-return} evictions. Let $q_t^{*}$ denote the victim proposed by the learned scorer at time $t$. If the evicted item is requested again within a short window, then the decision is treated as suspicious because it indicates that an item with immediate reuse value may have been removed. This turns a local post-decision outcome into an online safety signal.
+The guard uses repeated \emph{very-early-return} evictions as its signal. Let $q_t^{*}$ denote the victim proposed by the learned scorer at time $t$. If the evicted item is requested again within a short window, the decision is treated as suspicious because it indicates that an item with immediate reuse value may have been removed.
 
 Formally, let
 \begin{equation}
@@ -224,9 +223,7 @@ q_t^{\mathrm{fb}}, & \text{if } \mathcal{M}_t = \textsc{fallback},
 \end{equation}
 where $q_t^{\mathrm{fb}}$ is the victim selected by the fallback controller. After $D$ requests in fallback mode, the system returns to base mode unless the trigger condition fires again.
 
-This mechanism is intentionally lightweight: rather than calibrated uncertainty estimates, a separate adversarial detector, or a heavy expert-combination procedure, it uses an observable local failure pattern directly tied to eviction quality, so safety is assessed through concrete recent consequences rather than an abstract global trust score. It should therefore be interpreted as a practical empirical mechanism whose trigger signal, thresholds, duration, and fallback choice are implementation decisions for controlled study, not as a theorem-backed robustness guarantee; this positioning is consistent with the practical robustification literature in learning-augmented caching, where switching and fallback mechanisms limit the damage caused by unreliable predictive behavior \cite{wei2020better_simpler_lac,chledowski2021robust_lac_experimental}.
-
-Overall, the decision process has two layers. The first layer is the learned eviction-value scorer, which compares the current candidates and proposes a victim. The second layer is an optional guard, which monitors recent online behavior and temporarily hands control to a conservative fallback when local evidence indicates repeated unsafe decisions. This preserves the candidate-level structure of the method while providing a practical mechanism for reducing exposure to local prediction failures. We note that this second layer's empirical effect on end-to-end outcomes has not yet been measured in the present study; we discuss this gap directly in Limitations.
+This mechanism is intentionally lightweight and heuristic: trigger signal, thresholds, duration, and fallback choice are implementation decisions for controlled study, not a theorem-backed robustness guarantee \cite{wei2020better_simpler_lac,chledowski2021robust_lac_experimental}. The learned scorer proposes a victim; the optional guard may temporarily hand control to a conservative fallback when local evidence indicates repeated unsafe decisions. The guard's end-to-end effect has not been measured in the present study (see Limitations).
 
 \subsection{Algorithmic Workflow and Implementation Details}
 \label{subsec:workflow_implementation}
@@ -251,6 +248,13 @@ At a high level, the method proceeds in five stages.
     \item \textbf{Optional fallback control.}
     When the guarded variant is enabled, the controller monitors suspicious early-return events and temporarily switches to a conservative fallback policy when recent online behavior suggests that the learned scorer is locally unsafe.
 \end{enumerate}
+
+\begin{figure*}[!tbp]
+\centering
+\includegraphics[width=0.96\textwidth]{figures/method_overview.png}
+\caption{Conceptual overview of the eviction-value workflow. Offline replay is used to construct candidate-level training examples and finite-horizon loss targets, a supervised scorer is fitted to estimate decision-time eviction loss, and the online policy evicts the candidate with minimum predicted loss. An optional lightweight fallback layer can temporarily delegate control to a conservative baseline when repeated local signals indicate unsafe learned decisions.}
+\label{fig:method_overview}
+\end{figure*}
 
 In the implementation studied here, candidate-level supervision is generated for the main eviction-value line, a scorer is trained for a chosen replay horizon, and the resulting policy is evaluated in the same simulator used for the reference baselines. The framework records aggregate metrics together with step-level logs so that downstream behavior can be analyzed jointly with fallback activity.
 
@@ -287,14 +291,6 @@ Several implementation choices matter for interpreting the results. First, the r
 
 Finally, the implementation is designed to support conservative empirical claims. The main methodological contribution of the present manuscript is the candidate-level supervision and scoring framework. Other policy families and exploratory variants in the broader codebase are used primarily for contextual comparison and sensitivity analysis rather than as the center of the paper.
 
-\begin{figure*}[tbp]
-\centering
-\includegraphics[width=0.96\textwidth]{figures/method_overview.png}
-\caption{Conceptual overview of the eviction-value workflow. Offline replay is used to construct candidate-level training examples and finite-horizon loss targets, a supervised scorer is fitted to estimate decision-time eviction loss, and the online policy evicts the candidate with minimum predicted loss. An optional lightweight fallback layer can temporarily delegate control to a conservative baseline when repeated local signals indicate unsafe learned decisions.}
-\label{fig:method_overview}
-\end{figure*}
-
-\FloatBarrier
 \section{Experiments and Discussion}
 \label{sec:experiments}
 
@@ -329,7 +325,7 @@ Table~\ref{tab:trace_families} summarizes the workload families relevant to the 
 
 \begin{table}[!htbp]
 \centering
-\caption{Trace families relevant to the experimental study. The repository supports a broader workload collection than any single table should claim; reported results are restricted to the subset directly instantiated by the canonical manuscript artifacts.}
+\caption{Trace families in the artifact-backed evaluation. The repository supports additional workloads; reported results are restricted to the canonical artifact subset.}
 \label{tab:trace_families}
 \small
 \begin{tabular}{p{2.8cm} p{4.3cm} p{5.0cm}}
@@ -347,7 +343,7 @@ Production-style cache traces & Twitter cache clusters, SHARDS-related resources
 
 \begin{table}[!htbp]
 \centering
-\caption{Main policy families used in the empirical comparison, distinguishing stable reference baselines from the proposed learned eviction-value policy. A diagnostic-only blind-oracle variant used for internal sanity checks (not for the comparisons reported here) is excluded.}
+\caption{Main policy families in the empirical comparison. A diagnostic-only blind-oracle variant used for internal sanity checks is excluded from the reported comparisons.}
 \label{tab:main_policy_families}
 \small
 \begin{tabular}{p{2.2cm} p{2.3cm} p{6.6cm}}
@@ -370,7 +366,6 @@ The primary evaluation metric is the total number of cache misses incurred durin
 
 This evaluation design is intended to answer three questions. First, can candidate-level eviction-value prediction improve upon strong classical and predictive reference policies under a common replay protocol? Second, how does the learned policy compare with robust combiner-style baselines when predictive information is imperfect? Third, how do offline target-quality trends relate to downstream online replay behavior? In the present manuscript, the strongest displayed evidence concerns the scorer-selection and horizon-analysis path, while broader multi-trace replay claims are restricted to the canonical artifact-backed evaluation outputs. This distinction is important for maintaining consistency between the manuscript narrative and the repository evidence.
 
-\FloatBarrier
 \subsection{Offline Ablation and Model Selection}
 \label{subsec:main_results}
 
@@ -414,7 +409,6 @@ Horizon & Model & Val.\ regret & Test regret & Val.\ Top-1 & Test Top-1 \\
     \label{fig:evict-value-ablation}
 \end{figure}
 
-\FloatBarrier
 \subsection{End-to-End Online Replay Evaluation Across Available Capacities}
 \label{subsec:end_to_end_capacities}
 
@@ -456,7 +450,6 @@ Second, the other reference policies cluster tightly around LRU at every evaluat
 
 Third, the capacity trend for \texttt{evict\_value\_v1} is non-monotonic: the gap narrows from capacity 32 to capacity 64 and then widens sharply at capacity 128, rather than improving or degrading smoothly with capacity. We examine this pattern at the workload level next, and return to its likely cause in the Discussion and Limitations.
 
-\FloatBarrier
 \subsection{Workload-Specific Breakdown}
 \label{subsec:workload_breakdown}
 
@@ -490,7 +483,6 @@ Second, the capacity-128 widening is concentrated in, but not limited to, two fa
 
 Taken together with the offline ablation in Section~\ref{subsec:main_results}, the capacity-128 degradation documented above is broad-based across workload families rather than an artifact of a single outlier trace, reinforcing rather than qualifying away the negative end-to-end result already reported in Section~\ref{subsec:end_to_end_capacities}. We discuss its likely cause in Section~\ref{subsec:discussion_analysis} and revisit it in Section~\ref{subsec:limitations}.
 
-\FloatBarrier
 \subsection{Discussion and Analysis}
 \label{subsec:discussion_analysis}
 

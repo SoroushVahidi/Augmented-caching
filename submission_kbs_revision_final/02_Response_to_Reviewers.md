@@ -168,7 +168,10 @@ Date: 2026-06-21
 > We have revised our treatment of the guarded fallback mechanism
 > throughout the manuscript (contributions list and method-section wording),
 > describing it as an implementation safeguard / optional guard rather than
-> a validated contribution. We confirm that no dedicated
+> a validated contribution. The method section no longer presents the guard
+> as a full algorithmic centerpiece: the former Algorithm~1 pseudocode block
+> has been removed and replaced with concise prose, and the guarded-fallback
+> subsection has been shortened accordingly. We confirm that no dedicated
 > fallback-triggered-vs-disabled ablation has been added in this revision;
 > the mechanism remains an unvalidated, clearly-scoped guard, and we have
 > ensured the manuscript does not claim otherwise.
