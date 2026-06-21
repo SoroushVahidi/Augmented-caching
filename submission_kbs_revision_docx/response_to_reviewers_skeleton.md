@@ -205,11 +205,14 @@ for a canonical four-capacity sweep.
 ### Minor Problem 8 (R3-Minor8) — verbosity and repetition
 
 > We acknowledge this concern. This revision prioritized adding the missing
-> end-to-end evaluation evidence (Issues 1/3/9) over shortening; the
-> manuscript has grown rather than shrunk in this pass as a result. A
-> dedicated shortening pass targeting the reviewer's 30-40% reduction
-> target is planned as a follow-up before final submission and has not yet
-> been applied to `main.tex`.
+> end-to-end evaluation evidence (Issues 1/3/9), which grew the manuscript
+> rather than shrinking it. We have since applied two narrow, no-compute
+> repetition passes (2026-06-21) that removed duplicated restatements of
+> already-established claims in the Workload-Specific Breakdown, Summary of
+> Findings, and guard/fallback discussion, and compressed the overlap
+> between Sections 1.1 and 1.2 that this comment specifically names. This is
+> not the full 30-40% reduction requested in R3-Rec6; a larger shortening
+> and reframing pass remains a candidate follow-up before final submission.
 
 ### Minor Problem 9 (R3-Minor9) — missing workload-specific analysis
 
@@ -240,8 +243,9 @@ for a canonical four-capacity sweep.
 5. **(R3-Rec5)** Validate the fallback mechanism or remove it — not yet
    resolved; mechanism remains an unvalidated, clearly-scoped guard; see
    Issue 6.
-6. **(R3-Rec6)** Shorten the manuscript by 30-40% — deferred to a
-   follow-up pass; see Minor Problem 8.
+6. **(R3-Rec6)** Shorten the manuscript by 30-40% — two narrow repetition
+   passes applied (2026-06-21); see Minor Problem 8. The full 30-40% target
+   remains a candidate follow-up before final submission.
 7. **(R3-Rec7)** Investigate why H=4 works best — see R2-MC1.
 8. **(R3-Rec8)** Provide workload-specific breakdowns — added in the
    workload-specific breakdown subsection;
@@ -255,8 +259,11 @@ The cap32/64/128 end-to-end sweep is now complete and its results are
 reflected above; this letter still must not be converted to a final
 submission document until: (1) the fallback validate-or-remove decision is
 made (R3-Issue6/Rec5); (2) the HALP-reimplementation scope decision is made
-(R3-Issue2/Rec2); (3) the manuscript-shortening pass is actually applied to
-`main.tex` (R3-Minor8/Rec6). cap256 remains unrun and out of scope for the
+(R3-Issue2/Rec2); (3) the full 30-40% manuscript-shortening target is met or
+explicitly renegotiated (R3-Minor8/Rec6) — two narrow no-compute repetition
+passes have already been applied to `main.tex` as of 2026-06-21, but the
+full reduction target has not been attempted. cap256 remains unrun and out
+of scope for the
 three-capacity replay reported here, and this letter must continue to say so
 rather than implying otherwise. See `reports/kbs_response_to_reviewers_skeleton.md`
 for the authoritative, per-item status tags.

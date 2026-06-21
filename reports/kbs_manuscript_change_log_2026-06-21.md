@@ -369,3 +369,44 @@ numerical results, the cap256/canonical-heavy-r1 caveats, the guard/fallback
 unvalidated framing, and the overhead-benchmark local/tmux (not
 Wulver/Slurm) description. Net effect: 3 paragraphs edited, ~115 words
 removed, no new experiments, no claim changes.
+
+## Final co-author-readiness pass (no-compute)
+
+A second narrow, no-compute pass closed three remaining items from a final
+readiness audit of PR #49:
+
+- Trimmed the overlap between "Problem Setting and Motivation" (1.1) and
+  "Research Objective and Scope" (1.2) that R3-Minor8 named explicitly: the
+  candidate-level framing and the "predictive information is useful only if
+  it improves the decision" premise were each stated twice and are now
+  stated once, with 1.1 closing with a cross-reference to 1.2 instead of
+  re-deriving 1.2's content. Also replaced one residual "translated into
+  robust online eviction decisions" phrase in 1.2 with "translated into more
+  decision-aligned online eviction choices" to avoid echoing the
+  title-level robustness framing already removed elsewhere.
+- Added one Limitations sentence (new "Sixth" point) stating that this is a
+  single-author revision whose validation cannot substitute for independent
+  multi-author replication, mitigated by repository-level audit trails,
+  schema/replay-artifact checks, and negative-result reporting. This gives
+  the manuscript body the in-text counterpart that the R3-Issue7 response
+  already referenced but that previously existed only in the back-matter AI
+  Declaration.
+- Updated the R3-Minor8/R3-Rec6 text in both
+  `reports/kbs_response_to_reviewers_skeleton.md` and
+  `submission_kbs_revision_docx/response_to_reviewers_skeleton.md`, which
+  had still said a shortening pass was "planned" and "not yet applied to
+  `main.tex`" — stale as of the previous pass's commit. Both now describe
+  the two narrow passes actually applied and are explicit that the full
+  30-40% reduction target is still open. Status tags for R3-Minor8/R3-Rec6
+  moved from `[PENDING MANUSCRIPT REWRITE]` to `[IN PROGRESS]` in the
+  tracker (R3-Summary stays `[PENDING MANUSCRIPT REWRITE]`, since it
+  depends on the full R3-Rec6 target, not just the narrow passes); the
+  status-summary table's `[IN PROGRESS]` count was also corrected from a
+  pre-existing miscount (listed 16 items under "13") to the actual count.
+
+No experiments were run, no raw evaluation artifact changed, and no claim,
+number, or caveat (cap256, canonical heavy-r1, guard/fallback validation
+status, overhead-benchmark environment, negative end-to-end result) changed.
+Net effect: 2 short paragraphs trimmed/merged in the Introduction, one new
+Limitations sentence added, and the two response-letter files' R3-Minor8
+sections brought up to date with the manuscript's actual state.

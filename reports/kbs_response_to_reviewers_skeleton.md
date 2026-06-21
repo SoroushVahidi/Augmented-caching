@@ -414,17 +414,23 @@ this specific reviewer concern in this revision pass).
 > We thank the reviewer for this observation. This revision necessarily
 > grew the manuscript (a new end-to-end evaluation subsection, a
 > workload-specific breakdown, and an expanded Discussion/Limitations
-> treatment of the capacity-128 finding), so a dedicated shortening pass
-> reducing overlapping content in Sections 1.1-1.2 and the repeated
-> methodological caution in Sections 3.4/4.1-4.2 is planned as a follow-up
-> editing pass once the current content additions are finalized, rather
-> than attempted in the same pass as adding new empirical content.
+> treatment of the capacity-128 finding). We have since applied two narrow,
+> no-compute repetition passes (2026-06-21) that removed duplicated
+> restatements of already-established claims in the Workload-Specific
+> Breakdown, Summary of Findings, and guard/fallback discussion, and
+> compressed the overlap between Sections 1.1 ("Problem Setting and
+> Motivation") and 1.2 ("Research Objective and Scope") that the reviewer
+> specifically identified. This is not the full 30-40% reduction requested
+> in R3-Rec6; it targets the most repetitive caveats and the named section
+> overlap directly while preserving every substantive limitation and
+> caveat.
 
-**Status: `[PENDING MANUSCRIPT REWRITE]`** — a cut/reframing plan exists
-(`reports/kbs_manuscript_shortening_and_reframing_plan.md`); the new
-end-to-end/workload-breakdown content added in this pass works against
-shortening in the short term, so the condensing pass is explicitly deferred
-to a follow-up editing step rather than abandoned.
+**Status: `[IN PROGRESS]`** — the two repetition passes above are applied
+directly in `manuscript_source/main.tex`, not merely planned. A cut/
+reframing plan for a larger reduction still exists
+(`reports/kbs_manuscript_shortening_and_reframing_plan.md`), but a full
+30-40% cut has not been attempted, so this stays `[IN PROGRESS]` rather
+than `[DONE]`.
 
 ### Minor Problem 9 (R3-Minor9) — missing workload-specific analysis
 
@@ -450,7 +456,7 @@ of scope for this revision (on hold, see banner above).
 3. **(R3-Rec3) Report computational overhead.** Status: `[IN PROGRESS]` — same as Issue 5; the "Overhead and Scalability" subsection is now actually in `main.tex` (2026-06-19, see R2-MC2), and now includes the controlled local/tmux wall-clock benchmark added 2026-06-21 (see Issue 5/R2-MC2 updates above).
 4. **(R3-Rec4) Reduce hedging or reframe scope.** Status: `[IN PROGRESS]` — same as Issue 4; reframe direction (b) chosen and applied across abstract, Summary of Findings, Discussion, and Limitations (2026-06-21).
 5. **(R3-Rec5) Validate the fallback mechanism or remove it.** Status: `[PENDING BASELINE DECISION]` — same as Issue 6; the demotion wording is now actually in `main.tex` (2026-06-19), but the underlying validate-or-remove decision is still open.
-6. **(R3-Rec6) Shorten the manuscript by 30-40%.** Status: `[PENDING MANUSCRIPT REWRITE]` — the cut/reframing plan now exists in `reports/kbs_manuscript_shortening_and_reframing_plan.md`; explicitly deferred to a follow-up pass since this revision added content (see Minor Problem 8 update, 2026-06-21).
+6. **(R3-Rec6) Shorten the manuscript by 30-40%.** Status: `[IN PROGRESS]` — two narrow, no-compute repetition passes applied directly to `main.tex` (2026-06-21, see Minor Problem 8 update); the cut/reframing plan in `reports/kbs_manuscript_shortening_and_reframing_plan.md` covers a larger reduction that has not been attempted, so the full 30-40% target remains open.
 7. **(R3-Rec7) Investigate why H=4 works best.** Status: `[IN PROGRESS]` — same as R2-MC1; the "Replay Horizon Selection" subsection is now actually in `main.tex` (2026-06-19, see R2-MC1).
 8. **(R3-Rec8) Provide workload-specific breakdowns.** Status: `[IN PROGRESS]` — same as Minor Problem 9; cap32/64/128 breakdown now in `main.tex` (2026-06-21), cap256 out of scope.
 
@@ -461,10 +467,10 @@ of scope for this revision (on hold, see banner above).
 | Status tag | Count | Sections |
 |---|---|---|
 | `[DONE]` | 0 | None — no section is fully finalized; even sections with ready evidence (R2-MC2, R3-Issue5/Rec3) still need a final cross-check, and several depend on the cap256 scope decision remaining open. |
-| `[IN PROGRESS]` | 13 | AE, R2-MC1, R2-MC2, R2-MC3 (end-to-end half), R3-Issue1, R3-Issue3, R3-Issue4, R3-Issue5, R3-Issue7, R3-Minor9, R3-Rec1, R3-Rec2 (SIEVE/FIFO-Reinsertion half), R3-Rec3, R3-Rec4, R3-Rec7, R3-Rec8 |
+| `[IN PROGRESS]` | 18 | AE, R2-MC1, R2-MC2, R2-MC3 (end-to-end half), R3-Issue1, R3-Issue3, R3-Issue4, R3-Issue5, R3-Issue7, R3-Minor8, R3-Minor9, R3-Rec1, R3-Rec2 (SIEVE/FIFO-Reinsertion half), R3-Rec3, R3-Rec4, R3-Rec6, R3-Rec7, R3-Rec8 |
 | `[PENDING CAP128/CAP256]` | 0 | None remaining — cap128 completed 2026-06-21; cap256 is now tracked as an explicit scope decision (see banner above), not a pending-compute tag, and no section claims a cap256 result. |
 | `[PENDING BASELINE DECISION]` | 4 | R2-MC3 (fallback half), R3-Issue2, R3-Issue6, R3-Rec2 (HALP half), R3-Rec5 |
-| `[PENDING MANUSCRIPT REWRITE]` | 3 | R3-Summary, R3-Minor8, R3-Rec6 |
+| `[PENDING MANUSCRIPT REWRITE]` | 1 | R3-Summary (depends on R3-Rec6 being fully resolved, i.e. the full 30-40% target, not just the narrow passes applied so far) |
 | `[PENDING DOCX PACKAGE]` | 0 | Not applicable to any reviewer-comment response section itself — relevant only to the submission package, not this letter (see `reports/kbs_docx_submission_package_report.md`). |
 
 **Updated 2026-06-21.** cap128 has completed and the cap32/64/128
@@ -483,5 +489,20 @@ validate-or-remove) remain genuinely open author decisions rather than
 compute-blocked items. R3-Issue7 was upgraded from
 `[PENDING MANUSCRIPT REWRITE]` to `[IN PROGRESS]` because the
 reproducibility/validation-depth evidence it cites is now real and
-documented, even though the manuscript's own AI Declaration text has not
-yet been cross-checked against this specific framing.
+documented.
+
+**Updated 2026-06-21 (second pass).** Two further narrow, no-compute edits
+closed two remaining gaps identified in a final readiness audit. First,
+`main.tex` now has a Limitations sentence stating that this is a
+single-author revision whose validation cannot substitute for independent
+multi-author replication, mitigated by repository-level audit trails,
+schema/replay-artifact checks, and negative-result reporting — this is the
+in-body text the R3-Issue7 response above refers to, closing the gap noted
+in the previous update. Second, the Introduction's "Problem Setting and
+Motivation" / "Research Objective and Scope" overlap that R3-Minor8
+specifically named has been compressed (duplicated candidate-level framing
+and the "predictive information is useful only if it improves the decision"
+premise are now stated once, not twice), which moved R3-Minor8 and R3-Rec6
+from `[PENDING MANUSCRIPT REWRITE]` to `[IN PROGRESS]`. Neither edit changed
+any claim, number, or caveat; the full 30-40% reduction in R3-Rec6 remains
+unattempted.
