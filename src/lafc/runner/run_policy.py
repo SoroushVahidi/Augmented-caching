@@ -23,8 +23,8 @@ Supported ``--policy`` values (including aliases):
     atlas_v2, atlas_v3, blind_oracle, blind_oracle_lru_combiner, evict_value_v1,
     evict_value_v1_guarded, la_det, la_det_approx, la_det_faithful, lru, marker,
     ml_gate_v1, ml_gate_v2, offline_belady, parsimonious_caching, predictive_marker,
-    rest_v1, robust_ftp, robust_ftp_d_marker, sentinel_budgeted_guard_v2,
-    sentinel_robust_tripwire_v1, trust_and_doubt, weighted_lru
+    fifo_reinsertion, rest_v1, robust_ftp, robust_ftp_d_marker, sentinel_budgeted_guard_v2,
+    sentinel_robust_tripwire_v1, sieve, trust_and_doubt, weighted_lru
 """
 
 from __future__ import annotations
@@ -60,6 +60,8 @@ from lafc.policies.atlas_v3 import AtlasV3Policy
 from lafc.policies.atlas_cga_v1 import AtlasCGAV1Policy
 from lafc.policies.atlas_cga_v2 import AtlasCGAV2Policy
 from lafc.policies.rest_v1 import RestV1Policy
+from lafc.policies.sieve import SievePolicy
+from lafc.policies.fifo_reinsertion import FIFOReinsertionPolicy
 from lafc.policies.ml_gate_v1 import MLGateV1Policy
 from lafc.policies.ml_gate_v2 import MLGateV2Policy
 from lafc.policies.evict_value_v1 import EvictValueV1Policy
@@ -90,6 +92,8 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "la_det_faithful": LAWeightedPagingDeterministicFaithful(),
     # Baseline 2: Lykouris & Vassilvitskii 2018 (unweighted paging)
     "marker": MarkerPolicy(),
+    "sieve": SievePolicy(),
+    "fifo_reinsertion": FIFOReinsertionPolicy(),
     "blind_oracle": BlindOraclePolicy(),
     "predictive_marker": PredictiveMarkerPolicy(),
     # Baseline 5: Im et al. 2022 parsimonious adaptive querying.

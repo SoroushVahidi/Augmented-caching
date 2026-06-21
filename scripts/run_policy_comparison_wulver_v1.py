@@ -13,11 +13,13 @@ from lafc.policies.atlas_v3 import AtlasV3Policy
 from lafc.policies.blind_oracle import BlindOraclePolicy
 from lafc.policies.blind_oracle_lru_combiner import BlindOracleLRUCombiner
 from lafc.policies.evict_value_v1 import EvictValueV1Policy
+from lafc.policies.fifo_reinsertion import FIFOReinsertionPolicy
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.ml_gate_v1 import MLGateV1Policy
 from lafc.policies.ml_gate_v2 import MLGateV2Policy
 from lafc.policies.predictive_marker import PredictiveMarkerPolicy
 from lafc.policies.rest_v1 import RestV1Policy
+from lafc.policies.sieve import SievePolicy
 from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
 from lafc.predictors.offline_from_trace import attach_predicted_caches
 from lafc.runner.run_policy import run_policy
@@ -30,6 +32,8 @@ POLICIES = {
     "ml_gate_v1": lambda _: MLGateV1Policy(),
     "atlas_v3": lambda _: AtlasV3Policy(),
     "lru": lambda _: LRUPolicy(),
+    "sieve": lambda _: SievePolicy(),
+    "fifo_reinsertion": lambda _: FIFOReinsertionPolicy(),
     "blind_oracle": lambda _: BlindOraclePolicy(),
     "predictive_marker": lambda _: PredictiveMarkerPolicy(),
     "trust_and_doubt": lambda _: TrustAndDoubtPolicy(seed=7),

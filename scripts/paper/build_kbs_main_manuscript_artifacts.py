@@ -291,6 +291,20 @@ def _build_table2_policy_roster() -> Tuple[Path, Path]:
             "note": "Recency baseline.",
         },
         {
+            "policy": "sieve",
+            "label": "SIEVE",
+            "category": "Classical",
+            "role": "Baseline",
+            "note": "CLOCK-family turn-key eviction with a single FIFO queue and an advancing hand pointer.",
+        },
+        {
+            "policy": "fifo_reinsertion",
+            "label": "FIFO-Reinsertion",
+            "category": "Classical",
+            "role": "Baseline",
+            "note": "CLOCK / Second-Chance family baseline that reinserts retained survivors at the queue head.",
+        },
+        {
             "policy": "predictive_marker",
             "label": "PredMk",
             "category": "LA robust",

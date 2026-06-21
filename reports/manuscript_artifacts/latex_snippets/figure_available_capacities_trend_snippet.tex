@@ -1,0 +1,8 @@
+% Available-capacity replay figure snippet -- capacities evaluated: 32, 64, 128.
+% Capacity 256 was not evaluated in this revision, and this figure should not be cited as a full heavy_r1 sweep.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figures/manuscript/figure_available_capacities_trend.pdf}
+  \caption{Capacity-trend comparison across the available-capacity replay (capacities 32, 64, and 128; capacity 256 was not evaluated in this revision). (a) Mean replay misses per policy at each capacity, averaged across the 7 trace families. (b) \texttt{evict\_value\_v1}'s relative miss gap against LRU, SIEVE, and FIFO-Reinsertion at each capacity; positive values indicate more misses than the baseline. The non-monotonic widening at capacity 128 is discussed in the Limitations section.}
+  \label{fig:available-capacities-trend}
+\end{figure}
