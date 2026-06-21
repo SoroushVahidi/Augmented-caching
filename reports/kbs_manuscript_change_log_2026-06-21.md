@@ -338,3 +338,34 @@ rather than silently left inconsistent.
 This pass did not change any raw evaluation artifact other than the three
 new overhead-benchmark files listed above, did not launch cap256, and did
 not alter the reported three-capacity end-to-end result.
+
+## Repetition/verbosity pass (no-compute, R3-Minor8/R3-Rec6)
+
+A narrow, no-compute pass targeting R3-Minor8/R3-Rec6 (verbosity/repetition)
+removed three near-duplicate restatements of already-established claims,
+without changing any claim, number, or caveat:
+
+- End of "Workload-Specific Breakdown": replaced a full restatement of the
+  "decision-aligned supervision target... not yet a practically superior
+  online policy... does not improve on LRU/SIEVE/FIFO-Reinsertion" sentence
+  with a shorter bridge sentence plus explicit cross-references to
+  Section~\ref{subsec:discussion_analysis} (Discussion) and
+  Section~\ref{subsec:limitations} (Limitations), where the full claim is
+  stated once each and left untouched.
+- End of "Summary of Findings": condensed a paragraph that nearly duplicated
+  the closing paragraph of "Discussion and Analysis" verbatim, replacing it
+  with a shorter version that keeps the mixed-conclusion summary and the
+  negative end-to-end result but cross-references Discussion instead of
+  re-deriving it.
+- "Implications of the Proposed Approach": merged two near-identical
+  guard/fallback caveats ("not used to support the quantitative claims in
+  this revision") that appeared in two separate paragraphs of the same
+  subsection into one, with the second occurrence now cross-referencing the
+  first and Section~\ref{subsec:guarded_fallback_mechanism}.
+
+The Abstract, the full "Discussion and Analysis" closing paragraph, and the
+full Limitations capacity-128 paragraph were left fully intact, as were all
+numerical results, the cap256/canonical-heavy-r1 caveats, the guard/fallback
+unvalidated framing, and the overhead-benchmark local/tmux (not
+Wulver/Slurm) description. Net effect: 3 paragraphs edited, ~115 words
+removed, no new experiments, no claim changes.
