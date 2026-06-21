@@ -269,3 +269,27 @@ author decision rather than an automatic edit.
 
 This pass did not change any raw evaluation artifact, did not launch
 cap256, and did not alter the reported three-capacity end-to-end result.
+
+## Guard subsection rename (no-compute pass)
+
+A final-audit pass identified one remaining structural echo of the
+title's robustness overclaim: the Method subsection describing the
+optional fallback mechanism was headed "Robust Decision Mechanism"
+(`\label{subsec:robust_decision_mechanism}`), while its own body text
+states the guard is "not a theorem-backed robustness guarantee" and that
+its empirical effect "has not yet been measured." This text-only fix:
+
+- Renamed the subsection to "Guarded Fallback Mechanism"
+  (`\label{subsec:guarded_fallback_mechanism}`).
+- Updated the one descriptive cross-reference immediately before the
+  subsection ("...forms the basis for the robust decision mechanism
+  described next" to "...the guarded fallback mechanism described
+  next").
+
+No `\ref{subsec:robust_decision_mechanism}` cross-reference existed
+elsewhere in the document, so no other text required updating. No
+results, numbers, tables, cap256 language, or baseline/fallback claims
+were changed.
+
+This pass did not change any raw evaluation artifact, did not launch
+cap256, and did not alter the reported three-capacity end-to-end result.

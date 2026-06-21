@@ -164,7 +164,7 @@ q_t^{*} = \arg\min_{q \in \mathcal{V}_t} \widehat{L}_H(q,t).
 
 This candidate-centric formulation has two practical advantages. First, it is directly aligned with the actual online choice made at a full-cache miss: the policy compares the available candidates and selects one victim. Second, it supports robust extensions without changing the basic decision object. If the learned scores become unreliable in a particular regime, a fallback mechanism can still intervene at the same decision point by overriding or temporarily replacing the learned victim choice.
 
-The framework should therefore be understood as a decision-focused layer over online caching rather than as a claim of offline optimality. The replay target in \eqref{eq:eviction_loss} provides a stable and operational route for integrating predictive information into cache replacement, and it forms the basis for the robust decision mechanism described next.
+The framework should therefore be understood as a decision-focused layer over online caching rather than as a claim of offline optimality. The replay target in \eqref{eq:eviction_loss} provides a stable and operational route for integrating predictive information into cache replacement, and it forms the basis for the guarded fallback mechanism described next.
 
 \begin{table}[t]
 \centering
@@ -185,8 +185,8 @@ Recent-activity features & Summarize short-window request activity and local wor
 \end{tabular}
 \end{table}
 
-\subsection{Robust Decision Mechanism}
-\label{subsec:robust_decision_mechanism}
+\subsection{Guarded Fallback Mechanism}
+\label{subsec:guarded_fallback_mechanism}
 
 A learned eviction scorer can improve decision quality when its candidate rankings are well aligned with future reuse, but its behavior may deteriorate when the workload changes or when local predictive context becomes unreliable. For this reason, the learned scorer is not treated as sufficient by itself. We therefore describe a lightweight fallback mechanism, an optional guard intended to preserve a conservative decision path when recent online behavior suggests that the learned policy is making locally unsafe choices; we treat this guard as an implementation safeguard and a candidate design for future empirical validation rather than as a demonstrated component of the present results (see Limitations).
 
