@@ -218,3 +218,25 @@ recommendations without changing any raw evaluation artifacts:
 This follow-up did **not** regenerate figures/tables, run experiments,
 launch cap256, create the absent canonical heavy-r1 CSV, or change any raw
 CSV/MD evidence files.
+
+## Title and AI Declaration follow-up (no-compute pass)
+
+A further text-only pass, made after a reviewer-satisfaction audit of PR #49,
+applied two remaining no-compute fixes:
+
+- Changed the title from "Decision-aligned eviction-value prediction for
+  robust learning-augmented caching" to "Decision-aligned eviction-value
+  prediction for learning-augmented caching," since the guard/fallback
+  robustness mechanism is explicitly unvalidated in this revision and the
+  prior title echoed R3-Issue4's original complaint that the title promises
+  more than the evidence supports.
+- Expanded the AI Declaration to state that AI tools were also used to
+  audit repository artifacts and check manuscript/code/result consistency,
+  that all AI-assisted text, code, and analysis were independently verified
+  by the author against the repository's artifacts (including the
+  schema-validation, replay-artifact, and negative-result audits already
+  documented elsewhere in the repository), and that AI assistance was not
+  used to introduce any positive result unsupported by those artifacts.
+
+This pass did not change any raw evaluation artifact, did not launch
+cap256, and did not alter the reported three-capacity end-to-end result.
