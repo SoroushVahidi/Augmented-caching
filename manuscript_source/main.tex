@@ -8,6 +8,7 @@
 \usepackage{algorithmicx}
 \usepackage{tikz}
 \usepackage{booktabs}
+\usepackage{placeins}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 \journal{Knowledge-Based Systems}
 
@@ -72,7 +73,7 @@ The main contributions of this paper are as follows.
 
     \item We provide a reproducible empirical framework for studying the proposed method against classical, predictive, and robust reference policies under common replay semantics, with explicit separation between offline scorer analysis and downstream online replay evaluation.
 
-    \item We contribute an empirical and methodological perspective on robust cache replacement that highlights supervision-target design as a central issue in learning-augmented caching. In particular, the paper provides evidence that candidate-level finite-horizon eviction scoring is a plausible and practically grounded direction for integrating predictive context into online eviction decisions under imperfect predictive information.
+    \item We contribute an empirical and methodological perspective on decision-aligned cache replacement that highlights supervision-target design as a central issue in learning-augmented caching. In particular, the paper provides evidence that candidate-level finite-horizon eviction scoring is a plausible and practically grounded direction for integrating predictive context into online eviction decisions under imperfect predictive information.
 \end{enumerate}
 
 \subsection{Related Work}
@@ -82,7 +83,7 @@ The classical foundation of this problem lies in online paging and cache replace
 
 Learning-augmented caching extends this setting by allowing the online algorithm to exploit predictive information. In the paging literature, this line has focused primarily on advice such as next-arrival predictions, predicted actions, and limited future-oriented queries, together with robustness guarantees when the advice is inaccurate \cite{lykouris2021competitive_caching,rohatgi2020near_optimal_caching,bansal2022learning_augmented_weighted_paging,im2022parsimonious_lac}. Closely related work on untrusted predictions and robust online algorithms studies how predictive decisions can be combined with safer fallback behavior or expert-style switching without sacrificing worst-case protection \cite{antoniadis2020online_metric_untrusted,wei2020better_simpler_lac,chledowski2021robust_lac_experimental,blum2000online_learning_mts}. Our work is aligned with this literature in its concern for robustness, but differs in emphasis: rather than centering the design on trust in a hint or on policy-level switching alone, we study a candidate-level supervision target tied directly to the eviction decision itself.
 
-A second relevant line comes from learned cache-replacement systems that use future-derived supervision to guide eviction. PARROT learns to imitate Belady-style eviction behavior from trace-derived oracle decisions, while LRB and Raven use Belady-guided future-access prediction to drive learned replacement decisions \cite{liu2020parrot,song2020lrb,hu2022raven}. Mockingjay moves beyond binary Belady-style labels by learning finer-grained reuse-time estimates for eviction ordering \cite{shah2022mockingjay}. HALP is especially relevant because it uses candidate-level preference learning from future re-access outcomes rather than direct action imitation \cite{song2023halp}. These papers are close to the present work in that they move eviction learning beyond purely hand-designed heuristics. However, they are still organized around oracle imitation, next-arrival or reuse-distance prediction, or pairwise future preference signals, rather than explicit supervision on finite-horizon candidate-specific downstream harm.
+A second relevant line comes from learned cache-replacement systems that use future-derived supervision to guide eviction. PARROT learns to imitate Belady-style eviction behavior from trace-derived oracle decisions, while LRB and Raven use Belady-guided future-access prediction to drive learned replacement decisions \cite{liu2020parrot,song2020lrb,hu2022raven}. Mockingjay moves beyond binary Belady-style labels by learning finer-grained reuse-time estimates for eviction ordering \cite{shah2022mockingjay}. HALP is especially relevant because it uses candidate-level preference learning from future re-access outcomes rather than direct action imitation \cite{song2023halp}. These papers are close to the present work in that they move eviction learning beyond purely hand-designed heuristics. However, they are still organized around oracle imitation, next-arrival or reuse-distance prediction, or pairwise future preference signals, rather than explicit supervision on finite-horizon candidate-specific downstream harm. A faithful empirical reimplementation of HALP is outside the scope of the present revision; the comparison above is therefore analytical rather than empirical, and we treat this as an explicit scope limitation rather than an omitted result.
 
 This distinction matters because, in many prior formulations, the learned quantity remains an intermediate proxy that must still be translated into an eviction action. Such proxies include oracle action labels, reuse-distance estimates, next-arrival forecasts, and pairwise candidate orderings \cite{liu2020parrot,shah2022mockingjay,hu2022raven,song2023halp}. By contrast, our formulation is motivated by the view that eviction is inherently a local action-selection problem, so the supervision target should approximate the downstream consequence of each available action as directly as possible. In this sense, the paper is conceptually closer to decision-focused learning and predict-then-optimize perspectives, even though those frameworks have not been developed explicitly for cache-replacement supervision in the paging literature \cite{elmachtoub2022smart_predict_optimize,wilder2019decision_focused_learning}.
 
@@ -183,6 +184,7 @@ Recent-activity features & Summarize short-window request activity and local wor
 \end{tabular}
 \end{table}
 
+\FloatBarrier
 \subsection{Guarded Fallback Mechanism}
 \label{subsec:guarded_fallback_mechanism}
 
@@ -333,6 +335,7 @@ Finally, the implementation is designed to support conservative empirical claims
 \label{fig:method_overview}
 \end{figure*}
 
+\FloatBarrier
 \section{Experiments and Discussion}
 \label{sec:experiments}
 
@@ -408,6 +411,7 @@ The primary evaluation metric is the total number of cache misses incurred durin
 
 This evaluation design is intended to answer three questions. First, can candidate-level eviction-value prediction improve upon strong classical and predictive reference policies under a common replay protocol? Second, how does the learned policy compare with robust combiner-style baselines when predictive information is imperfect? Third, how do offline target-quality trends relate to downstream online replay behavior? In the present manuscript, the strongest displayed evidence concerns the scorer-selection and horizon-analysis path, while broader multi-trace replay claims are restricted to the canonical artifact-backed evaluation outputs. This distinction is important for maintaining consistency between the manuscript narrative and the repository evidence.
 
+\FloatBarrier
 \subsection{Offline Ablation and Model Selection}
 \label{subsec:main_results}
 
@@ -451,6 +455,7 @@ Horizon & Model & Val.\ regret & Test regret & Val.\ Top-1 & Test Top-1 \\
     \label{fig:evict-value-ablation}
 \end{figure}
 
+\FloatBarrier
 \subsection{End-to-End Online Replay Evaluation Across Available Capacities}
 \label{subsec:end_to_end_capacities}
 
@@ -492,6 +497,7 @@ Second, the other reference policies cluster tightly around LRU at every evaluat
 
 Third, the capacity trend for \texttt{evict\_value\_v1} is non-monotonic: the gap narrows from capacity 32 to capacity 64 and then widens sharply at capacity 128, rather than improving or degrading smoothly with capacity. We examine this pattern at the workload level next, and return to its likely cause in the Discussion and Limitations.
 
+\FloatBarrier
 \subsection{Workload-Specific Breakdown}
 \label{subsec:workload_breakdown}
 
@@ -525,6 +531,7 @@ Second, the capacity-128 widening is concentrated in, but not limited to, two fa
 
 Taken together with the offline ablation in Section~\ref{subsec:main_results}, the capacity-128 degradation documented above is broad-based across workload families rather than an artifact of a single outlier trace, reinforcing rather than qualifying away the negative end-to-end result already reported in Section~\ref{subsec:end_to_end_capacities}. We discuss its likely cause in Section~\ref{subsec:discussion_analysis} and revisit it in Section~\ref{subsec:limitations}.
 
+\FloatBarrier
 \subsection{Discussion and Analysis}
 \label{subsec:discussion_analysis}
 
@@ -569,7 +576,7 @@ This paper studied learning-augmented caching through a candidate-level view of 
 
 The current empirical evidence supports this perspective most clearly at the level of scorer construction and target selection. In particular, the offline ablation shows that the proposed eviction-value target is learnable, that nonlinear scorers are substantially stronger than a linear ridge baseline, and that shorter replay horizons provide the strongest results within the present artifact set. Taken together, these findings indicate that candidate-level downstream supervision is not merely a reformulation of the problem, but a productive object of study for learned cache replacement. We report this distinctly from end-to-end online competitiveness, which the offline ablation alone does not establish and which we evaluate directly next.
 
-A second finding is that robustness remains relevant even when the supervision target is better aligned with the decision problem. For this reason, the overall framework includes lightweight fallback variants that can temporarily defer to a conservative baseline when recent local behavior appears unsafe. In the present manuscript, however, this component should be interpreted as a practical robustness layer within the proposed design rather than as a fully established empirical contribution on its own.
+The overall framework also includes a lightweight, optional fallback layer that can defer to a conservative baseline when recent local behavior appears unsafe; Section~\ref{subsec:implications} and Section~\ref{subsec:limitations} discuss why this remains a design extension rather than a validated empirical contribution in the present study.
 
 More broadly, the study suggests that supervision-target design is a central issue in learning-augmented caching. The value of predictive information depends not only on the quality of the signal, but also on whether that signal is translated into a learning objective that matches the actual online action. In this sense, the main contribution of the paper is both methodological and empirical: it introduces a candidate-level finite-horizon supervision target for eviction scoring and provides evidence that this target yields a tractable and informative learning signal for cache replacement under imperfect predictive information.
 

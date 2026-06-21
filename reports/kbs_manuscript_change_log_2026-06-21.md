@@ -499,3 +499,121 @@ pre-existing `*_DRAFT` figure/snippet files
 `manuscript_source/figures/figure_available_capacities_trend_DRAFT.png`,
 `reports/manuscript_artifacts/latex_snippets/figure_available_capacities_trend_DRAFT_snippet.tex`)
 are untracked, unreferenced by `main.tex`, and were left untouched.
+
+## Final consistency/risk audit pass (no-compute)
+
+A final conservative text-level audit before another visual/external-AI
+review check, covering robustness overclaim, guard/fallback centrality,
+HALP-comparison scope, verbosity, computational-environment wording,
+response-letter finality, and figure/table consistency. Three genuine,
+narrow issues were found and fixed in `main.tex`; everything else audited
+clean.
+
+- **Main Contributions, point 4**: changed "an empirical and methodological
+  perspective on robust cache replacement" to "...on decision-aligned cache
+  replacement." The word "robust" here echoed the title-level overclaim
+  already removed elsewhere in the document; the rest of the sentence
+  (supervision-target design as the central contribution) was unchanged.
+- **Related Work, HALP paragraph**: appended one sentence stating directly
+  in the manuscript body — not only in the response letter — that "a
+  faithful empirical reimplementation of HALP is outside the scope of the
+  present revision; the comparison above is therefore analytical rather
+  than empirical, and we treat this as an explicit scope limitation rather
+  than an omitted result." This closes a gap where the manuscript explained
+  HALP's relevance and analytical differentiation but never disclosed the
+  missing empirical comparison in-text (the disclosure previously existed
+  only in `submission_kbs_revision_docx/response_to_reviewers_skeleton.md`,
+  Issue 2).
+- **Summary of Findings, "second finding" paragraph**: replaced a paragraph
+  that mislabeled the (unvalidated) guard/fallback layer's existence as an
+  empirical "finding" ("A second finding is that robustness remains
+  relevant...") with a single cross-referencing sentence pointing to
+  Implications and Limitations, where the guard's unvalidated, design-extension
+  status is already substantively discussed. This removes an instance of the
+  guard being over-centralized relative to its actual evidentiary status,
+  without deleting any caveat — the full discussion remains intact in the
+  two sections referenced.
+
+Verified and left unchanged (audited, no fix needed):
+- All other "robust"/"robustness" uses in `main.tex` and in
+  `submission_kbs_revision_docx/response_to_reviewers_skeleton.md` are
+  either literature-category descriptions of other baselines or already-hedged
+  guard/fallback caveats ("not a theorem-backed robustness guarantee," "the
+  mechanism remains an unvalidated, clearly-scoped guard").
+- Computational-environment wording: the overhead benchmark is described
+  consistently as local/tmux, explicitly not Wulver/Slurm, in both `main.tex`
+  (Overhead and Scalability) and the response letter; the Acknowledgements
+  sentence correctly scopes Wulver to "part of the experimental evaluation"
+  rather than all revision computations.
+- `submission_kbs_revision_docx/response_to_reviewers_skeleton.md`: re-read in
+  full; no internal-tracker language ("skeleton" as a draft marker, "DRAFT",
+  "pending", "not final") remains, every reviewer comment has a response, and
+  its content (HALP scope, overhead numbers, fallback status, negative result)
+  matches `main.tex`.
+- Figure/table consistency: no `_DRAFT` label or file is referenced anywhere
+  in `main.tex`; all table/figure references use `\ref{}` (no hardcoded
+  numbers to go stale); Table~\ref{tab:available-capacities-trend} and
+  Table~\ref{tab:family-capacity-gap} values were cross-checked arithmetically
+  against every percentage quoted in the surrounding body text (gap vs.
+  LRU/SIEVE/FIFO-Reinsertion at cap32/64/128, and all seven per-family gaps)
+  and match exactly.
+- Verbosity/repetition: the negative end-to-end result is repeated across the
+  Abstract, Contributions, Discussion, Summary of Findings, and Limitations,
+  but each occurrence serves a distinct section-level purpose (summary,
+  framing, analysis, recap, scoped caveat) and R3-Minor8/R3-Rec6 in the
+  response letter already discloses that the full 30-40% shortening target
+  remains future work beyond the two narrow passes already applied; no
+  further cuts were made here to avoid contradicting that disclosure.
+
+Rebuilt `manuscript_source/main.pdf` via `tectonic main.tex` and updated
+`submission_kbs_revision_docx/KBS_revised_manuscript_for_visual_check_20260621.pdf`
+to match (see build result recorded at push time). This pass did not run any
+experiment, did not launch cap256, did not touch or create
+`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`, and did not
+change any reported number, gap percentage, or claim about baseline
+comparisons.
+
+## Float-placement fix (no-compute, markup-only)
+
+The rebuild above surfaced a serious pre-existing layout defect, independent
+of the wording fixes above: all six tables (`tab:evict-value-feature-groups`,
+`tab:trace_families`, `tab:main_policy_families`, `tab:evict-value-ablation`,
+`tab:available-capacities-trend`, `tab:family-capacity-gap`) had drifted to
+pages 39-42 of the 42-page PDF, stranded after the bibliography, even though
+the text discussing each table appears on pages 6-25. This is a standard
+LaTeX float-queue backlog: with nine sequential `[t]`-placed floats (six
+tables, two figures, one algorithm) and no flush points, floats that cannot
+be placed immediately accumulate in a queue and get dumped together right
+before `\end{document}` once the backlog grows too large. This was an
+existing defect carried over from earlier passes (not introduced by the
+wording edits above), only noticed now because this pass rebuilt the PDF and
+checked page-by-page table/figure locations rather than only checking labels
+and undefined-reference warnings.
+
+Fix applied (markup-only, no numbers/claims/captions changed):
+- Added `\usepackage{placeins}` to the preamble.
+- Inserted six `\FloatBarrier` commands at section/subsection boundaries
+  immediately after each float-heavy block: before "Guarded Fallback
+  Mechanism," before "Experiments and Discussion," before "Offline Ablation
+  and Model Selection," before "End-to-End Online Replay Evaluation Across
+  Available Capacities," before "Workload-Specific Breakdown," and before
+  "Discussion and Analysis." Each barrier forces LaTeX to resolve all
+  currently queued floats before continuing, bounding the queue depth to
+  roughly one subsection's worth of floats instead of letting it grow
+  unbounded for the rest of the document.
+
+Result after rebuild: page count went from 42 to 44 (two additional pages,
+some of which are now partially blank where a barrier forced an early flush);
+zero undefined-reference/citation warnings; every table and figure now
+renders within 0-2 pages of the text that first calls it (Table 1 page 11 vs.
+its reference on page 9; Table 5/Figure 3/Table 6 on pages 27-29, immediately
+following the "End-to-End Online Replay" and "Workload-Specific Breakdown"
+text on pages 26 and 29; back matter — Acknowledgements, AI Declaration,
+Data/Code Availability, Declaration of Competing Interest, References —
+correctly follows the main text on pages 39-40 with no stray floats
+interleaved). Visually re-checked all affected pages via rendered PNGs.
+
+This pass did not change any table value, figure content, caption wording, or
+claim — only float placement. Updated
+`submission_kbs_revision_docx/KBS_revised_manuscript_for_visual_check_20260621.pdf`
+to match the corrected build (890,092 bytes, 44 pages).
