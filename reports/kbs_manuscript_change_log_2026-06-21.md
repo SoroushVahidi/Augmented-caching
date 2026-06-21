@@ -410,3 +410,45 @@ status, overhead-benchmark environment, negative end-to-end result) changed.
 Net effect: 2 short paragraphs trimmed/merged in the Introduction, one new
 Limitations sentence added, and the two response-letter files' R3-Minor8
 sections brought up to date with the manuscript's actual state.
+
+## Submission-package finalization pass (no-compute)
+
+This pass finalized the submission-facing response letter and built the
+manuscript PDF, with PR #49's prior commits already incorporated into
+`main` and pushed to `origin/main`:
+
+- Removed a dead, never-rendered `% TODO(revision): ...` LaTeX comment block
+  from the "Replay Horizon Selection" subsection of `main.tex`; the rendered
+  sentence immediately following it already states the same open question
+  honestly, so the comment was pure stale scaffolding with no effect on the
+  PDF.
+- Rewrote `submission_kbs_revision_docx/response_to_reviewers_skeleton.md`
+  to remove internal tracker/process language so it reads as a final
+  response letter rather than an internal draft: dropped the
+  "DRAFT — NOT FINAL" / "source of truth tracker" header, the dated
+  "2026-06-21 update:" changelog banner (its non-redundant content was
+  already duplicated in Issue 1/Issue 3), and the "Do not submit as-is"
+  gating section. Reworded "pending a separate, explicit scope decision,"
+  "not yet resolved," "out of scope for this revision cycle," and "candidate
+  follow-up before final submission" into direct, honestly-scoped statements
+  (e.g., "outside the scope of this revision," "remains available as a
+  further revision if the Editor and reviewers consider it necessary").
+  Added an explicit cross-reference in the Issue 7 response to the
+  manuscript's new Limitations sixth point. Replaced the removed gating
+  section with a "Closing Note" that names the three items still explicitly
+  out of scope (fallback validation ablation, faithful HALP reimplementation,
+  full 30-40% shortening target) as disclosed limitations rather than
+  blockers. No reviewer comment, claim, or number was added or removed in
+  this rewrite; `reports/kbs_response_to_reviewers_skeleton.md` (the internal
+  tracker) was intentionally left untouched and keeps its status-tag
+  structure.
+- Rebuilt `manuscript_source/main.pdf` via `tectonic main.tex` from a clean
+  state: exit 0, 41 pages, 889,424 bytes, zero undefined-reference/citation
+  warnings, only routine overfull/underfull `\hbox` warnings.
+- Added `submission_kbs_revision_docx/KBS_revised_manuscript_for_visual_check_20260621.pdf`,
+  a copy of the same PDF, for visual/external-AI review. No `.docx` file was
+  created or modified.
+
+No experiments were run, cap256 was not launched, and
+`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` was not
+created or touched (confirmed absent both before and after this pass).

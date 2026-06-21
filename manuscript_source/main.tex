@@ -557,9 +557,6 @@ This complexity comparison is verified directly against our own implementations'
 \label{subsec:horizon_selection}
 
 The choice of replay horizon $H$ controls a tradeoff in label quality. A short horizon ties the eviction-value label closely to the immediate consequence of the scored decision, while a long horizon allows the label to absorb increasing variance from the continuation policy's own subsequent choices, effects that are downstream consequences of later decisions rather than of the eviction being scored. We observe this tradeoff empirically: validation MAE, RMSE, top-1 eviction match, and mean regret-vs-oracle all degrade monotonically as $H$ increases from 4 to 8 to 16, for every model class evaluated. This pattern holds not only in aggregate but within every individual trace family represented in our validation sample (BrightKite, CloudPhysics, MetaCDN, Twemcache, and Wikimedia pageviews), suggesting that the advantage of shorter horizons in this framework is not specific to any one workload among those evaluated.
-% TODO(revision): validation coverage for Citi Bike and MetaKV, and any interaction
-% between horizon and cache capacity, remain open; do not generalize this finding
-% beyond the families and capacities listed above until that analysis is complete.
 We have not yet evaluated whether this pattern extends to the remaining trace families in our full dataset or whether it interacts with cache capacity; we flag both as open questions for future work rather than claim to have resolved them.
 
 \section{Conclusions and Future Research}

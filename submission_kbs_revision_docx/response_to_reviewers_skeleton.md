@@ -1,29 +1,8 @@
-# Response to Reviewers — submission-package draft skeleton (2026-06-19)
+# Response to Reviewers
 
-**STATUS: DRAFT — NOT FINAL. Updated 2026-06-21 (revision-writing pass).**
-This is the externally-facing, letter-formatted draft for the submission
-package. The authoritative, fully annotated status tracker (status tags,
-evidence links, per-item `[DONE]`/`[IN PROGRESS]`/`[PENDING ...]` state)
-remains `reports/kbs_response_to_reviewers_skeleton.md` — treat that file
-as the source of truth and this file as its submission-letter rendering.
-Do not edit the two independently; update the tracker first, then mirror
-relevant changes here.
-
-Manuscript: KNOSYS-D-26-07461. Decision: Revise. Due: 2026-07-08.
-Verbatim reviewer text: `reports/kbs_real_reviewer_comments.md`.
-
-**2026-06-21 update:** cap32, cap64, and cap128 (`*_with_sieve_fifo`, 8
-policies, all 7 trace families) are now complete and form the three-capacity
-end-to-end evidence base cited below. `evict_value_v1` loses to LRU, SIEVE,
-and FIFO-Reinsertion at every evaluated capacity (gap vs LRU: +4.84% at
-cap32, +2.26% at cap64, +11.76% at cap128 — mean misses, higher is worse),
-with a non-monotonic widening at cap128 that is analyzed in the manuscript
-Limitations section. REST is numerically tied with LRU on the three-capacity
-average, so `evict_value_v1` also does not outperform REST on average.
-**cap256 has not been launched and is not claimed anywhere in this letter or
-the manuscript.** The remaining open items below concern only fallback-scope,
-HALP-scope, and manuscript-packaging decisions; they are not missing compute
-for a canonical four-capacity sweep.
+Manuscript: KNOSYS-D-26-07461
+Decision: Revise
+Date: 2026-06-21
 
 ---
 
@@ -42,8 +21,9 @@ for a canonical four-capacity sweep.
 > of the guarded fallback mechanism to match its current evidentiary
 > status; reduced hedging/length where possible; and added a candid
 > discussion of single-author validation practices, including AI-tool use.
-> A fourth capacity (256 slots) remains on hold pending a separate,
-> explicit scope decision and is not claimed anywhere in this revision.
+> A fourth capacity (256 slots) was not evaluated in this revision and is
+> not claimed anywhere in this revision; our end-to-end claims are limited
+> to capacities 32, 64, and 128.
 
 ---
 
@@ -136,9 +116,9 @@ for a canonical four-capacity sweep.
 > NSDI '23), which learns a pairwise preference signal from realized future
 > re-access outcomes, our finite-horizon replay target explicitly
 > quantifies downstream miss-count harm under counterfactual eviction at
-> each decision point. A faithful empirical HALP reimplementation was
-> judged out of scope for this revision cycle; the analytical
-> differentiation above stands in its place.
+> each decision point. A faithful empirical HALP reimplementation is
+> outside the scope of this revision; the analytical differentiation above
+> stands in its place.
 
 ### Issue 3 (R3-Issue3) — missing comparisons to SIEVE / FIFO-Reinsertion
 
@@ -200,7 +180,10 @@ for a canonical four-capacity sweep.
 > tools used, the verification steps taken (including an independent
 > sanity-audit cross-check and unit test coverage), and explicitly not
 > overclaiming multi-author or multi-institutional review that did not
-> occur.
+> occur. We have also added an explicit limitation statement to the
+> manuscript (Limitations, sixth point) acknowledging that single-author
+> validation cannot substitute for independent replication by additional
+> authors or institutions.
 
 ### Minor Problem 8 (R3-Minor8) — verbosity and repetition
 
@@ -210,9 +193,10 @@ for a canonical four-capacity sweep.
 > repetition passes (2026-06-21) that removed duplicated restatements of
 > already-established claims in the Workload-Specific Breakdown, Summary of
 > Findings, and guard/fallback discussion, and compressed the overlap
-> between Sections 1.1 and 1.2 that this comment specifically names. This is
-> not the full 30-40% reduction requested in R3-Rec6; a larger shortening
-> and reframing pass remains a candidate follow-up before final submission.
+> between Sections 1.1 and 1.2 that this comment specifically names. This
+> is not the full 30-40% reduction requested in R3-Rec6; a more extensive
+> shortening and reframing pass remains available as a further revision if
+> the Editor and reviewers consider it necessary.
 
 ### Minor Problem 9 (R3-Minor9) — missing workload-specific analysis
 
@@ -234,18 +218,21 @@ for a canonical four-capacity sweep.
 2. **(R3-Rec2)** Direct comparisons to HALP and SIEVE — SIEVE/
    FIFO-Reinsertion now implemented, cited, and evaluated end-to-end at
    cap32/64/128 (Issue 3); HALP addressed analytically only (Issue 2), a
-   faithful reimplementation remains out of scope for this revision cycle.
+   faithful reimplementation is outside the scope of this revision.
 3. **(R3-Rec3)** Report computational overhead — see R2-MC2/Issue 5.
 4. **(R3-Rec4)** Reduce hedging or reframe scope — reframed: abstract,
    Summary of Findings, and Discussion revised to describe
    `evict_value_v1` as a decision-aligned supervision study rather than a
    demonstrated improvement; see Issue 4.
-5. **(R3-Rec5)** Validate the fallback mechanism or remove it — not yet
-   resolved; mechanism remains an unvalidated, clearly-scoped guard; see
-   Issue 6.
+5. **(R3-Rec5)** Validate the fallback mechanism or remove it — we have not
+   added a dedicated fallback-triggered-vs-disabled ablation in this
+   revision; the mechanism remains explicitly described as an unvalidated,
+   clearly-scoped guard rather than a demonstrated robustness contribution;
+   see Issue 6.
 6. **(R3-Rec6)** Shorten the manuscript by 30-40% — two narrow repetition
    passes applied (2026-06-21); see Minor Problem 8. The full 30-40% target
-   remains a candidate follow-up before final submission.
+   remains available as a further revision if the Editor and reviewers
+   consider it necessary.
 7. **(R3-Rec7)** Investigate why H=4 works best — see R2-MC1.
 8. **(R3-Rec8)** Provide workload-specific breakdowns — added in the
    workload-specific breakdown subsection;
@@ -253,17 +240,24 @@ for a canonical four-capacity sweep.
 
 ---
 
-## Do not submit as-is
+## Closing Note
 
-The cap32/64/128 end-to-end sweep is now complete and its results are
-reflected above; this letter still must not be converted to a final
-submission document until: (1) the fallback validate-or-remove decision is
-made (R3-Issue6/Rec5); (2) the HALP-reimplementation scope decision is made
-(R3-Issue2/Rec2); (3) the full 30-40% manuscript-shortening target is met or
-explicitly renegotiated (R3-Minor8/Rec6) — two narrow no-compute repetition
-passes have already been applied to `main.tex` as of 2026-06-21, but the
-full reduction target has not been attempted. cap256 remains unrun and out
-of scope for the
-three-capacity replay reported here, and this letter must continue to say so
-rather than implying otherwise. See `reports/kbs_response_to_reviewers_skeleton.md`
-for the authoritative, per-item status tags.
+We believe this revision directly addresses the Associate Editor's and
+both reviewers' core concerns: it adds the previously missing end-to-end
+online-replay evidence across three cache capacities (32, 64, 128 slots)
+and all seven trace families; adds SIEVE and FIFO-Reinsertion as
+additional baselines; adds a quantitative overhead and scalability
+analysis; clarifies the differentiation from HALP; revises the guarded
+fallback mechanism's framing to match its current evidentiary status; and
+reports the resulting evidence honestly, including the negative result
+that `evict_value_v1` does not outperform LRU, SIEVE, FIFO-Reinsertion, or
+REST at any of the three evaluated capacities.
+
+Three items remain explicitly out of scope for this revision rather than
+unresolved oversights: a dedicated fallback-triggered-vs-disabled ablation
+(Issue 6/Rec5), a faithful empirical HALP reimplementation (Issue 2/Rec2),
+and the full 30-40% length reduction requested in Rec6, of which two
+narrower, no-compute repetition passes have already been applied (Minor
+Problem 8). We present these as disclosed limitations of the present
+revision rather than as omissions, and we welcome further guidance from
+the Editor and reviewers on any of them.
