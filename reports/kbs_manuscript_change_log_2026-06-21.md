@@ -293,3 +293,48 @@ were changed.
 
 This pass did not change any raw evaluation artifact, did not launch
 cap256, and did not alter the reported three-capacity end-to-end result.
+
+## Overhead benchmark added (controlled timing pass)
+
+A new controlled per-decision wall-clock latency benchmark
+(`scripts/run_overhead_benchmark.py`,
+`analysis/kbs_overhead_benchmark_local_tmux_20260621.csv/.md`) was run to
+fill the gap the Overhead and Scalability subsection had explicitly
+flagged as an open item ("we have not yet produced a controlled,
+capacity-isolated wall-clock benchmark"). Key facts:
+
+- Measured on the author's local/cloud development machine under tmux —
+  not on Wulver and not under Slurm.
+- Trace: a 5,000-request prefix of BrightKite (`brightkite_50k`), not the
+  full seven-trace canonical sweep.
+- Capacities: 32, 64, 128. No cap256.
+- Policies: lru, sieve, fifo_reinsertion, rest_v1, evict_value_v1 — all
+  five completed with zero failures.
+- Result: `evict_value_v1` mean per-eviction-decision cost is 75.0\,ms /
+  152.1\,ms / 316.0\,ms at capacities 32/64/128 (near-linear in capacity,
+  consistent with the existing $O(k)$ argument), versus ~0.001\,ms for
+  LRU/FIFO-Reinsertion, 0.002--0.005\,ms for SIEVE, and 0.04--0.18\,ms for
+  REST.
+- Does not touch, modify, or create
+  `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` (that
+  file does not exist anywhere in the repository).
+- Does not claim `evict_value_v1` outperforms any baseline; this is a cost
+  measurement only.
+
+`main.tex`'s Overhead and Scalability subsection was updated to replace
+the "open item" sentence with the measured numbers above (and the
+now-resolved TODO comment above it was removed). The response-letter
+skeleton's R2-MC2, Issue 5, and Rec 3 entries were each given a short
+"Update 2026-06-21" note plus the same numbers; none of their status tags
+were bumped to `[DONE]`, consistent with that file's own caution that
+ready evidence still needs a final cross-check pass.
+`submission_kbs_revision_docx/response_to_reviewers_skeleton.md` is a
+separately-organized, condensed draft (not a structural mirror of the
+`reports/` skeleton) and still contains the older "we do not claim a
+controlled wall-clock timing benchmark" wording; it was intentionally
+left unedited in this pass and is flagged here as a known follow-up
+rather than silently left inconsistent.
+
+This pass did not change any raw evaluation artifact other than the three
+new overhead-benchmark files listed above, did not launch cap256, and did
+not alter the reported three-capacity end-to-end result.
