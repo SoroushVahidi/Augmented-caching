@@ -240,3 +240,32 @@ applied two remaining no-compute fixes:
 
 This pass did not change any raw evaluation artifact, did not launch
 cap256, and did not alter the reported three-capacity end-to-end result.
+
+## Residual robustness-framing follow-up (no-compute pass)
+
+A further text-only pass removed the two remaining over-strong uses of
+"robust" identified by the prior audit, both outside the title:
+
+- Changed the `\keyword{}` field entry "robust cache control" to "caching
+  baselines," since the guard/fallback mechanism that the original phrase
+  implicitly referenced is unvalidated in this revision.
+- Changed the Introduction sentence "We focus on robust learning-augmented
+  caching in the unweighted paging setting..." to "We focus on
+  learning-augmented caching under strong heuristic and combiner
+  baselines in the unweighted paging setting...," for the same reason.
+
+Other uses of "robust"/"robustness" elsewhere in the manuscript were left
+unchanged because they either describe the literature category of other
+baselines (e.g., "robust reference policies," "robust combiner-style
+baselines" for REST/T&D/BO-LRU) or are already-hedged limitation language
+about the guard (e.g., "not a theorem-backed robustness guarantee," "remains
+heuristic"); none of these claim a demonstrated robustness result for
+`evict_value_v1`.
+
+This pass also reviewed the existing `\section*{Acknowledgements}` block
+(already present, already thanking Professor Ioannis Koutis and the Wulver
+HPC system) but made no change to it; any further additions are left as an
+author decision rather than an automatic edit.
+
+This pass did not change any raw evaluation artifact, did not launch
+cap256, and did not alter the reported three-capacity end-to-end result.

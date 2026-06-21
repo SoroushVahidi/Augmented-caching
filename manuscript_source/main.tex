@@ -30,7 +30,7 @@ Caching with predictive information remains challenging because the value of a p
 \end{abstract}
 
 \begin{keyword}
-learning-augmented caching \sep online paging \sep cache replacement \sep eviction-value prediction \sep robust cache control
+learning-augmented caching \sep online paging \sep cache replacement \sep eviction-value prediction \sep caching baselines
 \end{keyword}
 \end{frontmatter}
 
@@ -46,7 +46,7 @@ Recent work on learning-augmented caching has shown that predictive information 
 
 This observation is especially important for practical cache control. At a full-cache miss, the relevant question is not merely whether a predictor should be trusted in the abstract, but which currently cached item is safest to remove. The replacement problem is therefore inherently a candidate-selection problem, and from this perspective the learning target matters. If learning is organized only around a coarse proxy, such as a trust signal or another indirect future hint, the resulting policy may remain weakly aligned with the eviction decision itself. By contrast, a candidate-level target asks a more direct question: what downstream harm is associated with evicting each available item under the current decision context?
 
-This paper studies that candidate-centric view. We focus on robust learning-augmented caching in the unweighted paging setting and model each full-cache miss as a structured comparison among the current eviction candidates. For each candidate, the method estimates a short-horizon proxy for downstream loss and evicts the candidate with the smallest predicted loss. This formulation is attractive for two reasons. First, it aligns supervision more closely with the actual online action than next-arrival or trust-only proxies. Second, it remains compatible with practical robustness layers, because learned scoring can be combined with conservative fallback behavior at the level of concrete eviction choices rather than through a single global switch.
+This paper studies that candidate-centric view. We focus on learning-augmented caching under strong heuristic and combiner baselines in the unweighted paging setting and model each full-cache miss as a structured comparison among the current eviction candidates. For each candidate, the method estimates a short-horizon proxy for downstream loss and evicts the candidate with the smallest predicted loss. This formulation is attractive for two reasons. First, it aligns supervision more closely with the actual online action than next-arrival or trust-only proxies. Second, it remains compatible with practical robustness layers, because learned scoring can be combined with conservative fallback behavior at the level of concrete eviction choices rather than through a single global switch.
 
 Accordingly, the paper is motivated by two questions. Can candidate-level eviction-value prediction provide a more decision-aligned basis for learning-augmented paging than broader advice-centered formulations? And can such a policy be combined with lightweight fallback control so that it remains reliable when predictive information is imperfect? The remainder of the paper develops this formulation and studies it empirically in the unweighted paging setting.
 
