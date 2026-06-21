@@ -482,7 +482,7 @@ EV (proposed)     & 36344.1 & 34409.0 & 36316.6 \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/figure_available_capacities_trend.png}
-\caption{Capacity-trend comparison across the available evaluated capacities (32, 64, 128; capacity 256 not evaluated in this revision). (a) Mean replay misses per policy at each capacity, averaged across the seven trace families. (b) \texttt{evict\_value\_v1}'s relative miss gap against LRU, SIEVE, and FIFO-Reinsertion at each capacity; positive values indicate more misses than the baseline. The non-monotonic widening at capacity 128 is discussed in Section~\ref{subsec:discussion_analysis} and Section~\ref{subsec:limitations}.}
+\caption{Capacity-trend comparison across the available evaluated capacities (32, 64, 128; capacity 256 not evaluated in this revision). (a) Mean replay misses per policy at each capacity, averaged across the seven trace families. (b) \texttt{evict\_value\_v1}'s relative miss gap against LRU, SIEVE, and FIFO-Reinsertion at each capacity; positive values indicate more misses than the baseline. The LRU and FIFO-Reinsertion gap curves nearly coincide because the two baselines have nearly identical miss counts in the averaged replay; distinct line styles and markers are used to keep them visually separable. The non-monotonic widening at capacity 128 is discussed in Section~\ref{subsec:discussion_analysis} and Section~\ref{subsec:limitations}.}
 \label{fig:available-capacities-trend}
 \end{figure}
 

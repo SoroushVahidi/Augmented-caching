@@ -58,6 +58,11 @@ POLICY_ORDER = [
 ]
 HIGHLIGHT_POLICY = "evict_value_v1"
 GAP_BASELINES = ["lru", "sieve", "fifo_reinsertion"]
+GAP_BASELINE_STYLE = {
+    "lru": {"linestyle": "-", "marker": "o", "label": "vs LRU"},
+    "sieve": {"linestyle": ":", "marker": "^", "label": "vs SIEVE"},
+    "fifo_reinsertion": {"linestyle": "--", "marker": "s", "label": "vs FIFO-Reinsertion"},
+}
 
 
 def load_rows() -> list[dict[str, str]]:
@@ -116,13 +121,15 @@ def main() -> int:
             num = mean_misses.get((c, HIGHLIGHT_POLICY))
             den = mean_misses.get((c, baseline))
             ys.append(100.0 * (num - den) / den if (num is not None and den) else None)
+        style = GAP_BASELINE_STYLE[baseline]
         ax1.plot(
             x,
             ys,
-            marker="s",
-            markersize=5,
+            marker=style["marker"],
+            markersize=5.5,
             linewidth=1.8,
-            label=f"vs {baseline.replace('_', ' ')}",
+            linestyle=style["linestyle"],
+            label=style["label"],
         )
     ax1.axhline(0.0, color="0.2", linewidth=1.0)
     ax1.set_xticks(x)
@@ -132,12 +139,6 @@ def main() -> int:
     ax1.grid(True, linestyle=":", linewidth=0.6, alpha=0.85)
     ax1.legend(fontsize=7.5, frameon=False, loc="upper left")
 
-    fig.suptitle(
-        "Available-capacity replay only (capacities 32, 64, 128; cap256 not evaluated)",
-        fontsize=8.5,
-        color="#8a1f1f",
-        y=1.02,
-    )
     fig.tight_layout()
 
     pdf_path, png_path = save_figure_pdf_png(fig, FIGURES_DIR, STEM)
@@ -159,8 +160,10 @@ def main() -> int:
         "(a) Mean replay misses per policy at each capacity, averaged across the 7 trace "
         "families. (b) \\texttt{evict\\_value\\_v1}'s relative miss gap against LRU, SIEVE, "
         "and FIFO-Reinsertion at each capacity; positive values indicate more misses than "
-        "the baseline. The non-monotonic widening at capacity 128 is discussed in the "
-        "Limitations section.}\n"
+        "the baseline. The LRU and FIFO-Reinsertion gap curves nearly coincide because the "
+        "two baselines have nearly identical miss counts in the averaged replay; distinct "
+        "line styles and markers are used to keep them visually separable. The "
+        "non-monotonic widening at capacity 128 is discussed in the Limitations section.}\n"
         f"  \\label{{fig:available-capacities-trend}}\n"
         "\\end{figure}\n"
     )

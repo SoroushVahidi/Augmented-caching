@@ -452,3 +452,50 @@ manuscript PDF, with PR #49's prior commits already incorporated into
 No experiments were run, cap256 was not launched, and
 `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` was not
 created or touched (confirmed absent both before and after this pass).
+
+## Figure polish pass (no-compute, Fig. 3 visual cleanup)
+
+A visual-check of the rebuilt PDF on page 19 found two cosmetic issues in
+Figure 3 (the available-capacity replay figure). Both were fixed at the
+source (`scripts/paper/build_kbs_available_capacities_figure.py`) and the
+figure was regenerated from the same, unchanged input CSV
+(`analysis/kbs_policy_trend_available_capacities.csv`) — no underlying
+numbers changed:
+
+- Removed the red `fig.suptitle(...)` ("Available-capacity replay only
+  (capacities 32, 64, 128; cap256 not evaluated)") that duplicated
+  information already stated in the caption and looked like an unresolved
+  draft marker. The caption already states the evaluated/not-evaluated
+  capacities, so no replacement title was added.
+- In panel (b), the `vs LRU` and `vs FIFO-Reinsertion` gap curves are
+  visually close because the two baselines have nearly identical mean miss
+  counts (within 0.11% of each other at every capacity, as already noted in
+  the body text). Gave each of the three baselines (`vs LRU`, `vs SIEVE`,
+  `vs FIFO-Reinsertion`) a distinct line style (solid/dotted/dashed) and
+  marker (circle/triangle/square) plus a properly capitalized legend label,
+  and added one sentence to the figure caption in `main.tex` explaining the
+  near-coincidence so a reader does not mistake it for a plotting error.
+- Regenerated `figures/manuscript/figure_available_capacities_trend.pdf`,
+  `figures/manuscript/figure_available_capacities_trend.png`,
+  `manuscript_source/figures/figure_available_capacities_trend.png`, and
+  the (unused-by-`main.tex`) companion snippet
+  `reports/manuscript_artifacts/latex_snippets/figure_available_capacities_trend_snippet.tex`
+  via `PYTHONPATH=scripts/paper python3
+  scripts/paper/build_kbs_available_capacities_figure.py`. Rebuilt
+  `manuscript_source/main.pdf` via `tectonic main.tex`: exit 0, 41 pages,
+  889,274 bytes, zero undefined-reference/citation warnings, only routine
+  overfull/underfull `\hbox` warnings. Visually re-checked page 19 of the
+  rebuilt PDF: the red label is gone and the three gap-curve styles/markers
+  are distinguishable in the legend. Updated
+  `submission_kbs_revision_docx/KBS_revised_manuscript_for_visual_check_20260621.pdf`
+  to match.
+
+This pass did not run any experiment, did not launch cap256, did not touch
+or create `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`,
+and did not change any reported number, gap percentage, or claim — only the
+figure's visual styling and one caption sentence changed. The separate,
+pre-existing `*_DRAFT` figure/snippet files
+(`figures/manuscript/figure_available_capacities_trend_DRAFT.*`,
+`manuscript_source/figures/figure_available_capacities_trend_DRAFT.png`,
+`reports/manuscript_artifacts/latex_snippets/figure_available_capacities_trend_DRAFT_snippet.tex`)
+are untracked, unreferenced by `main.tex`, and were left untouched.
