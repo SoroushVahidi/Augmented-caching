@@ -368,6 +368,114 @@ Outputs write to `analysis/external_learned_baselines/three_l_cache/` — canoni
 
 ---
 
+## Baseline 8: HALP — Heuristic Aided Learned Preference Eviction Policy (Song et al., NSDI 2023)
+
+### Paper citation
+
+Song, Z., Chen, K., Sarda, N., Altınbüken, D., Brevdo, E., Coleman, J., Ju, X.,
+Jurczyk, P., Schooler, R., & Gummadi, R. (2023). **HALP: Heuristic Aided
+Learned Preference Eviction Policy for YouTube Content Delivery Network**.
+20th USENIX Symposium on Networked Systems Design and Implementation
+(NSDI '23).
+
+### Official code source and pinned commit
+
+**None.** HALP runs inside Google's proprietary YouTube CDN production
+stack; no author-released simulator, reference implementation, or artifact
+package is public (checked 2026-08-06: USENIX conference page, Google
+Research publication page, author pages, general code-hosting search — see
+`docs/halp_provenance.md`). This baseline is an independent
+reimplementation of the paper's and the official Google Research blog
+post's algorithmic description, not a port of any released code.
+
+### Implemented policy names
+
+- `halp` (native, this repository's simulator; no optional dependency
+  beyond the core `scikit-learn` requirement).
+
+### Exact implemented variant
+
+- **Deterministic 8-candidate shortlist**: eviction candidates are the 8
+  oldest pages currently in cache, read off the LRU tail. This
+  deterministically approximates the paper's randomized, priority-queue-
+  approximating baseline-heuristic sampling (see
+  `docs/halp_method_spec.md`).
+- **Pairwise preference target**: for two shortlisted candidates, the one
+  re-accessed sooner (by ground-truth `actual_next`, observed only during
+  the training window) is preferred.
+- **Two-layer MLP reward model** (hand-rolled shared-weight
+  `R(x) = W2 . relu(W1 x + b1)`, default 8 hidden units), trained once via
+  deterministic full-batch gradient descent on a Bradley-Terry / RankNet
+  pairwise cross-entropy loss — matching the official blog's "light-weight
+  two-layer multilayer perceptron" characterization, with the
+  online-vs-frozen-split and optimizer choice disclosed as adaptations.
+  (Hand-rolled rather than `sklearn.neural_network.MLPClassifier` because a
+  classifier trained on feature-difference vectors is only equivalent to a
+  proper pairwise-scored network for a *linear* reward function; see
+  `docs/halp_method_spec.md` and `docs/halp_provenance.md` §3.)
+- **Cold-start fallback**: plain LRU eviction before the model is trained.
+- **Frozen single-split training**: trained once at `training_trigger`
+  (default 10,000 requests, i.e. the first 20% of a 50,000-request trace)
+  and never retrained — an adaptation of the paper's continuous-online
+  training regime to this offline-replay simulator.
+- **Deterministic tie-break** by largest `page_id` among equally-scored
+  candidates.
+
+### Unit-size specialization (important)
+
+Official HALP targets a variable-sized, byte-capacity production CDN DRAM
+cache. Every object's size is held at 1.0 here, matching this repository's
+canonical unweighted-paging evaluation (capacities 32/64/128 object slots).
+This is **"HALP adapted to the unit-size, offline-replay paging setting,"**
+not a reproduction of the paper's production byte-cache deployment —
+only request-miss/miss-ratio results are evaluated, and no byte-miss-ratio
+or CPU-overhead claim from the paper is reproduced or compared against.
+
+### Faithfulness assessment
+
+Independent reimplementation of the algorithmic core (heuristic-generated
+shortlist → pairwise preference model → lowest-score eviction), verified
+for **decision-semantic parity** (candidate/label/victim-selection
+direction, leakage isolation) against the paper and official blog — not
+model-architecture parity, loss-formulation parity, or production-score
+parity, none of which is checkable without access to the closed production
+system. Every design decision is classified in `docs/halp_method_spec.md`
+as exact-from-paper, exact-from-official-blog, a required adaptation, a
+material evaluation adaptation, or an unresolved ambiguity. See
+`docs/halp_provenance.md` §3 for a corrected claim: an earlier draft of
+this baseline used a linear (logistic-regression) reward model and
+described it as faithful; this was inaccurate against the primary source
+(the production reward model is a two-layer MLP) and has been fixed.
+
+### Diagnostics exposed
+
+- `n_cold_start_evictions`, `n_model_ranked_evictions`, `model_trained`
+  (`HALPPolicy.diagnostics_summary()`).
+- Per-step `CacheEvent.diagnostics["mode"]` ∈
+  `{hit, direct_admit, cold_start_lru, model_ranked}`.
+
+### Running
+
+```bash
+python -m lafc.runner.run_policy \
+  --policy halp \
+  --trace data/example_unweighted.json \
+  --capacity 3 \
+  --halp-training-trigger 10000 --halp-hidden-units 8 --halp-alpha 1e-4 --halp-seed 0
+```
+
+Full external-baseline comparison across all 7 manuscript trace families
+and capacities 32/64/128:
+
+```bash
+python scripts/experiments/run_halp_comparison.py
+```
+
+Outputs write to `analysis/external_learned_baselines/halp/` — canonical
+`*_heavy_r1`, `lrb/`, and `three_l_cache/` artifacts are never touched.
+
+---
+
 ## Implemented baselines
 
 - `lru`
@@ -383,6 +491,8 @@ Outputs write to `analysis/external_learned_baselines/three_l_cache/` — canoni
   requires optional `lightgbm` dependency)
 - `three_l_cache` (Baseline 7 target — Zhou et al. 2025, FAST, external learned baseline;
   requires optional `lightgbm` dependency)
+- `halp` (Baseline 8 target — Song et al. 2023, NSDI, external learned baseline;
+  no official code exists, see `docs/halp_provenance.md`)
 
 ## Prediction interfaces supported
 
