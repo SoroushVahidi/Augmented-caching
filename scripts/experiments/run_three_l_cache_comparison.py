@@ -103,7 +103,7 @@ def main() -> None:
     ap.add_argument("--max-requests-per-trace", type=int, default=None)
     ap.add_argument("--validation-fraction", type=float, default=0.2)
     ap.add_argument("--three-l-cache-seed", type=int, default=0)
-    ap.add_argument("--three-l-cache-batch-size", type=int, default=4096)
+    ap.add_argument("--three-l-cache-batch-sizes", default="1024,2048,4096,8192,16384,65536")
     ap.add_argument("--lrb-memory-window", type=int, default=4096)
     ap.add_argument("--lrb-batch-size", type=int, default=2048)
     ap.add_argument("--lrb-seed", type=int, default=0)
@@ -118,7 +118,7 @@ def main() -> None:
     args = ap.parse_args()
 
     caps = [int(x) for x in args.capacities.split(",") if x.strip()]
-    researcher_bs = args.three_l_cache_batch_size
+    bs_list = [int(x) for x in args.three_l_cache_batch_sizes.split(",") if x.strip()]
     traces = read_trace_manifest(args.trace_manifest)
     if not traces:
         raise SystemExit(f"No traces found in manifest {args.trace_manifest}")
@@ -149,49 +149,29 @@ def main() -> None:
         val_reqs = reqs[:n_val]
 
         for cap in caps:
-            # --- 3L-Cache: official default (65536) ---
-            row_key = {"trace_name": trace_name, "capacity": cap, "policy": "three_l_cache", "variant": "official_default"}
-            if writer.already_done(row_key):
-                n_rows_skipped += 1
-            else:
-                cfg = ThreeLCacheConfig(batch_size=65536, seed=args.three_l_cache_seed)
-                t0 = time.time()
-                result = run_policy(ThreeLCachePolicy(cfg), reqs, pages, cap)
-                wall_s = time.time() - t0
-                summary = result.extra_diagnostics["three_l_cache"]["summary"]
-                writer.write_row(
-                    {
-                        "trace_name": trace_name, "trace_family": family, "capacity": cap,
-                        "policy": "three_l_cache", "variant": "official_default",
-                        "requests": n, "misses": result.total_misses, "hit_rate": hit_rate(result.events),
-                        "batch_size": 65536, "seed": args.three_l_cache_seed,
-                        "n_retrain": int(summary["n_retrain"]), "wall_s": round(wall_s, 3),
-                    }
-                )
-                n_rows_written += 1
-                print(f"[eval] {trace_name} cap={cap} three_l_cache (official): misses={result.total_misses} ({wall_s:.2f}s)")
-
-            # --- 3L-Cache: researcher-selected default (4096) ---
-            row_key = {"trace_name": trace_name, "capacity": cap, "policy": "three_l_cache", "variant": "researcher_default"}
-            if writer.already_done(row_key):
-                n_rows_skipped += 1
-            else:
-                cfg = ThreeLCacheConfig(batch_size=researcher_bs, seed=args.three_l_cache_seed)
-                t0 = time.time()
-                result = run_policy(ThreeLCachePolicy(cfg), reqs, pages, cap)
-                wall_s = time.time() - t0
-                summary = result.extra_diagnostics["three_l_cache"]["summary"]
-                writer.write_row(
-                    {
-                        "trace_name": trace_name, "trace_family": family, "capacity": cap,
-                        "policy": "three_l_cache", "variant": "researcher_default",
-                        "requests": n, "misses": result.total_misses, "hit_rate": hit_rate(result.events),
-                        "batch_size": researcher_bs, "seed": args.three_l_cache_seed,
-                        "n_retrain": int(summary["n_retrain"]), "wall_s": round(wall_s, 3),
-                    }
-                )
-                n_rows_written += 1
-                print(f"[eval] {trace_name} cap={cap} three_l_cache (researcher): misses={result.total_misses} ({wall_s:.2f}s)")
+            # --- 3L-Cache: batch size sensitivity grid ---
+            for bs in bs_list:
+                variant_name = f"batch_{bs}"
+                row_key = {"trace_name": trace_name, "capacity": cap, "policy": "three_l_cache", "variant": variant_name}
+                if writer.already_done(row_key):
+                    n_rows_skipped += 1
+                else:
+                    cfg = ThreeLCacheConfig(batch_size=bs, seed=args.three_l_cache_seed)
+                    t0 = time.time()
+                    result = run_policy(ThreeLCachePolicy(cfg), reqs, pages, cap)
+                    wall_s = time.time() - t0
+                    summary = result.extra_diagnostics["three_l_cache"]["summary"]
+                    writer.write_row(
+                        {
+                            "trace_name": trace_name, "trace_family": family, "capacity": cap,
+                            "policy": "three_l_cache", "variant": variant_name,
+                            "requests": n, "misses": result.total_misses, "hit_rate": hit_rate(result.events),
+                            "batch_size": bs, "seed": args.three_l_cache_seed,
+                            "n_retrain": int(summary["n_retrain"]), "wall_s": round(wall_s, 3),
+                        }
+                    )
+                    n_rows_written += 1
+                    print(f"[eval] {trace_name} cap={cap} three_l_cache ({variant_name}): misses={result.total_misses} ({wall_s:.2f}s)")
 
             # --- LRB comparison row (same conditions) ---
             if not args.skip_lrb and not args.three_l_cache_only:
@@ -280,7 +260,7 @@ def main() -> None:
         "capacities": caps,
         "max_requests_per_trace": args.max_requests_per_trace,
         "validation_fraction": args.validation_fraction,
-        "three_l_cache_batch_size": researcher_bs,
+        "three_l_cache_batch_sizes": bs_list,
         "three_l_cache_seed": args.three_l_cache_seed,
         "lrb_memory_window": args.lrb_memory_window,
         "lrb_batch_size": args.lrb_batch_size,
