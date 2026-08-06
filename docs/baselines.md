@@ -198,6 +198,110 @@ This is a conservative adapter; it is documented explicitly in policy comments.
 
 ---
 
+## Baseline 6: LRB — Learning Relaxed Belady (Song et al., NSDI 2020)
+
+### Paper citation
+
+Song, Z., Berger, D. S., Li, K., & Lloyd, W. (2020). **Learning Relaxed
+Belady for Content Distribution Network Caching**. NSDI 2020, pp. 529–544.
+
+### Official code source and pinned commit
+
+[`sunnyszy/lrb`](https://github.com/sunnyszy/lrb) (BSD-2-Clause), commit
+`9e8b4423383c01c4528deb447f152f0437a37c3a` (fetched 2026-08-06). See
+`docs/lrb_method_spec.md` for the full paper-and-code-grounded specification.
+
+### Implemented policy names
+
+- `lrb` (native, this repository's simulator; requires the optional
+  `lightgbm` dependency: `pip install 'lafc[lrb]'`).
+
+### Exact implemented variant
+
+- Candidate-level online eviction: on a full-cache miss, sample
+  `sample_rate` (default 64) cached objects uniformly at random and evict
+  the one with the largest LightGBM-predicted `log1p(time-to-next-request)`.
+- Delayed-label training: a sampled object's label matures only when
+  re-requested, force-evicted for exceeding the sliding `memory_window`, or
+  when its post-eviction "ghost" metadata times out of the window — never
+  from ground-truth future information.
+- GBDT (LightGBM) regressor, `num_iterations=32, num_leaves=32,
+  learning_rate=0.1, feature_fraction=0.8, bagging_fraction=0.8,
+  bagging_freq=5` — exact from the official code.
+- Documented cold-start fallback (part of the official design, not an ad hoc
+  addition): plain LRU eviction before any model has trained, or whenever
+  the LRU-tail object's age exceeds `memory_window`.
+- Deterministic tie-break by smallest `page_id` (the official code's
+  `std::sort` is not guaranteed stable here; this repository picks one
+  fixed rule for reproducibility).
+
+### Unit-size specialization (important)
+
+This repository's manuscript evaluation is standard **unweighted paging**
+(unit miss cost, capacity measured in object slots: 32/64/128). The official
+LRB targets variable-sized, byte-capacity CDN caches. Every object's size is
+held at a constant 1 here; the size feature and the
+`objective="object_miss_ratio"` score/size interaction are kept
+structurally but are numerically inert under this specialization. This is
+**"LRB under unit-size specialization,"** not a reproduction of the paper's
+byte-cache CDN experiments — do not cite byte-miss-ratio results from this
+implementation; only request-miss/miss-ratio results are meaningful here
+(and are numerically identical to a byte-miss ratio under unit size, so
+nothing is lost).
+
+### Faithfulness assessment
+
+Native, algorithmic-level-faithful port of the official simulator core
+(not the ATS system-level prototype). Every design decision is classified
+in `docs/lrb_method_spec.md` as exact-from-paper, exact-from-code, a
+required adaptation, or an optional deviation. The two `memory_window`/
+`batch_size` numeric defaults are the only genuinely adaptation-required
+values (the official defaults are CDN-scale constants that never fire at
+this repository's request-count scale); both are validation-tunable via CLI
+flags and are tuned on a held-out validation prefix (never the test region)
+in `scripts/experiments/run_lrb_external_baseline.py`, mirroring the
+paper's own per-trace tuning protocol.
+
+### Diagnostics exposed
+
+- `lrb_sample_rate`, `lrb_memory_window`, `lrb_batch_size`,
+  `lrb_max_n_past_timestamps`, `lrb_num_iterations`, `lrb_num_leaves`,
+  `lrb_learning_rate`, `lrb_seed`, `lrb_objective_is_object_miss_ratio`
+  (config echoes)
+- `lrb_n_retrain`, `lrb_model_trained`
+- `lrb_n_in_cache_meta`, `lrb_n_ghost_meta`, `lrb_n_pending_rows`
+- `lrb_n_force_eviction`, `lrb_n_cold_start_evictions`,
+  `lrb_n_age_forced_evictions`, `lrb_n_model_ranked_evictions`,
+  `lrb_n_candidates_sampled_total`
+- Per-step `CacheEvent.diagnostics["mode"]` ∈
+  `{hit, direct_admit, cold_start_lru, age_forced_lru, model_ranked}`,
+  plus `candidate_count`.
+
+### Running
+
+```bash
+# Requires the optional lightgbm dependency:
+pip install 'lafc[lrb]'
+
+python -m lafc.runner.run_policy \
+  --policy lrb \
+  --trace data/example_unweighted.json \
+  --capacity 3 \
+  --lrb-sample-rate 4 --lrb-memory-window 20 --lrb-batch-size 8
+```
+
+Full external-baseline comparison across all 7 manuscript trace families and
+capacities 32/64/128:
+
+```bash
+python scripts/experiments/run_lrb_external_baseline.py
+```
+
+Outputs write to `analysis/external_learned_baselines/lrb/` — canonical
+`*_heavy_r1` artifacts are never touched.
+
+---
+
 ## Implemented baselines
 
 - `lru`
@@ -209,6 +313,8 @@ This is a conservative adapter; it is documented explicitly in policy comments.
 - `robust_ftp_d_marker` / `robust_ftp` (ICML'21 experimental robust switching)
 - `adaptive_query` / `parsimonious_caching` (Baseline 5 target)
 - `evict_value_v1_guarded` (experimental guard-style robust wrapper over `evict_value_v1`)
+- `lrb` (Baseline 6 target — Song et al. 2020, NSDI, external learned baseline;
+  requires optional `lightgbm` dependency)
 
 ## Prediction interfaces supported
 
