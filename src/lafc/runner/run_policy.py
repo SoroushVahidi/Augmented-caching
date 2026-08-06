@@ -58,6 +58,7 @@ from lafc.policies.la_weighted_paging_deterministic import LAWeightedPagingDeter
 from lafc.policies.la_weighted_paging_det_faithful import LAWeightedPagingDeterministicFaithful
 from lafc.policies.lrb import LRBConfig, LRBPolicy
 from lafc.policies.three_l_cache import ThreeLCacheConfig, ThreeLCachePolicy
+from lafc.policies.halp import HALPConfig, HALPPolicy
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
@@ -134,6 +135,7 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "lrb": LRBPolicy(),
     # External baseline: Zhou et al. 2025 (FAST), 3L-Cache.
     "three_l_cache": ThreeLCachePolicy(),
+    "halp": HALPPolicy(),
 }
 
 
@@ -406,6 +408,9 @@ def run_policy(
     if isinstance(policy, ThreeLCachePolicy):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["three_l_cache"] = {"summary": policy.diagnostics_summary()}
+    elif isinstance(policy, HALPPolicy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["halp"] = {"summary": policy.diagnostics_summary()}
     if isinstance(policy, RobustFtPDeterministicMarkerCombiner):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["robust_ftp"] = {
@@ -1362,6 +1367,42 @@ def main() -> None:
         help="Disable auto-tuning; use the paper's 'default value' ablation variant instead.",
     )
     parser.add_argument(
+        "--halp-training-trigger",
+        type=int,
+        default=10000,
+        help="Number of requests before HALP trains its preference model.",
+    )
+    parser.add_argument(
+        "--halp-hidden-units",
+        type=int,
+        default=8,
+        help="Hidden-layer width of HALP's two-layer MLP preference model.",
+    )
+    parser.add_argument(
+        "--halp-alpha",
+        type=float,
+        default=1e-4,
+        help="L2 regularization strength for HALP's MLP preference model.",
+    )
+    parser.add_argument(
+        "--halp-lr",
+        type=float,
+        default=0.05,
+        help="Full-batch gradient-descent learning rate for HALP's MLP preference model.",
+    )
+    parser.add_argument(
+        "--halp-n-epochs",
+        type=int,
+        default=300,
+        help="Full-batch gradient-descent epochs for HALP's MLP preference model.",
+    )
+    parser.add_argument(
+        "--halp-seed",
+        type=int,
+        default=0,
+        help="RNG seed for HALP.",
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug logging.",
@@ -1508,6 +1549,17 @@ def main() -> None:
                 seed=args.three_l_cache_seed,
                 objective=args.three_l_cache_objective,
                 auto_tune=args.three_l_cache_auto_tune,
+            )
+        )
+    elif args.policy == "halp":
+        policy = HALPPolicy(
+            HALPConfig(
+                training_trigger=args.halp_training_trigger,
+                hidden_units=args.halp_hidden_units,
+                alpha=args.halp_alpha,
+                lr=args.halp_lr,
+                n_epochs=args.halp_n_epochs,
+                seed=args.halp_seed,
             )
         )
     else:
