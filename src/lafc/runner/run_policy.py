@@ -24,12 +24,14 @@ Supported ``--policy`` values (including aliases):
     evict_value_v1_guarded, la_det, la_det_approx, la_det_faithful, lrb, lru, marker,
     ml_gate_v1, ml_gate_v2, offline_belady, parsimonious_caching, predictive_marker,
     fifo_reinsertion, rest_v1, robust_ftp, robust_ftp_d_marker, sentinel_budgeted_guard_v2,
-    sentinel_robust_tripwire_v1, sieve, trust_and_doubt, weighted_lru
+    sentinel_robust_tripwire_v1, sieve, three_l_cache, trust_and_doubt, weighted_lru
 
-Note: ``lrb`` (Learning Relaxed Belady, NSDI 2020) requires the optional
-'lightgbm' dependency (``pip install 'lafc[lrb]'``); it is importable without
-it, but ``reset()``/running it will raise a clear ImportError if lightgbm is
-missing. See ``docs/lrb_method_spec.md`` and ``docs/baselines.md`` (Baseline 6).
+Note: ``lrb`` (Learning Relaxed Belady, NSDI 2020) and ``three_l_cache``
+(3L-Cache, FAST 2025) require the optional 'lightgbm' dependency
+(``pip install 'lafc[lrb]'``); they are importable without
+it, but ``reset()``/running them will raise a clear ImportError if lightgbm
+is missing. See ``docs/lrb_method_spec.md``, ``docs/three_l_cache_method_spec.md``,
+and ``docs/baselines.md`` (Baselines 6-7).
 """
 
 from __future__ import annotations
@@ -55,6 +57,7 @@ from lafc.policies.blind_oracle_lru_combiner import BlindOracleLRUCombiner
 from lafc.policies.la_weighted_paging_deterministic import LAWeightedPagingDeterministic
 from lafc.policies.la_weighted_paging_det_faithful import LAWeightedPagingDeterministicFaithful
 from lafc.policies.lrb import LRBConfig, LRBPolicy
+from lafc.policies.three_l_cache import ThreeLCacheConfig, ThreeLCachePolicy
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
@@ -129,6 +132,8 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "sentinel_budgeted_guard_v2": SentinelBudgetedGuardV2Policy(),
     # External baseline: Song et al. 2020 (NSDI), Learning Relaxed Belady.
     "lrb": LRBPolicy(),
+    # External baseline: Zhou et al. 2025 (FAST), 3L-Cache.
+    "three_l_cache": ThreeLCachePolicy(),
 }
 
 
@@ -398,6 +403,9 @@ def run_policy(
     if isinstance(policy, LRBPolicy):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["lrb"] = {"summary": policy.diagnostics_summary()}
+    if isinstance(policy, ThreeLCachePolicy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["three_l_cache"] = {"summary": policy.diagnostics_summary()}
     if isinstance(policy, RobustFtPDeterministicMarkerCombiner):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["robust_ftp"] = {
@@ -1323,6 +1331,37 @@ def main() -> None:
         help="lrb score/size interaction; object_miss_ratio matches this repo's unit-size metric.",
     )
     parser.add_argument(
+        "--three-l-cache-batch-size",
+        type=int,
+        default=4096,
+        help="Matured-label buffer size that triggers a retrain for three_l_cache. Validation-tunable.",
+    )
+    parser.add_argument(
+        "--three-l-cache-seed",
+        type=int,
+        default=0,
+        help="RNG seed for three_l_cache.",
+    )
+    parser.add_argument(
+        "--three-l-cache-objective",
+        choices=["byte_miss_ratio", "object_miss_ratio"],
+        default="byte_miss_ratio",
+        help="three_l_cache score/heap-offset mode; byte_miss_ratio matches the official code's own default.",
+    )
+    parser.add_argument(
+        "--three-l-cache-auto-tune",
+        dest="three_l_cache_auto_tune",
+        action="store_true",
+        default=True,
+        help="Enable 3L-Cache's h_sw/f/x/Q auto-tuning (default: on).",
+    )
+    parser.add_argument(
+        "--three-l-cache-no-auto-tune",
+        dest="three_l_cache_auto_tune",
+        action="store_false",
+        help="Disable auto-tuning; use the paper's 'default value' ablation variant instead.",
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug logging.",
@@ -1460,6 +1499,15 @@ def main() -> None:
                 learning_rate=args.lrb_learning_rate,
                 seed=args.lrb_seed,
                 objective=args.lrb_objective,
+            )
+        )
+    elif args.policy == "three_l_cache":
+        policy = ThreeLCachePolicy(
+            ThreeLCacheConfig(
+                batch_size=args.three_l_cache_batch_size,
+                seed=args.three_l_cache_seed,
+                objective=args.three_l_cache_objective,
+                auto_tune=args.three_l_cache_auto_tune,
             )
         )
     else:
