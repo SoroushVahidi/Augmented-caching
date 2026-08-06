@@ -302,6 +302,72 @@ Outputs write to `analysis/external_learned_baselines/lrb/` — canonical
 
 ---
 
+## Baseline 7: 3L-Cache — Low Overhead and Precise Learning-based Eviction (Zhou et al., FAST 2025)
+
+### Paper citation
+
+Zhou, W., Niu, Z., Xiong, Y., Fang, J., & Wang, Q. (2025). **3L-Cache: Low Overhead and Precise Learning-based Eviction Policy for Caches**. FAST 2025, pp. 237–254.
+
+### Official code source and pinned commit
+
+[`optiq-lab/3L-Cache`](https://github.com/optiq-lab/3L-Cache) (GPL-3.0), commit
+`134cd159b635cdab75419a4281bed1a330fef31f` (fetched 2026-08-06). See
+`docs/three_l_cache_method_spec.md` for the full paper-and-code-grounded specification.
+
+### Implemented policy names
+
+- `three_l_cache` (native, this repository's simulator; requires the optional
+  `lightgbm` dependency: `pip install 'lafc[lrb]'`).
+
+### Exact implemented variant
+
+- **Bidirectional sampling**: eviction candidates are drawn both from newly admitted objects ("sampling from the head", `_quick_demotion`) and from long-resident objects via a *persistent* scan pointer walking the LRU order once per lap ("sampling from the tail", `_tail_scan_round`).
+- **Batched, heap-based eviction**: candidates are scored once per resampling round (not once per miss) and pushed onto a shared min-heap; a run of evictions is drawn from that heap before the next resampling round. Stale heap entries (objects re-requested or already evicted since being scored) are detected via a side `pred_map` and silently skipped.
+- **Delayed-label training**: a sampled object's label matures only when re-requested, or when its post-eviction "ghost" metadata times out of the window. A *dynamic* window-exit label is constructed (a running empirical maximum wait time, frozen at each retrain), not LRB's fixed `2*window` constant.
+- **Auto-tuning**: automatic online tuning of five parameters (`h_sw, f, x, Q`, and the closed-form `n`) from accumulated eviction-outcome statistics, exactly as specified in the paper's Table 2. Can be disabled (`auto_tune=False`) to freeze them at initial values (the paper's own "default value" ablation variant).
+- **GBDT (LightGBM) regressor**: `num_iterations=16, num_leaves=32, learning_rate=0.1, feature_fraction=0.8, bagging_fraction=0.8, bagging_freq=5` — exact from the official code.
+- **Cold-start fallback**: plain LRU eviction before any model has trained (paper Section 4.2.1, footnote 3).
+- **Deterministic tie-break** by smallest `page_id` for equal predicted values on the heap.
+
+### Unit-size specialization (important)
+
+This repository's manuscript evaluation is standard **unweighted paging** (unit miss cost, capacity measured in object slots: 32/64/128). The official 3L-Cache targets variable-sized, byte-capacity file/storage and CDN caches. Every object's size is held at a constant 1.0 here; the size feature and the `objective="byte_miss_ratio"` score interaction are kept structurally but are numerically specialized under this setting. This is **"3L-Cache under unit-size specialization,"** not a reproduction of the paper's byte-cache CDN/block-storage experiments — only request-miss/miss-ratio results are evaluated.
+
+### Faithfulness assessment
+
+Native, algorithmic-level-faithful port of the official simulator core. Every design decision is classified in `docs/three_l_cache_method_spec.md` as exact-from-paper, exact-from-code, a required adaptation, or an optional deviation. The `batch_size` numeric default is the only adaptation-required value (the official default is CDN-scale 64K which never fires at this repository's request-count scale); it is validation-tunable via CLI flags and is tuned on a held-out validation prefix (never the test region) in `scripts/experiments/run_three_l_cache_comparison.py`, mirroring the paper's own per-workload tuning protocol.
+
+### Diagnostics exposed
+
+- `three_l_cache_batch_size`, `three_l_cache_num_iterations`, `three_l_cache_num_leaves`,
+  `three_l_cache_learning_rate`, `three_l_cache_seed`, `three_l_cache_objective_is_byte_miss_ratio`,
+  `three_l_cache_auto_tune` (config echoes)
+- `three_l_cache_n_retrain`, `three_l_cache_model_trained`
+- `three_l_cache_n_in_cache_meta`, `three_l_cache_n_ghost_meta`, `three_l_cache_n_pending_rows`
+- `three_l_cache_n_cold_start_evictions`, `three_l_cache_n_model_ranked_evictions`,
+  `three_l_cache_n_stale_heap_pops`, `three_l_cache_n_resample_rounds`
+- `three_l_cache_hsw`, `three_l_cache_f`, `three_l_cache_x`, `three_l_cache_q`
+- Per-step `CacheEvent.diagnostics["mode"]` ∈ `{hit, direct_admit, cold_start_lru, model_ranked, heap_exhausted_lru_fallback}`.
+
+### Running
+
+```bash
+# Requires the optional lightgbm dependency:
+pip install 'lafc[lrb]'
+
+python -m lafc.runner.run_policy   --policy three_l_cache   --trace data/example_unweighted.json   --capacity 3   --three-l-cache-batch-size 4 --three-l-cache-seed 0
+```
+
+Full external-baseline comparison across all 7 manuscript trace families and capacities 32/64/128:
+
+```bash
+python scripts/experiments/run_three_l_cache_comparison.py
+```
+
+Outputs write to `analysis/external_learned_baselines/three_l_cache/` — canonical `*_heavy_r1` artifacts are never touched.
+
+---
+
 ## Implemented baselines
 
 - `lru`
@@ -314,6 +380,8 @@ Outputs write to `analysis/external_learned_baselines/lrb/` — canonical
 - `adaptive_query` / `parsimonious_caching` (Baseline 5 target)
 - `evict_value_v1_guarded` (experimental guard-style robust wrapper over `evict_value_v1`)
 - `lrb` (Baseline 6 target — Song et al. 2020, NSDI, external learned baseline;
+  requires optional `lightgbm` dependency)
+- `three_l_cache` (Baseline 7 target — Zhou et al. 2025, FAST, external learned baseline;
   requires optional `lightgbm` dependency)
 
 ## Prediction interfaces supported
