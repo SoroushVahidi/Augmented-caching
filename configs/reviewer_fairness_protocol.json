@@ -1,0 +1,87 @@
+{
+  "protocol_version": "reviewer_fairness_v1",
+  "created": "2026-08-06",
+  "worktree": "/home/soroush/Augmented-caching-fairness",
+  "branch": "feat/reviewer-fairness-protocol",
+  "base_commit": "5a54b33",
+  "canonical_traces": {
+    "manifest": "analysis/wulver_trace_manifest_full.csv",
+    "trace_count": 7,
+    "requests_per_trace": 50000,
+    "families": ["brightkite", "citibike", "wiki2018", "twemcache", "metakv", "metacdn", "cloudphysics"]
+  },
+  "capacities": [32, 64, 128],
+  "capacity_semantics": "object_slots",
+  "object_size_semantics": "unit",
+  "primary_window": {
+    "history_start": 0,
+    "history_end": 10000,
+    "score_start": 10000,
+    "score_end": 50000,
+    "history_fraction": 0.2,
+    "scored_requests": 40000,
+    "rationale": "20% history / 80% scored suffix. Not chosen freely for this audit: independently pre-adopted by 3 of the 4 new external-baseline runners before this protocol existed -- LRB's --validation-fraction default (0.2), 3L-Cache's --validation-fraction default (0.2), and HALP's training_trigger default (10000 of 50000 = 0.2). Adopting the same boundary for the fairness comparison reuses an existing, independently-converged-upon choice rather than introducing a new one post hoc."
+  },
+  "deployment_window": {
+    "start": 0,
+    "end": 50000,
+    "rationale": "Matches the manuscript's existing, already-published end-to-end replay protocol (Table: 'mean replay misses ... 50,000 requests/trace', main.tex ~line 401) for evict_value_v1 and the 7 original baselines. Retained as a secondary/diagnostic comparison, not overridden."
+  },
+  "metric": {
+    "numerator": "misses within [score_start, score_end)",
+    "denominator": "score_end - score_start (== scored_requests)",
+    "identity_required": "hits + misses == scored_requests for every row"
+  },
+  "policy_inventory": {
+    "lru": {"category": "classical", "implementation_source": "native", "training": "none", "randomness": "none"},
+    "sieve": {"category": "classical", "implementation_source": "native", "training": "none", "randomness": "none"},
+    "fifo_reinsertion": {"category": "classical", "implementation_source": "native", "training": "none", "randomness": "none"},
+    "blind_oracle_lru_combiner": {"category": "classical/reference", "implementation_source": "native", "training": "none", "randomness": "none", "status": "in manuscript pool, not yet ported to this harness"},
+    "rest_v1": {"category": "classical/reference", "implementation_source": "native", "training": "none", "randomness": "none", "status": "in manuscript pool, not yet ported to this harness"},
+    "trust_and_doubt": {"category": "classical/reference", "implementation_source": "native", "training": "none", "randomness": "seeded", "status": "in manuscript pool, not yet ported to this harness"},
+    "predictive_marker": {"category": "classical/reference", "implementation_source": "native", "training": "none", "randomness": "none", "status": "in manuscript pool, not yet ported to this harness"},
+    "offline_belady": {"category": "oracle", "implementation_source": "native", "training": "none", "future_information": "full_trace_by_definition", "status": "not run in this session; oracle, see docs section 13"},
+    "evict_value_v1": {
+      "category": "proposed_method",
+      "implementation_source": "native_pretrained",
+      "training": "offline_pretrained_frozen",
+      "training_data": "CRITICAL: chunk-level pseudo-random split (assign_split/_stable_bucket, trace_chunk mode, chunk_size=4096) over the SAME 7 canonical evaluation traces, same 0-50000 request range (data/derived/evict_value_v1_wulver_heavy_r1/manifest.json: trace_count=7, max_requests_per_trace=50000, same trace_name identifiers as analysis/wulver_trace_manifest_full.csv)",
+      "fairness_status": "CRITICAL_FAIL_train_test_overlap",
+      "randomness": "n/a (frozen at inference)"
+    },
+    "lrb": {
+      "category": "external_learned_baseline",
+      "implementation_source": "repository_reimplementation",
+      "training": "online_batched_retraining",
+      "randomness": "seeded (--lrb-seed)",
+      "status": "NOT run in this session -- may still be running in the primary checkout (PID 113981 at audit time); do not duplicate. Policy-only mode already exists via scripts/experiments/run_lrb_external_baseline.py --skip-baselines."
+    },
+    "three_l_cache": {
+      "category": "external_learned_baseline",
+      "implementation_source": "repository_reimplementation",
+      "official_commit": "134cd159b635cdab75419a4281bed1a330fef31f",
+      "training": "online_batched_retraining",
+      "hyperparameter_note": "batch_size=4096 used in this run's primary comparison is the ThreeLCacheConfig class default (hardcoded in src/lafc/policies/three_l_cache.py, not selected post hoc from the existing batch-size sensitivity grid); a validation-tuned variant using the SAME [0,10000) history prefix as the tuning window (mirroring the existing --validation-fraction 0.2 protocol in run_three_l_cache_comparison.py) is the more rigorous follow-up and was not run in this session.",
+      "randomness": "seeded (seed=0)"
+    },
+    "halp": {
+      "category": "external_learned_baseline",
+      "implementation_source": "repository_reimplementation",
+      "official_commit": "n/a (no official code exists)",
+      "training": "offline_frozen_single_split",
+      "training_data": "in-trace prefix [0, training_trigger) only; training_trigger set to 10000 in this protocol's runs to exactly match history_end",
+      "randomness": "seeded (seed=0)"
+    },
+    "cacheus": {
+      "category": "external_learned_baseline",
+      "implementation_source": "official_source_unmodified",
+      "official_commit": "1eec63ce166502be33ddd1f35bc041ed73a24f4d",
+      "official_repo": "https://github.com/sylab/cacheus",
+      "training": "online_continuous_no_explicit_phase",
+      "randomness": "hardcoded upstream seed 123 (not repository-controlled)"
+    }
+  },
+  "policies_run_in_this_session": ["lru", "sieve", "fifo_reinsertion", "cacheus", "halp", "three_l_cache", "evict_value_v1"],
+  "policies_not_run_in_this_session": ["lrb", "blind_oracle_lru_combiner", "rest_v1", "trust_and_doubt", "predictive_marker", "offline_belady"],
+  "output_dir": "analysis/reviewer_fairness/"
+}
