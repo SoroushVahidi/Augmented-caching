@@ -1,0 +1,29 @@
+{
+  "plan_version": "supervision_objective_ablation_statistics_v1",
+  "frozen_before_results": true,
+  "experimental_unit": "one (held_out_family, capacity) instance -- NOT individual requests. 7 families x 3 capacities = 21 paired instances per objective. Requests within one instance are sequentially dependent (cache state carries forward), never treated as independent replicates.",
+  "comparison_design": "paired: all 4 objectives (eviction_loss, next_arrival, reuse_distance, pairwise) are scored on the identical 21 (held_out_family, capacity) instances under the identical held-out evaluation protocol, so differences are computed per-instance.",
+  "reported_statistics": [
+    "mean_miss_ratio per objective (across the 21 instances)",
+    "median_miss_ratio per objective",
+    "per_instance_absolute_miss_difference (alternative_objective_misses - eviction_loss_misses)",
+    "per_instance_percentage_miss_difference",
+    "wins_ties_losses (alternative strictly lower / equal / strictly higher miss_ratio than eviction_loss, per instance)"
+  ],
+  "inferential_test": {
+    "primary_test": "Wilcoxon signed-rank test, two-sided, for each of the 3 alternative objectives (next_arrival, reuse_distance, pairwise) vs. the eviction_loss reference, paired on the same 21 instances",
+    "omnibus_robustness_check": "Friedman test across all 4 objectives as a robustness check on the primary pairwise results -- not a substitute for them",
+    "rationale": "21 paired, non-independent-request instances per objective; matches the paired design already frozen for Concern 1 (configs/reviewer_fairness_statistics.json) for consistency across the campaign",
+    "multiple_comparison_correction": "Holm-Bonferroni across the 3 primary pairwise comparisons (vs. eviction_loss)",
+    "significance_threshold": 0.05,
+    "effect_size": "matched-pairs rank-biserial correlation, reported alongside each p-value",
+    "confidence_intervals": "bootstrap (10,000 resamples over the 21 paired instances) 95% CI on the mean miss-ratio difference"
+  },
+  "explicit_prohibitions": [
+    "Do not treat the 40,000 scored requests within one (family, capacity) instance as independent replicates for any test.",
+    "Do not select which objective comparisons to report after viewing results.",
+    "Do not change the test, correction, or threshold after viewing any objective's held-out results.",
+    "Do not compute statistics until the same-example audit and fairness audit both report FINAL=true PASS -- a statistically significant difference computed over a non-fairness-audited comparison is not evidence of anything."
+  ],
+  "status": "PLAN ONLY -- not yet applied to any result table. Recorded before the 84-row held-out evaluation exists, per the requirement to freeze the analysis plan before viewing results. Gated on: registry MODEL_SELECTION_FROZEN=true, same_example_audit.json FINAL=true PASS, fairness_audit.json FINAL=true PASS, policy_comparison.csv 84/84 rows."
+}
