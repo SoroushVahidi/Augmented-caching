@@ -476,6 +476,97 @@ Outputs write to `analysis/external_learned_baselines/halp/` — canonical
 
 ---
 
+## Baseline 9: CACHEUS (Rodriguez et al., FAST 2021)
+
+### Paper citation
+
+Rodriguez, L. V., Yusuf, F., Lyons, S., Paz, E., Rangaswami, R., Liu, J.,
+Zhao, M., & Narasimhan, G. (2021). **Learning Cache Replacement with
+CACHEUS**. 19th USENIX Conference on File and Storage Technologies
+(FAST '21).
+
+### Official code source and pinned commit
+
+[`sylab/cacheus`](https://github.com/sylab/cacheus) (author-released; no
+LICENSE file — see `docs/cacheus_provenance.md`), commit
+`1eec63ce166502be33ddd1f35bc041ed73a24f4d` (fetched 2026-08-06). Because
+there is no license, the official source is fetched **externally** by
+`scripts/setup/fetch_cacheus_official.py` into `external/` (gitignored,
+never committed) and executed unmodified from there — it is not
+reimplemented anywhere in this repository. See
+`docs/cacheus_method_spec.md` for the full specification.
+
+### Implemented policy names
+
+- `cacheus` (official-source wrapper; requires running
+  `python scripts/setup/fetch_cacheus_official.py` first — raises a clear,
+  explicit error otherwise, no silent fallback to any other policy).
+
+### Exact implemented variant
+
+The authors' own `Cacheus` class (`code/algs/cacheus.py`), which **is**
+the SR-LRU + CR-LFU expert combination — the paper's own headline
+configuration, predeclared here before any evaluation (see
+`docs/cacheus_method_spec.md`, "Primary variant used here"). All
+hyperparameters (`initial_weight=0.5`, `history_size=cache_size // 2`,
+initial `learning_rate=sqrt(2*ln(2)/cache_size)`, RNG seed 123) are the
+official, unmodified defaults.
+
+### Unit-size specialization: none needed
+
+Unlike LRB, 3L-Cache, and HALP (all originally byte-capacity/CDN-oriented
+and requiring a disclosed unit-size evaluation adaptation), **official
+CACHEUS has no size/weight concept at all** — it is natively a unit-size,
+object-slot paging algorithm (per its own README: "designed for paging
+domain"). This repository's capacity semantics (32/64/128 object slots)
+match the official algorithm's native domain exactly, with no adaptation.
+
+### Faithfulness assessment
+
+This is the authors' own, unmodified source code, not a reimplementation
+— the strongest fidelity position of this repository's four external
+learned baselines. The only disclosed deviations are non-algorithmic: a
+portability-only patch (two empty `__init__.py` files added to the
+*external, non-vendored* clone so it can be imported as a library) and an
+explicit `ValueError` guard for capacity < 2 (an upstream crash in the
+official source at that boundary, confirmed empirically and documented in
+`docs/cacheus_method_spec.md`, "Known upstream limitation: capacity 1" —
+not patched, and irrelevant to this repository's 32/64/128 capacities).
+The official RNG seed (123) is hardcoded in the upstream source and is not
+repository-controlled, unlike every other baseline here.
+
+### Diagnostics exposed
+
+- `final_weight_srlru`, `final_weight_crlfu`, `final_learning_rate`,
+  `n_history_hits_lru`, `n_history_hits_lfu`, `dem_count`, `nor_count`
+  (`CacheusPolicy.diagnostics_summary()`).
+- Per-step `CacheEvent.diagnostics["mode"]` ∈ `{hit, official_cacheus}`.
+
+### Running
+
+```bash
+# One-time fetch of the official source (external, gitignored, not vendored):
+python scripts/setup/fetch_cacheus_official.py
+
+python -m lafc.runner.run_policy \
+  --policy cacheus \
+  --trace data/example_unweighted.json \
+  --capacity 3
+```
+
+Full external-baseline comparison across all 7 manuscript trace families
+and capacities 32/64/128:
+
+```bash
+python scripts/experiments/run_cacheus_comparison.py
+```
+
+Outputs write to `analysis/external_learned_baselines/cacheus/` —
+canonical `*_heavy_r1`, `lrb/`, `three_l_cache/`, and `halp/` artifacts are
+never touched.
+
+---
+
 ## Implemented baselines
 
 - `lru`
@@ -493,6 +584,9 @@ Outputs write to `analysis/external_learned_baselines/halp/` — canonical
   requires optional `lightgbm` dependency)
 - `halp` (Baseline 8 target — Song et al. 2023, NSDI, external learned baseline;
   no official code exists, see `docs/halp_provenance.md`)
+- `cacheus` (Baseline 9 target — Rodriguez et al. 2021, FAST, external learned
+  baseline; runs the authors' own official source, see `docs/cacheus_provenance.md`
+  — requires `python scripts/setup/fetch_cacheus_official.py` first)
 
 ## Prediction interfaces supported
 
