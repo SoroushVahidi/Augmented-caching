@@ -1,0 +1,48 @@
+{
+  "rules_version": "reviewer_fairness_temporal_rules_v1",
+  "frozen_rule": "For a deployment-style primary comparison, model training and hyperparameter selection must not use observations chronologically later than the final test period, unless the study explicitly adopts a non-temporal transfer-learning protocol and discloses it.",
+  "classifications": {
+    "A_earlier_same_family": {
+      "description": "Training chronologically precedes test, same workload family.",
+      "eligible_for_deployment_style_primary": true
+    },
+    "B_independent_same_time_shard": {
+      "description": "Different cluster/region/shard, same or overlapping time window, no overlapping objects/events, no future temporal advantage.",
+      "eligible_for_deployment_style_primary": true
+    },
+    "C_different_family": {
+      "description": "Cross-workload transfer, no test overlap.",
+      "eligible_for_deployment_style_primary": true,
+      "caveat": "May be less representative; must be predeclared, not chosen after seeing results."
+    },
+    "D_later_same_family": {
+      "description": "Chronologically after test, same workload family.",
+      "eligible_for_deployment_style_primary": false,
+      "eligible_as": "non-temporal transfer-learning study only, if explicitly disclosed as such -- never presented as a deployment-style evaluation"
+    },
+    "E_same_trace_prefix": {
+      "description": "Earlier prefix of the SAME trace instance being tested, with all labels censored strictly before the score boundary.",
+      "eligible_for_deployment_style_primary": true
+    },
+    "F_unverifiable_or_interleaved_order": {
+      "description": "Raw source order does not correspond to chronological order (grouped by entity, alphabetical, or otherwise non-temporal), and/or the candidate segment's calendar range is not disjoint from the test segment's calendar range.",
+      "eligible_for_deployment_style_primary": false,
+      "note": "Not covered by classifications A-E; requires either re-sorting the source by verified timestamp before splitting, or a different data source, before any eligibility claim can be made."
+    },
+    "G_no_temporal_axis": {
+      "description": "Source has no verifiable time field at all (static catalog or logging format without timestamps).",
+      "eligible_for_deployment_style_primary": false,
+      "eligible_as": "content-disjoint partition only (closer to classification C/B in spirit), with an explicit disclosure that no temporal claim is being made"
+    }
+  },
+  "per_family_classification_this_audit": {
+    "twemcache": "D_later_same_family",
+    "metacdn": "D_later_same_family",
+    "cloudphysics": "D_later_same_family",
+    "brightkite": "F_unverifiable_or_interleaved_order",
+    "citibike": "F_unverifiable_or_interleaved_order",
+    "wiki2018": "G_no_temporal_axis",
+    "metakv": "F_unverifiable_or_interleaved_order"
+  },
+  "conclusion": "0 of 7 families are classified A, B, C, or E (the classifications eligible for a deployment-style primary comparison) under the fair_v1 extraction strategy. fair_v1 is therefore not eligible as constructed. See docs/reviewer_fairness_temporal_rules.md for the protocol decision."
+}

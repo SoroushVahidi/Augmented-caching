@@ -1,5 +1,8 @@
 {
   "protocol_id": "evict_value_v1_fair_v1",
+  "status": "REJECTED_TEMPORALLY_INELIGIBLE",
+  "rejection_reason": "See analysis/reviewer_fairness/temporal_order_audit.{json,md} and docs/reviewer_fairness_temporal_rules.md. The implicit assumption that request positions [50000,100000) of each raw source occur chronologically after the canonical [0,50000) test range is confirmed TRUE for only 3 of 7 families (twemcache, metacdn, cloudphysics -- where it disqualifies them under classification D, 'later same-family data', per the frozen temporal rule) and is demonstrably FALSE or unverifiable for the other 4 (brightkite, citibike: raw order is grouped by entity, not time, with near-total calendar-range overlap between segments; wiki2018, metakv: no verifiable time axis in the source at all). 0 of 7 families are eligible as constructed. Training was stopped during Stage 1 (dataset construction, before any model was fit) once this was discovered; no evict_value_v1_fair_v1.pkl was ever produced. This record is preserved as rejected history, not deleted, per this task's requirements.",
+  "superseded_by": "evict_value_v1_fair_v2 (not yet designed/built -- see docs/reviewer_fairness_temporal_rules.md 'What would make each family eligible' for the concrete path)",
   "frozen_before_training": true,
   "frozen_at_commit": "PRE-TRAINING (see git log at time of freeze)",
   "purpose": "Corrects the CRITICAL train/test overlap in models/evict_value_wulver_v1_best.pkl (see analysis/reviewer_fairness/evict_value_v1_overlap_audit.json). Training/validation data are drawn ONLY from data/processed_fair_v1/ (request positions [50000,100000) of the same 7 raw source datasets), never from data/processed/ (the canonical [0,50000) evaluation range).",

@@ -23,11 +23,12 @@
     "identical_to_canonical_evaluation_manifest": "analysis/wulver_trace_manifest_full.csv (same 7 trace_name identifiers, same file paths, same [0,50000) request range)",
     "overlap_mechanism": "chunk_id = request_position // 4096, assigned to train (70%) / val (15%) / test (15%) via a hash of (trace_name, chunk_id) -- chunks are scattered pseudo-randomly across the ENTIRE [0,50000) range of each trace, not confined to an early prefix. Approximately 70% of each canonical evaluation trace's own request positions were used as training examples for the model subsequently scored end-to-end over the SAME, unrestricted [0,50000) range.",
     "consequence": "The model that produced the manuscript's headline end-to-end table (Table tab:available-capacities-trend) was fit on candidate examples drawn from the same positions it was later scored on, for every one of the 7 canonical trace families.",
-    "eligible_for_primary_comparison": false
+    "eligible_for_primary_comparison": false,
+    "corrective_action_v1_status": "REJECTED_TEMPORALLY_INELIGIBLE -- see temporal_order_audit.json"
   },
   "verification_method": "Read directly from data/derived/evict_value_v1_wulver_heavy_r1/manifest.json (trace_count=7, max_requests_per_trace=50000, trace_stats[*].path matching analysis/wulver_trace_manifest_full.csv paths exactly) and src/lafc/evict_value_wulver_v1.py:assign_split (chunk-hash bucket assignment, not a contiguous split). Not inferred from documentation.",
   "corrective_action": {
-    "status": "in_progress",
+    "status": "fair_v1_rejected_temporally_ineligible; fair_v2_not_yet_designed",
     "chosen_strategy": "later_non_overlapping_time_range_same_source_dataset",
     "protocol_doc": "docs/evict_value_v1_fair_training_protocol.md",
     "protocol_config": "configs/evict_value_v1_fair_training_protocol.json",

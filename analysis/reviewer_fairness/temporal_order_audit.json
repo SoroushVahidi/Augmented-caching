@@ -1,0 +1,120 @@
+{
+  "audit_version": "1",
+  "method": "Direct timestamp inspection of every record in the canonical [0,50000) trace and the fair_v1 disjoint [50000,100000) segment per family; monotonicity checked across the FULL segment (not just first/last row) after correcting a string-vs-numeric comparison bug for small-integer timestamp fields (twemcache).",
+  "families": {
+    "brightkite": {
+      "canonical_range": [
+        "2008-03-22T05:01:29Z",
+        "2010-10-17T19:39:20Z"
+      ],
+      "fair_v1_train_range": [
+        "2008-04-14T12:07:28Z",
+        "2010-10-17T22:12:29Z"
+      ],
+      "raw_row_order_chronological": false,
+      "evidence": "Raw file (loc-brightkite_totalCheckins.txt.gz) is grouped by user_id first (all of user 0's checkins listed together, in REVERSE chronological order within that user, before user 1 begins) -- confirmed by direct inspection of the first 5 raw lines. Row position has no direct relationship to time.",
+      "temporal_relationship_to_test": "UNKNOWN_INTERLEAVED -- calendar ranges of the canonical and fair_v1 segments overlap almost entirely (both span 2008-2010); the disjoint-by-ROW-POSITION segments are NOT cleanly earlier, later, or non-overlapping in TIME.",
+      "confidence": "HIGH (direct evidence: non-monotonic timestamps within the canonical segment itself, extensive calendar-range overlap between segments)"
+    },
+    "citibike": {
+      "canonical_range": [
+        "2023-12-31 13:50:28.976",
+        "2024-01-14 18:59:32.753"
+      ],
+      "fair_v1_train_range": [
+        "2023-12-31 22:52:36.844",
+        "2024-01-14 18:59:22.147"
+      ],
+      "raw_row_order_chronological": false,
+      "evidence": "202401-citibike-tripdata_1.csv is a large multi-station export; row order is non-monotonic in started_at across the full 100,000-row prefix used here (confirmed by direct per-row timestamp check, not assumed).",
+      "temporal_relationship_to_test": "UNKNOWN_INTERLEAVED -- nearly identical calendar ranges for both segments (both span essentially all of Jan 1-14, 2024).",
+      "confidence": "HIGH (direct evidence)"
+    },
+    "wiki2018": {
+      "canonical_range": [
+        null,
+        null
+      ],
+      "fair_v1_train_range": [
+        null,
+        null
+      ],
+      "raw_row_order_chronological": null,
+      "evidence": "Raw file (wiki2018_pageviews_en.csv) has an empty timestamp column for every row and is sorted ALPHABETICALLY by article name (object_id), e.g. 'en:!!!', 'en:!!!_(album)', ... -- confirmed by direct inspection. This is a static per-article pageview catalog, not a timestamped request log; it has no time axis to reason about at all.",
+      "temporal_relationship_to_test": "NOT_APPLICABLE -- no temporal dimension exists in this source; the fair_v1 segment is a different alphabetical slice of the same catalog (content-disjoint, but 'future' or 'past' is not a meaningful description).",
+      "confidence": "HIGH (direct evidence of absence of a time axis)"
+    },
+    "metakv": {
+      "canonical_range": [
+        null,
+        null
+      ],
+      "fair_v1_train_range": [
+        null,
+        null
+      ],
+      "raw_row_order_chronological": null,
+      "evidence": "Raw file (kvcache_traces_1_head.csv) header is 'key,op,size,op_count,key_size' -- no timestamp column exists in the source at all (confirmed by direct inspection of the raw CSV header).",
+      "temporal_relationship_to_test": "UNKNOWN -- row order may reflect a logged access sequence, but this cannot be independently verified from the available source fields.",
+      "confidence": "LOW (absence of evidence, not evidence of absence)"
+    },
+    "twemcache": {
+      "canonical_range": [
+        0,
+        187
+      ],
+      "fair_v1_train_range": [
+        187,
+        390
+      ],
+      "raw_row_order_chronological": true,
+      "evidence": "Numeric timestamp field (relative seconds), strictly non-decreasing across all 100,000 rows (verified with correct integer comparison after fixing an initial string-comparison bug); canonical segment ends at timestamp=187, fair_v1 training segment begins at timestamp=187 -- contiguous.",
+      "temporal_relationship_to_test": "LATER (Option D) -- training data is confirmed strictly chronologically after the test period.",
+      "confidence": "HIGH (direct, verified evidence)"
+    },
+    "metacdn": {
+      "canonical_range": [
+        1678863509425,
+        1678864397813
+      ],
+      "fair_v1_train_range": [
+        1678864397815,
+        1678865210994
+      ],
+      "raw_row_order_chronological": true,
+      "evidence": "Epoch-millisecond timestamp, strictly non-decreasing across all rows; canonical segment ends at 1678864397813, training segment begins 2ms later at 1678864397815 -- contiguous.",
+      "temporal_relationship_to_test": "LATER (Option D) -- confirmed strictly chronologically after the test period.",
+      "confidence": "HIGH (direct, verified evidence)"
+    },
+    "cloudphysics": {
+      "canonical_range": [
+        1577808000000046,
+        1577808002637526
+      ],
+      "fair_v1_train_range": [
+        1577808002637557,
+        1577808007447124
+      ],
+      "raw_row_order_chronological": true,
+      "evidence": "Epoch-microsecond timestamp, strictly non-decreasing across all rows; canonical segment ends at 1577808002637526, training segment begins 31us later at 1577808002637557 -- contiguous.",
+      "temporal_relationship_to_test": "LATER (Option D) -- confirmed strictly chronologically after the test period.",
+      "confidence": "HIGH (direct, verified evidence)"
+    }
+  },
+  "summary": {
+    "clean_option_D_future_data_confirmed": [
+      "twemcache",
+      "metacdn",
+      "cloudphysics"
+    ],
+    "unverifiable_or_interleaved_order": [
+      "brightkite",
+      "citibike"
+    ],
+    "no_temporal_axis_in_source": [
+      "wiki2018",
+      "metakv"
+    ],
+    "conclusion": "No single family-agnostic classification holds across all 7 families. The fair_v1 protocol's implicit assumption ('later raw row position = later chronological time') is TRUE and directly confirmed for 3 families, UNVERIFIABLE for 2 families, and FALSE for 2 families (raw order is grouped by entity, not time, with extensive calendar-range overlap between the 'canonical' and 'training' segments). fair_v1 cannot be certified as a uniform, defensible deployment-style temporal protocol across all 7 families as originally framed."
+  }
+}
