@@ -256,9 +256,19 @@ heterogeneous-cost case study would add anything beyond it.
   at uncontended-machine quality so far because Concerns 1–3's jobs were
   actively consuming CPU during this session. **IMPLEMENTED, timing
   campaign PREPARED_BUT_DEFERRED.**
-- Exact-optimization equivalence + smoke-scale speedup — **PARTIAL** (ran
-  at smoke scale for correctness; final controlled speedup numbers deferred
-  with the timing campaign).
+- Exact-optimization equivalence + smoke-scale speedup — **PARTIAL**.
+  Decision-equivalence confirmed by unit test; a smoke-scale run
+  (`--max-requests 200`) across all 7 certified traces at capacities 32/64
+  additionally shows ~22–30x speedup from batched model inference alone
+  (`vectorized_exact`/`vectorized_cached_exact`) versus only ~1.0–1.08x from
+  invariant-hoisting alone (`cached_exact`) at these small `k` — i.e. the
+  dominant avoidable cost at k≤64 is unbatched per-candidate model calls,
+  not the O(k²) redundant recomputation (which is expected to matter more
+  as `k` grows toward 128). Capacity 128 needs a longer request prefix than
+  this smoke run's 200 requests to reach eviction decisions at all in some
+  traces. Final controlled numbers (all capacities, full request budget,
+  idle machine) deferred with the timing campaign; smoke run left running
+  in tmux `practical_significance_smoke` for continued incremental output.
 - Selective invocation invocation-rate/quality outputs — **PARTIAL**
   (smoke scale).
 - Top-k victim-retention/quality-cost curve — **PARTIAL** (smoke scale).
