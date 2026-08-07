@@ -18,9 +18,21 @@ output/
 /data/derived/evict_value_v1_wulver*/
 /data/derived/evict_value_v1_wulver_array*/
 
+# Analysis artifacts
+/analysis/exploratory/**
+/analysis/diagnostics/**
+/analysis/external_learned_baselines/**
+/analysis/*/per_step_decisions.csv
+/analysis/**/*.log
+
 # Trained model artifacts
 /models/*.pkl
 /analysis/family_winner_selection/models/*.pkl
+
+# Manuscript packaging and artifacts
+/artifacts/
+/submission_kbs_revision*/
+/*.zip
 
 # Slurm job logs
 slurm/logs/
