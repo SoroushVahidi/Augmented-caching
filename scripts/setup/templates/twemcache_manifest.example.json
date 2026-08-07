@@ -1,0 +1,4 @@
+{
+  "files": ["cluster26_sample100_head.csv"],
+  "note": "Place decompressed/headered Twemcache CSV under data/raw/twemcache/ and list it here. See docs/datasets_wulver_trace_acquisition.md."
+}
