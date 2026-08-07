@@ -17,9 +17,20 @@ from __future__ import annotations
 
 from typing import Dict, Optional
 
+import numpy as np
+
 from lafc.cacheus_official_loader import EXPECTED_COMMIT, load_official_classes
 from lafc.policies.base import BasePolicy
 from lafc.types import CacheEvent, Page, PageId, Request
+
+# The official Cacheus.__init__ unconditionally calls `np.random.seed(123)`
+# -- a hardcoded constant, not a parameter. There is no seed argument
+# anywhere in the official constructor or `.request()`. This repository
+# does not add one (would be an algorithm-changing patch); this constant
+# documents what the official source actually does, for provenance/
+# diagnostics recording. See docs/cacheus_method_spec.md, "Expert victim
+# proposal and selection" and docs/cacheus_provenance.md's RNG audit.
+OFFICIAL_RNG_SEED = 123
 
 
 class CacheusConfig:
@@ -91,6 +102,22 @@ class CacheusPolicy(BasePolicy):
                 "upstream limitation, not an adapter bug. Minimum "
                 "supported capacity is 2."
             )
+        # Isolation, not seeding: the official Cacheus.__init__ itself
+        # deterministically resets numpy's *global* RNG state to a
+        # hardcoded seed (123) -- that already makes each freshly
+        # constructed instance's own decisions independent of whatever ran
+        # before it in this process (see OFFICIAL_RNG_SEED docstring
+        # above). What is NOT handled upstream is the reverse direction:
+        # protecting *other* code in the same process from being affected
+        # by CACHEUS having consumed/reset the global numpy RNG stream.
+        # Snapshotting here and restoring in restore_global_rng_state()
+        # (called by run_policy() after the simulation loop) closes that
+        # gap without touching any official algorithmic code -- the
+        # official constructor's own np.random.seed(123) call and all of
+        # Cacheus's own random draws during the run are completely
+        # untouched and unaffected by this save/restore.
+        self._numpy_state_before_cacheus = np.random.get_state()
+
         Cacheus, _LRU = load_official_classes()
         self._official = Cacheus(
             capacity, self._config.window_size, **self._config.official_kwargs()
@@ -98,6 +125,20 @@ class CacheusPolicy(BasePolicy):
         self._n_expert_disagreements = 0
         self._n_history_hits_lru = 0
         self._n_history_hits_lfu = 0
+
+    def restore_global_rng_state(self) -> None:
+        """Restore numpy's global RNG state to what it was before this
+        policy instance constructed the official Cacheus object.
+
+        Purely an isolation measure for code outside this policy; has no
+        effect on any decision CACHEUS itself already made (those are
+        final, already recorded in `self._official`'s state and in the
+        CacheEvents already returned). Safe to call multiple times or not
+        at all; a no-op if reset() was never called.
+        """
+        state = getattr(self, "_numpy_state_before_cacheus", None)
+        if state is not None:
+            np.random.set_state(state)
 
     def on_request(self, request: Request) -> CacheEvent:
         pid = request.page_id
@@ -153,4 +194,5 @@ class CacheusPolicy(BasePolicy):
             "n_history_hits_lfu": float(self._n_history_hits_lfu),
             "dem_count": float(getattr(self._official, "dem_count", float("nan"))),
             "nor_count": float(getattr(self._official, "nor_count", float("nan"))),
+            "official_rng_seed": float(OFFICIAL_RNG_SEED),
         }

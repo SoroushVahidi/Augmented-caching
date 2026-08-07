@@ -420,6 +420,13 @@ def run_policy(
     if isinstance(policy, CacheusPolicy):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["cacheus"] = {"summary": policy.diagnostics_summary()}
+        # Isolation only (see CacheusPolicy.restore_global_rng_state
+        # docstring): restores numpy's global RNG state to what it was
+        # before this policy ran, so other code sharing this process isn't
+        # affected by the official Cacheus source's use of the global
+        # numpy RNG. Does not alter anything CACHEUS itself already
+        # decided.
+        policy.restore_global_rng_state()
     if isinstance(policy, RobustFtPDeterministicMarkerCombiner):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["robust_ftp"] = {
