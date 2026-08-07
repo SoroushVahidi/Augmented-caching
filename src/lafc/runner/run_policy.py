@@ -59,6 +59,7 @@ from lafc.policies.la_weighted_paging_det_faithful import LAWeightedPagingDeterm
 from lafc.policies.lrb import LRBConfig, LRBPolicy
 from lafc.policies.three_l_cache import ThreeLCacheConfig, ThreeLCachePolicy
 from lafc.policies.halp import HALPConfig, HALPPolicy
+from lafc.policies.cacheus import CacheusConfig, CacheusPolicy
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
@@ -136,6 +137,11 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     # External baseline: Zhou et al. 2025 (FAST), 3L-Cache.
     "three_l_cache": ThreeLCachePolicy(),
     "halp": HALPPolicy(),
+    # External baseline: Rodriguez et al. 2021 (FAST), CACHEUS. Official-
+    # source wrapper (see lafc.cacheus_official_loader) -- construction is
+    # lazy-safe even if the external clone hasn't been fetched yet; the
+    # clear error surfaces only when .reset() is actually called.
+    "cacheus": CacheusPolicy(),
 }
 
 
@@ -411,6 +417,9 @@ def run_policy(
     elif isinstance(policy, HALPPolicy):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["halp"] = {"summary": policy.diagnostics_summary()}
+    if isinstance(policy, CacheusPolicy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["cacheus"] = {"summary": policy.diagnostics_summary()}
     if isinstance(policy, RobustFtPDeterministicMarkerCombiner):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["robust_ftp"] = {
@@ -1403,6 +1412,35 @@ def main() -> None:
         help="RNG seed for HALP.",
     )
     parser.add_argument(
+        "--cacheus-window-size",
+        type=int,
+        default=100,
+        help="Visualization-only window_size for official CACHEUS (no effect "
+        "on hit/miss outcomes); 100 matches the official run.py default for "
+        "absolute (non-fractional) cache sizes.",
+    )
+    parser.add_argument(
+        "--cacheus-initial-weight",
+        type=float,
+        default=None,
+        help="Override official CACHEUS's initial_weight (default: official "
+        "default of 0.5, applied when left unset).",
+    )
+    parser.add_argument(
+        "--cacheus-history-size",
+        type=int,
+        default=None,
+        help="Override official CACHEUS's history_size (default: official "
+        "default of capacity // 2, applied when left unset).",
+    )
+    parser.add_argument(
+        "--cacheus-learning-rate",
+        type=float,
+        default=None,
+        help="Override official CACHEUS's initial learning rate (default: "
+        "official default of sqrt(2*ln(2)/capacity), applied when left unset).",
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug logging.",
@@ -1560,6 +1598,15 @@ def main() -> None:
                 lr=args.halp_lr,
                 n_epochs=args.halp_n_epochs,
                 seed=args.halp_seed,
+            )
+        )
+    elif args.policy == "cacheus":
+        policy = CacheusPolicy(
+            CacheusConfig(
+                window_size=args.cacheus_window_size,
+                initial_weight=args.cacheus_initial_weight,
+                history_size=args.cacheus_history_size,
+                learning_rate=args.cacheus_learning_rate,
             )
         )
     else:
