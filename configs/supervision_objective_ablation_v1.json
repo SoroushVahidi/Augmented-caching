@@ -1,0 +1,74 @@
+{
+  "protocol_id": "supervision_objective_ablation_v1",
+  "frozen_before_training": true,
+  "purpose": "Isolate the effect of the supervision TARGET on eviction-scorer quality, holding candidate generation, cache simulator, trace preprocessing, capacities, request positions, history/scoring window, features, model family, training/validation resources, seeds, hyperparameter budget, and evaluation metric fixed.",
+  "objectives": {
+    "objective_eviction_loss": {
+      "description": "Canonical finite-horizon eviction loss L_H(q,t), unmodified reference architecture.",
+      "source_module": "src/lafc/evict_value_wulver_v1.py:iter_candidate_rows / src/lafc/evict_value_dataset_v1.py:_simulate_lru_misses",
+      "label_column": "eviction_loss_label",
+      "eviction_rule": "argmin predicted loss",
+      "model_family": ["ridge", "random_forest", "hist_gb"]
+    },
+    "objective_next_arrival": {
+      "description": "Distance (in requests) to the candidate's next reoccurrence.",
+      "primary_label_column": "next_arrival_label_censored",
+      "secondary_label_column": "next_arrival_label_raw",
+      "censoring_rule": "censored at H (same horizon as objective_eviction_loss) for the primary variant; uncensored (trace length as sentinel if never reused again) for the secondary variant",
+      "eviction_rule": "argmax predicted next-arrival distance (evict what returns latest)",
+      "model_family": ["ridge", "random_forest", "hist_gb"]
+    },
+    "objective_reuse_distance": {
+      "description": "Forward reuse distance: number of DISTINCT other objects requested before the candidate's next reoccurrence (standard stack-distance-to-next-reuse notion, not the same as next_arrival's raw request-count distance).",
+      "primary_label_column": "reuse_distance_label_censored",
+      "secondary_label_column": "reuse_distance_label_raw",
+      "censoring_rule": "censored at H distinct objects for the primary variant; uncensored for the secondary variant",
+      "eviction_rule": "argmax predicted reuse distance",
+      "model_family": ["ridge", "random_forest", "hist_gb"]
+    },
+    "objective_pairwise": {
+      "description": "Next-arrival-ordering pairwise preference (HALP-style): i preferred over j iff i's next reuse occurs before j's. Independent of the eviction-loss/rollout computation.",
+      "label_source": "next_arrival",
+      "eviction_rule": "evict lowest-scored candidate under the trained shared pairwise scorer",
+      "model": "shared-weight two-layer MLP, Bradley-Terry pairwise loss (reused from src/lafc/halp_model.py)"
+    },
+    "objective_pairwise_regret_derived": {
+      "description": "SECONDARY DIAGNOSTIC ONLY, not a primary comparison arm. Pairwise labels derived directly from eviction-loss regret (i preferred over j iff L_H(i,t) < L_H(j,t)). Prominently flagged as derived from objective_eviction_loss itself, per the task's explicit warning against presenting this as an independent objective.",
+      "label_source": "regret",
+      "primary_comparison_arm": false
+    }
+  },
+  "primary_comparisons": [
+    ["objective_eviction_loss", "objective_next_arrival"],
+    ["objective_eviction_loss", "objective_reuse_distance"],
+    ["objective_eviction_loss", "objective_pairwise"]
+  ],
+  "horizon": {
+    "H": 4,
+    "note": "Matches the fairness-protocol's scoped horizon (docs/evict_value_v1_fair_training_protocol.md). Primary analysis is horizon-controlled: objectives B/C/D censor future information at the same H as objective A."
+  },
+  "folds": "reuse configs/reviewer_fairness_cross_family_v1.json and configs/fair_cross_family_v1/folds/*.json UNCHANGED -- no new family rotation invented",
+  "capacities": [32, 64, 128],
+  "history_window_decision_time": 64,
+  "history_start": 0,
+  "history_end": 10000,
+  "score_start": 10000,
+  "score_end": 50000,
+  "scored_requests": 40000,
+  "metric": "request misses / miss ratio over [score_start, score_end)",
+  "hyperparameter_protocol": {
+    "model_families_scalar": ["ridge", "random_forest", "hist_gb"],
+    "selection_metric": "min validation mean_regret (regret vs. best candidate's true label at each validation decision)",
+    "tie_breaking": "lower val_mae, then lower val_rmse",
+    "seed": 0,
+    "search_budget_note": "Same 3-family search space applied identically to objective_eviction_loss, objective_next_arrival, objective_reuse_distance. No objective receives a larger or smaller search budget than another."
+  },
+  "expected_rows": {
+    "per_objective_per_fold": 3,
+    "scalar_objectives_total": "3 objectives x 7 folds x 3 capacities = 63 rows",
+    "pairwise_objective_total": "1 objective x 7 folds x 3 capacities = 21 rows",
+    "grand_total_primary": 84
+  },
+  "output_dir": "analysis/supervision_objective_ablation_v1/",
+  "amendment_policy": "Any change to censoring, horizon, model family, hyperparameter grid, or objective definition after viewing held-out results requires a new protocol_id (supervision_objective_ablation_v2) and a documented reason -- this file must not be edited in place after evaluation results are known."
+}

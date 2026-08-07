@@ -25,6 +25,10 @@ output/
 /data/derived/evict_value_v1_wulver_array*/
 /data/derived/evict_value_v1_fair_v1/
 /data/derived/evict_value_v1_cross_family_v1/
+/data/derived/supervision_objective_ablation_v1/
+
+# Per-worktree Python virtualenvs
+/.venv*/
 
 # Trained model artifacts
 /models/*.pkl
