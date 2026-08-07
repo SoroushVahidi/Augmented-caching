@@ -1,0 +1,8 @@
+trace_name,trace_family,path,capacity,policy,misses,hit_rate
+brightkite_50k,brightkite,data/processed/brightkite/trace.jsonl,256,lru,14758,0.70484
+brightkite_50k,brightkite,data/processed/brightkite/trace.jsonl,256,blind_oracle,29554,0.40892
+brightkite_50k,brightkite,data/processed/brightkite/trace.jsonl,256,predictive_marker,14923,0.70154
+brightkite_50k,brightkite,data/processed/brightkite/trace.jsonl,256,blind_oracle_lru_combiner,14759,0.70482
+brightkite_50k,brightkite,data/processed/brightkite/trace.jsonl,256,trust_and_doubt,15306,0.69388
+brightkite_50k,brightkite,data/processed/brightkite/trace.jsonl,256,rest_v1,14758,0.70484
+brightkite_50k,brightkite,data/processed/brightkite/trace.jsonl,256,evict_value_v1,20533,0.58934

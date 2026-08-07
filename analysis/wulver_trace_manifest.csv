@@ -1,2 +1,1 @@
-path,trace_name,dataset_source,trace_family
-data/processed/brightkite/trace.jsonl,brightkite_trace_50k,brightkite,brightkite
+manifests/wulver_trace_manifest.csv

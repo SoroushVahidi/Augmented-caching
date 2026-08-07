@@ -1,0 +1,8 @@
+path,trace_name,dataset_source,trace_family
+data/processed/brightkite/trace.jsonl,brightkite_50k,brightkite,brightkite
+data/processed/citibike/trace.jsonl,citibike_202401_50k,citibike,citibike
+data/processed/wiki2018/trace.jsonl,wiki2018_pageviews_en_50k,wiki2018,wiki2018
+data/processed/twemcache/trace.jsonl,twemcache_cluster26_sample100_50k,twemcache,twemcache
+data/processed/metakv/trace.jsonl,metakv_kvcache_202206_head_50k,metakv,metakv
+data/processed/metacdn/trace.jsonl,metacdn_cdn_202303_head_50k,metacdn,metacdn
+data/processed/cloudphysics/trace.jsonl,cloudphysics_alibaba_block_head_50k,cloudphysics,cloudphysics
