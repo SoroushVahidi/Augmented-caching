@@ -32,6 +32,9 @@ descent, deterministic given a fixed seed and no minibatching.
 
 from __future__ import annotations
 
+import pickle
+from pathlib import Path
+
 import numpy as np
 from sklearn.impute import SimpleImputer
 
@@ -133,3 +136,48 @@ class HALPModel:
         Xs = (X_imp - self._mean) / self._std
         h = np.maximum(Xs @ self._W1 + self._b1, 0.0)
         return h @ self._W2
+
+    def save(self, path: str | Path) -> None:
+        """Serialize the fitted model (weights + normalization stats) for
+        offline freeze/reload across processes -- pure I/O, no change to
+        fit()/predict_rewards()'s math."""
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("wb") as fh:
+            pickle.dump(
+                {
+                    "hidden_units": self._hidden_units,
+                    "alpha": self._alpha,
+                    "lr": self._lr,
+                    "n_epochs": self._n_epochs,
+                    "seed": self._seed,
+                    "fitted": self._fitted,
+                    "mean": self._mean,
+                    "std": self._std,
+                    "W1": self._W1,
+                    "b1": self._b1,
+                    "W2": self._W2,
+                    "imputer": self._imputer,
+                },
+                fh,
+            )
+
+    @classmethod
+    def load(cls, path: str | Path) -> "HALPModel":
+        with Path(path).open("rb") as fh:
+            payload = pickle.load(fh)
+        model = cls(
+            hidden_units=payload["hidden_units"],
+            alpha=payload["alpha"],
+            lr=payload["lr"],
+            n_epochs=payload["n_epochs"],
+            seed=payload["seed"],
+        )
+        model._fitted = payload["fitted"]
+        model._mean = payload["mean"]
+        model._std = payload["std"]
+        model._W1 = payload["W1"]
+        model._b1 = payload["b1"]
+        model._W2 = payload["W2"]
+        model._imputer = payload["imputer"]
+        return model

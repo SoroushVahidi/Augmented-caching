@@ -22,7 +22,8 @@ class EvictValueV1Model:
         """Batched form of predict_loss_one: identical per-row result, but
         one estimator.predict() call instead of N -- avoids per-call
         thread-pool spin-up overhead in estimators with internal
-        parallelism (e.g. HistGradientBoostingRegressor)."""
+        parallelism (e.g. HistGradientBoostingRegressor), which otherwise
+        dominates runtime when scoring many candidates one at a time."""
         if not rows:
             return []
         x = [[float(row[c]) for c in self.feature_columns] for row in rows]

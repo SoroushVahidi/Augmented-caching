@@ -9,9 +9,14 @@ import math
 
 import pytest
 
+from lafc.evict_value_v2_rollout import _next_use_distance
 from lafc.simulator.request_trace import build_requests_from_lists
 from lafc.supervision_objective_ablation import (
     ObjectiveAblationConfig,
+    _build_distinct_suffix_counts,
+    _build_occurrence_index,
+    _forward_reuse_distance,
+    _next_arrival_and_reuse_distance_fast,
     build_multi_label_candidate_rows,
     build_pairwise_rows,
 )
@@ -147,3 +152,62 @@ def test_pairwise_regret_derived_is_explicitly_labeled_and_separate():
 def test_build_pairwise_rows_rejects_unknown_source():
     with pytest.raises(ValueError):
         build_pairwise_rows([], source="bogus")
+
+
+def test_fast_distance_helpers_match_reference_scan_implementation():
+    # Differential test: the O(log n) occurrence-index fast path used by
+    # the hot loop must produce EXACTLY the same (next_raw, reuse_raw)
+    # values as the original linear-scan reference functions
+    # (_next_use_distance / _forward_reuse_distance), for every
+    # (candidate, decision time) pair, including candidates that never
+    # reoccur (the pathological case that motivated the optimization) and
+    # a trace with duplicate/repeated page ids at varying gaps.
+    import math
+    import random as _random
+
+    rng = _random.Random(7)
+    vocab = [f"p{i}" for i in range(15)]
+    page_ids = [rng.choice(vocab) for _ in range(200)]
+    # Add some pages that appear exactly once (never reoccur).
+    page_ids += [f"unique{i}" for i in range(5)]
+    reqs, _ = build_requests_from_lists(page_ids=page_ids)
+
+    occurrence_index = _build_occurrence_index(reqs)
+    distinct_suffix_counts = _build_distinct_suffix_counts(reqs)
+    n = len(reqs)
+
+    candidates = set(page_ids)
+    for t in range(0, n - 1, 7):  # sample decision points
+        future = reqs[t + 1 :]
+        for candidate in candidates:
+            ref_next = _next_use_distance(candidate, future, 0)
+            ref_next_raw = ref_next + 1.0 if math.isfinite(ref_next) else float(len(future) + 1)
+            ref_reuse = _forward_reuse_distance(candidate, future, 0)
+            ref_reuse_raw = ref_reuse if math.isfinite(ref_reuse) else float(len(set(r.page_id for r in future)))
+
+            fast_next_raw, fast_reuse_raw = _next_arrival_and_reuse_distance_fast(
+                candidate, t, n, occurrence_index, distinct_suffix_counts, reqs
+            )
+            assert fast_next_raw == ref_next_raw, (t, candidate, fast_next_raw, ref_next_raw)
+            assert fast_reuse_raw == ref_reuse_raw, (t, candidate, fast_reuse_raw, ref_reuse_raw)
+
+
+def test_pairwise_max_pairs_per_decision_caps_and_is_deterministic():
+    import random as _random
+
+    page_ids = ["a", "b", "c", "d", "e", "f"]
+    rng = _random.Random(1)
+    for _ in range(300):
+        page_ids.append(rng.choice(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]))
+    rows = _rows_for(page_ids, capacity=6, horizon=4)
+
+    uncapped = build_pairwise_rows(rows, source="next_arrival")
+    capped = build_pairwise_rows(rows, source="next_arrival", max_pairs_per_decision=6, sample_seed=0)
+    capped_again = build_pairwise_rows(rows, source="next_arrival", max_pairs_per_decision=6, sample_seed=0)
+
+    counts: dict = {}
+    for p in capped:
+        counts[p["decision_id"]] = counts.get(p["decision_id"], 0) + 1
+    assert counts and max(counts.values()) <= 6
+    assert len(capped) < len(uncapped)
+    assert capped == capped_again  # deterministic given the same seed

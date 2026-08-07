@@ -62,6 +62,24 @@ def test_halp_pairwise_model_training():
     assert np.all(score_pref > score_non_pref)
 
 
+def test_halp_model_save_load_roundtrip(tmp_path):
+    model = HALPModel(hidden_units=4, seed=42)
+    X_pref = np.array([[1.0, 10.0, 2.0, 2.0, 2.0], [2.0, 15.0, 1.0, 1.0, 1.0]])
+    X_non_pref = np.array([[10.0, 1.0, 20.0, 20.0, 20.0], [12.0, 2.0, 15.0, 15.0, 15.0]])
+    model.fit(X_pref, X_non_pref)
+    before = model.predict_rewards(X_pref)
+
+    path = tmp_path / "halp_model.pkl"
+    model.save(path)
+    reloaded = HALPModel.load(path)
+    after = reloaded.predict_rewards(X_pref)
+
+    assert np.allclose(before, after)
+    assert reloaded._fitted is True
+    assert reloaded._hidden_units == 4
+    assert reloaded._seed == 42
+
+
 def test_halp_model_cold_start_returns_zero_rewards():
     model = HALPModel(hidden_units=4, seed=42)
     X = np.array([[1.0, 1.0, 1.0, 1.0, 1.0], [2.0, 2.0, 2.0, 2.0, 2.0]])
