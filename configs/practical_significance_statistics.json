@@ -1,0 +1,26 @@
+{
+  "plan_version": "practical_significance_ablation_statistics_v1",
+  "frozen_before_results": true,
+  "experimental_unit": "one (trace, capacity) instance per variant, with N repeated wall-clock timing measurements per instance under the controlled campaign (median + variation reported, warm-up discarded -- see docs/practical_significance_ablation_protocol.md completion criteria).",
+  "comparison_design": "within-instance: each optimized/selective/top-k/model-complexity variant is timed on the SAME (trace, capacity) instances as the canonical implementation; miss-ratio quality is compared against the already-certified fair-window baselines (analysis/reviewer_fairness/), never re-measured ad hoc.",
+  "reported_statistics": [
+    "median and IQR wall-clock time per (trace, capacity, variant), warm-up repetitions discarded",
+    "speedup ratio (canonical median time / variant median time) per instance, with bootstrap 95% CI",
+    "component-level time breakdown (bookkeeping / candidate construction / feature extraction / model prediction / ranking / other) as a percentage of total, per instance",
+    "quality-cost tradeoff: miss_ratio vs. mean time-per-decision, per selective/top-k configuration",
+    "break-even miss-cost threshold vs. LRU/SIEVE/FIFO-Reinsertion and the strongest certified lightweight baseline",
+    "Pareto-efficient frontier over (quality, cost)"
+  ],
+  "inferential_approach": {
+    "primary_analysis": "descriptive: median + bootstrap CI, not a significance test -- the practical-significance question is 'how large is the effect and is it worth the cost', not 'is there a nonzero effect' (timing differences at this scale are essentially always significant; magnitude and the break-even/Pareto framing are what matters)",
+    "confidence_intervals": "bootstrap (10,000 resamples over repetitions within each instance) 95% CI on median wall-clock time and on the speedup ratio",
+    "reported_alongside_every_speedup_number": "the underlying miss-ratio quality (never report a speedup without its quality cost/benefit in the same table)"
+  },
+  "explicit_prohibitions": [
+    "Do not report a speedup number without its corresponding quality (miss-ratio) impact in the same table.",
+    "Do not select which variants/capacities to report after viewing controlled-campaign results (predeclared grid, matches the smoke-scale campaign already run and reported).",
+    "Do not run the controlled campaign, or this analysis, while any Concern 1/2/3 job or the legacy LRB is actively consuming CPU (see scripts/experiments/run_practical_significance_controlled.py's TIMING_GATE).",
+    "Report the honest 'no positive miss penalty makes the current policy preferable' outcome if that is what the break-even analysis shows -- do not hide or reframe a negative finding."
+  ],
+  "status": "PLAN ONLY -- not yet applied to the controlled campaign's results (only to the smoke-scale campaign, which is explicitly a preview, not the final numbers). Recorded before the controlled campaign runs, per the requirement to freeze the analysis plan before viewing final results. Gated on: run_practical_significance_controlled.py reporting TIMING_GATE=READY and the controlled run completing."
+}
