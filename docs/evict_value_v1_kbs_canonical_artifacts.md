@@ -2,9 +2,9 @@
 
 **Navigation:** `docs/kbs_manuscript_workflow.md` (full manuscript path: Slurm → analysis inputs → `build_kbs_main_manuscript_artifacts.py` → `tables/manuscript/`, `figures/manuscript/`).
 
-This document fixes a single source of truth for the main Wulver evaluation and training evidence used with `scripts/paper/build_kbs_main_manuscript_artifacts.py`.
+This document fixes a single source of truth for the main Wulver evaluation and training evidence used with `scripts/experiments/canonical/paper/build_kbs_main_manuscript_artifacts.py`.
 
-**See also:** `docs/kbs_manuscript_submission_index.md` (reviewer-facing index), `analysis/README.md` (canonical vs non-canonical root filenames).
+**See also:** `docs/reviewer/submission_index.md` (reviewer-facing index), `analysis/README.md` (canonical vs non-canonical root filenames).
 
 ## Canonical pipeline
 
@@ -16,15 +16,15 @@ This document fixes a single source of truth for the main Wulver evaluation and 
 
 | Role | Path |
 |------|------|
-| Policy comparison (CSV) | `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` |
-| Policy comparison (report) | `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.md` |
-| Dataset summary (human-readable) | `analysis/evict_value_v1_wulver_dataset_summary_heavy_r1.md` |
-| Training metrics | `analysis/evict_value_wulver_v1_train_metrics_heavy_r1.json` |
-| Model comparison (selection / ablation) | `analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv` |
-| Best config | `analysis/evict_value_wulver_v1_best_config_heavy_r1.json` |
-| Trace manifest | `analysis/wulver_trace_manifest_full.csv` |
+| Policy comparison (CSV) | `analysis/manuscript_canonical/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` |
+| Policy comparison (report) | `analysis/manuscript_canonical/evict_value_wulver_v1_policy_comparison_heavy_r1.md` |
+| Dataset summary (human-readable) | `analysis/manuscript_canonical/evict_value_v1_wulver_dataset_summary_heavy_r1.md` |
+| Training metrics | `analysis/manuscript_canonical/evict_value_wulver_v1_train_metrics_heavy_r1.json` |
+| Model comparison (selection / ablation) | `analysis/manuscript_canonical/evict_value_wulver_v1_model_comparison_heavy_r1.csv` |
+| Best config | `analysis/manuscript_canonical/evict_value_wulver_v1_best_config_heavy_r1.json` |
+| Trace manifest | `analysis/manifests/wulver_trace_manifest_full.csv` |
 
-The manuscript builder reads exactly these paths (see `EVIDENCE_FILES` in `scripts/paper/build_kbs_main_manuscript_artifacts.py`).
+The manuscript builder reads exactly these paths (see `EVIDENCE_FILES` in `scripts/experiments/canonical/paper/build_kbs_main_manuscript_artifacts.py`).
 
 ## Generated manuscript outputs (from the builder)
 

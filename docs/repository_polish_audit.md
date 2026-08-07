@@ -70,15 +70,15 @@ The following paths **MUST NOT** be modified while experiments are running:
 
 ## 11. Prioritized Cleanup Plan
 
-| Severity | Task | Query |
-| :--- | :--- | :--- |
-| **P0** | Consolidate reviewer revision docs into `main` | Query 3 |
-| **P0** | Fix dependency issues in `pyproject.toml` / environment | Query 3 |
-| **P1** | Move manuscript packaging folders to `artifacts/` | Query 2 |
-| **P1** | Group root-level `analysis/` files into subdirectories | Query 2 |
-| **P2** | Normalize script names and remove truly obsolete ones | Query 2 |
-| **P2** | Enhance `.gitignore` for all worktrees | Query 2 |
-| **P3** | Refactor top-level `lafc/evict_*.py` into submodules | Query 2 |
+| Severity | Task | Query | Status |
+| :--- | :--- | :--- | :--- |
+| **P0** | Consolidate reviewer revision docs into `main` | Query 3 | PARTIALLY_RESOLVED |
+| **P0** | Fix dependency issues in `pyproject.toml` / environment | Query 3 | |
+| **P1** | Move manuscript packaging folders to `artifacts/` | Query 2 | RESOLVED |
+| **P1** | Group root-level `analysis/` files into subdirectories | Query 2 | RESOLVED |
+| **P2** | Normalize script names and remove truly obsolete ones | Query 2 | RESOLVED |
+| **P2** | Enhance `.gitignore` for all worktrees | Query 2 | RESOLVED |
+| **P3** | Refactor top-level `lafc/evict_*.py` into submodules | Query 2 | DEFERRED_UNTIL_ACTIVE_JOBS_FINISH |
 
 ---
 

@@ -66,10 +66,14 @@ Author-facing working notes, novelty guardrails, bibliography gaps, and prior-wo
 
 ---
 
-## Repository hygiene and cleanup
+## Reviewer revision (`docs/reviewer/`)
 
-| Document | Role |
-|----------|------|
-| [`repository_cleanup_report.md`](repository_cleanup_report.md) | What changed in journal-readiness passes (navigation, not science) |
-| [`kbs_repository_hygiene_report.md`](kbs_repository_hygiene_report.md) | Earlier KBS hygiene notes |
-| [`repo_hygiene_cleanup_report_2026-04-11.md`](repo_hygiene_cleanup_report_2026-04-11.md) | Dated snapshot |
+| Document | Notes |
+|----------|-------|
+| [`next_stage_runbook.md`](reviewer/next_stage_runbook.md) | Operational runbook for reviewer experiments |
+| `roadmap.md` | Roadmap for revision completion (in active worktrees) |
+| `concern_1_baselines_and_fairness.md` | Protocol and results for Fairness (in active worktree) |
+
+---
+
+## Repository map and hygiene

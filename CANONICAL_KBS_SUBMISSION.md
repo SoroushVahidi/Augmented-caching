@@ -10,7 +10,7 @@
 
 - **Method:** `evict_value_v1` — learned candidate-level eviction scores trained on Wulver-scale artifact-backed datasets, evaluated by **trace replay** alongside documented baselines.
 - **Experiment tag:** `EXP_TAG=heavy_r1` on Slurm drivers (train then eval).
-- **Manuscript bundle:** `scripts/paper/build_kbs_main_manuscript_artifacts.py` reads **only** the canonical `*_heavy_r1` analysis inputs listed in `docs/evict_value_v1_kbs_canonical_artifacts.md` and writes `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/`.
+- **Manuscript bundle:** `scripts/experiments/canonical/paper/build_kbs_main_manuscript_artifacts.py` reads **only** the canonical `*_heavy_r1` analysis inputs listed in `docs/evict_value_v1_kbs_canonical_artifacts.md` and writes `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/`.
 
 ---
 
@@ -20,7 +20,7 @@
 |-------|----------------|
 | Train (dataset + model) | `slurm/evict_value_v1_wulver_heavy_train.sbatch` with `sbatch --export=ALL,EXP_TAG=heavy_r1,...` |
 | Eval (policy replay comparison) | `slurm/evict_value_v1_wulver_heavy_eval.sbatch` with `sbatch --export=ALL,EXP_TAG=heavy_r1,...` |
-| Manuscript tables/figures | `python scripts/paper/build_kbs_main_manuscript_artifacts.py` (from repo root; see `scripts/paper/README.md`) |
+| Manuscript tables/figures | `python scripts/experiments/canonical/paper/build_kbs_main_manuscript_artifacts.py` (from repo root) |
 
 **Runbook (defaults, success checks, logs):** `docs/wulver_heavy_evict_value_experiment.md`
 
@@ -32,7 +32,7 @@
 
 | Role | Path |
 |------|------|
-| Trace manifest | `analysis/wulver_trace_manifest_full.csv` |
+| Trace manifest | `analysis/manifests/wulver_trace_manifest_full.csv` |
 | Dataset / train / model-selection outputs | Paths under `docs/evict_value_v1_kbs_canonical_artifacts.md` (`*_heavy_r1` filenames) |
 | Trained model (eval expects tagged copy) | `models/evict_value_wulver_v1_best_heavy_r1.pkl` (also `models/evict_value_wulver_v1_best.pkl` during training) |
 
@@ -44,8 +44,8 @@
 
 Minimum set for the **full** quantitative manuscript bundle (Table~3, Fig.~2–3):
 
-- `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` (**required** for main replay table/figures)
-- Optional companion: `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.md`
+- `analysis/manuscript_canonical/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` (**required** for main replay table/figures)
+- Optional companion: `analysis/manuscript_canonical/evict_value_wulver_v1_policy_comparison_heavy_r1.md`
 
 **Also used by the builder** (offline ablation, dataset summary, etc.): same doc’s table of `*_heavy_r1` paths.
 

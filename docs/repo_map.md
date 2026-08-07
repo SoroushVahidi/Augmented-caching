@@ -14,12 +14,15 @@ For **Knowledge-Based Systems** and the canonical Wulver **`heavy_r1`** `evict_v
 ## Top-level layout
 
 - `src/lafc/` — core library implementation (policies, simulator, runners, datasets, offline solvers).
-- `scripts/` — reproducible experiment and dataset-prep entry points.
+- `scripts/` — structured experiment and setup entry points (see `scripts/README.md`).
+- `configs/` — experimental configurations and protocols (see `configs/README.md`).
 - `tests/` — unit/integration tests for policies, datasets, runners, and experiments.
 - `docs/` — method notes, experiment protocols, theorem-development notes, and manuscript-support docs.
 - `analysis/` — generated text artifacts from experiments (`.csv`, `.json`, `.md`).
 - `data/` — small examples in git + raw/processed derived data roots.
-- `slurm/` — cluster batch templates for heavier runs. **KBS canonical Wulver pipeline:** `evict_value_v1_wulver_heavy_train.sbatch`, `evict_value_v1_wulver_heavy_eval.sbatch` (`EXP_TAG=heavy_r1`); index at `docs/kbs_manuscript_submission_index.md`.
+- `models/` — trained model artifacts and staging areas.
+- `artifacts/` — final manuscript submission packages and external releases.
+- `slurm/` — cluster batch templates for heavier runs.
 
 ## `src/lafc/` subpackages
 
@@ -32,22 +35,23 @@ For **Knowledge-Based Systems** and the canonical Wulver **`heavy_r1`** `evict_v
 - top-level `evict_*` / `offline_teacher_supervision.py` — eviction-learning datasets/models and supervision helpers.
 - `metrics/` — common cost and prediction error metrics.
 
-## `scripts/` families
+## `scripts/` organization
 
-- `scripts/paper/` — KBS manuscript bundle (`build_kbs_main_manuscript_artifacts.py`); requires canonical `heavy_r1` analysis inputs.
-- `scripts/datasets/` — canonical dataset download/prepare wrappers.
-- `build_*` scripts — build training tables from traces.
-- `train_*` scripts — fit lightweight models and write metrics.
-- `run_*` scripts — first-checks, ablations, and experiment reports.
-- `search_*` / `analyze_*` scripts — theorem/proof or counterexample support utilities.
-- `scripts/experiments/` — lightweight ablation runners (incoming-aware, history-aware, history-objective, joint-state).
+- `scripts/setup/` — dataset ingestion, download, and preprocessing.
+- `scripts/maintenance/` — search, theorem-support, and aggregation utilities.
+- `scripts/validation/` — revision readiness and status runners.
+- `scripts/experiments/canonical/` — manuscript-safe canonical Wulver pipeline.
+- `scripts/experiments/reviewer/` — reviewer-revision experiments.
+- `scripts/experiments/exploratory/` — exploratory lightweight ablations.
+- `scripts/experiments/diagnostics/` — failure-slice audits and diagnostic tools.
 
-## `analysis/` organization conventions
+## `analysis/` organization
 
-- **Experiment directories** (preferred): one directory per experiment with `report.md`, `results.csv`, `summary.json`.
-- **Legacy root-level artifacts**: older single-file outputs kept for history and manuscript traceability.
-- **Manifests/audits**: stable helper artifacts (for example Wulver trace manifests and failure-slice audits).
-- **Exploratory lightweight ablations**: grouped under `analysis/*_light/` (see `docs/lightweight_exploratory_ablations.md`).
+- `analysis/manuscript_canonical/` — frozen results for the final KBS manuscript.
+- `analysis/reviewer_revision/` — results from reviewer-revision experiments.
+- `analysis/exploratory/` — first-check runners and ad-hoc ablations.
+- `analysis/diagnostics/` — failure-slice audits and benchmarks.
+- `analysis/manifests/` — trace manifests and experiment split definitions.
 
 See `analysis/README.md` for details and naming guidance.
 

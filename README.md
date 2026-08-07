@@ -33,16 +33,16 @@ For **Knowledge-Based Systems** and the **only** designated multi-trace Wulver `
 | Slurm train → eval | [`slurm/evict_value_v1_wulver_heavy_train.sbatch`](slurm/evict_value_v1_wulver_heavy_train.sbatch), [`slurm/evict_value_v1_wulver_heavy_eval.sbatch`](slurm/evict_value_v1_wulver_heavy_eval.sbatch) with `EXP_TAG=heavy_r1` |
 | Runbook | [`docs/wulver_heavy_evict_value_experiment.md`](docs/wulver_heavy_evict_value_experiment.md) |
 | Exact filenames | [`docs/evict_value_v1_kbs_canonical_artifacts.md`](docs/evict_value_v1_kbs_canonical_artifacts.md) |
-| Tables / figures | `python scripts/paper/build_kbs_main_manuscript_artifacts.py` → `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/` |
+| Tables / figures | `python scripts/experiments/canonical/paper/build_kbs_main_manuscript_artifacts.py` → `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/` |
 
 **Do not** cite `analysis/evict_value_wulver_v1_policy_comparison.csv` (unsuffixed) as the main KBS comparison; it may include extra policies from non-heavy drivers. Use **`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`** only when present. See [`analysis/README.md`](analysis/README.md).
 
 ### After heavy eval completes (minimal checklist)
 
 ```bash
-test -f analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
+test -f analysis/manuscript_canonical/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
 export PYTHONPATH="${PYTHONPATH:-$(pwd)/src}"
-python scripts/paper/build_kbs_main_manuscript_artifacts.py
+python scripts/experiments/canonical/paper/build_kbs_main_manuscript_artifacts.py
 ls tables/manuscript figures/manuscript reports/manuscript_artifacts
 ```
 
@@ -97,9 +97,9 @@ python -m lafc.runner.run_policy \
 ### Local `evict_value_v1` first check (small; not the Wulver `heavy_r1` line)
 
 ```bash
-python scripts/build_evict_value_dataset_v1.py --max-rows 200000
-python scripts/train_evict_value_v1.py --horizon 8
-python scripts/run_evict_value_v1_first_check.py
+python scripts/experiments/exploratory/build_evict_value_dataset_v1.py --max-rows 200000
+python scripts/experiments/exploratory/train_evict_value_v1.py --horizon 8
+python scripts/experiments/exploratory/run_evict_value_v1_first_check.py
 ```
 
 ---
@@ -123,7 +123,7 @@ Details: `docs/baselines.md`, `docs/framework.md`.
 ## Datasets
 
 ```bash
-python scripts/datasets/prepare_all.py --dataset <brightkite|citibike|spec_cpu2006|wiki2018|twemcache|metakv|metacdn|cloudphysics|all>
+python scripts/setup/prepare_all.py --dataset <brightkite|citibike|spec_cpu2006|wiki2018|twemcache|metakv|metacdn|cloudphysics|all>
 ```
 
 - Raw: `data/raw/<dataset>/` — Processed: `data/processed/<dataset>/` — Notes: `docs/datasets.md`
@@ -137,10 +137,10 @@ python scripts/datasets/prepare_all.py --dataset <brightkite|citibike|spec_cpu20
 ### A) Offline-teacher vs heuristic
 
 ```bash
-python scripts/run_offline_teacher_vs_heuristic_experiment.py \
+python scripts/experiments/exploratory/run_offline_teacher_vs_heuristic_experiment.py \
   --trace-glob "data/example_*.json,data/example_general_caching.json" \
   --capacities 2,3 --horizon 12 \
-  --output-dir analysis/offline_teacher_vs_heuristic
+  --output-dir analysis/exploratory/offline_teacher_vs_heuristic
 ```
 
 See `docs/offline_teacher_vs_heuristic_mediumscale.md`.
@@ -148,7 +148,7 @@ See `docs/offline_teacher_vs_heuristic_mediumscale.md`.
 ### B) Pairwise vs pointwise
 
 ```bash
-python scripts/run_pairwise_vs_pointwise_experiment.py --output-dir analysis/pairwise_vs_pointwise
+python scripts/experiments/exploratory/run_pairwise_vs_pointwise_experiment.py --output-dir analysis/exploratory/pairwise_vs_pointwise
 ```
 
 Interpret conservatively: `docs/pairwise_vs_pointwise_experiment.md`, `docs/manuscript_evidence_map.md`.
@@ -156,8 +156,8 @@ Interpret conservatively: `docs/pairwise_vs_pointwise_experiment.md`, `docs/manu
 ### C) Sentinel / guard refinement
 
 ```bash
-python scripts/run_sentinel_budgeted_guard_v2_eval.py
-python scripts/run_sentinel_budgeted_guard_v2_ablation.py
+python scripts/experiments/exploratory/run_sentinel_budgeted_guard_v2_eval.py
+python scripts/experiments/exploratory/run_sentinel_budgeted_guard_v2_ablation.py
 ```
 
 ---
