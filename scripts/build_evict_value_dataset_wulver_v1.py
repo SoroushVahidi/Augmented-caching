@@ -31,7 +31,7 @@ def main() -> None:
     ap.add_argument("--trace-glob", action="append", default=["data/processed/*/trace.jsonl"], help="Glob(s) used when manifest is absent.")
     ap.add_argument("--capacities", default="64,128,256")
     ap.add_argument("--horizons", default="8,16,32")
-    ap.add_argument("--split-mode", default="trace_chunk", choices=["trace_chunk", "source_family"])
+    ap.add_argument("--split-mode", default="trace_chunk", choices=["trace_chunk", "source_family", "family_map"])
     ap.add_argument("--chunk-size", type=int, default=4096)
     ap.add_argument("--split-train-pct", type=int, default=70)
     ap.add_argument("--split-val-pct", type=int, default=15)
@@ -51,10 +51,16 @@ def main() -> None:
     )
     ap.add_argument("--out-dir", default="data/derived/evict_value_v1_wulver")
     ap.add_argument("--overwrite", action="store_true")
+    ap.add_argument(
+        "--family-split-map-json", default=None,
+        help="JSON object mapping trace_family -> 'train'|'val', required when "
+        "--split-mode family_map. See configs/reviewer_fairness_cross_family_v1.json.",
+    )
     args = ap.parse_args()
 
     capacities = [int(x.strip()) for x in args.capacities.split(",") if x.strip()]
     horizons = tuple(int(x.strip()) for x in args.horizons.split(",") if x.strip())
+    family_split_map = json.loads(args.family_split_map_json) if args.family_split_map_json else None
     cfg = WulverDatasetConfig(
         horizons=horizons,
         history_window=args.history_window,
@@ -63,6 +69,7 @@ def main() -> None:
         split_train_pct=args.split_train_pct,
         split_val_pct=args.split_val_pct,
         split_seed=args.split_seed,
+        family_split_map=family_split_map,
     )
     specs = parse_trace_manifest(args.trace_manifest, args.trace_glob)
     if args.max_traces is not None:

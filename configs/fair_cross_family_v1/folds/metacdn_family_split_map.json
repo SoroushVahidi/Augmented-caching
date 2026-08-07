@@ -1,0 +1,8 @@
+{
+  "metakv": "val",
+  "brightkite": "train",
+  "citibike": "train",
+  "cloudphysics": "train",
+  "twemcache": "train",
+  "wiki2018": "train"
+}

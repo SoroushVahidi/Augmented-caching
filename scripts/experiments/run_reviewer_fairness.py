@@ -157,6 +157,65 @@ def _make_policy(name: str, capacity: int):
             random_seed="0", future_information="none",
             batch_size_or_equivalent="4096",
         )
+    if name == "blind_oracle_lru_combiner":
+        from lafc.policies.blind_oracle_lru_combiner import BlindOracleLRUCombiner
+        return BlindOracleLRUCombiner(), dict(
+            implementation_source="native", implementation_commit="n/a",
+            model_training_mode="none", model_training_data="n/a",
+            model_frozen_during_test="n/a", online_adaptation_during_test="no",
+            hyperparameter_source="n/a (parameter-free)", random_seed="n/a",
+            future_information="none (deterministic shadow-simulation combiner)",
+            batch_size_or_equivalent="",
+        )
+    if name == "rest_v1":
+        from lafc.policies.rest_v1 import RestV1Policy
+        return RestV1Policy(), dict(
+            implementation_source="native", implementation_commit="n/a",
+            model_training_mode="none", model_training_data="n/a",
+            model_frozen_during_test="n/a", online_adaptation_during_test="no",
+            hyperparameter_source="class_defaults",
+            random_seed="n/a",
+            future_information="actual_next (published prediction-augmented "
+            "design, matches manuscript's original evaluation of this policy)",
+            batch_size_or_equivalent="",
+        )
+    if name == "trust_and_doubt":
+        from lafc.policies.trust_and_doubt import TrustAndDoubtPolicy
+        return TrustAndDoubtPolicy(seed=0), dict(
+            implementation_source="native", implementation_commit="n/a",
+            model_training_mode="none", model_training_data="n/a",
+            model_frozen_during_test="n/a", online_adaptation_during_test="no",
+            hyperparameter_source="class_defaults", random_seed="0",
+            future_information="predicted_caches (published prediction-"
+            "augmented design; requires attach_predicted_caches preprocessing, "
+            "matches manuscript's original evaluation of this policy)",
+            batch_size_or_equivalent="",
+        )
+    if name == "predictive_marker":
+        from lafc.policies.predictive_marker import PredictiveMarkerPolicy
+        return PredictiveMarkerPolicy(), dict(
+            implementation_source="native", implementation_commit="n/a",
+            model_training_mode="none", model_training_data="n/a",
+            model_frozen_during_test="n/a", online_adaptation_during_test="no",
+            hyperparameter_source="n/a (parameter-free)", random_seed="n/a",
+            future_information="predicted_next/actual_next (published "
+            "prediction-augmented design, matches manuscript's original "
+            "evaluation of this policy)",
+            batch_size_or_equivalent="",
+        )
+    if name == "offline_belady":
+        from lafc.policies.offline_belady import OfflineBeladyPolicy
+        return OfflineBeladyPolicy(), dict(
+            implementation_source="native", implementation_commit="n/a",
+            model_training_mode="none", model_training_data="n/a",
+            model_frozen_during_test="n/a", online_adaptation_during_test="no",
+            hyperparameter_source="n/a (parameter-free)", random_seed="n/a",
+            future_information="oracle_by_definition (Belady's optimal offline "
+            "policy uses actual_next -- this is a theoretical lower bound, "
+            "NOT an implementable learned baseline; must never be presented "
+            "as comparable to online/learned policies in a fairness table)",
+            batch_size_or_equivalent="",
+        )
     if name == "evict_value_v1":
         from lafc.policies.evict_value_v1 import EvictValueV1Policy
         model_path = _EVICT_VALUE_MODEL_PATH
@@ -190,7 +249,9 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--policy", required=True,
                      choices=["lru", "sieve", "fifo_reinsertion", "cacheus", "halp",
-                              "three_l_cache", "evict_value_v1", "lrb"])
+                              "three_l_cache", "evict_value_v1", "lrb",
+                              "blind_oracle_lru_combiner", "rest_v1", "trust_and_doubt",
+                              "predictive_marker", "offline_belady"])
     ap.add_argument("--trace-manifest", type=Path, default=DEFAULT_MANIFEST)
     ap.add_argument("--capacities", default="32,64,128")
     ap.add_argument("--evict-value-model", type=Path, default=Path(_EVICT_VALUE_MODEL_PATH))
@@ -231,8 +292,12 @@ def main() -> None:
 
             try:
                 policy, meta = _make_policy(args.policy, cap)
+                policy_reqs = reqs
+                if args.policy == "trust_and_doubt":
+                    from lafc.predictors.offline_from_trace import attach_predicted_caches
+                    policy_reqs = attach_predicted_caches(reqs, capacity=cap)
                 t0 = time.time()
-                result = run_policy(policy, reqs, pages, cap)
+                result = run_policy(policy, policy_reqs, pages, cap)
                 wall_s = time.time() - t0
 
                 full = score_window(result.events, HISTORY_START, len(result.events))

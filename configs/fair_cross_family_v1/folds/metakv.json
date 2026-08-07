@@ -1,0 +1,28 @@
+{
+  "fold_id": "cross_family_v1_metakv",
+  "test_family": "metakv",
+  "test_trace_name": "metakv_kvcache_202206_head_50k",
+  "test_trace_path": "data/processed/metakv/trace.jsonl",
+  "test_trace_sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de",
+  "history": [
+    0,
+    10000
+  ],
+  "score": [
+    10000,
+    50000
+  ],
+  "validation_family": "twemcache",
+  "training_families": [
+    "brightkite",
+    "citibike",
+    "cloudphysics",
+    "metacdn",
+    "wiki2018"
+  ],
+  "train_manifest": "configs/fair_cross_family_v1/folds/metakv_train_manifest.csv",
+  "family_split_map": "configs/fair_cross_family_v1/folds/metakv_family_split_map.json",
+  "held_out_family_rows_in_train_manifest": 0,
+  "model_output_path": "models/evict_value_v1_cross_family_v1_metakv.pkl",
+  "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/metakv/"
+}

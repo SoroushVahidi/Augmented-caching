@@ -1,0 +1,8 @@
+{
+  "citibike": "val",
+  "cloudphysics": "train",
+  "metacdn": "train",
+  "metakv": "train",
+  "twemcache": "train",
+  "wiki2018": "train"
+}

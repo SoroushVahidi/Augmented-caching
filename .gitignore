@@ -24,10 +24,12 @@ output/
 /data/derived/evict_value_v1_wulver*/
 /data/derived/evict_value_v1_wulver_array*/
 /data/derived/evict_value_v1_fair_v1/
+/data/derived/evict_value_v1_cross_family_v1/
 
 # Trained model artifacts
 /models/*.pkl
 /models/fair_v1_staging/
+/models/cross_family_v1_staging/
 /analysis/family_winner_selection/models/*.pkl
 
 # Slurm job logs

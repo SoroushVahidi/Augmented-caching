@@ -1,0 +1,8 @@
+{
+  "metacdn": "val",
+  "brightkite": "train",
+  "citibike": "train",
+  "metakv": "train",
+  "twemcache": "train",
+  "wiki2018": "train"
+}

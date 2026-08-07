@@ -23,6 +23,14 @@ class WulverDatasetConfig:
     split_train_pct: int = 70
     split_val_pct: int = 15
     split_seed: int = 0
+    # Explicit family -> {"train","val"} assignment, used only when
+    # split_mode == "family_map" (see reviewer-fairness cross-family
+    # protocol, configs/reviewer_fairness_cross_family_v1.json). Every row
+    # from a given trace_family is assigned identically -- deterministic,
+    # not hash-bucketed -- so a held-out test family can simply be
+    # excluded from the input manifest entirely rather than relying on a
+    # hash to route it correctly.
+    family_split_map: Optional[Mapping[str, str]] = None
 
 
 @dataclass(frozen=True)
@@ -49,9 +57,27 @@ def assign_split(
     train_pct: int,
     val_pct: int,
     seed: int,
+    family_split_map: Optional[Mapping[str, str]] = None,
 ) -> str:
-    if split_mode not in {"trace_chunk", "source_family"}:
+    if split_mode not in {"trace_chunk", "source_family", "family_map"}:
         raise ValueError(f"Unsupported split_mode={split_mode}")
+
+    if split_mode == "family_map":
+        if not family_split_map or trace_family not in family_split_map:
+            raise ValueError(
+                f"split_mode=family_map requires trace_family={trace_family!r} "
+                "to be present in family_split_map; no implicit default -- a "
+                "held-out or unmapped family must never silently receive a split."
+            )
+        split = family_split_map[trace_family]
+        if split not in {"train", "val"}:
+            raise ValueError(
+                f"family_split_map[{trace_family!r}] = {split!r}; only 'train' "
+                "or 'val' are valid (held-out families must be excluded from "
+                "the input manifest entirely, not mapped to 'test')."
+            )
+        return split
+
     if train_pct <= 0 or val_pct <= 0 or train_pct + val_pct >= 100:
         raise ValueError("train_pct and val_pct must be positive and sum to < 100")
 
@@ -209,6 +235,7 @@ def iter_candidate_rows(
             train_pct=cfg.split_train_pct,
             val_pct=cfg.split_val_pct,
             seed=cfg.split_seed,
+            family_split_map=cfg.family_split_map,
         )
 
         future = requests[t + 1 :]

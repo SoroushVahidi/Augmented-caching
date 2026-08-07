@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from lafc.evict_value_wulver_v1 import WulverDatasetConfig, assign_split, iter_candidate_rows, materialize_summary, update_summary_maps
 from lafc.simulator.request_trace import build_requests_from_lists
 
@@ -28,6 +30,51 @@ def test_assign_split_trace_chunk_stable():
         seed=9,
     )
     assert s1 == s2
+
+
+def test_assign_split_family_map_deterministic_and_explicit():
+    fmap = {"brightkite": "train", "citibike": "val"}
+    for t in (0, 100, 9999):
+        assert assign_split(
+            split_mode="family_map", trace_name="t", dataset_source="brightkite",
+            trace_family="brightkite", t=t, chunk_size=4096, train_pct=70,
+            val_pct=15, seed=0, family_split_map=fmap,
+        ) == "train"
+        assert assign_split(
+            split_mode="family_map", trace_name="t", dataset_source="citibike",
+            trace_family="citibike", t=t, chunk_size=4096, train_pct=70,
+            val_pct=15, seed=0, family_split_map=fmap,
+        ) == "val"
+
+
+def test_assign_split_family_map_rejects_unmapped_family():
+    # A held-out test family must never silently receive a split -- it
+    # must be excluded from the input manifest entirely, and if it
+    # somehow appears anyway, this must raise, not default to "train".
+    with pytest.raises(ValueError, match="wiki2018"):
+        assign_split(
+            split_mode="family_map", trace_name="t", dataset_source="wiki2018",
+            trace_family="wiki2018", t=0, chunk_size=4096, train_pct=70,
+            val_pct=15, seed=0, family_split_map={"brightkite": "train"},
+        )
+
+
+def test_assign_split_family_map_rejects_test_value():
+    with pytest.raises(ValueError, match="'test'|only 'train' or 'val'"):
+        assign_split(
+            split_mode="family_map", trace_name="t", dataset_source="brightkite",
+            trace_family="brightkite", t=0, chunk_size=4096, train_pct=70,
+            val_pct=15, seed=0, family_split_map={"brightkite": "test"},
+        )
+
+
+def test_assign_split_family_map_requires_map():
+    with pytest.raises(ValueError):
+        assign_split(
+            split_mode="family_map", trace_name="t", dataset_source="brightkite",
+            trace_family="brightkite", t=0, chunk_size=4096, train_pct=70,
+            val_pct=15, seed=0, family_split_map=None,
+        )
 
 
 def test_wulver_rows_include_required_metadata():

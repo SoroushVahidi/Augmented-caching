@@ -1,0 +1,49 @@
+{
+  "protocol_id": "reviewer_fair_cross_family_v1",
+  "frozen_before_training": true,
+  "purpose": "Corrects both the CRITICAL train/test overlap (heavy_r1) and the temporal-ordering blocker (fair_v1, REJECTED_TEMPORALLY_INELIGIBLE) findings with a leave-one-family-out cross-family protocol: zero request-level, event-level, AND temporal-direction risk, because held-out families never contribute any row at any stage.",
+  "central_rule": [
+    "No request from the held-out test family F may contribute to model training, validation, hyperparameter selection, feature selection, horizon selection, seed selection, or early stopping.",
+    "Training and validation use only the other six families.",
+    "The trained model is frozen before any request from F is processed.",
+    "F is evaluated with history [0,10000) and score [10000,50000).",
+    "Exactly 40,000 requests contribute to the reported metric.",
+    "Cache and policy state survive the history/score boundary.",
+    "Metric counters reset at index 10000 without resetting cache/model state."
+  ],
+  "canonical_families_sorted": ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"],
+  "validation_rotation_rule": "Sort all 7 family identifiers lexicographically. For the held-out test family at sorted index i, the validation family is the next family in cyclic order (index i+1 mod 7, excluding the test family itself, which cyclic-next never equals). The remaining 5 families are training. Deterministic, performance-independent, frozen before any training.",
+  "folds": [
+    {"test_family": "brightkite", "validation_family": "citibike", "training_families": ["cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"]},
+    {"test_family": "citibike", "validation_family": "cloudphysics", "training_families": ["brightkite", "metacdn", "metakv", "twemcache", "wiki2018"]},
+    {"test_family": "cloudphysics", "validation_family": "metacdn", "training_families": ["brightkite", "citibike", "metakv", "twemcache", "wiki2018"]},
+    {"test_family": "metacdn", "validation_family": "metakv", "training_families": ["brightkite", "citibike", "cloudphysics", "twemcache", "wiki2018"]},
+    {"test_family": "metakv", "validation_family": "twemcache", "training_families": ["brightkite", "citibike", "cloudphysics", "metacdn", "wiki2018"]},
+    {"test_family": "twemcache", "validation_family": "wiki2018", "training_families": ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv"]},
+    {"test_family": "wiki2018", "validation_family": "brightkite", "training_families": ["citibike", "cloudphysics", "metacdn", "metakv", "twemcache"]}
+  ],
+  "fold_isolation_invariants": [
+    "held_out_test_family_rows == 0 in both training and validation datasets",
+    "set(train_families) intersect {validation_family, test_family} == empty",
+    "validation_family not in train_families",
+    "test_family not in train_families and not in validation_family"
+  ],
+  "global_statistic_rule": "No preprocessing statistic (feature normalization, scaling, imputation constants) may be fit using all 7 families jointly. Any such statistic must be fit on the 5 training families of a given fold only. See docs/reviewer_fairness_cross_family_v1.md section 5 for the code audit confirming the reused feature-construction code has no such global-fit step to begin with.",
+  "training_family_weighting": {
+    "decision": "B_proportional_to_requests",
+    "rationale": "The existing, reused build_evict_value_dataset_wulver_v1.py / assign_split pipeline does not implement per-family row-count equalization; it emits one row per (candidate, decision) naturally proportional to each family's request volume and unique-object count. Re-engineering equal-family-weighting (e.g. per-family subsampling to a common row budget) was considered but not implemented this session -- flagged as a documented, predeclared-before-training scope limitation, not a silent choice made after seeing results. This decision was frozen BEFORE any fold's dataset was built.",
+    "alternative_considered": "A (equal rows per training family) was the task's stated preference; not implemented due to session time budget. If revisited, subsampling must be applied identically across all 7 folds' training splits, predeclared, and re-frozen as protocol version cross_family_v2."
+  },
+  "hyperparameter_grid": {
+    "source": "reused unchanged from the canonical heavy_r1 search space (scripts/train_evict_value_wulver_v1.py: ridge, random_forest, hist_gb; scripts/build_evict_value_dataset_wulver_v1.py horizon default) -- not re-chosen after seeing any fold's held-out result, and not narrowed for this session's time budget the way fair_v1's scope was (this protocol keeps the full model-family set to preserve comparability with the original selection methodology).",
+    "horizon": 4,
+    "horizon_note": "Same scope-reduction rationale as fair_v1 (see docs/evict_value_v1_fair_training_protocol.md) -- a modeling prior, not leaked test information; applies identically to every fold."
+  },
+  "output_roots": {
+    "fold_manifests": "configs/fair_cross_family_v1/folds/",
+    "datasets": "data/derived/evict_value_v1_cross_family_v1/<held_out_family>/",
+    "models": "models/evict_value_v1_cross_family_v1_<held_out_family>.pkl",
+    "analysis": "analysis/reviewer_fairness_cross_family_v1/"
+  },
+  "amendment_policy": "Any change to this protocol after viewing a held-out result requires a new protocol_id and a documented reason, mirroring the amendment policy already established for evict_value_v1_fair_v1."
+}

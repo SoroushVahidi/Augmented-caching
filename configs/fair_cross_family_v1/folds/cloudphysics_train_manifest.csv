@@ -1,0 +1,7 @@
+path,trace_name,trace_family
+data/processed/brightkite/trace.jsonl,brightkite_50k,brightkite
+data/processed/citibike/trace.jsonl,citibike_202401_50k,citibike
+data/processed/metakv/trace.jsonl,metakv_kvcache_202206_head_50k,metakv
+data/processed/twemcache/trace.jsonl,twemcache_cluster26_sample100_50k,twemcache
+data/processed/wiki2018/trace.jsonl,wiki2018_pageviews_en_50k,wiki2018
+data/processed/metacdn/trace.jsonl,metacdn_cdn_202303_head_50k,metacdn
