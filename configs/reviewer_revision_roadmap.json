@@ -1,0 +1,157 @@
+{
+  "roadmap_id": "reviewer_revision_roadmap_v1",
+  "last_updated_utc": "2026-08-07",
+  "status_vocabulary": [
+    "NOT_STARTED",
+    "IMPLEMENTED",
+    "RUNNING",
+    "PARTIAL",
+    "COMPLETE",
+    "BLOCKED",
+    "REJECTED",
+    "SUPERSEDED"
+  ],
+  "concerns": {
+    "concern_1_comparison_with_existing_methods": {
+      "reviewer_concern": "Insufficient comparison with existing learned cache-replacement methods, and existing comparisons are not clearly fair.",
+      "scientific_question": "Under one frozen fair evaluation protocol, how does evict_value_v1 perform against LRB, 3L-Cache, CACHEUS, HALP, and the original manuscript's lightweight baselines?",
+      "response_strategy": "One frozen fair-comparison protocol (reviewer_fairness_v1 / reviewer_fairness_cross_family_v1): faithful/official external baselines under a common window, plus a leave-one-family-out retraining of evict_value_v1 itself.",
+      "experiments": [
+        {"name": "LRB fair-window comparison", "path": "analysis/reviewer_fairness/policy_comparison_lrb.csv", "status": "COMPLETE"},
+        {"name": "3L-Cache fair comparison", "path": "analysis/reviewer_fairness/policy_comparison_three_l_cache.csv", "status": "COMPLETE", "note": "primary batch_size=4096; six-setting grid sensitivity-only"},
+        {"name": "CACHEUS fair comparison", "path": "analysis/reviewer_fairness/policy_comparison_cacheus.csv", "status": "COMPLETE", "note": "official author code, upstream seed 123 preserved"},
+        {"name": "HALP fair comparison", "path": "analysis/reviewer_fairness/policy_comparison_halp.csv", "status": "COMPLETE", "note": "evaluation-resource equivalence yes; training-resource equivalence with evict_value_v1 no"},
+        {"name": "Original manuscript baselines (LRU, SIEVE, FIFO-Reinsertion, blind_oracle_lru_combiner, REST v1, Trust-and-Doubt, Predictive Marker)", "path": "analysis/reviewer_fairness/policy_comparison_*.csv", "status": "COMPLETE"},
+        {"name": "evict_value_v1_cross_family_v1 corrected retraining", "path": "data/derived/evict_value_v1_cross_family_v1/, models/cross_family_v1_staging/", "status": "RUNNING", "tmux": "evict_cross_family_resume", "progress": "1/7 folds stage-1 complete, 0/7 models complete"},
+        {"name": "Cross-family held-out evaluation", "path": "analysis/reviewer_fairness_cross_family_v1/", "status": "NOT_STARTED", "blocked_by": "model completion"},
+        {"name": "Fairness certificate v5", "path": "analysis/reviewer_fairness_v5/fairness_certificate.json", "status": "PARTIAL"},
+        {"name": "Primary/oracle comparison datasets", "path": "analysis/reviewer_fairness_v5/primary_comparison.csv, oracle_comparison.csv", "status": "NOT_STARTED"}
+      ],
+      "theory_motivation_additions": [],
+      "implementation_status": "RUNNING",
+      "current_jobs": ["evict_cross_family_resume"],
+      "artifact_paths": [
+        "analysis/reviewer_fairness/",
+        "analysis/reviewer_fairness_cross_family_v1/",
+        "analysis/reviewer_fairness_v5/",
+        "models/cross_family_v1_staging/",
+        "data/derived/evict_value_v1_cross_family_v1/"
+      ],
+      "blockers": ["cross-family training wall-clock (7 folds x 3 model families)"],
+      "completion_criteria": [
+        "7/7 cross-family models trained and leakage-audited",
+        "model registry frozen (MODEL_SELECTION_FROZEN=true)",
+        "21-row held-out evaluation complete and clean",
+        "fairness certificate: evict_value_v1_cross_family_v1 = PASS",
+        "primary_comparison.csv / oracle_comparison.csv built and machine-checked"
+      ],
+      "manuscript_sections_likely_to_change": ["related work / comparison table", "end-to-end results", "limitations (HALP training-resource caveat)"],
+      "reviewer_response_evidence_needed": ["frozen primary_comparison.csv", "fairness certificate", "frozen paired statistical analysis (later task)"]
+    },
+    "concern_2_supervision_objective_justification": {
+      "reviewer_concern": "Insufficient justification for the finite-horizon eviction-loss supervision objective versus plausible alternatives.",
+      "scientific_question": "Holding candidate generation/features/model family/folds/capacities/evaluation fixed, does finite-horizon eviction loss outperform next-arrival prediction, reuse-distance prediction, and pairwise preference under the same held-out evaluation?",
+      "response_strategy": "Add a motivating explanation/example, then empirically test with a frozen 4-objective x 7-fold ablation matching Concern 1's cross-family protocol.",
+      "experiments": [
+        {"name": "Motivating example in manuscript", "path": "manuscript_source/main.tex", "status": "COMPLETE", "note": "prose only, not gated on experiments; commits 1dec44f, df0f0b9"},
+        {"name": "Frozen protocol", "path": "configs/supervision_objective_ablation_v1.json, docs/supervision_objective_ablation_protocol.md", "status": "IMPLEMENTED"},
+        {"name": "Dataset build + training, 4 objectives x 7 folds = 28 models", "path": "data/derived/supervision_objective_ablation_v1/, models/supervision_objective_ablation_v1/", "status": "RUNNING", "tmux": "objective_ablation_pipeline", "progress": "3/7 folds complete (brightkite, citibike, cloudphysics) = 12/28 models"},
+        {"name": "Model registry freeze", "path": "analysis/supervision_objective_ablation_v1/model_registry.json", "status": "NOT_STARTED"},
+        {"name": "Held-out evaluation, 4 x 7 x 3 = 84 rows", "path": "analysis/supervision_objective_ablation_v1/policy_comparison.csv", "status": "NOT_STARTED"},
+        {"name": "Same-example / fairness alignment audit", "path": "analysis/supervision_objective_ablation_v1/same_example_audit.json, fairness_audit.json", "status": "NOT_STARTED"}
+      ],
+      "theory_motivation_additions": ["motivating example (done)"],
+      "implementation_status": "RUNNING",
+      "current_jobs": ["objective_ablation_pipeline"],
+      "artifact_paths": [
+        "data/derived/supervision_objective_ablation_v1/",
+        "models/supervision_objective_ablation_v1/",
+        "analysis/supervision_objective_ablation_v1/"
+      ],
+      "blockers": ["wall-clock only (4 remaining folds)"],
+      "completion_criteria": [
+        "28/28 models complete and audited",
+        "registry frozen",
+        "84/84 held-out rows complete and clean",
+        "same-example/fairness audits pass"
+      ],
+      "manuscript_sections_likely_to_change": ["supervision-target motivation subsection", "new ablation table/figure", "limitations if inconclusive/mixed"],
+      "reviewer_response_evidence_needed": ["frozen 84-row comparison", "same-example audit"]
+    },
+    "concern_3_offline_online_gap_distribution_shift": {
+      "reviewer_concern": "Unexplained gap between offline learning quality and online cache performance; the distribution-shift explanation is speculative and untested.",
+      "scientific_question": "Is there measurable train/deployment state shift; does it cause trajectory divergence and prediction degradation; does on-policy (DAgger) collection reduce the shift; does reducing shift improve held-out miss performance?",
+      "response_strategy": "Reduced 2-condition ablation (OFF_POLICY_LRU vs DAGGER_ITER1, top 2 of 5 originally prioritized, reduction frozen before launch) across 7 folds x 3 capacities, paired state-shift/trajectory diagnostics, frozen statistics run only once complete.",
+      "experiments": [
+        {"name": "Frozen protocol (reduced matrix)", "path": "configs/distribution_shift_ablation_v1.json, docs/distribution_shift_ablation_protocol.md", "status": "IMPLEMENTED", "note": "DAGGER_ITER2, LEARNED_CONTINUATION, MIXED_50_50 explicitly deferred to v2"},
+        {"name": "Original 9h pass", "path": "/tmp/distribution_shift_9h.log", "status": "PARTIAL", "note": "stopped cleanly at wall-clock budget, 12/42 rows, not a failure"},
+        {"name": "2h resumed continuation", "path": "/tmp/distribution_shift_2h_continue.log", "status": "RUNNING", "tmux": "distribution_shift_2h_continue", "progress": "still 12/42 as of last check, fold 3/7 (cloudphysics) in progress"},
+        {"name": "State-shift diagnostics", "path": "analysis/distribution_shift_ablation_v1/state_shift_metrics.csv", "status": "PARTIAL", "progress": "12/12 rows for completed folds, clean"},
+        {"name": "Trajectory divergence diagnostics", "path": "analysis/distribution_shift_ablation_v1/trajectory_divergence.csv", "status": "PARTIAL", "progress": "6/6 rows for completed folds, clean"},
+        {"name": "Frozen statistical analysis", "path": "N/A", "status": "NOT_STARTED", "note": "explicitly gated on 42/42 completion"}
+      ],
+      "theory_motivation_additions": ["compounding-distribution-shift hypothesis already in manuscript discussion (subsec:discussion_analysis); this ablation tests it, does not motivate new theory"],
+      "implementation_status": "RUNNING",
+      "current_jobs": ["distribution_shift_2h_continue"],
+      "artifact_paths": ["analysis/distribution_shift_ablation_v1/"],
+      "blockers": ["wall-clock only; ~4.5h/fold observed average likely exceeds the 2h continuation budget, a further resume will probably be needed"],
+      "completion_criteria": [
+        "42/42 primary rows",
+        "matching diagnostic coverage",
+        "zero failures/duplicates/NaNs",
+        "frozen paired statistical analysis executed exactly once on the complete set"
+      ],
+      "manuscript_sections_likely_to_change": ["subsec:discussion_analysis / limitations", "new ablation subsection and table"],
+      "reviewer_response_evidence_needed": ["complete 42-row comparison", "state-shift and trajectory diagnostics", "frozen statistical conclusion (supported / shift-exists-but-doesn't-explain-gap / not-supported / mixed)"]
+    },
+    "concern_4_practical_significance": {
+      "reviewer_concern": "The implementation is much slower per eviction decision than lightweight baselines (75.0/152.1/316.0 ms at capacities 32/64/128 vs ~0.001-0.18 ms) while not outperforming them on miss ratio end-to-end; unclear practical significance.",
+      "scientific_question": "Where does the overhead come from; how much is avoidable implementation cost vs fundamental algorithmic cost; can selective invocation or candidate pruning recover most quality at a fraction of the cost; at what miss-cost regime (if any) would the added cost be justified?",
+      "response_strategy": "Exact-decision-preserving optimized implementation, quality-preserving selective/pruning variants, transparent break-even/miss-cost-sweep/Pareto analysis, non-API only, before evaluating whether an API case study adds anything beyond it.",
+      "experiments": [
+        {"name": "Frozen protocol", "path": "configs/practical_significance_ablation_v1.json, docs/practical_significance_ablation_protocol.md", "status": "IMPLEMENTED"},
+        {"name": "Existing canonical overhead benchmark (source of the manuscript's 75/152/316ms claim)", "path": "scripts/run_overhead_benchmark.py, analysis/kbs_overhead_benchmark_local_tmux_20260621.csv", "status": "COMPLETE", "note": "pre-existing; whole on_request() black-box timer, no component breakdown"},
+        {"name": "Exact-optimized variants (cached_exact, vectorized_exact, vectorized_cached_exact)", "path": "src/lafc/policies/evict_value_v1_optimized.py", "status": "IMPLEMENTED", "note": "decision-equivalence proven by test; hoists O(k^2) redundant per-candidate recomputation to O(k), uses pre-existing EvictValueV1Model.predict_loss_batch"},
+        {"name": "Selective/top-k variants", "path": "src/lafc/policies/evict_value_v1_selective.py", "status": "IMPLEMENTED"},
+        {"name": "Runner", "path": "scripts/experiments/run_practical_significance_ablation.py", "status": "IMPLEMENTED"},
+        {"name": "Component-level profiling", "path": "analysis/practical_significance_ablation_v1/profiler_breakdown.csv", "status": "PARTIAL", "note": "smoke-scale only; final controlled run deferred, concurrent jobs were active"},
+        {"name": "Exact-optimization equivalence + speedup", "path": "analysis/practical_significance_ablation_v1/exact_optimization_equivalence.json", "status": "PARTIAL", "note": "equivalence proven; final speedup numbers deferred with timing campaign"},
+        {"name": "Selective invocation quality-cost", "path": "analysis/practical_significance_ablation_v1/selective_invocation.csv", "status": "PARTIAL"},
+        {"name": "Top-k quality-cost curve", "path": "analysis/practical_significance_ablation_v1/topk_tradeoff.csv", "status": "PARTIAL"},
+        {"name": "Model-complexity variants (ridge/random_forest/hist_gb, reusing frozen h4 grid)", "path": "analysis/practical_significance_ablation_v1/model_complexity_tradeoff.csv", "status": "PARTIAL"},
+        {"name": "Break-even miss-cost analysis vs LRU/SIEVE/FIFO-Reinsertion", "path": "analysis/practical_significance_ablation_v1/break_even_miss_cost.csv", "status": "PARTIAL", "note": "formula implemented and exercised against certified fair-window miss counts; compute-cost term depends on deferred controlled timing"},
+        {"name": "Miss-cost sweep (log-spaced synthetic grid)", "path": "analysis/practical_significance_ablation_v1/miss_cost_sweep.csv", "status": "IMPLEMENTED", "note": "independent of machine load"},
+        {"name": "Weighted/heterogeneous miss-cost analysis", "path": "analysis/practical_significance_ablation_v1/weighted_cost.csv", "status": "IMPLEMENTED", "note": "audited: Page.weight is uniformly 1.0 in the canonical trace loader, no real heterogeneous cost metadata exists; synthetic sensitivity analysis only, clearly labeled"},
+        {"name": "Quality-latency Pareto frontier", "path": "analysis/practical_significance_ablation_v1/pareto_frontier.csv", "status": "PARTIAL", "note": "populated from smoke-scale data pending controlled campaign"},
+        {"name": "Final controlled timing campaign", "path": "N/A", "status": "BLOCKED", "note": "deliberately deferred; Concerns 1-3 jobs (evict_cross_family_resume, objective_ablation_pipeline, distribution_shift_2h_continue) were actively using CPU"}
+      ],
+      "theory_motivation_additions": [],
+      "implementation_status": "PARTIAL",
+      "current_jobs": [],
+      "artifact_paths": ["analysis/practical_significance_ablation_v1/"],
+      "blockers": ["final controlled timing campaign requires an idle machine; scheduling constraint, not scientific"],
+      "completion_criteria": [
+        "controlled timing campaign complete under an idle machine (median + variation, warm-up discarded)",
+        "exact-optimization speedups measured, not just proven equivalent",
+        "selective/top-k quality-cost curves complete across predeclared grids",
+        "break-even numbers finalized vs LRU/SIEVE/FIFO-Reinsertion and strongest certified lightweight baseline",
+        "Pareto frontier finalized",
+        "API decision gate re-evaluated once non-API picture is complete"
+      ],
+      "manuscript_sections_likely_to_change": ["subsec:overhead_scalability / practical-significance discussion", "new break-even/Pareto figure", "limitations"],
+      "reviewer_response_evidence_needed": ["complete analysis/practical_significance_ablation_v1/ artifact set under a controlled idle-machine run", "honest break-even conclusion including possible no-positive-miss-penalty outcome"],
+      "api_decision": {
+        "status": "NOT_YET_EVALUATED_FINAL",
+        "note": "Evaluated at the end of this session's non-API work; see docs/practical_significance_ablation_protocol.md and the session's final report. Re-evaluate again once the controlled timing campaign completes."
+      }
+    }
+  },
+  "do_not_forget": [
+    "Do not write the final reviewer response before each concern's experiments are complete.",
+    "Do not choose hyperparameters/thresholds/optimization variants based on held-out/test outcomes; use validation data or predeclared fixed values only.",
+    "Keep deployment, sensitivity, diagnostic, and primary-fair results in clearly separated artifacts.",
+    "Do not use API-backed experiments for Concern 4 unless non-API evidence leaves a specific, named gap.",
+    "Negative/null findings must be reported honestly, not hidden or reframed as success.",
+    "Re-audit 'current_jobs' fields before citing them in the manuscript; they go stale within minutes."
+  ]
+}

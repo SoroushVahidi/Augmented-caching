@@ -1,0 +1,145 @@
+{
+  "protocol_id": "practical_significance_ablation_v1",
+  "frozen_before_measurement": true,
+  "purpose": "Reviewer 1 Concern 4: determine where evict_value_v1's per-decision computational overhead comes from, how much is avoidable research-prototype implementation cost vs fundamental algorithmic cost, whether selective/hybrid invocation or candidate pruning recovers most of the quality at a fraction of the cost, and at what synthetic miss-cost regime (if any) the added cost would be justified. Non-API only; see api_experiments_excluded below.",
+  "api_experiments_excluded": "This protocol (v1) explicitly excludes any OpenAI/Gemini/Cohere/Azure/Cloudrift or other paid/external API call. An API-backed heterogeneous-inference-cost case study may be considered later, only as a v2, only if the non-API evidence here leaves a specific named gap, decided at the end of the v1 run -- never mid-run.",
+  "canonical_overhead_claim_source": {
+    "script": "scripts/run_overhead_benchmark.py",
+    "csv": "analysis/kbs_overhead_benchmark_local_tmux_20260621.csv",
+    "md": "analysis/kbs_overhead_benchmark_local_tmux_20260621.md",
+    "manuscript_location": "manuscript_source/main.tex subsec:overhead_scalability",
+    "reported_values_ms_per_eviction_decision": {"cap32": 75.0, "cap64": 152.1, "cap128": 316.0},
+    "reported_baseline_values_ms_per_eviction_decision": {
+      "lru_and_fifo_reinsertion": "~0.001",
+      "sieve": "0.002-0.005",
+      "rest_v1": "0.04-0.18"
+    },
+    "measurement_scope": "single trace (brightkite), 5000-request prefix, single run, timing boundary = whole policy.on_request() call, no component breakdown -- this v1 protocol extends coverage to all 7 certified traces x 3 capacities x repetitions, and adds a component-level breakdown."
+  },
+  "traces": {
+    "source": "same 7 certified fair-comparison traces used throughout the reviewer-fairness protocol; hashes copied verbatim from analysis/reviewer_fairness/provenance_lrb.json",
+    "trace_hashes_sha256": {
+      "brightkite_50k": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de",
+      "citibike_202401_50k": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130",
+      "wiki2018_pageviews_en_50k": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608",
+      "twemcache_cluster26_sample100_50k": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9",
+      "metakv_kvcache_202206_head_50k": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de",
+      "metacdn_cdn_202303_head_50k": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73",
+      "cloudphysics_alibaba_block_head_50k": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57"
+    }
+  },
+  "capacities": [32, 64, 128],
+  "score_start": 10000,
+  "score_end": 50000,
+  "scored_requests": 40000,
+  "history_start": 0,
+  "history_end": 10000,
+  "model_artifact": {
+    "canonical": "models/evict_value_wulver_v1_best_heavy_r1.pkl",
+    "note": "Same canonical artifact-backed scorer used throughout the manuscript's end-to-end evaluation; not retrained for this protocol."
+  },
+  "timing_methodology": {
+    "timer": "time.perf_counter(), wrapped tightly around the timed unit only",
+    "timing_boundary_whole_decision": "each policy.on_request(request) call, matching scripts/run_overhead_benchmark.py's existing convention",
+    "timing_boundary_component": [
+      "A_bookkeeping: hit/miss check, page-order bookkeeping (excludes candidate scoring)",
+      "B_candidate_construction: building the resident-candidate list for a full-cache miss",
+      "C_feature_extraction: compute_candidate_features_v1 (or its hoisted-invariant equivalent) across all candidates",
+      "D_model_prediction: EvictValueV1Model.predict_loss_one / predict_loss_batch calls",
+      "E_ranking: argmin/victim-selection over predicted losses",
+      "F_other: residual (measured decision total minus A..E, includes Python/dict-allocation/framework overhead not separately isolated)"
+    ],
+    "repetitions": 3,
+    "warmup_treatment": "first 200 timed decisions per (trace, capacity, variant, repetition) are discarded before computing statistics, to exclude interpreter/JIT/cache warm-up",
+    "threading": "OMP_NUM_THREADS=1, OPENBLAS_NUM_THREADS=1, MKL_NUM_THREADS=1 (matches this repo's existing convention for controlled single-threaded runs, e.g. the cross-family training pipeline)",
+    "cpu_affinity": "not pinned -- this repository does not use taskset/CPU-affinity pinning anywhere else either; documented as a limitation, not silently omitted",
+    "hardware_metadata_to_record": ["nproc", "uname -a", "cpu model (from /proc/cpuinfo)", "total RAM (free -h)", "hostname"],
+    "controlled_run_requirement": "final reviewer-facing timing numbers must be collected while no other Concern-1/2/3 job (evict_cross_family_resume, objective_ablation_pipeline, distribution_shift_2h_continue, or the legacy LRB baseline process) is actively consuming CPU; see docs/practical_significance_ablation_protocol.md Section 'Hardware-controlled timing gate'."
+  },
+  "profiling_request_budget": {
+    "requests_per_trace": 5000,
+    "note": "matches scripts/run_overhead_benchmark.py's existing single-trace convention; extended here to all 7 traces"
+  },
+  "optimization_variants": {
+    "canonical": {"description": "src/lafc/policies/evict_value_v1.py, unmodified.", "exact": true},
+    "cached_exact": {"description": "Hoists compute_predictor_scores/compute_lru_scores/pred_victim/lru_victim/cache-level aggregate stats (bucket mean/std/min/max, confidence mean/std, unique-bucket-count) and the recent-request/hit-rate Counters out of the per-candidate loop -- computed once per eviction decision instead of once per candidate. Still calls predict_loss_one per candidate.", "exact": true},
+    "vectorized_exact": {"description": "Keeps canonical per-candidate feature construction, but batches all k candidate feature rows into one EvictValueV1Model.predict_loss_batch call instead of k separate predict_loss_one calls.", "exact": true},
+    "vectorized_cached_exact": {"description": "Combines cached_exact's hoisting with vectorized_exact's batched prediction.", "exact": true}
+  },
+  "exact_equivalence_requirement": "Every optimization_variants entry marked exact:true must produce an identical hit/miss sequence AND an identical eviction (victim) sequence to canonical, on the same trace, same model artifact, same capacity, same seed. Verified by tests/test_practical_significance_ablation.py. Any variant that changes even one decision must be reclassified as a quality/cost tradeoff variant (selective_invocation_variants or topk_variants below), never left under optimization_variants.",
+  "selective_invocation_variants": {
+    "disagreement_lru_sieve": {
+      "description": "Invoke the learned scorer only when the cheap LRU victim and a cheap shadow-SIEVE victim (visited-bit/hand state tracked over the real resident candidate set, updated on every request regardless of invocation) disagree; otherwise evict the LRU victim.",
+      "predeclared_parameters": {},
+      "uses_future_information": false
+    },
+    "periodic": {
+      "description": "Invoke the learned scorer on 1 of every K evictions; otherwise evict the LRU victim.",
+      "predeclared_parameters": {"K": 4},
+      "uses_future_information": false
+    },
+    "deferred": {
+      "candidate_ambiguity": "Deferred: requires specifying a predeclared cheap ambiguity signal beyond this protocol's scope; not implemented in v1.",
+      "score_margin_confidence": "Excluded per the task brief's explicit anti-circularity warning: obtaining a score margin already requires paying the full learned-inference cost, which would make the 'selective' label circular."
+    }
+  },
+  "topk_pruning": {
+    "cheap_prefilter": "LRU recency order (already maintained by evict_value_v1's internal _order) selects the k most LRU-eligible (oldest) candidates; the learned scorer evaluates only those k.",
+    "k_grid": [4, 8, 16, 32],
+    "k_grid_note": "For each capacity, only k values strictly less than that capacity are meaningful pruning and are used; k >= capacity degenerates to canonical (no pruning) and is skipped.",
+    "post_hoc_k_selection_forbidden": true
+  },
+  "model_complexity_variants": {
+    "source": "Reuses the already-frozen h4 training grid artifacts (models/evict_value_wulver_v1_h4_{ridge,random_forest,hist_gb}.pkl in the main repository worktree) -- same target, same features, same training data. No new model search.",
+    "families": ["ridge", "random_forest", "hist_gb"],
+    "purpose": "Determine how much of the practical cost comes from model choice vs the supervision framework itself."
+  },
+  "break_even_analysis": {
+    "cost_model": "TotalCost_p(Cmiss) = DecisionComputeCost_p + Misses_p * Cmiss, where DecisionComputeCost_p is applied only on evictions (full-cache misses), not on every request.",
+    "break_even_formula": "Cmiss* = (ComputeCost_learned - ComputeCost_b) / (Misses_b - Misses_learned), defined only when Misses_b > Misses_learned",
+    "no_crossover_rule": "If Misses_learned >= Misses_b for baseline b, report explicitly: 'no positive miss penalty makes the current learned policy preferable to b under this simple additive cost model' -- do not compute or report a spurious/negative break-even number.",
+    "baselines": {
+      "fixed": ["lru", "sieve", "fifo_reinsertion"],
+      "fourth_baseline_selection_rule": "argmin(mean total misses across the certified reviewer_fairness primary fair-window rows) among the original implementable non-oracle, non-evict_value_v1 baselines -- determined programmatically at run time by the runner, never hand-picked.",
+      "miss_counts_source": "analysis/reviewer_fairness/policy_comparison_*.csv, fair-window rows only (score_start=10000, score_end=50000, scored_requests=40000)"
+    },
+    "units": "milliseconds"
+  },
+  "miss_cost_sweep": {
+    "grid": ["1us", "10us", "100us", "1ms", "10ms", "100ms", "1s", "10s"],
+    "spacing": "logarithmic",
+    "disclaimer": "This grid is a synthetic sensitivity sweep. It is not a claim that any of these values correspond to a real storage/serving system's actual miss cost."
+  },
+  "weighted_cost_analysis": {
+    "real_metadata_audit_result": "AUDITED: the canonical trace loader (lafc.simulator.request_trace.build_requests_from_lists, invoked via lafc.evict_value_wulver_v1.load_trace_from_any -> _parse_jsonl_trace) assigns Page.weight = 1.0 uniformly for every page when no explicit weights dict is supplied, which is always the case for the 7 certified .jsonl traces. No real heterogeneous per-object cost/size/latency metadata exists in the pipeline actually used for evaluation.",
+    "mode": "synthetic_sensitivity_only",
+    "synthetic_scheme": {
+      "name": "lognormal_per_page_cost_multiplier",
+      "distribution": "cost_multiplier(page_id) = exp(Normal(mu=0, sigma=1)), one deterministic draw per unique page_id",
+      "seed": 0,
+      "seed_derivation": "numpy.random.default_rng(0), draws consumed in the sorted order of unique page_id strings within each trace, for full reproducibility independent of dict/set iteration order",
+      "applied_as": "weighted_miss_cost = sum over scored misses of (base_Cmiss * cost_multiplier(page_id)), evaluated at each grid point in miss_cost_sweep"
+    },
+    "disclaimer": "Synthetic costs are not claimed to be real-world measurements of any kind. This is a sensitivity analysis only, testing whether heterogeneous miss consequences change which policy is preferable, holding the same underlying hit/miss decisions fixed."
+  },
+  "pareto_analysis": {
+    "x_axis": ["mean_ms_per_eviction_decision", "p95_ms_per_eviction_decision"],
+    "y_axis": ["miss_ratio", "misses"],
+    "variants_included": [
+      "lru", "sieve", "fifo_reinsertion",
+      "evict_value_v1_canonical",
+      "evict_value_v1_vectorized_cached_exact",
+      "evict_value_v1_selective_disagreement_lru_sieve",
+      "evict_value_v1_selective_periodic",
+      "evict_value_v1_topk_4", "evict_value_v1_topk_8", "evict_value_v1_topk_16", "evict_value_v1_topk_32",
+      "evict_value_v1_model_ridge", "evict_value_v1_model_random_forest", "evict_value_v1_model_hist_gb"
+    ],
+    "hide_dominated_variants": false,
+    "note": "Dominated learned-policy variants must be reported, not hidden."
+  },
+  "statistical_summaries": {
+    "per_component_per_capacity_per_trace": ["mean", "median", "p90", "p95", "p99"],
+    "unit": "milliseconds"
+  },
+  "not_modified_after_seeing_performance": "Any change to this protocol after final performance numbers are seen requires creating configs/practical_significance_ablation_v2.json; this file (v1) must not be edited in place once measurement begins."
+}
