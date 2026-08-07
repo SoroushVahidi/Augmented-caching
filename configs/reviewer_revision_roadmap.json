@@ -20,7 +20,8 @@
         {
           "name": "LRB fair-window comparison",
           "path": "analysis/reviewer_fairness/policy_comparison_lrb.csv",
-          "status": "COMPLETE"
+          "status": "COMPLETE",
+          "note": ""
         },
         {
           "name": "3L-Cache fair comparison",
@@ -50,7 +51,7 @@
           "path": "data/derived/evict_value_v1_cross_family_v1/, models/cross_family_v1_staging/",
           "status": "RUNNING",
           "tmux": "evict_cross_family_resume",
-          "progress": "1/7 folds stage-1 complete, 0/7 models complete"
+          "progress": "1/7 folds fully complete (brightkite: dataset+train+model+sha256 b81e43d326ad1d75c85b923debb3e95a89cb406f6218432bebf6d77f8bee5df0, winner=hist_gb by val mean regret); fold 2/7 (citibike) stage-1 dataset build in progress; 1/7 final models complete"
         },
         {
           "name": "Cross-family held-out evaluation",
@@ -82,7 +83,7 @@
         "data/derived/evict_value_v1_cross_family_v1/"
       ],
       "blockers": [
-        "cross-family training wall-clock (7 folds x 3 model families)"
+        "corrected cross-family training/evaluation completion (6/7 folds remaining, wall-clock only)"
       ],
       "completion_criteria": [
         "7/7 cross-family models trained and leakage-audited",
@@ -100,7 +101,14 @@
         "frozen primary_comparison.csv",
         "fairness certificate",
         "frozen paired statistical analysis (later task)"
-      ]
+      ],
+      "legacy_canonical_lrb": {
+        "status": "ARCHIVAL_NONBLOCKING",
+        "pid": 113981,
+        "elapsed_hours_at_audit": 22.5,
+        "diagnosis": "ACTIVE_COMPUTE_LIKELY_VALID (not stuck) -- read-only diagnostic performed 2026-08-07: CPU time actively accumulating (+11s over an 11s wall-clock window), zero /proc/io byte-count change over that window (consistent with in-memory sklearn/LightGBM compute, not blocked I/O), lib_lightgbm.so loaded as expected. The script (scripts/experiments/run_lrb_external_baseline.py) evaluates evict_value_v1 at the full 50,000-request budget for every one of 7 traces x 3 capacities, at the SAME 75-316ms/eviction-decision cost independently measured in the Concern 4 practical-significance work -- a total runtime in the 25-35 hour range is arithmetically plausible from that alone. The script also only writes policy_comparison.csv/provenance.json/summary.md ONCE at the very end (no incremental output), and stdout is block-buffered (not flushed) since it's redirected to a log file with neither PYTHONUNBUFFERED nor print(flush=True) -- both facts fully explain the 0-byte log and empty output directory without implying a stall. Does not block the primary fair comparison, which already uses the separately-completed fair-window LRB artifact.",
+        "recommendation": "LEAVE RUNNING; safe to stop later as archival-only if ever needed, but no evidence it is stuck."
+      }
     },
     "concern_2_supervision_objective_justification": {
       "reviewer_concern": "Insufficient justification for the finite-horizon eviction-loss supervision objective versus plausible alternatives.",
@@ -123,7 +131,7 @@
           "path": "data/derived/supervision_objective_ablation_v1/, models/supervision_objective_ablation_v1/",
           "status": "RUNNING",
           "tmux": "objective_ablation_pipeline",
-          "progress": "3/7 folds complete (brightkite, citibike, cloudphysics) = 12/28 models"
+          "progress": "6/7 dataset folders started (brightkite, citibike, cloudphysics, metacdn, metakv complete; twemcache dataset build in progress; wiki2018 not started) = 20/28 models complete"
         },
         {
           "name": "Model registry freeze",
@@ -154,7 +162,7 @@
         "analysis/supervision_objective_ablation_v1/"
       ],
       "blockers": [
-        "wall-clock only (4 remaining folds)"
+        "remaining twemcache fold completion, then wiki2018 fold (dataset+train), then 84-row held-out evaluation"
       ],
       "completion_criteria": [
         "28/28 models complete and audited",
@@ -194,7 +202,7 @@
           "path": "/tmp/distribution_shift_2h_continue.log",
           "status": "RUNNING",
           "tmux": "distribution_shift_2h_continue",
-          "progress": "still 12/42 as of last check, fold 3/7 (cloudphysics) in progress"
+          "progress": "17/42 rows as of audit; fold 3/7 (cloudphysics) mid-evaluation; process has now run ~4.5h wall time, well past its own --max-wall-hours 2 budget, but is still actively producing valid rows -- the budget check evidently only fires between folds, matching the original 9h run's behavior"
         },
         {
           "name": "State-shift diagnostics",
@@ -226,7 +234,7 @@
         "analysis/distribution_shift_ablation_v1/"
       ],
       "blockers": [
-        "wall-clock only; ~4.5h/fold observed average likely exceeds the 2h continuation budget, a further resume will probably be needed"
+        "4/7 folds remaining; wall-clock only; a further resume cycle will likely be needed once this continuation stops at its next fold boundary"
       ],
       "completion_criteria": [
         "42/42 primary rows",
@@ -280,70 +288,71 @@
           "name": "Component-level profiling",
           "path": "analysis/practical_significance_ablation_v1/profiler_breakdown.csv",
           "status": "PARTIAL",
-          "note": "smoke-scale only; final controlled run deferred, concurrent jobs were active"
+          "note": "smoke-scale run (tmux practical_significance_smoke) COMPLETED and self-terminated cleanly; profiler_breakdown.csv (21 rows) exists at 200-req/trace smoke scale; final controlled run still deferred"
         },
         {
           "name": "Exact-optimization equivalence + speedup",
           "path": "analysis/practical_significance_ablation_v1/exact_optimization_equivalence.json",
           "status": "PARTIAL",
-          "note": "equivalence proven; final speedup numbers deferred with timing campaign"
+          "note": "smoke run COMPLETE: exact_optimization_equivalence.json shows all_variants_exact=True across all 21 trace x capacity entries; speedups ~22-30x at cap 32-64, ~85-94x at cap 128 from batching; final controlled numbers still deferred"
         },
         {
           "name": "Selective invocation quality-cost",
           "path": "analysis/practical_significance_ablation_v1/selective_invocation.csv",
-          "status": "PARTIAL"
+          "status": "PARTIAL",
+          "note": "smoke run COMPLETE: selective_invocation.csv (42 rows)"
         },
         {
           "name": "Top-k quality-cost curve",
           "path": "analysis/practical_significance_ablation_v1/topk_tradeoff.csv",
-          "status": "PARTIAL"
+          "status": "PARTIAL",
+          "note": "smoke run COMPLETE: topk_tradeoff.csv (77 rows)"
         },
         {
           "name": "Model-complexity variants (ridge/random_forest/hist_gb, reusing frozen h4 grid)",
           "path": "analysis/practical_significance_ablation_v1/model_complexity_tradeoff.csv",
-          "status": "PARTIAL"
+          "status": "PARTIAL",
+          "note": "smoke run COMPLETE: model_complexity_tradeoff.csv (63 rows), reusing frozen h4 grid"
         },
         {
           "name": "Break-even miss-cost analysis vs LRU/SIEVE/FIFO-Reinsertion",
           "path": "analysis/practical_significance_ablation_v1/break_even_miss_cost.csv",
           "status": "PARTIAL",
-          "note": "formula implemented and exercised against certified fair-window miss counts; compute-cost term depends on deferred controlled timing"
+          "note": "smoke run COMPLETE: break_even_miss_cost.csv (12 rows) computed from smoke-scale compute-cost inputs + certified fair-window miss counts; final numbers need controlled compute-cost inputs"
         },
         {
           "name": "Miss-cost sweep (log-spaced synthetic grid)",
           "path": "analysis/practical_significance_ablation_v1/miss_cost_sweep.csv",
-          "status": "IMPLEMENTED",
-          "note": "independent of machine load"
+          "status": "COMPLETE",
+          "note": "miss_cost_sweep.csv (96 rows); synthetic grid, load-independent, does not need the controlled campaign"
         },
         {
           "name": "Weighted/heterogeneous miss-cost analysis",
           "path": "analysis/practical_significance_ablation_v1/weighted_cost.csv",
-          "status": "IMPLEMENTED",
-          "note": "audited: Page.weight is uniformly 1.0 in the canonical trace loader, no real heterogeneous cost metadata exists; synthetic sensitivity analysis only, clearly labeled"
+          "status": "COMPLETE",
+          "note": "weighted_cost.csv (84 rows); synthetic sensitivity only, confirmed no real heterogeneous-cost metadata exists in the trace pipeline"
         },
         {
           "name": "Quality-latency Pareto frontier",
           "path": "analysis/practical_significance_ablation_v1/pareto_frontier.csv",
           "status": "PARTIAL",
-          "note": "populated from smoke-scale data pending controlled campaign"
+          "note": "smoke run COMPLETE: pareto_frontier.csv (170 rows, 23 Pareto-efficient at smoke scale); final frontier needs controlled campaign"
         },
         {
           "name": "Final controlled timing campaign",
           "path": "N/A",
           "status": "BLOCKED",
-          "note": "deliberately deferred; Concerns 1-3 jobs (evict_cross_family_resume, objective_ablation_pipeline, distribution_shift_2h_continue) were actively using CPU"
+          "note": "not launched; machine still has 4 concurrent scientific processes (C1/C2/C3 + legacy LRB) at audit time, load avg ~4.2/20 cores"
         }
       ],
       "theory_motivation_additions": [],
       "implementation_status": "PARTIAL",
-      "current_jobs": [
-        "practical_significance_smoke (non-final, correctness/smoke-scale --all run at --max-requests 200, launched this session, safe to leave running or stop)"
-      ],
+      "current_jobs": [],
       "artifact_paths": [
         "analysis/practical_significance_ablation_v1/"
       ],
       "blockers": [
-        "final controlled timing campaign requires an idle machine; scheduling constraint, not scientific"
+        "uncontended (idle) machine required for final controlled timing campaign -- C1/C2/C3 jobs (and legacy LRB) still active"
       ],
       "completion_criteria": [
         "controlled timing campaign complete under an idle machine (median + variation, warm-up discarded)",
@@ -363,8 +372,8 @@
         "honest break-even conclusion including possible no-positive-miss-penalty outcome"
       ],
       "api_decision": {
-        "status": "NOT_YET_EVALUATED_FINAL",
-        "note": "Evaluated at the end of this session's non-API work; see docs/practical_significance_ablation_protocol.md and the session's final report. Re-evaluate again once the controlled timing campaign completes."
+        "status": "API_CASE_STUDY_NOT_NEEDED",
+        "note": "Re-evaluated at end of smoke-scale work: non-API evidence (measured batching speedups, formalized break-even model, synthetic weighted-cost sensitivity, confirmed absence of real heterogeneous-cost metadata) covers the reviewer's question. Re-evaluate again once the controlled campaign completes."
       }
     }
   },
@@ -375,5 +384,13 @@
     "Do not use API-backed experiments for Concern 4 unless non-API evidence leaves a specific, named gap.",
     "Negative/null findings must be reported honestly, not hidden or reframed as success.",
     "Re-audit 'current_jobs' fields before citing them in the manuscript; they go stale within minutes."
+  ],
+  "experiment_dependency_order": [
+    "1. Let the C1 (evict_cross_family_resume), C2 (objective_ablation_pipeline), and C3 (distribution_shift_2h_continue) long-running jobs finish their remaining folds.",
+    "2. Perform C1/C2/C3 completion audits (leakage/isolation checks, row-count/integrity checks) once each reaches its full expected row count.",
+    "3. Run the C4 controlled timing campaign on an idle machine (no C1/C2/C3 jobs active).",
+    "4. Run the final frozen statistical analyses for C1/C2/C3 (paired tests, correlations) only once each is complete -- never on partial data.",
+    "5. Update the manuscript and reviewer response using the frozen, certified results.",
+    "6. Consider an API-backed case study for C4 only if the controlled non-API evidence leaves a specific, named gap."
   ]
 }

@@ -52,10 +52,11 @@ contamination is removed before the head-to-head comparison.
 - `analysis/reviewer_fairness/policy_comparison_cacheus.csv` (+ `/home/soroush/Augmented-caching-cacheus/analysis/external_learned_baselines/cacheus/`) — CACHEUS, official author code, upstream seed 123 preserved. **COMPLETE.**
 - `analysis/reviewer_fairness/policy_comparison_halp.csv` — HALP fair-window comparison. **COMPLETE** (evaluation-resource equivalence: yes; training-resource equivalence with `evict_value_v1`: no — documented caveat, not resolved).
 - All original manuscript baselines (LRU, SIEVE, FIFO-Reinsertion, blind_oracle_lru_combiner, REST v1, Trust-and-Doubt, Predictive Marker, Offline Belady as oracle-only) — 21/21 fair-window rows each. **COMPLETE.**
-- `evict_value_v1_cross_family_v1` corrected retraining (leave-one-family-out, 7 folds × 4 objective-agnostic model families) — tmux `evict_cross_family_resume`, memory-bounded resumed pipeline. **RUNNING** (1/7 folds' stage-1 dataset complete as of last check; stage-2 training in progress for fold `brightkite`; 0/7 models complete).
-- Cross-family held-out evaluation (7 families × 3 capacities = 21 rows) — **NOT_STARTED** (blocked on model completion).
+- `evict_value_v1_cross_family_v1` corrected retraining (leave-one-family-out, 7 folds × 4 objective-agnostic model families) — tmux `evict_cross_family_resume`, memory-bounded resumed pipeline. **RUNNING** (1/7 folds fully complete — `brightkite`: dataset+train+model+sha256 `b81e43d3...`, winner=`hist_gb` by val mean regret; fold 2/7 `citibike` stage-1 dataset build in progress; 1/7 final models complete).
+- Cross-family held-out evaluation (7 families × 3 capacities = 21 rows) — **NOT_STARTED** (blocked on model completion, 6 folds remaining).
 - `analysis/reviewer_fairness_v5/fairness_certificate.{json,md}` — **PARTIAL**, accurately reflects `evict_value_v1_cross_family_v1` as `NOT_RUN` pending training completion; all other policies already certified.
 - `analysis/reviewer_fairness_v5/primary_comparison.csv` / `oracle_comparison.csv` — **NOT_STARTED** (blocked on certificate completion).
+- **Legacy canonical LRB (PID 113981, archival only, does not block the primary comparison):** running ~22.5h at 100% CPU with an empty log and empty output directory. Read-only diagnostic (2026-08-07) found this **not** to be stuck — classified `ACTIVE_COMPUTE_LIKELY_VALID`. Evidence: CPU time actively accumulates (+11s over an 11s wall-clock window), `/proc/io` byte counters are unchanged over that window (in-memory compute, not blocked I/O), `lib_lightgbm.so` is loaded as expected. The script (`scripts/experiments/run_lrb_external_baseline.py`) evaluates `evict_value_v1` at the full 50,000-request budget for all 7 traces × 3 capacities at the same 75–316 ms/eviction-decision cost measured in Concern 4 — a ~25–35h total runtime is arithmetically plausible from that alone — and it writes its CSV/JSON/MD outputs only once, at the very end (no incremental output), with stdout block-buffered on the non-TTY log redirect (explains the empty log independent of progress). Recommendation: **leave running**; no evidence of a stall.
 
 **Theory/motivation additions:** none required; this is purely an empirical
 fairness-protocol concern.
@@ -115,9 +116,9 @@ that otherwise matches Concern 1's cross-family protocol.
   reuse-distance prediction, pairwise preference) × 7 held-out families.
   **IMPLEMENTED.**
 - `objective_ablation_pipeline` tmux — dataset build + training for all
-  4 objectives × 7 folds = 28 models. **RUNNING** (3/7 folds complete —
-  brightkite, citibike, cloudphysics — i.e. 12/28 models; fold 4/7,
-  `metacdn`, mid-stage-1 dataset build as of last check).
+  4 objectives × 7 folds = 28 models. **RUNNING** (5/7 folds complete —
+  brightkite, citibike, cloudphysics, metacdn, metakv — i.e. 20/28 models;
+  fold 6/7, `twemcache`, mid-dataset-build; `wiki2018` not yet started).
 - Model registry freeze (`analysis/supervision_objective_ablation_v1/model_registry.json`) — **NOT_STARTED** (blocked on all 28 models).
 - Held-out evaluation (4 objectives × 7 families × 3 capacities = 84 rows) — **NOT_STARTED** (blocked on registry freeze).
 - Same-example / fairness alignment audit (`same_example_audit.json`, `fairness_audit.json`) — **NOT_STARTED**.
@@ -175,12 +176,14 @@ predeclared statistical analysis only once complete.
   wall-clock budget with 12/42 primary rows (2/7 folds: brightkite,
   citibike). **STOPPED CLEANLY AT BUDGET (partial), not a failure.**
 - 2-hour resumed continuation (`distribution_shift_2h_continue`) — resumed
-  correctly (skipped already-complete folds), currently training fold 3/7
-  (`cloudphysics`). **RUNNING**, still 12/42 as of last check.
+  correctly (skipped already-complete folds), currently evaluating fold 3/7
+  (`cloudphysics`). **RUNNING**, 17/42 as of last check. The process has now
+  run ~4.5h wall time, well past its own `--max-wall-hours 2` budget, but
+  continues to produce valid rows — the budget check evidently only fires
+  between folds (same behavior as the original 9h pass).
 - State-shift diagnostics (`state_shift_metrics.csv`) and trajectory
   divergence (`trajectory_divergence.csv`) — coverage tracks the primary
-  rows exactly (12/12 and 6/6 respectively for the 2 completed folds).
-  **PARTIAL**, integrity clean so far.
+  rows exactly. **PARTIAL**, integrity clean so far.
 - Frozen statistical analysis (paired test vs `OFF_POLICY_LRU`, Spearman
   correlations of shift-vs-miss-degradation) — **NOT_STARTED** (explicitly
   gated on full 42/42 completion; must not be run on partial data).
@@ -264,42 +267,55 @@ heterogeneous-cost case study would add anything beyond it.
   invariant-hoisting alone (`cached_exact`) at these small `k` — i.e. the
   dominant avoidable cost at k≤64 is unbatched per-candidate model calls,
   not the O(k²) redundant recomputation (which is expected to matter more
-  as `k` grows toward 128). Capacity 128 needs a longer request prefix than
-  this smoke run's 200 requests to reach eviction decisions at all in some
-  traces. Final controlled numbers (all capacities, full request budget,
-  idle machine) deferred with the timing campaign; smoke run left running
-  in tmux `practical_significance_smoke` for continued incremental output.
+  as `k` grows toward 128). At capacity 128 specifically, the smoke run's
+  200-request prefix was too short to reach eviction decisions in some
+  traces, so those cells show no speedup number (not a failure, just no
+  data at that scale). The `practical_significance_smoke` tmux session has
+  since **completed and self-terminated cleanly** (no errors); all 9
+  planned artifacts now exist under `analysis/practical_significance_ablation_v1/`
+  at smoke scale. Final controlled numbers (all capacities, full request
+  budget, idle machine) remain deferred.
 - Selective invocation invocation-rate/quality outputs — **PARTIAL**
-  (smoke scale).
-- Top-k victim-retention/quality-cost curve — **PARTIAL** (smoke scale).
+  (smoke scale, `selective_invocation.csv`, 42 rows, complete for the smoke run).
+- Top-k victim-retention/quality-cost curve — **PARTIAL** (smoke scale,
+  `topk_tradeoff.csv`, 77 rows).
 - Model-complexity variants (ridge/random_forest/hist_gb, reusing the
-  already-frozen h4 training grid, no new model search) — **PARTIAL**.
+  already-frozen h4 training grid, no new model search) — **PARTIAL**
+  (smoke scale, `model_complexity_tradeoff.csv`, 63 rows).
 - Break-even miss-cost analysis vs LRU/SIEVE/FIFO-Reinsertion — formula
   **IMPLEMENTED** and exercised against the certified fair-window miss
-  counts; final numeric conclusion depends on the deferred controlled
-  timing campaign for the compute-cost term. **PARTIAL.**
-- Miss-cost sweep (log-spaced synthetic grid) — **IMPLEMENTED**, runs
-  independent of timing/machine load.
+  counts (`break_even_miss_cost.csv`, 12 rows); final numeric conclusion
+  depends on the deferred controlled timing campaign for the compute-cost
+  term. **PARTIAL.**
+- Miss-cost sweep (log-spaced synthetic grid) — **COMPLETE**
+  (`miss_cost_sweep.csv`, 96 rows), runs independent of timing/machine load.
 - Weighted/heterogeneous miss-cost analysis — audited: the canonical trace
   loader (`build_requests_from_lists`) assigns every `Page.weight = 1.0`
   uniformly; **no real heterogeneous cost metadata exists** in the current
   trace pipeline. Falls back to a predeclared, clearly-labeled synthetic
-  sensitivity analysis only. **IMPLEMENTED** (synthetic).
-- Quality-latency Pareto frontier — **IMPLEMENTED**, populated from
-  smoke-scale data pending the controlled campaign.
+  sensitivity analysis only. **COMPLETE (synthetic)** (`weighted_cost.csv`, 84 rows).
+- Quality-latency Pareto frontier — **PARTIAL**, populated from smoke-scale
+  data (`pareto_frontier.csv`, 170 rows, 23 Pareto-efficient) pending the
+  controlled campaign.
 - Final controlled timing campaign — **BLOCKED**, deliberately deferred:
   Concerns 1–3's jobs (`evict_cross_family_resume`,
-  `objective_ablation_pipeline`, `distribution_shift_2h_continue`) were
-  actively using the CPU at the time this concern's work began; launching
-  reviewer-facing timing evidence under that load would be scientifically
-  invalid.
+  `objective_ablation_pipeline`, `distribution_shift_2h_continue`) plus the
+  archival legacy LRB process remain actively using the CPU (load average
+  ~4.2/20 cores at last check); launching reviewer-facing timing evidence
+  under that load would be scientifically invalid.
+
+**API decision:** re-evaluated at the end of the smoke-scale work —
+**API_CASE_STUDY_NOT_NEEDED**. The non-API evidence (measured batching
+speedups, formalized break-even model, synthetic weighted-cost sensitivity,
+confirmed absence of real heterogeneous-cost metadata) covers the
+reviewer's question. Re-evaluate again once the controlled campaign
+completes.
 
 **Theory/motivation additions:** none planned yet; this concern is purely
 about measurement, not new supervision theory.
 
-**Current jobs/tmux sessions:** none launched for Concern 4 in this session
-(smoke-scale correctness runs only, executed inline, not via tmux, since
-each ran in well under a minute).
+**Current jobs/tmux sessions:** none active for Concern 4 (the
+`practical_significance_smoke` tmux session completed and exited cleanly).
 
 **Artifacts/output paths:** `analysis/practical_significance_ablation_v1/`.
 
@@ -345,3 +361,21 @@ preferable" outcome if that is what the data shows).
   reported honestly, not hidden or reframed as success.
 - Re-audit "current jobs/tmux sessions" fields before citing them — these
   are snapshots and go stale within minutes on this campaign.
+
+---
+
+## Experiment dependency / recommended order
+
+1. Let the C1 (`evict_cross_family_resume`), C2 (`objective_ablation_pipeline`),
+   and C3 (`distribution_shift_2h_continue`) long-running jobs finish their
+   remaining folds.
+2. Perform C1/C2/C3 completion audits (leakage/isolation checks, row-count
+   and integrity checks) once each reaches its full expected row count.
+3. Run the C4 controlled timing campaign on an idle machine (no C1/C2/C3
+   jobs active).
+4. Run the final frozen statistical analyses for C1/C2/C3 (paired tests,
+   correlations) only once each is complete — never on partial data.
+5. Update the manuscript and reviewer response using the frozen, certified
+   results.
+6. Consider an API-backed case study for C4 only if the controlled non-API
+   evidence leaves a specific, named gap.
