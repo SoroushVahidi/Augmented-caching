@@ -1,0 +1,77 @@
+{
+  "protocol_id": "distribution_shift_ablation_v1",
+  "frozen_before_launch": true,
+  "purpose": "Test whether train/deployment state-distribution shift (states used to generate training labels vs. states actually visited by the deployed learned policy) explains the online underperformance gap, holding the supervision target, features, model family, folds, capacities, and evaluation protocol fixed.",
+  "prior_art_audit": "docs/distribution_shift_ablation_protocol.md#1-prior-art-audit-why-this-is-new-work-and-what-is-reused",
+  "target": {
+    "name": "finite_horizon_eviction_loss",
+    "horizon": 4,
+    "source": "src/lafc/evict_value_dataset_v1._simulate_lru_misses",
+    "note": "UNCHANGED across all conditions -- this experiment ablates state generation, not the objective (that is supervision_objective_ablation_v1's job)."
+  },
+  "features": "EVICT_VALUE_V1_FEATURE_COLUMNS (src/lafc/evict_value_features_v1.py), unmodified, identical across conditions",
+  "folds": "reuse configs/fair_cross_family_v1/folds/*.json UNCHANGED -- no new family rotation invented",
+  "capacities": [32, 64, 128],
+  "history_start": 0,
+  "history_end": 10000,
+  "score_start": 10000,
+  "score_end": 50000,
+  "scored_requests": 40000,
+  "hyperparameter_protocol": {
+    "model_families_scalar": ["ridge", "random_forest", "hist_gb"],
+    "selection_metric": "min validation mean_regret_vs_oracle",
+    "tie_breaking": "lower val_mae, then lower val_rmse",
+    "seed": 0
+  },
+  "conditions": {
+    "OFF_POLICY_LRU": {
+      "description": "Canonical current behavior: training-state cache trajectory always evicts the LRU victim (candidates[0]), independent of any model. Reused characterization of existing dataset-builder behavior, not new code.",
+      "behavior_policy": "lru",
+      "iterations": 1,
+      "primary_comparison_arm": true
+    },
+    "DAGGER_ITER1": {
+      "description": "Iteration 0 = OFF_POLICY_LRU. Iteration 1 additionally collects states visited under the frozen iteration-0 model's own argmin eviction decisions on TRAINING+VALIDATION families only (never held-out), labels computed independently via the same frozen L_H. D_train = D0 union D1, equal weighting.",
+      "behavior_policy_iter0": "lru",
+      "behavior_policy_iter1": "learned_argmin_frozen_iter0_model",
+      "iterations": 2,
+      "aggregation_weighting": "equal_weight_per_iteration_source",
+      "primary_comparison_arm": true
+    }
+  },
+  "deferred_conditions": {
+    "DAGGER_ITER2": "Deferred to distribution_shift_ablation_v2 -- not implemented or launched in this run, per the task brief's explicit reduced-matrix authorization (Section 18 priority order, frozen before launch).",
+    "LEARNED_CONTINUATION": "Deferred to distribution_shift_ablation_v2.",
+    "MIXED_50_50": "Deferred to distribution_shift_ablation_v2.",
+    "ORACLE_STATE_DIAGNOSTIC_ONLY": "Deferred (optional diagnostic in the original brief, not required)."
+  },
+  "reduction_authorization": "Task brief Section 18 explicitly authorizes launching a reduced matrix under compute/engineering budget constraints provided it is frozen BEFORE launch and follows the stated priority order (OFF_POLICY_LRU, DAGGER_ITER1, DAGGER_ITER2, LEARNED_CONTINUATION, MIXED_50_50). This run implements the top 2 of 5.",
+  "anti_circularity": "State-generation policy and label-generation mechanism are always separate; no row's label is ever derived from a model's own prediction on that row. See protocol doc Section 7.",
+  "state_shift_metrics": {
+    "state_signature": "compute_candidate_features_v1 output, reused unmodified",
+    "per_feature_metrics": ["standardized_mean_difference", "wasserstein_1"],
+    "aggregate_formula": "mean of per-feature Wasserstein-1 distances, each min-max normalized by the TRAINING distribution's range for that feature",
+    "frozen_before_results": true
+  },
+  "trajectory_diagnostics": [
+    "first_divergence_index", "fraction_decisions_diverged_from_lru",
+    "mean_cache_set_jaccard_similarity", "longest_identical_prefix_length",
+    "distinct_cache_states_visited"
+  ],
+  "expected_rows": {
+    "primary_conditions": 2,
+    "folds": 7,
+    "capacities": 3,
+    "primary_result_rows": 42,
+    "note": "2 conditions x 7 folds x 3 capacities = 42 (reduced from the original 5x7x3=105 per the frozen reduction above)."
+  },
+  "runtime_budget": {
+    "max_wall_hours": 9,
+    "controller": "checkpoint-based, stops launching new units when remaining budget < observed average unit cost; never truncates a unit mid-write",
+    "checkpoint_path": "analysis/distribution_shift_ablation_v1/campaign_state.json"
+  },
+  "output_dir": "analysis/distribution_shift_ablation_v1/",
+  "statistical_plan": "docs/distribution_shift_ablation_protocol.md#10-statistical-plan-pre-registered-not-executed-until-completion",
+  "manuscript_safety": "No manuscript results/abstract/conclusions/reviewer-response updates from this protocol's output until a separate completion-audit task authorizes it.",
+  "amendment_policy": "Any change to target, features, folds, capacities, grid, seeds, condition set, or aggregation weighting after viewing held-out results requires distribution_shift_ablation_v2 with a documented reason."
+}

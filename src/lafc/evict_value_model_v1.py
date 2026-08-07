@@ -18,6 +18,16 @@ class EvictValueV1Model:
         x = [[float(row[c]) for c in self.feature_columns]]
         return float(self.estimator.predict(x)[0])
 
+    def predict_loss_batch(self, rows: List[Dict[str, float]]) -> List[float]:
+        """Batched form of predict_loss_one: identical per-row result, but
+        one estimator.predict() call instead of N -- avoids per-call
+        thread-pool spin-up overhead in estimators with internal
+        parallelism (e.g. HistGradientBoostingRegressor)."""
+        if not rows:
+            return []
+        x = [[float(row[c]) for c in self.feature_columns] for row in rows]
+        return [float(v) for v in self.estimator.predict(x)]
+
     def save(self, path: str | Path) -> None:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
