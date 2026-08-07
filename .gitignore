@@ -6,6 +6,11 @@ build/
 .pytest_cache/
 output/
 
+# External, non-vendored dependencies (cloned via scripts/setup/*, never
+# committed -- e.g. the official CACHEUS source, which has no LICENSE file
+# and is therefore executed externally rather than copied into this repo).
+/external/
+
 # Dataset artifacts
 /data/raw/**
 !/data/raw/README.md
