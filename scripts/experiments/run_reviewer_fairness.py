@@ -119,6 +119,20 @@ def _make_policy(name: str, capacity: int):
             hyperparameter_source="official_defaults", random_seed="123_hardcoded_upstream",
             future_information="none", batch_size_or_equivalent="",
         )
+    if name == "lrb":
+        from lafc.policies.lrb import LRBConfig, LRBPolicy
+        return LRBPolicy(LRBConfig(memory_window=4096, batch_size=2048, seed=0)), dict(
+            implementation_source="repository_reimplementation",
+            implementation_commit="9e8b4423383c01c4528deb447f152f0437a37c3a",
+            model_training_mode="online_batched_retraining",
+            model_training_data="in_trace_only",
+            model_frozen_during_test="no", online_adaptation_during_test="yes",
+            hyperparameter_source="repository_documented_defaults_not_regridsearched_this_run "
+            "(memory_window=4096, batch_size=2048 -- same values used elsewhere in this "
+            "repository's LRB comparisons, e.g. run_three_l_cache_comparison.py's LRB "
+            "reference row; official CDN-scale defaults never fire at this trace length)",
+            random_seed="0", future_information="none", batch_size_or_equivalent="2048",
+        )
     if name == "halp":
         from lafc.policies.halp import HALPConfig, HALPPolicy
         return HALPPolicy(HALPConfig(training_trigger=HISTORY_END, seed=0)), dict(
@@ -176,7 +190,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--policy", required=True,
                      choices=["lru", "sieve", "fifo_reinsertion", "cacheus", "halp",
-                              "three_l_cache", "evict_value_v1"])
+                              "three_l_cache", "evict_value_v1", "lrb"])
     ap.add_argument("--trace-manifest", type=Path, default=DEFAULT_MANIFEST)
     ap.add_argument("--capacities", default="32,64,128")
     ap.add_argument("--evict-value-model", type=Path, default=Path(_EVICT_VALUE_MODEL_PATH))

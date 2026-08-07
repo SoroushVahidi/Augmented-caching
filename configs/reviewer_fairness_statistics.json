@@ -1,0 +1,28 @@
+{
+  "plan_version": "reviewer_fairness_statistics_v1",
+  "frozen_before_results": true,
+  "experimental_unit": "one (trace_family, capacity) instance -- NOT individual requests. 7 traces x 3 capacities = 21 paired instances per policy comparison. Requests within one trace-capacity replay are sequentially dependent (cache state carries forward), not independent replicates, and are never treated as such.",
+  "comparison_design": "paired: every policy is scored on the identical 21 (trace, capacity) instances under the identical primary_controlled_window protocol, so differences are computed per-instance, not from independently-sampled runs.",
+  "reported_statistics": [
+    "mean_miss_ratio (across the 21 instances)",
+    "median_miss_ratio",
+    "per_instance_absolute_miss_difference (candidate_misses - reference_misses, reference = LRU unless stated otherwise)",
+    "per_instance_percentage_miss_difference",
+    "wins_ties_losses (candidate strictly lower / equal / strictly higher miss_ratio than reference, per instance)"
+  ],
+  "inferential_test": {
+    "test": "Wilcoxon signed-rank test on paired per-instance miss_ratio differences (candidate vs. reference), two-sided",
+    "rationale": "21 paired, non-independent-request instances; a paired non-parametric test avoids assuming normality of miss-ratio differences across heterogeneous trace families and does not require an independence-of-requests assumption the data does not satisfy",
+    "multiple_comparison_correction": "Holm-Bonferroni across the set of pairwise policy comparisons reported in a single table (family-wise error rate control)",
+    "significance_threshold": 0.05,
+    "effect_size": "matched-pairs rank-biserial correlation, reported alongside the p-value",
+    "confidence_intervals": "bootstrap (10,000 resamples over the 21 paired instances) 95% CI on the mean miss-ratio difference"
+  },
+  "explicit_prohibitions": [
+    "Do not treat the 40,000 scored requests within one (trace, capacity) instance as independent replicates for any test.",
+    "Do not select which policies/instances to report after viewing results.",
+    "Do not change the test, correction, or threshold after viewing evict_value_v1_fair_v1's results on the canonical traces.",
+    "Do not compute statistics over deployment_full_stream and primary_controlled_window rows together -- report each variant's statistics separately, never pooled."
+  ],
+  "status": "PLAN ONLY -- not yet applied to any result table in this session; recorded here before evict_value_v1_fair_v1 training/evaluation completes, per this task's requirement to freeze the analysis plan before viewing corrected-method results."
+}

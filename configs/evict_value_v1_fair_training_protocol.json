@@ -1,0 +1,52 @@
+{
+  "protocol_id": "evict_value_v1_fair_v1",
+  "frozen_before_training": true,
+  "frozen_at_commit": "PRE-TRAINING (see git log at time of freeze)",
+  "purpose": "Corrects the CRITICAL train/test overlap in models/evict_value_wulver_v1_best.pkl (see analysis/reviewer_fairness/evict_value_v1_overlap_audit.json). Training/validation data are drawn ONLY from data/processed_fair_v1/ (request positions [50000,100000) of the same 7 raw source datasets), never from data/processed/ (the canonical [0,50000) evaluation range).",
+  "training_data": {
+    "source_root": "data/processed_fair_v1/",
+    "provenance": "data/processed_fair_v1/PROVENANCE.json",
+    "builder_script": "scripts/build_evict_value_v1_fair_corpus.py",
+    "non_overlap_verification": "Each family's first 50,000 reparsed records were asserted equal to the canonical data/processed/{family}/trace.jsonl before extracting records[50000:100000) -- proves the extraction methodology exactly reproduces the canonical processing, so the disjoint slice is genuinely a continuation of the same source, not a different extraction.",
+    "families": ["brightkite", "citibike", "wiki2018", "twemcache", "metakv", "metacdn", "cloudphysics"],
+    "records_per_family": "~50000 (49999 for metakv/metacdn -- raw source has 99999 lines)"
+  },
+  "candidate_dataset": {
+    "split_mode": "trace_chunk",
+    "chunk_size": 4096,
+    "split_train_pct": 70,
+    "split_val_pct": 15,
+    "split_seed": 0,
+    "capacities": [32, 64, 128],
+    "horizons": [4],
+    "horizon_note": "Scoped to horizon=4 only (not a full {4,8,16} sweep) given this session's time budget. This is not a leakage-relevant choice -- horizon selects how many future steps the LOCAL replay-based label looks ahead within the training trace itself (data/processed_fair_v1, never data/processed) -- but it is a scope reduction relative to the original heavy_r1 build, predeclared before training, not selected by comparing to canonical-trace performance. horizon=4 reuses the ORIGINAL heavy_r1 ablation's own finding (validation MAE/RMSE/top-1/regret all degrade monotonically as horizon increases from 4) as a modeling prior, not as leaked test information -- that finding is about general model behavior under the label-construction mechanism, not about the specific canonical evaluation traces' request content.",
+    "output_root": "data/derived/evict_value_v1_fair_v1/",
+    "min_requests_per_trace": 1000,
+    "min_unique_pages_per_trace": 100
+  },
+  "model_selection": {
+    "candidate_model_families": ["ridge", "random_forest", "hist_gb"],
+    "selection_metric": "val_mean_regret (mean_regret_vs_oracle on the validation split only, never the internal test split, never the canonical traces)",
+    "selection_rule": "minimize val_mean_regret",
+    "tie_breaking": "lower val_mae, then lower val_rmse (exact logic of the existing, unmodified scripts/train_evict_value_wulver_v1.py, reused as-is -- the same selection methodology already used to select the contaminated heavy_r1 model, now applied to the disjoint corpus)",
+    "search_space_note": "Scoped to 1 horizon x 3 model families = 3 configurations (vs. original heavy_r1's up-to-9), given this session's time budget. Predeclared before any configuration was fit.",
+    "seed": 0,
+    "staging_models_dir": "models/fair_v1_staging/",
+    "staging_note": "scripts/train_evict_value_wulver_v1.py hardcodes its selected-best output filename to 'evict_value_wulver_v1_best.pkl' inside --models-dir. To avoid ANY risk of overwriting the canonical models/evict_value_wulver_v1_best.pkl, this run points --models-dir at a separate staging directory (models/fair_v1_staging/); the winning artifact is copied to the final path below only after the run completes."
+  },
+  "output_model_path": "models/evict_value_v1_fair_v1.pkl",
+  "evaluation_protocol": {
+    "history_start": 0,
+    "history_end": 10000,
+    "score_start": 10000,
+    "score_end": 50000,
+    "scored_requests": 40000,
+    "traces": "the ORIGINAL canonical data/processed/{family}/trace.jsonl (analysis/wulver_trace_manifest_full.csv) -- never data/processed_fair_v1/",
+    "capacities": [32, 64, 128],
+    "model_frozen_during_test": true,
+    "online_adaptation_during_test": false,
+    "metric": "misses / scored_requests over [score_start, score_end) only",
+    "runner": "scripts/experiments/run_reviewer_fairness.py --policy evict_value_v1 --evict-value-model models/evict_value_v1_fair_v1.pkl"
+  },
+  "amendment_policy": "Any change to this protocol after viewing evaluation results on the canonical traces requires a new protocol_id (e.g. evict_value_v1_fair_v2) and an explicit, documented reason in docs/evict_value_v1_fair_training_protocol.md -- this file must never be edited in place after evaluation results are known."
+}

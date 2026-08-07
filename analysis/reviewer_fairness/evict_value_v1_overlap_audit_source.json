@@ -1,0 +1,59 @@
+{
+  "format": "evict_value_v1_wulver_candidate_csv_shards",
+  "split_mode": "trace_chunk",
+  "chunk_size": 4096,
+  "capacities": [
+    32,
+    64,
+    128,
+    256
+  ],
+  "horizons": [
+    4,
+    8,
+    16
+  ],
+  "max_requests_per_trace": 50000,
+  "trace_count": 7,
+  "shard_count": 662,
+  "trace_stats": [
+    {
+      "trace_name": "brightkite_50k",
+      "path": "data/processed/brightkite/trace.jsonl",
+      "request_count": 50000
+    },
+    {
+      "trace_name": "citibike_202401_50k",
+      "path": "data/processed/citibike/trace.jsonl",
+      "request_count": 50000
+    },
+    {
+      "trace_name": "wiki2018_pageviews_en_50k",
+      "path": "data/processed/wiki2018/trace.jsonl",
+      "request_count": 50000
+    },
+    {
+      "trace_name": "twemcache_cluster26_sample100_50k",
+      "path": "data/processed/twemcache/trace.jsonl",
+      "request_count": 50000
+    },
+    {
+      "trace_name": "metakv_kvcache_202206_head_50k",
+      "path": "data/processed/metakv/trace.jsonl",
+      "request_count": 50000
+    },
+    {
+      "trace_name": "metacdn_cdn_202303_head_50k",
+      "path": "data/processed/metacdn/trace.jsonl",
+      "request_count": 50000
+    },
+    {
+      "trace_name": "cloudphysics_alibaba_block_head_50k",
+      "path": "data/processed/cloudphysics/trace.jsonl",
+      "request_count": 50000
+    }
+  ],
+  "manifest_sha256": "7e06f18d99313eb7f8ff1158719243f85230880f27dd395a237d6aed0648d6bf",
+  "contaminated_model_path": "models/evict_value_wulver_v1_best.pkl",
+  "contaminated_model_sha256": "0c9e8a48066f8bb80bfab31b023c9785ca5b955f408d50c18008dbcc314ea61b"
+}

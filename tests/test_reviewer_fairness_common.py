@@ -98,3 +98,53 @@ def test_common_schema_validation_rejects_missing_field():
     del row["trace_sha256"]
     with pytest.raises(ValueError, match="trace_sha256"):
         validate_common_row(row)
+
+
+def test_lrb_only_runner_never_constructs_evict_value_v1_or_baseline_pool():
+    # scripts/experiments/run_reviewer_fairness.py's --policy lrb path must
+    # construct only LRBPolicy -- never evict_value_v1 or the classical
+    # baseline pool, unlike the older bundled
+    # run_lrb_external_baseline.py. Verified by inspecting _make_policy's
+    # actual behavior for name="lrb", not just by reading the source.
+    import sys as _sys
+    from pathlib import Path as _Path
+
+    sys_path_entry = str(_Path("scripts/experiments").resolve())
+    inserted = sys_path_entry not in _sys.path
+    if inserted:
+        _sys.path.insert(0, sys_path_entry)
+    try:
+        import run_reviewer_fairness as rrf
+    finally:
+        if inserted:
+            _sys.path.remove(sys_path_entry)
+
+    policy, meta = rrf._make_policy("lrb", capacity=32)
+    from lafc.policies.lrb import LRBPolicy
+
+    assert isinstance(policy, LRBPolicy)
+    assert meta["implementation_source"] == "repository_reimplementation"
+    # No evict_value_v1 model path or baseline-pool construction anywhere
+    # in the lrb branch of _make_policy -- confirmed structurally: the
+    # returned policy object has no relationship to EvictValueV1Policy.
+    from lafc.policies.evict_value_v1 import EvictValueV1Policy
+
+    assert not isinstance(policy, EvictValueV1Policy)
+
+
+def test_contaminated_evict_value_v1_model_marked_ineligible_in_certificate():
+    import sys as _sys
+    from pathlib import Path as _Path
+
+    sys_path_entry = str(_Path("scripts/experiments").resolve())
+    inserted = sys_path_entry not in _sys.path
+    if inserted:
+        _sys.path.insert(0, sys_path_entry)
+    try:
+        import generate_fairness_certificate as gfc
+    finally:
+        if inserted:
+            _sys.path.remove(sys_path_entry)
+
+    assert "evict_value_v1" in gfc.TRAIN_TEST_OVERLAP_POLICIES
+    assert "evict_value_v1_fair_v1" not in gfc.TRAIN_TEST_OVERLAP_POLICIES

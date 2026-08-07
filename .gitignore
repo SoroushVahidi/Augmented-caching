@@ -18,13 +18,16 @@ output/
 !/data/raw/wiki2018/INSTRUCTIONS.md
 /data/processed/**
 !.gitkeep
+/data/processed_fair_v1/
 
 # Large derived artifacts (Wulver runs)
 /data/derived/evict_value_v1_wulver*/
 /data/derived/evict_value_v1_wulver_array*/
+/data/derived/evict_value_v1_fair_v1/
 
 # Trained model artifacts
 /models/*.pkl
+/models/fair_v1_staging/
 /analysis/family_winner_selection/models/*.pkl
 
 # Slurm job logs
