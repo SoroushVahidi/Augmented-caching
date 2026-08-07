@@ -104,3 +104,53 @@ the commit identifier (`EXPECTED_COMMIT` in
 `analysis/external_learned_baselines/cacheus/provenance.json`, which *is*
 committed-repository-adjacent generated output (per this repository's
 existing convention for LRB/3L-Cache/HALP).
+
+## 7. Runtime integrity verification (before every reviewer-facing run)
+
+`lafc.cacheus_official_loader.verify_official_source_integrity()` is
+called at the start of `scripts/experiments/run_cacheus_comparison.py`
+(and independently testable via `tests/test_cacheus.py`) and re-checks,
+against the live external clone, every time the runner is invoked -- not
+just once at fetch time:
+
+1. the resolved `git rev-parse HEAD` commit equals `EXPECTED_COMMIT`;
+2. `git status --porcelain` on the clone shows nothing beyond the two
+   known portability `__init__.py` additions (any other untracked,
+   modified, or deleted file is treated as an integrity failure);
+3. a fresh SHA-256 of every file in the "used at runtime" table above
+   matches the hash recorded in `PROVENANCE.json` at fetch time.
+
+Any failure raises `CacheusIntegrityError` with the specific mismatch, and
+the runner exits before writing any rows -- it does not silently execute
+whatever happens to be on disk at `external/cacheus_official/`.
+
+## 8. RNG audit
+
+The official `Cacheus.__init__` calls `np.random.seed(123)` -- a hardcoded
+constant, consumed via bare `np.random.rand()` (`getChoice()`) and
+`np.random.choice()` (`updateInRandomDirection()`), both against numpy's
+**global**, not instance-local, RNG state (confirmed by grepping the
+fetched source directly, not assumed). There is no seed parameter
+anywhere in the official constructor; this repository does not add one
+(would be an algorithm-changing patch to third-party code).
+
+Because the reseed is unconditional at construction, each freshly built
+`Cacheus` instance's own decisions are already independent of whatever
+numpy/Python `random` state existed before it (verified by
+`tests/test_cacheus.py::test_cacheus_deterministic_despite_prior_random_state_perturbation`,
+which perturbs both RNG streams before each of two independent runs and
+asserts an identical hit/miss/eviction/weight trace). What is *not*
+handled upstream is the reverse direction -- protecting other code in the
+same process from being affected by CACHEUS having reset/consumed the
+global numpy stream. `CacheusPolicy` snapshots `np.random.get_state()`
+before constructing the official object and `run_policy()` calls
+`policy.restore_global_rng_state()` after the simulation loop, restoring
+that snapshot -- purely an isolation measure around the official code,
+never altering what CACHEUS itself decided (verified by
+`test_cacheus_restores_global_numpy_state_after_run`). The `random`
+module's own usage in the official source is confined to
+`code/algs/lib/heapdict.py`'s `if __name__ == '__main__':` self-test
+block, never executed on import.
+
+`official_rng_seed=123` is recorded in `CacheusPolicy.diagnostics_summary()`
+and in every run's `provenance.json` (`official_cacheus_rng_seed`).

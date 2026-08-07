@@ -42,7 +42,11 @@ from typing import Dict, List
 
 import argparse
 
-from lafc.cacheus_official_loader import EXPECTED_COMMIT, EXTERNAL_CODE_DIR
+from lafc.cacheus_official_loader import (
+    EXPECTED_COMMIT,
+    CacheusIntegrityError,
+    verify_official_source_integrity,
+)
 from lafc.evict_value_wulver_v1 import load_trace_from_any
 from lafc.experiments.external_baseline_common import (
     IncrementalCsvWriter,
@@ -82,12 +86,19 @@ def main() -> None:
     ap.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     args = ap.parse_args()
 
-    if not (EXTERNAL_CODE_DIR / "algs" / "cacheus.py").exists():
+    try:
+        integrity = verify_official_source_integrity()
+    except CacheusIntegrityError as exc:
         raise SystemExit(
-            "Official CACHEUS source not found. Run:\n\n"
-            "    python scripts/setup/fetch_cacheus_official.py\n\n"
-            "before running this experiment. Refusing to start (no rows written)."
+            f"Official CACHEUS source failed integrity verification: {exc}\n\n"
+            "Refusing to start a reviewer-facing run against an unverified "
+            "or unexpected checkout (no rows written)."
         )
+    print(
+        f"Official CACHEUS source verified: commit={integrity['resolved_commit']}, "
+        f"{len(integrity['tracked_file_sha256'])} tracked files hash-matched, "
+        f"license={integrity['license']!r} (see docs/cacheus_provenance.md)."
+    )
 
     caps = [int(x) for x in args.capacities.split(",") if x.strip()]
     traces = read_trace_manifest(args.trace_manifest)
@@ -179,8 +190,22 @@ def main() -> None:
         **base_provenance(),
         "official_cacheus_repo": "https://github.com/sylab/cacheus",
         "official_cacheus_commit": EXPECTED_COMMIT,
+        "official_cacheus_resolved_commit": integrity["resolved_commit"],
+        "official_cacheus_tracked_file_sha256": integrity["tracked_file_sha256"],
         "official_cacheus_license": None,
+        "official_cacheus_license_note": (
+            "Public, author-released source; no LICENSE file found at the "
+            "pinned commit. This repository does not vendor or redistribute "
+            "it and draws no conclusion about permitted reuse beyond that "
+            "factual description. See docs/cacheus_provenance.md."
+        ),
         "official_cacheus_execution_mode": "external, non-vendored clone; imported and executed unmodified",
+        "official_cacheus_rng_seed": 123,
+        "official_cacheus_rng_note": (
+            "RNG seed is hardcoded to 123 in the official Cacheus.__init__ "
+            "(np.random.seed(123)); not configurable, not overridden by "
+            "this repository. See docs/cacheus_method_spec.md."
+        ),
         "trace_manifest": str(args.trace_manifest),
         "trace_hashes_sha256": trace_hashes,
         "capacities": caps,
