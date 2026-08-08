@@ -57,21 +57,16 @@ See `analysis/README.md` for details and naming guidance.
 
 ## Manuscript-support docs to read first
 
-1. `docs/kbs_manuscript_workflow.md` (canonical `heavy_r1` path + builder + outputs + “not canonical” pointers)
-2. `docs/evict_value_v1_kbs_canonical_artifacts.md` (heavy_r1-only inputs for KBS tables/figures)
-3. `docs/reproducibility_and_artifacts.md` (entry points, output locations, manuscript vs exploratory)
-4. `docs/kbs_manuscript_submission_index.md` (reviewer-facing index)
-5. `docs/lightweight_exploratory_ablations.md` (non-canonical lightweight branch index)
-6. `docs/manuscript_evidence_map.md`
-7. `docs/manuscript_open_questions.md`
-8. `docs/baselines.md`
-9. `docs/framework.md`
-10. `docs/internal_research_summary_eviction_value.md` (internal working-state note; not manuscript text, not canonical evidence)
-11. `docs/internal_prior_work_audit_eviction_value.md` (internal prior-work coverage + bibliography-gap audit; non-canonical)
-12. `docs/internal_current_project_decisions.md` (internal record of current agreed framing decisions; non-canonical)
-13. `docs/internal_novelty_positioning_eviction_value.md` (internal novelty-positioning guardrails for related-work and claim scope; non-canonical)
-14. `docs/internal_prior_work_matrix_eviction_value.md` (internal comparison matrix for eviction-value related-work and safest novelty scope; non-canonical)
-15. `docs/internal_bibliography_gap_report.md` (internal bibliography coverage update for closest learned-eviction references; non-canonical)
+1. **[Reproducibility Guide](reproducibility.md)** (Environment, installation, workflow)
+2. **[Canonical Experiments](canonical_experiments.md)** (Manuscript reproduction commands)
+3. **[Dataset Setup](data_setup.md)** (Trace acquisition and preparation)
+4. **[External Baselines](external_baselines.md)** (Baseline provenance and setup)
+5. **[Artifact Policy](artifact_policy.md)** (Version control and retention rules)
+6. `docs/kbs_manuscript_workflow.md` (Detailed narrative workflow)
+7. `docs/evict_value_v1_kbs_canonical_artifacts.md` (heavy_r1-only inputs for KBS tables/figures)
+8. `docs/results_guide.md` (Results interpretation and pitfalls)
+9. `docs/manuscript_evidence_map.md`
+10. `docs/baselines.md`
 
 ## Notes on scientific status
 

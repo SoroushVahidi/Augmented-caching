@@ -1,5 +1,7 @@
 # Baselines: Learning-Augmented Caching
 
+For an overview of external baseline provenance and setup, see **[External Baselines](external_baselines.md)**. For the full scientific roster including classical policies, see the sections below.
+
 ## Baseline 1: Learning-Augmented Weighted Paging (SODA 2022)
 
 ### Paper citation

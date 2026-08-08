@@ -72,30 +72,31 @@ The following paths **MUST NOT** be modified while experiments are running:
 
 | Severity | Task | Query | Status |
 | :--- | :--- | :--- | :--- |
-| **P0** | Consolidate reviewer revision docs into `main` | Query 3 | PARTIALLY_RESOLVED |
-| **P0** | Fix dependency issues in `pyproject.toml` / environment | Query 3 | |
+| **P0** | Consolidate reviewer revision docs into `docs/reviewer/` | Query 3 | RESOLVED |
+| **P0** | Fix dependency issues / provide clear setup guide | Query 3 | RESOLVED |
+| **P0** | Overhaul README for onboarding and canonical focus | Query 3 | RESOLVED |
 | **P1** | Move manuscript packaging folders to `artifacts/` | Query 2 | RESOLVED |
 | **P1** | Group root-level `analysis/` files into subdirectories | Query 2 | RESOLVED |
 | **P2** | Normalize script names and remove truly obsolete ones | Query 2 | RESOLVED |
 | **P2** | Enhance `.gitignore` for all worktrees | Query 2 | RESOLVED |
 | **P3** | Refactor top-level `lafc/evict_*.py` into submodules | Query 2 | DEFERRED_UNTIL_ACTIVE_JOBS_FINISH |
+| **P3** | Establish clear artifact and provenance policy | Query 3 | RESOLVED |
 
 ---
 
 ## Proposed Scopes for Queries 2-4
 
 ### QUERY 2: Repository Structure & Git Hygiene
-- Move manuscript artifacts to `artifacts/`.
-- Organize `analysis/` and `reports/` into logical subdirectories.
-- Clean up `scripts/` and normalize naming.
-- Synchronize `.gitignore` across all worktrees.
-- (Optional) Refactor `src/lafc/` top-level modules.
+- Move manuscript artifacts to `artifacts/`. [RESOLVED]
+- Organize `analysis/` and `reports/` into logical subdirectories. [RESOLVED]
+- Clean up `scripts/` and normalize naming. [RESOLVED]
+- Synchronize `.gitignore` across all worktrees. [RESOLVED]
 
 ### QUERY 3: Documentation, Reproducibility & Provenance
-- Consolidate all reviewer-revision documents into `docs/reviewer/`.
-- Update `pyproject.toml` and provide a clear `environment.yml` or setup guide.
-- Overhaul README to focus on canonical results while clearly labeling exploratory ones.
-- Establish a clear artifact and provenance commitment policy.
+- Consolidate all reviewer-revision documents into `docs/reviewer/`. [RESOLVED]
+- Update `pyproject.toml` and provide a clear setup guide. [RESOLVED]
+- Overhaul README to focus on canonical results while clearly labeling exploratory ones. [RESOLVED]
+- Establish a clear artifact and provenance commitment policy. [RESOLVED]
 
 ### QUERY 4: Final Validation & Release Readiness
 - Final test suite execution across all families.

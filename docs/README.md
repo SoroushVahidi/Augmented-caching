@@ -1,79 +1,42 @@
-# Documentation index (`docs/`)
+# Documentation Index
 
-Use this page to find the **right** document without duplicating long runbooks. **Primary KBS gateway (repo root):** [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md).
+This directory contains detailed technical documentation for the Augmented Caching project.
 
----
+## Core Guides
 
-## Canonical KBS / Wulver `heavy_r1` (main submission line)
+- **[Reproducibility Guide](reproducibility.md)**: Environment setup, installation, and general experiment workflow.
+- **[Dataset Setup](data_setup.md)**: Instructions for obtaining and preparing trace data.
+- **[Canonical Experiments](canonical_experiments.md)**: Exact commands to reproduce manuscript results.
+- **[External Baselines](external_baselines.md)**: Provenance and setup for integrated learned baselines.
 
-| Document | Use when you need… |
-|----------|---------------------|
-| [`CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md) | One-page list of scripts, inputs, outputs, and what not to cite |
-| [`kbs_manuscript_workflow.md`](kbs_manuscript_workflow.md) | Full workflow, builder command, separation from exploratory work |
-| [`evict_value_v1_kbs_canonical_artifacts.md`](evict_value_v1_kbs_canonical_artifacts.md) | Exact filenames for builder `EVIDENCE_FILES` |
-| [`kbs_manuscript_submission_index.md`](kbs_manuscript_submission_index.md) | Reviewer-facing index for the same line |
-| [`wulver_heavy_evict_value_experiment.md`](wulver_heavy_evict_value_experiment.md) | Slurm runbook, defaults, success checks |
-| [`evict_value_v1_method_spec.md`](evict_value_v1_method_spec.md) | Repository-derived method facts (features, labels, splits, selection) |
-| [`method_detail_support_evict_value_v1.md`](method_detail_support_evict_value_v1.md) | Internal consolidation for Methods rewrites (not an artifact) |
-| [`kbs_knowledge_framing_note.md`](kbs_knowledge_framing_note.md) | Safe “knowledge-based” framing without over-claiming |
-| [`kbs_author_writing_evict_value_v1.md`](kbs_author_writing_evict_value_v1.md) | Author notes tied to KBS artifacts |
+## Methodology and Results
 
-**Primary vs duplicate:** `kbs_manuscript_workflow.md` remains the **narrative** workflow hub; `CANONICAL_KBS_SUBMISSION.md` is the **checklist** hub. Cross-links replace merging two long documents.
+- **[Artifact Policy](artifact_policy.md)**: Version control and retention rules for scientific artifacts.
+- **[Results Interpretation](results_guide.md)**: Guide to understanding miss ratio metrics and provenance.
+- **[Repository Map](repo_map.md)**: Hierarchical overview of the repository structure.
+- **[Baseline Roster](baselines.md)**: Definitions and literature references for classical policies.
 
----
+## Reviewer Revision
 
-## Reproducibility, baselines, and framework
+- **[Revision Index](reviewer_revision/README.md)**: Roadmap and status of ongoing revision experiments.
+- **[Revision Runbook](reviewer/next_stage_runbook.md)**: Operational commands for finalizing revision tasks.
+- **[Submission Index](reviewer/submission_index.md)**: Reviewer-facing map of revision evidence.
 
-| Document | Use when you need… |
-|----------|---------------------|
-| [`reproducibility_and_artifacts.md`](reproducibility_and_artifacts.md) | CLI entry points, output locations, manuscript vs exploratory |
-| [`repo_map.md`](repo_map.md) | Top-level directory orientation |
-| [`baselines.md`](baselines.md) | Baseline policy definitions and literature pointers |
-| [`framework.md`](framework.md) | Experimental policy families and architecture notes |
-| [`datasets.md`](datasets.md) | Dataset formats and preparation |
-| [`datasets_wulver_trace_acquisition.md`](datasets_wulver_trace_acquisition.md) | Wulver trace acquisition notes |
+## Manuscript Support
 
----
+- **[KBS Workflow](kbs_manuscript_workflow.md)**: Narrative hub for the Knowledge-Based Systems submission.
+- **[Canonical Artifacts](evict_value_v1_kbs_canonical_artifacts.md)**: Exact filenames required by manuscript builders.
+- **[Method Specification](evict_value_v1_method_spec.md)**: Repository-derived facts for the primary learned model.
 
-## Evidence strength, open questions, and audits
+## Exploratory Research
 
-| Document | Use when you need… |
-|----------|---------------------|
-| [`manuscript_open_questions.md`](manuscript_open_questions.md) | Priority-ordered research and positioning risks |
-| [`manuscript_evidence_map.md`](manuscript_evidence_map.md) | Claim-by-claim table (includes exploratory pairwise line) |
-| [`manuscript_tist_positioning.md`](manuscript_tist_positioning.md) | TIST-oriented positioning notes (separate from KBS path) |
+- **[Framework Overview](framework.md)**: Experimental policy families and architecture.
+- **[Lightweight Ablations](lightweight_exploratory_ablations.md)**: Index for exploratory diagnostic runs.
+- **[Evidence Map](manuscript_evidence_map.md)**: Claim-by-claim verification of scientific evidence.
 
 ---
 
-## Exploratory: pairwise, theory, guards, offline teachers
+## Historical and internal notes
 
-| Document | Notes |
-|----------|--------|
-| [`pairwise_vs_pointwise_experiment.md`](pairwise_vs_pointwise_experiment.md) | Controlled comparison; interpret per evidence map |
-| `pairwise_*.md` (many files) | Theorem development and audits; not finalized proofs — start from [`pairwise_theory_roadmap.md`](pairwise_theory_roadmap.md) |
-| [`wulver_pairwise_publishability_campaign.md`](wulver_pairwise_publishability_campaign.md), [`wulver_pairwise_chain_witness_campaign.md`](wulver_pairwise_chain_witness_campaign.md) | Campaign runbooks |
-| [`guarded_robust_wrapper.md`](guarded_robust_wrapper.md) | `evict_value_v1_guarded` specification |
-| [`lightweight_exploratory_ablations.md`](lightweight_exploratory_ablations.md) | Index for `analysis/*_light/` |
-| [`offline_teacher_*.md`](offline_teacher_vs_heuristic_experiment.md), [`offline_general_caching_approx.md`](offline_general_caching_approx.md) | Separate experiment families |
-
-**Decision-aligned v2 (not v1 heavy supervision):** [`decision_aligned_eviction_targets.md`](decision_aligned_eviction_targets.md), [`decision_aligned_targets.md`](decision_aligned_targets.md).
-
----
-
-## Internal (`internal_*`) — not canonical evidence
-
-Author-facing working notes, novelty guardrails, bibliography gaps, and prior-work matrices. **Do not** treat as peer-reviewed claims. See filenames under `docs/internal_*`.
-
----
-
-## Reviewer revision (`docs/reviewer/`)
-
-| Document | Notes |
-|----------|-------|
-| [`next_stage_runbook.md`](reviewer/next_stage_runbook.md) | Operational runbook for reviewer experiments |
-| `roadmap.md` | Roadmap for revision completion (in active worktrees) |
-| `concern_1_baselines_and_fairness.md` | Protocol and results for Fairness (in active worktree) |
-
----
-
-## Repository map and hygiene
+- **[Archive](README.md)**: (This file)
+- **Internal Notes**: See `docs/internal_*` for author-facing working notes and novelty guardrails.

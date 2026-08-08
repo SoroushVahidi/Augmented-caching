@@ -64,7 +64,7 @@ After a successful builder run:
 **Preflight before claiming main numbers:**
 
 ```bash
-test -f analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
+test -f analysis/manuscript_canonical/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
 ```
 
 ---
@@ -94,11 +94,14 @@ test -f analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
 
 | Document | Role |
 |----------|------|
-| `docs/kbs_manuscript_workflow.md` | Detailed workflow + “not canonical” table |
-| `docs/kbs_manuscript_submission_index.md` | Reviewer-facing index |
-| `docs/reproducibility_and_artifacts.md` | CLI entry points, output roots |
+| `docs/reproducibility.md` | Authoritative reproducibility guide |
+| `docs/canonical_experiments.md` | Command sequences for manuscript results |
+| `docs/data_setup.md` | Dataset preparation workflow |
+| `docs/artifact_policy.md` | Scientific artifact retention policy |
 | `docs/README.md` | Index of all `docs/` |
+| `docs/kbs_manuscript_workflow.md` | Detailed narrative workflow |
+| `docs/reviewer/submission_index.md` | Reviewer-facing index |
 | `analysis/README.md` | Canonical vs exploratory under `analysis/` |
-| `scripts/README.md` | Script families (paths stay flat for compatibility) |
+| `scripts/README.md` | Script family organization |
 
 **Caveats and open questions:** `docs/manuscript_open_questions.md`, `docs/manuscript_evidence_map.md`.

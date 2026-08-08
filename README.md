@@ -1,185 +1,102 @@
-# Learning-Augmented Caching (`lafc`)
+# Augmented Caching
 
-Research code for **learning-augmented caching**: literature-faithful baselines, robust combiners, dataset pipelines for public and manifest-based traces, and reproducible experiment scripts (CSV / JSON / Markdown artifacts).
+Research repository for **learning-augmented caching**, focusing on decision-aligned eviction-value prediction. This project provides a robust framework for training and evaluating learned cache eviction policies against literature-faithful baselines across diverse production workloads.
 
----
+## Key Ideas
 
-## What this repository is
+Classical learned caching often focuses on predicting the "time-to-next-access" (reuse distance). This repository explores **eviction-value prediction**, where a supervised model predicts the expected loss (in terms of future misses) if an item is evicted now.
 
-- **Simulator and policies:** `python -m lafc.runner.run_policy` (`src/lafc/`) for trace replay of named policies.
-- **Learned eviction (main line):** **`evict_value_v1`** — scores each cache resident (candidate) with a supervised model; evicts a minimizer. Optional **`evict_value_v1_guarded`** wrapper (`docs/guarded_robust_wrapper.md`).
-- **Exploratory research:** pairwise / ranking supervision, sentinel variants, and theorem notes under `docs/pairwise_*` and `analysis/pairwise_*` — **not** the canonical KBS Wulver table path unless explicitly cross-walked.
+- **Decision Alignment**: We optimize for prediction quality specifically where it affects the eviction decision, improving closed-loop cache performance.
+- **Robustness**: Integrated "guarded" wrappers provide fallback mechanisms to classical policies (e.g., LRU) when learned models are uncertain.
+- **Trace-Driven**: Evaluated on real-world traces from Twitter, Meta, CloudPhysics, and public sources.
 
-**Evidence caveats:** `docs/manuscript_evidence_map.md`, `docs/manuscript_open_questions.md`.
+## Repository Layout
 
----
+- `src/lafc/`: Core library implementation (policies, simulator, models).
+- `scripts/`: Structured entry points for setup, training, and evaluation.
+- `configs/`: Experimental protocols and frozen configurations.
+- `docs/`: Detailed methodology, reproducibility, and result guides.
+- `analysis/`: Generated experiment artifacts (CSV, JSON, Markdown).
+- `data/`: Small example traces and dataset preparation drivers.
+- `models/`: Trained model artifacts and staging areas.
 
-## Stable baselines (manuscript-safe references)
+For a detailed map, see [Repository Map](docs/repo_map.md).
 
-Classical and robust policies exposed on the main CLI include `lru`, `marker`, `predictive_marker`, `trust_and_doubt`, `robust_ftp_d_marker` (`robust_ftp`), `blind_oracle_lru_combiner`, and the unweighted optimum `offline_belady` (full lookahead via trace construction). **General caching** (variable sizes/costs) uses a separate LP+rounding entry point: `scripts/run_offline_general_caching_approx.py` — see `docs/offline_general_caching_approx.md` (not a `--policy` on `run_policy`).
+## Quick Start
 
-Full roster and literature pointers: `docs/baselines.md` (summary lists above).
+### 1. Installation
 
----
-
-## Canonical KBS manuscript path (Wulver `heavy_r1`)
-
-For **Knowledge-Based Systems** and the **only** designated multi-trace Wulver `evict_value_v1` evidence line:
-
-| Step | Resource |
-|------|----------|
-| **One-page checklist** | **[`CANONICAL_KBS_SUBMISSION.md`](CANONICAL_KBS_SUBMISSION.md)** (repo root) |
-| Narrative workflow | [`docs/kbs_manuscript_workflow.md`](docs/kbs_manuscript_workflow.md) |
-| Slurm train → eval | [`slurm/evict_value_v1_wulver_heavy_train.sbatch`](slurm/evict_value_v1_wulver_heavy_train.sbatch), [`slurm/evict_value_v1_wulver_heavy_eval.sbatch`](slurm/evict_value_v1_wulver_heavy_eval.sbatch) with `EXP_TAG=heavy_r1` |
-| Runbook | [`docs/wulver_heavy_evict_value_experiment.md`](docs/wulver_heavy_evict_value_experiment.md) |
-| Exact filenames | [`docs/evict_value_v1_kbs_canonical_artifacts.md`](docs/evict_value_v1_kbs_canonical_artifacts.md) |
-| Tables / figures | `python scripts/experiments/canonical/paper/build_kbs_main_manuscript_artifacts.py` → `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/` |
-
-**Do not** cite `analysis/evict_value_wulver_v1_policy_comparison.csv` (unsuffixed) as the main KBS comparison; it may include extra policies from non-heavy drivers. Use **`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`** only when present. See [`analysis/README.md`](analysis/README.md).
-
-### After heavy eval completes (minimal checklist)
+Requires Python 3.9+.
 
 ```bash
-test -f analysis/manuscript_canonical/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
-export PYTHONPATH="${PYTHONPATH:-$(pwd)/src}"
-python scripts/experiments/canonical/paper/build_kbs_main_manuscript_artifacts.py
-ls tables/manuscript figures/manuscript reports/manuscript_artifacts
-```
+# Clone the repository
+git clone https://github.com/soroush/Augmented-caching.git
+cd Augmented-caching
 
-If the first command fails, finish the eval stage per [`docs/wulver_heavy_evict_value_experiment.md`](docs/wulver_heavy_evict_value_experiment.md).
+# Create and activate virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
 
----
-
-## Reproduce main artifacts (orientation)
-
-| Goal | Start here |
-|------|------------|
-| KBS `heavy_r1` bundle | [`CANONICAL_KBS_SUBMISSION.md`](CANONICAL_KBS_SUBMISSION.md) |
-| All docs (index) | [`docs/README.md`](docs/README.md) |
-| CLI and output roots | [`docs/reproducibility_and_artifacts.md`](docs/reproducibility_and_artifacts.md) |
-| `analysis/` layout | [`analysis/README.md`](analysis/README.md) |
-| `scripts/` layout | [`scripts/README.md`](scripts/README.md) |
-| Repo layout | [`docs/repo_map.md`](docs/repo_map.md) |
-
-**Method detail (internal support for rewriting Methods):** [`docs/method_detail_support_evict_value_v1.md`](docs/method_detail_support_evict_value_v1.md) (consolidates `docs/evict_value_v1_method_spec.md` and related sources; not a result artifact).
-
----
-
-## Installation
-
-```bash
+# Install base dependencies and dev tools
 pip install -e ".[dev]"
 ```
 
----
+### 2. Run a smoke test
 
-## Quick start
-
-### Baseline
+Verify the installation by running a simple LRU simulation on a small example trace:
 
 ```bash
 python -m lafc.runner.run_policy \
-  --policy predictive_marker \
+  --policy lru \
   --trace data/example_unweighted.json \
   --capacity 3
 ```
 
-### Robust combiner
-
-```bash
-python -m lafc.runner.run_policy \
-  --policy robust_ftp_d_marker \
-  --trace data/example_unweighted.json \
-  --capacity 3 \
-  --derive-predicted-caches
-```
-
-### Local `evict_value_v1` first check (small; not the Wulver `heavy_r1` line)
-
-```bash
-python scripts/experiments/exploratory/build_evict_value_dataset_v1.py --max-rows 200000
-python scripts/experiments/exploratory/train_evict_value_v1.py --horizon 8
-python scripts/experiments/exploratory/run_evict_value_v1_first_check.py
-```
-
----
-
-## Policy families (`run_policy` registry)
-
-### Literature baselines and robust references
-
-`lru`, `weighted_lru`, `advice_trusting`, `la_det`, `la_det_approx`, `la_det_faithful`, `marker`, `blind_oracle`, `predictive_marker`, `adaptive_query` (`parsimonious_caching`), `trust_and_doubt`, `robust_ftp_d_marker` (`robust_ftp`), `blind_oracle_lru_combiner`, `offline_belady`
-
-### Experimental policies
-
-`atlas_v1`, `atlas_v2`, `atlas_v3`, `atlas_cga_v1` (`atlas_cga`), `atlas_cga_v2`, `rest_v1`, `ml_gate_v1`, `ml_gate_v2`, `evict_value_v1`, `evict_value_v1_guarded`, `sentinel_robust_tripwire_v1`, `sentinel_budgeted_guard_v2`
-
-**Pairwise learned line** (separate scripts, not in `POLICY_REGISTRY`): `scripts/build_evict_value_pairwise_dataset.py`, `scripts/train_evict_value_pairwise_v1.py`, `scripts/run_evict_value_pairwise_first_check.py`.
-
-Details: `docs/baselines.md`, `docs/framework.md`.
-
----
-
-## Datasets
-
-```bash
-python scripts/setup/prepare_all.py --dataset <brightkite|citibike|spec_cpu2006|wiki2018|twemcache|metakv|metacdn|cloudphysics|all>
-```
-
-- Raw: `data/raw/<dataset>/` — Processed: `data/processed/<dataset>/` — Notes: `docs/datasets.md`
-
----
-
-## Other experiment families (not the canonical KBS `heavy_r1` path unless labeled)
-
-> Sections A–D are useful entry points; they are **not** interchangeable with the Wulver `heavy_r1` manuscript pipeline.
-
-### A) Offline-teacher vs heuristic
-
-```bash
-python scripts/experiments/exploratory/run_offline_teacher_vs_heuristic_experiment.py \
-  --trace-glob "data/example_*.json,data/example_general_caching.json" \
-  --capacities 2,3 --horizon 12 \
-  --output-dir analysis/exploratory/offline_teacher_vs_heuristic
-```
-
-See `docs/offline_teacher_vs_heuristic_mediumscale.md`.
-
-### B) Pairwise vs pointwise
-
-```bash
-python scripts/experiments/exploratory/run_pairwise_vs_pointwise_experiment.py --output-dir analysis/exploratory/pairwise_vs_pointwise
-```
-
-Interpret conservatively: `docs/pairwise_vs_pointwise_experiment.md`, `docs/manuscript_evidence_map.md`.
-
-### C) Sentinel / guard refinement
-
-```bash
-python scripts/experiments/exploratory/run_sentinel_budgeted_guard_v2_eval.py
-python scripts/experiments/exploratory/run_sentinel_budgeted_guard_v2_ablation.py
-```
-
----
-
-## Output conventions
-
-Default roots: **`analysis/`** (experiments and manuscript-support), **`output/`** (ad hoc). New work should use `analysis/<experiment_name>/` with `summary.json` + `report.md` when possible.
-
----
-
-## Testing
+### 3. Run unit tests
 
 ```bash
 pytest tests/ -v
 ```
 
----
+## Reproducing Results
 
-## Navigation and hygiene
+Detailed instructions for reproducing published results are available in the following guides:
 
-| Topic | Document |
-|-------|----------|
-| Cleanup / navigation audit (this release) | [`docs/repository_cleanup_report.md`](docs/repository_cleanup_report.md) |
-| KBS hygiene notes | [`docs/kbs_repository_hygiene_report.md`](docs/kbs_repository_hygiene_report.md) |
-| Exploratory lightweight ablations | [`docs/lightweight_exploratory_ablations.md`](docs/lightweight_exploratory_ablations.md) |
+- **[Reproducibility Guide](docs/reproducibility.md)**: Environment setup and general workflow.
+- **[Dataset Setup](docs/data_setup.md)**: How to obtain and prepare trace data.
+- **[Canonical Experiments](docs/canonical_experiments.md)**: Command sequences for the primary manuscript results.
+
+## Baselines and Policies
+
+This repository integrates a wide range of cache eviction policies:
+
+- **Classical**: LRU, FIFO, Marker, Belady (Optimal).
+- **Learned (Internal)**: `evict_value_v1` (our primary model), `atlas`, `ml_gate`.
+- **Learned (External)**: LRB (songjiayang/LRB), 3L-Cache, HALP, CACHEUS.
+
+For details on baseline provenance and implementation status, see [External Baselines](docs/external_baselines.md) and [Baseline Roster](docs/baselines.md).
+
+## Reviewer Revision
+
+Ongoing experiments addressing reviewer feedback (Fairness, Objective Ablation, Distribution Shift) are tracked in the [Reviewer Revision Index](docs/reviewer_revision/README.md).
+
+## Artifacts and Provenance
+
+Scientific outputs are written to `analysis/`. We use a strict [Artifact Policy](docs/artifact_policy.md) to distinguish between frozen canonical results and exploratory diagnostics.
+
+## License
+
+This project is licensed under the terms included in the [LICENSE](LICENSE) file. External baselines may have separate licensing terms; see [Third-Party Notices](docs/external_baselines.md).
+
+## Citation
+
+If you use this code in your research, please cite our manuscript:
+
+```bibtex
+@article{lafc2026,
+  title={Decision-aligned eviction-value prediction for robust learning-augmented caching},
+  author={...},
+  journal={Knowledge-Based Systems},
+  year={2026}
+}
+```
