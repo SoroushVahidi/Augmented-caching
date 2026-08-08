@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -50,6 +51,13 @@ CENSOR_FLAG_COLUMN = {
     "objective_next_arrival": "next_arrival_censored_flag",
     "objective_reuse_distance": "reuse_distance_censored_flag",
 }
+PROTOCOL_CONFIG_PATH = Path("configs/supervision_objective_ablation_v1.json")
+
+
+def _protocol_config_sha256() -> str:
+    if not PROTOCOL_CONFIG_PATH.exists():
+        return "unavailable"
+    return hashlib.sha256(PROTOCOL_CONFIG_PATH.read_bytes()).hexdigest()
 
 
 class AuditFailure(RuntimeError):
@@ -202,6 +210,7 @@ def main() -> None:
 
     output = {
         "protocol_id": "supervision_objective_ablation_v1",
+        "protocol_config_sha256": _protocol_config_sha256(),
         "FINAL": is_final,
         "scope_families": families,
         "folds_built": [r["family"] for r in built],

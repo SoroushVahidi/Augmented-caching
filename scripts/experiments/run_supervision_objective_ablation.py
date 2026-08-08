@@ -60,6 +60,7 @@ from lafc.experiments.reviewer_fairness_common import (
 )
 from lafc.policies.supervision_objective_ablation_policy import PairwiseObjectivePolicy, ScalarObjectivePolicy
 from lafc.runner.run_policy import run_policy
+from supervision_objective_ablation_gates import assert_gate_clear, evaluator_startup_failures
 
 FOLDS_DIR = Path("configs/fair_cross_family_v1/folds")
 DEFAULT_REGISTRY = Path("analysis/supervision_objective_ablation_v1/model_registry.json")
@@ -144,6 +145,10 @@ def main() -> None:
     args = ap.parse_args()
 
     caps = [int(x) for x in args.capacities.split(",") if x.strip()]
+    assert_gate_clear(
+        evaluator_startup_failures(registry_path=args.registry, out_dir=args.out_dir),
+        "EVALUATOR_STARTUP",
+    )
     registry = _load_registry(args.registry)
 
     args.out_dir.mkdir(parents=True, exist_ok=True)

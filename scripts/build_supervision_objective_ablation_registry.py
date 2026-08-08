@@ -1,9 +1,29 @@
 """Build and freeze the model registry for the supervision-objective
 ablation (docs/supervision_objective_ablation_protocol.md).
 
-Requires all 4 objectives x 7 folds = 28 models to exist before writing
-MODEL_SELECTION_FROZEN=true. No held-out evaluation may begin before this
-gate passes (Section 6 of the orchestration task).
+FUTURE / REPRODUCTION GATE (fail-closed, no bypass):
+The strict pipeline order is enforced here and in
+scripts/experiments/supervision_objective_ablation_gates.py:
+
+    28/28 models complete
+        ->
+    same-example audit FINAL=true + PASS (7/7 folds, protocol hash agrees)
+        ->
+    fairness audit FINAL=true + PASS (7/7 folds, protocol hash agrees)
+        ->
+    protocol/hash consistency verified
+        ->
+    registry freeze
+        ->
+    held-out evaluation
+
+Before writing MODEL_SELECTION_FROZEN=true the registry finalizer requires
+all 28 models to exist, every recorded artifact hash to match the on-disk
+file, and both final audits to have run and passed. On any failure it
+prints ``REGISTRY_FREEZE_BLOCKED: <reason>`` and exits nonzero WITHOUT
+writing or partially overwriting a registry.
+
+There is intentionally NO normal CLI bypass (no --skip-audit-gate / --force).
 """
 
 from __future__ import annotations
@@ -15,9 +35,25 @@ from typing import Dict, List
 
 from lafc.experiments.external_baseline_common import base_provenance, sha256_of_file
 
+import sys as _sys
+from pathlib import Path as _Path
+_GATES_DIR = str(_Path(__file__).resolve().parent / "experiments")
+if _GATES_DIR not in _sys.path:
+    _sys.path.insert(0, _GATES_DIR)
+from supervision_objective_ablation_gates import (
+    PROTOCOL_ID,
+    assert_gate_clear,
+    audit_gate_failures,
+    protocol_config_sha256,
+)
+
 FOLDS_DIR = Path("configs/fair_cross_family_v1/folds")
 FAMILIES = ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"]
 OBJECTIVES = ["objective_eviction_loss", "objective_next_arrival", "objective_reuse_distance", "objective_pairwise"]
+
+AUDIT_DIR = Path("analysis/supervision_objective_ablation_v1")
+SAME_EXAMPLE_AUDIT_PATH = AUDIT_DIR / "same_example_audit.json"
+FAIRNESS_AUDIT_PATH = AUDIT_DIR / "fairness_audit.json"
 
 
 def main() -> None:
@@ -37,7 +73,6 @@ def main() -> None:
 
     families = [f.strip() for f in args.families.split(",")] if args.families else FAMILIES
     objectives = [o.strip() for o in args.objectives.split(",")] if args.objectives else OBJECTIVES
-
     records: List[Dict[str, object]] = []
     missing: List[str] = []
 
@@ -92,9 +127,27 @@ def main() -> None:
         raise SystemExit(1)
 
     is_full_campaign = families == FAMILIES and objectives == OBJECTIVES
+
+    # Fail-closed audit + protocol gate: no frozen registry may be written
+    # unless both final audits have run and passed (7/7 folds, protocol hash
+    # agrees). A partial/diagnostic registry (allow-incomplete) is never frozen,
+    # so it may still be written for smoke-testing -- the evaluator refuses to
+    # run against it.
+    if frozen and is_full_campaign:
+        gate_failures = audit_gate_failures(
+            same_example_path=SAME_EXAMPLE_AUDIT_PATH,
+            fairness_path=FAIRNESS_AUDIT_PATH,
+        )
+        if len(records) != len(objectives) * len(families):
+            gate_failures.append(
+                f"expected {len(objectives) * len(families)} model records, built {len(records)}"
+            )
+        assert_gate_clear(gate_failures, "REGISTRY_FREEZE")
+
     registry = {
         **base_provenance(),
-        "protocol_id": "supervision_objective_ablation_v1",
+        "protocol_id": PROTOCOL_ID,
+        "protocol_config_sha256": protocol_config_sha256(),
         "scope_families": families,
         "scope_objectives": objectives,
         "is_full_campaign_scope": is_full_campaign,

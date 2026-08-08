@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import csv
 import io
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -49,6 +50,32 @@ def _import_registry_builder():
 def _import_dataset_builder():
     import build_supervision_objective_ablation_dataset as m
     return m
+
+
+def _import_gates():
+    import supervision_objective_ablation_gates as m
+    return m
+
+
+def _write_protocol_config(tmp_path: Path) -> str:
+    path = tmp_path / "configs" / "supervision_objective_ablation_v1.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"protocol": "supervision_objective_ablation_v1", "version": 1}))
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _write_final_audit(path: Path, protocol_hash: str, *, overall: str = "PASS", final: bool = True) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({
+        "protocol_id": "supervision_objective_ablation_v1",
+        "protocol_config_sha256": protocol_hash,
+        "FINAL": final,
+        "scope_families": ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"],
+        "folds_built": ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"],
+        "folds_not_built": [],
+        "overall": overall,
+        "reports": [],
+    }))
 
 
 # ---------------------------------------------------------------------
@@ -192,6 +219,90 @@ def test_expected_84_row_key_space_has_no_duplicates():
     assert len(keys) == 84
     assert len(m.FAMILIES) == 7
     assert len(m.ALL_OBJECTIVES) == 4
+
+
+# ---------------------------------------------------------------------
+# Shared gates: audit / provenance fail-closed behavior
+# ---------------------------------------------------------------------
+
+def test_audit_gate_blocks_missing_same_example_audit(tmp_path, monkeypatch):
+    m = _import_gates()
+    monkeypatch.chdir(tmp_path)
+    protocol_hash = _write_protocol_config(tmp_path)
+    _write_final_audit(
+        tmp_path / "analysis" / "supervision_objective_ablation_v1" / "fairness_audit.json",
+        protocol_hash,
+    )
+    failures = m.audit_gate_failures()
+    assert any("same-example audit: audit file not found" in f for f in failures)
+
+
+def test_audit_gate_blocks_missing_fairness_audit(tmp_path, monkeypatch):
+    m = _import_gates()
+    monkeypatch.chdir(tmp_path)
+    protocol_hash = _write_protocol_config(tmp_path)
+    _write_final_audit(
+        tmp_path / "analysis" / "supervision_objective_ablation_v1" / "same_example_audit.json",
+        protocol_hash,
+    )
+    failures = m.audit_gate_failures()
+    assert any("fairness audit: audit file not found" in f for f in failures)
+
+
+def test_audit_gate_blocks_failing_fairness_audit(tmp_path, monkeypatch):
+    m = _import_gates()
+    monkeypatch.chdir(tmp_path)
+    protocol_hash = _write_protocol_config(tmp_path)
+    _write_final_audit(
+        tmp_path / "analysis" / "supervision_objective_ablation_v1" / "same_example_audit.json",
+        protocol_hash,
+    )
+    _write_final_audit(
+        tmp_path / "analysis" / "supervision_objective_ablation_v1" / "fairness_audit.json",
+        protocol_hash,
+        overall="FAIL",
+    )
+    failures = m.audit_gate_failures()
+    assert any("fairness audit: overall='FAIL'" in f for f in failures)
+
+
+def test_evaluator_startup_blocks_incomplete_registry_provenance(tmp_path, monkeypatch):
+    m = _import_gates()
+    monkeypatch.chdir(tmp_path)
+    protocol_hash = _write_protocol_config(tmp_path)
+    _write_final_audit(
+        tmp_path / "analysis" / "supervision_objective_ablation_v1" / "same_example_audit.json",
+        protocol_hash,
+    )
+    _write_final_audit(
+        tmp_path / "analysis" / "supervision_objective_ablation_v1" / "fairness_audit.json",
+        protocol_hash,
+    )
+    model_path = tmp_path / "models" / "supervision_objective_ablation_v1" / "objective_eviction_loss" / "brightkite.pkl"
+    model_path.parent.mkdir(parents=True, exist_ok=True)
+    model_path.write_bytes(b"model")
+    from lafc.experiments.external_baseline_common import sha256_of_file
+
+    registry_path = tmp_path / "analysis" / "supervision_objective_ablation_v1" / "model_registry.json"
+    registry_path.parent.mkdir(parents=True, exist_ok=True)
+    registry_path.write_text(json.dumps({
+        "protocol_id": "supervision_objective_ablation_v1",
+        "MODEL_SELECTION_FROZEN": True,
+        "records": [{
+            "objective": "objective_eviction_loss",
+            "held_out_family": "brightkite",
+            "model_artifact_path": str(model_path),
+            "model_artifact_sha256": sha256_of_file(model_path),
+        }],
+    }))
+    failures = m.evaluator_startup_failures(
+        registry_path=registry_path,
+        out_dir=tmp_path / "analysis" / "supervision_objective_ablation_v1",
+        expected_models=1,
+        check_second_evaluator=False,
+        check_resume_safe=False,
+    )
+    assert any("registry: missing protocol_config_sha256" in f for f in failures)
 
 
 # ---------------------------------------------------------------------

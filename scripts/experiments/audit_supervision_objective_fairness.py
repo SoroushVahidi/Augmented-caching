@@ -36,6 +36,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -45,6 +46,13 @@ METRICS_DIR = Path("analysis/supervision_objective_ablation_v1/training")
 FAMILIES = ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"]
 SCALAR_OBJECTIVES = ["objective_eviction_loss", "objective_next_arrival", "objective_reuse_distance"]
 EXPECTED_MODEL_SWEEP = {"ridge", "random_forest", "hist_gb"}
+PROTOCOL_CONFIG_PATH = Path("configs/supervision_objective_ablation_v1.json")
+
+
+def _protocol_config_sha256() -> str:
+    if not PROTOCOL_CONFIG_PATH.exists():
+        return "unavailable"
+    return hashlib.sha256(PROTOCOL_CONFIG_PATH.read_bytes()).hexdigest()
 # Model SELECTION is always min(val_mean_regret, val_mae, val_rmse) for every
 # scalar objective, regardless of that objective's own "direction" field --
 # "direction" governs how mean_regret_vs_oracle is computed internally (pick
@@ -155,6 +163,7 @@ def main() -> None:
 
     output = {
         "protocol_id": "supervision_objective_ablation_v1",
+        "protocol_config_sha256": _protocol_config_sha256(),
         "FINAL": is_final,
         "scope_families": families,
         "folds_built": [r["family"] for r in built],
