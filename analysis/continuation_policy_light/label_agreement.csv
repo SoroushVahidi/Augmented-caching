@@ -1,4 +1,0 @@
-policy_a,policy_b,common_decisions,top1_label_agreement,mean_abs_regret_diff
-blind_oracle,fifo,38,0.6578947368421053,0.2727272727272727
-blind_oracle,lru,38,0.631578947368421,0.2159090909090909
-fifo,lru,38,0.9210526315789473,0.10227272727272728
