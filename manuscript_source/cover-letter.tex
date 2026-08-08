@@ -1,0 +1,55 @@
+\documentclass[11pt]{letter}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{setspace}
+\usepackage{hyperref}
+
+\setstretch{1.08}
+\hypersetup{
+  colorlinks=true,
+  urlcolor=blue,
+  linkcolor=black
+}
+
+\signature{Soroush Vahidi}
+\address{
+Soroush Vahidi\\
+Ying Wu College of Computing\\
+New Jersey Institute of Technology\\
+Newark, NJ, USA\\
+\texttt{sv96@njit.edu}
+}
+
+\begin{document}
+
+\begin{letter}{
+Editor-in-Chief\\
+Knowledge-Based Systems
+}
+
+\opening{Dear Editor,}
+
+Please consider the enclosed manuscript, entitled \textit{``Decision-aligned eviction-value prediction for robust learning-augmented caching''}, for publication as a Research Article in \textit{Knowledge-Based Systems}.
+
+This manuscript studies learning-augmented caching from a candidate-level decision perspective. Rather than treating prediction primarily as advice that should be trusted or ignored at a global level, the paper formulates each full-cache miss as a structured comparison among the items currently in cache and develops a method that predicts the finite-horizon downstream loss associated with evicting each candidate. The paper therefore shifts the focus from coarse trust-oriented use of predictive information to decision-aligned scoring of concrete eviction actions.
+
+The main novel contributions of the manuscript are as follows. First, it formulates online paging as a candidate-level eviction-value prediction problem, in which each currently cached item is scored by its estimated short-horizon downstream harm. Second, it introduces a finite-horizon supervision target for eviction scoring that is more directly aligned with the online eviction decision than trust-only or indirect proxy formulations. Third, it studies a practical guarded extension in which the learned candidate scorer can temporarily defer to a conservative fallback policy when recent online behavior suggests locally unsafe decisions. Fourth, it provides an empirical framework for evaluating this decision rule against classical, predictive, and robust reference policies under common replay semantics. More broadly, the manuscript argues that supervision-target design is a central issue in learning-augmented caching and that candidate-level finite-horizon eviction scoring is a practically grounded direction for robust cache replacement under imperfect predictive information.
+
+The manuscript is original, has not been published previously, and is not under consideration for publication elsewhere. This submission is intended as a Research Article. The manuscript has been approved by all authors. As this is a single-author paper, there is only one corresponding author: Soroush Vahidi (\texttt{sv96@njit.edu}), and the same corresponding-author information has been provided consistently in both the manuscript and the submission system.
+
+To the best of my knowledge, this manuscript has not been previously rejected by \textit{Knowledge-Based Systems}.%
+% If needed, replace the previous sentence with the following:
+% This manuscript is a substantially revised and extensively rewritten version of a previously rejected submission. The revised manuscript has been changed by more than 70\% in content, structure, framing, and presentation, and the justification for resubmission is as follows: [ADD JUSTIFICATION HERE].
+
+The work fits the scope of \textit{Knowledge-Based Systems} because it addresses an intelligent decision-making problem at the intersection of machine learning, robust predictive control, and data-driven online systems. In particular, the paper proposes a knowledge-driven decision framework for integrating predictive context into cache-replacement decisions in a way that is both operationally meaningful and empirically reproducible.
+
+Thank you for your time and consideration.
+
+\closing{Sincerely,}
+
+\end{letter}
+
+\end{document}
