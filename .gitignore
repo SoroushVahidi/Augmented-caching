@@ -32,9 +32,24 @@ output/
 
 # Trained model artifacts
 /models/*.pkl
+/models/supervision_objective_ablation_v1/
+/models/supervision_objective_learning_curve_v1/
 /models/fair_v1_staging/
 /models/cross_family_v1_staging/
 /analysis/family_winner_selection/models/*.pkl
+
+# Local reviewer-science generated evidence. Keep analysis/ broadly visible so
+# intentionally curated summaries can still be tracked later.
+/analysis/distribution_shift_ablation_v1/
+/analysis/external_learned_baselines/
+/analysis/practical_significance_ablation_v1/
+/analysis/reviewer_fairness/fairness_certificate.json
+/analysis/reviewer_fairness/fairness_certificate.md
+/analysis/reviewer_fairness/policy_comparison_*.csv
+/analysis/reviewer_fairness/provenance_*.json
+/analysis/reviewer_fairness_cross_family_v1/
+/analysis/supervision_objective_ablation_v1/
+/analysis/supervision_objective_learning_curve_v1/
 
 # Slurm job logs
 slurm/logs/
