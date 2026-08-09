@@ -156,6 +156,32 @@ def _load_json(path: Path) -> Dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _resolve_repo_path(value: object, *, repo_root: Path) -> Path:
+    path = Path(str(value))
+    return path if path.is_absolute() else (repo_root / path)
+
+
+def _resolve_protocol_paths(
+    config: Mapping[str, object],
+    *,
+    repo_root: Path,
+    out_dir: Path | None = None,
+    models_dir: Path | None = None,
+    data_read_root: Path | None = None,
+    dataset_repo_root: Path | None = None,
+    dataset_root: Path | None = None,
+) -> Dict[str, object]:
+    resolved = dict(config)
+    resolved["output_dir"] = str(_resolve_repo_path(out_dir or config["output_dir"], repo_root=repo_root))
+    resolved["models_dir"] = str(_resolve_repo_path(models_dir or config["models_dir"], repo_root=repo_root))
+    resolved["data_read_root"] = str(_resolve_repo_path(data_read_root or config["data_read_root"], repo_root=repo_root))
+    resolved["dataset_repo_root"] = str(
+        _resolve_repo_path(dataset_repo_root or config["dataset_repo_root"], repo_root=repo_root)
+    )
+    resolved["dataset_root"] = str(_resolve_repo_path(dataset_root or config["dataset_root"], repo_root=repo_root))
+    return resolved
+
+
 def _fraction_label(fraction: float) -> str:
     return f"{fraction:.2f}".rstrip("0").rstrip(".")
 
@@ -895,6 +921,7 @@ def plan_units(
     fractions: Sequence[float],
     capacities: Sequence[int] | None = None,
 ) -> List[Dict[str, object]]:
+    config = _resolve_protocol_paths(config, repo_root=Path.cwd().resolve())
     capacities_eff = list(capacities) if capacities is not None else [int(value) for value in config["capacities"]]
     fold_plans = _build_fold_plans(
         config=config,
@@ -930,14 +957,26 @@ def main() -> None:
     ap.add_argument("--capacities", default="")
     ap.add_argument("--out-dir", type=Path, default=None)
     ap.add_argument("--models-dir", type=Path, default=None)
+    ap.add_argument("--data-read-root", type=Path, default=None)
+    ap.add_argument("--dataset-repo-root", type=Path, default=None)
+    ap.add_argument("--dataset-root", type=Path, default=None)
     ap.add_argument("--max-wall-hours", type=float, default=None)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--resume", action="store_true")
     args = ap.parse_args()
 
-    config = _load_json(args.config)
-    if str(config["protocol_id"]) != "supervision_objective_learning_curve_v1":
+    raw_config = _load_json(args.config)
+    if str(raw_config["protocol_id"]) != "supervision_objective_learning_curve_v1":
         raise ProtocolBlocked("Unexpected protocol_id in learning-curve config.")
+    config = _resolve_protocol_paths(
+        raw_config,
+        repo_root=Path.cwd().resolve(),
+        out_dir=args.out_dir,
+        models_dir=args.models_dir,
+        data_read_root=args.data_read_root,
+        dataset_repo_root=args.dataset_repo_root,
+        dataset_root=args.dataset_root,
+    )
 
     held_out_families = (
         [item.strip() for item in args.held_out_families.split(",") if item.strip()]
@@ -955,8 +994,8 @@ def main() -> None:
         else [int(value) for value in config["capacities"]]
     )
 
-    out_dir = args.out_dir or Path(str(config["output_dir"]))
-    models_dir = args.models_dir or Path(str(config["models_dir"]))
+    out_dir = Path(str(config["output_dir"]))
+    models_dir = Path(str(config["models_dir"]))
     max_wall_hours = float(args.max_wall_hours if args.max_wall_hours is not None else config["max_wall_hours_default"])
     data_read_root = Path(str(config["data_read_root"]))
     dataset_repo_root = Path(str(config["dataset_repo_root"]))
@@ -997,7 +1036,7 @@ def main() -> None:
 
     out_dir.mkdir(parents=True, exist_ok=True)
     models_dir.mkdir(parents=True, exist_ok=True)
-    _atomic_write_json(out_dir / "protocol_snapshot.json", config)
+    _atomic_write_json(out_dir / "protocol_snapshot.json", raw_config)
     _atomic_write_json(
         out_dir / "provenance.json",
         {

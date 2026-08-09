@@ -38,6 +38,9 @@ from typing import Dict, List
 
 from lafc.experiments.external_baseline_common import sha256_of_file
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_DATA_READ_ROOT = REPO_ROOT.parent / "Augmented-caching"
+DEFAULT_HEAVY_MODEL = DEFAULT_DATA_READ_ROOT / "models/evict_value_wulver_v1_best_heavy_r1.pkl"
 CONFIG_PATH = Path("configs/practical_significance_ablation_v1.json")
 UNDERLYING_RUNNER = Path("scripts/experiments/run_practical_significance_ablation.py")
 
@@ -142,8 +145,8 @@ def main() -> None:
     ap.add_argument("--capacities", default="32,64,128")
     ap.add_argument("--max-requests", type=int, default=50000, help="Full request budget for the controlled run "
                      "(vs. the smoke-scale default of 1500 in the underlying runner).")
-    ap.add_argument("--data-read-root", default="/home/soroush/Augmented-caching")
-    ap.add_argument("--evict-value-model", default="/home/soroush/Augmented-caching/models/evict_value_wulver_v1_best_heavy_r1.pkl")
+    ap.add_argument("--data-read-root", default=str(DEFAULT_DATA_READ_ROOT))
+    ap.add_argument("--evict-value-model", default=str(DEFAULT_HEAVY_MODEL))
     ap.add_argument("--launch", action="store_true",
                      help="Actually invoke the underlying controlled-final campaign if the gate is READY. "
                      "Without this flag the script only reports the gate result and the exact command "

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import csv
 import json
 import sys
@@ -257,6 +258,25 @@ def test_plan_units_reports_expected_counts(tmp_path, monkeypatch):
     assert len(units) == 2
     assert units[0]["train_decision_count"] == 4
     assert units[1]["train_decision_count"] == 8
+
+
+def test_plan_units_supports_repo_relative_external_roots(tmp_path, monkeypatch):
+    payload = _write_fold_and_dataset(tmp_path)
+    cfg = payload["config"]
+    repo_root = payload["repo_root"]
+    monkeypatch.chdir(repo_root)
+    cfg["dataset_repo_root"] = os.path.relpath(cfg["dataset_repo_root"], repo_root)
+    cfg["dataset_root"] = os.path.relpath(cfg["dataset_root"], repo_root)
+    cfg["data_read_root"] = os.path.relpath(cfg["data_read_root"], repo_root)
+
+    units = _import_module().plan_units(
+        config=cfg,
+        held_out_families=["brightkite"],
+        fractions=[0.5, 1.0],
+    )
+
+    assert len(units) == 2
+    assert units[0]["trace_name"] == "brightkite_trace"
 
 
 def test_campaign_state_marks_completed_units(tmp_path):

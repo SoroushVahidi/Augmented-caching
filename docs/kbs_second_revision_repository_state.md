@@ -1,7 +1,7 @@
 # KBS Second-Revision Repository State
 
 Date: 2026-08-09  
-Canonical worktree: `/home/soroush/Augmented-caching-kbs-second-revision`  
+Canonical checkout: this `kbs/second-revision-science` repository clone  
 Canonical branch: `kbs/second-revision-science`  
 Expected baseline HEAD for the current local documentation pass: `58f486701c304d8db5460cfd559af4051e59b938`
 

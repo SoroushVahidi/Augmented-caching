@@ -62,6 +62,9 @@ from lafc.types import Page, PageId, Request  # noqa: E402
 
 PROTOCOL_PATH = Path("configs/practical_significance_ablation_v1.json")
 OUT_DIR = Path("analysis/practical_significance_ablation_v1")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_DATA_READ_ROOT = REPO_ROOT.parent / "Augmented-caching"
+DEFAULT_HEAVY_MODEL = DEFAULT_DATA_READ_ROOT / "models/evict_value_wulver_v1_best_heavy_r1.pkl"
 
 EXACT_VARIANT_CLASSES = {
     "canonical": EvictValueV1Policy,
@@ -954,8 +957,8 @@ def main() -> None:
     ap.add_argument("--controlled-final", dest="smoke_scale", action="store_false")
     ap.add_argument("--capacities", default="32,64,128")
     ap.add_argument("--max-requests", type=int, default=1500, help="requests per trace; smoke-scale default, use full 50000 for the final controlled campaign")
-    ap.add_argument("--data-read-root", default="/home/soroush/Augmented-caching")
-    ap.add_argument("--evict-value-model", default="/home/soroush/Augmented-caching/models/evict_value_wulver_v1_best_heavy_r1.pkl")
+    ap.add_argument("--data-read-root", default=str(DEFAULT_DATA_READ_ROOT))
+    ap.add_argument("--evict-value-model", default=str(DEFAULT_HEAVY_MODEL))
     args = ap.parse_args()
     args.capacities = [int(x) for x in args.capacities.split(",") if x.strip()]
 

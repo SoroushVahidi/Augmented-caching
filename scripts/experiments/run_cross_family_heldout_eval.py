@@ -29,6 +29,8 @@ from pathlib import Path
 
 from lafc.experiments.external_baseline_common import sha256_of_file
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_DATA_READ_ROOT = REPO_ROOT.parent / "Augmented-caching"
 REGISTRY_PATH = Path("analysis/reviewer_fairness_cross_family_v1/model_registry.json")
 UNDERLYING_EVALUATOR = Path("scripts/experiments/run_evict_value_v1_cross_family_eval.py")
 FAMILIES = ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"]
@@ -84,7 +86,7 @@ def check_gate(registry_path: Path) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--registry", type=Path, default=REGISTRY_PATH)
-    ap.add_argument("--data-read-root", default="/home/soroush/Augmented-caching",
+    ap.add_argument("--data-read-root", default=str(DEFAULT_DATA_READ_ROOT),
                      help="Root containing the canonical data/processed/ traces -- this worktree's "
                      "own data/processed/ is empty by design.")
     ap.add_argument("--capacities", default="32,64,128")

@@ -27,20 +27,20 @@ in closed-loop deployment, not about claiming a new performance SOTA.
 - `analysis/`: generated outputs and small tracked audits.
 - `slurm/`: batch templates for heavier runs.
 
-More detail: [docs/repo_map.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/repo_map.md).
+More detail: [docs/repo_map.md](docs/repo_map.md).
 
 ## Current reviewer-science entry points
 
 - Repository state and tracked-vs-generated boundaries:
-  [docs/kbs_second_revision_repository_state.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/kbs_second_revision_repository_state.md)
+  [docs/kbs_second_revision_repository_state.md](docs/kbs_second_revision_repository_state.md)
 - Current KBS second-revision workflow:
-  [docs/kbs_manuscript_workflow.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/kbs_manuscript_workflow.md)
+  [docs/kbs_manuscript_workflow.md](docs/kbs_manuscript_workflow.md)
 - Reviewer artifact map:
-  [docs/reviewer/kbs_second_revision_artifact_map.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/reviewer/kbs_second_revision_artifact_map.md)
+  [docs/reviewer/kbs_second_revision_artifact_map.md](docs/reviewer/kbs_second_revision_artifact_map.md)
 - Evidence eligibility rules:
-  [docs/reviewer/kbs_evidence_eligibility.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/reviewer/kbs_evidence_eligibility.md)
+  [docs/reviewer/kbs_evidence_eligibility.md](docs/reviewer/kbs_evidence_eligibility.md)
 - Internal note on the negative results:
-  [docs/reviewer/kbs_negative_results_interpretation.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/reviewer/kbs_negative_results_interpretation.md)
+  [docs/reviewer/kbs_negative_results_interpretation.md](docs/reviewer/kbs_negative_results_interpretation.md)
 - Read-only campaign status tools:
   `python3 scripts/validation/revision_status.py`
   and
@@ -114,7 +114,7 @@ python3 -m lafc.runner.run_policy \
 
 These write generated outputs under `analysis/<experiment>/` or related
 reviewer-specific paths documented in
-[docs/reviewer/kbs_second_revision_artifact_map.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/reviewer/kbs_second_revision_artifact_map.md).
+[docs/reviewer/kbs_second_revision_artifact_map.md](docs/reviewer/kbs_second_revision_artifact_map.md).
 
 ## Historical heavy-run material
 
@@ -123,10 +123,10 @@ longer the best top-level orientation for this cleanup pass. It remains useful
 as historical provenance and for older manuscript-support builders.
 
 - Historical heavy-run workflow:
-  [docs/wulver_heavy_evict_value_experiment.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/wulver_heavy_evict_value_experiment.md)
+  [docs/wulver_heavy_evict_value_experiment.md](docs/wulver_heavy_evict_value_experiment.md)
 - Historical heavy-run artifact set:
-  [docs/evict_value_v1_kbs_canonical_artifacts.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/evict_value_v1_kbs_canonical_artifacts.md)
+  [docs/evict_value_v1_kbs_canonical_artifacts.md](docs/evict_value_v1_kbs_canonical_artifacts.md)
 
 ## Documentation index
 
-[docs/README.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/README.md)
+[docs/README.md](docs/README.md)

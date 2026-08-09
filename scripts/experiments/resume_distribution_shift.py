@@ -45,6 +45,8 @@ import sys
 from pathlib import Path
 from typing import Dict, List
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_DATA_READ_ROOT = REPO_ROOT.parent / "Augmented-caching"
 CONFIG_PATH = Path("configs/distribution_shift_ablation_v1.json")
 OUT_DIR = Path("analysis/distribution_shift_ablation_v1")
 UNDERLYING_RUNNER = Path("scripts/experiments/run_distribution_shift_ablation.py")
@@ -158,7 +160,7 @@ def main() -> None:
     ap.add_argument("--out-dir", type=Path, default=OUT_DIR)
     ap.add_argument("--models-dir", type=Path, default=Path("models/distribution_shift_ablation_v1"))
     ap.add_argument("--max-wall-hours", type=float, default=2.0)
-    ap.add_argument("--data-read-root", default="/home/soroush/Augmented-caching")
+    ap.add_argument("--data-read-root", default=str(DEFAULT_DATA_READ_ROOT))
     ap.add_argument("--dry-run", action="store_true",
                      help="Report the resume plan (completed folds, primary rows, next fold, artifact "
                      "integrity) and exit without launching anything.")

@@ -1,7 +1,7 @@
 {
   "protocol_version": "reviewer_fairness_v1",
   "created": "2026-08-06",
-  "worktree": "/home/soroush/Augmented-caching-fairness",
+  "worktree": "../Augmented-caching-fairness",
   "branch": "feat/reviewer-fairness-protocol",
   "base_commit": "5a54b33",
   "canonical_traces": {

@@ -43,9 +43,9 @@
       "shared_reward_model": "HALPModel"
     }
   },
-  "dataset_repo_root": "/home/soroush/Augmented-caching-objective-ablation",
-  "dataset_root": "/home/soroush/Augmented-caching-objective-ablation/data/derived/supervision_objective_ablation_v1",
-  "data_read_root": "/home/soroush/Augmented-caching",
+  "dataset_repo_root": "../Augmented-caching-objective-ablation",
+  "dataset_root": "../Augmented-caching-objective-ablation/data/derived/supervision_objective_ablation_v1",
+  "data_read_root": "../Augmented-caching",
   "output_dir": "analysis/supervision_objective_learning_curve_v1",
   "models_dir": "models/supervision_objective_learning_curve_v1",
   "max_wall_hours_default": 10.0

@@ -30,12 +30,14 @@ def _import_module():
 
 def test_parse_worktree_porcelain():
     m = _import_module()
+    main_repo = Path("/portable/main-repo")
+    fairness_repo = Path("/portable/fairness-repo")
     porcelain = (
-        "worktree /home/soroush/Augmented-caching\n"
+        f"worktree {main_repo}\n"
         "HEAD abc123\n"
         "branch refs/heads/main\n"
         "\n"
-        "worktree /home/soroush/Augmented-caching-fairness\n"
+        f"worktree {fairness_repo}\n"
         "HEAD def456\n"
         "branch refs/heads/feat/reviewer-fairness-protocol\n"
     )
@@ -56,8 +58,8 @@ def test_parse_worktree_porcelain():
 
     with unittest.mock.patch.object(m.subprocess, "run", side_effect=fake_run):
         worktrees = m.find_worktrees(Path("/fake"))
-    assert worktrees["main"] == Path("/home/soroush/Augmented-caching")
-    assert worktrees["feat/reviewer-fairness-protocol"] == Path("/home/soroush/Augmented-caching-fairness")
+    assert worktrees["main"] == main_repo
+    assert worktrees["feat/reviewer-fairness-protocol"] == fairness_repo
 
 
 def _write_csv(path: Path, n_data_rows: int) -> None:

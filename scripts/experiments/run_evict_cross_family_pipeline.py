@@ -32,6 +32,7 @@ import time
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_DATA_READ_ROOT = REPO_ROOT.parent / "Augmented-caching"
 FAMILIES = ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"]
 
 DATA_DIR = REPO_ROOT / "data/derived/evict_value_v1_cross_family_v1"
@@ -189,7 +190,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--families", default=",".join(FAMILIES))
     ap.add_argument("--python-bin", default=str(REPO_ROOT / ".venv_fairness/bin/python"))
-    ap.add_argument("--data-read-root", type=Path, default=Path("/home/soroush/Augmented-caching"))
+    ap.add_argument("--data-read-root", type=Path, default=DEFAULT_DATA_READ_ROOT)
     ap.add_argument("--memory-bounded", dest="memory_bounded", action="store_true", default=True)
     ap.add_argument("--no-memory-bounded", dest="memory_bounded", action="store_false")
     ap.add_argument("--memory-guard-gb", type=float, default=45.0,

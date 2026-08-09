@@ -38,8 +38,9 @@ from lafc.supervision_objective_ablation import (
     iter_multi_label_candidate_rows,
 )
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
 FOLDS_DIR = Path("configs/fair_cross_family_v1/folds")
-FAIRNESS_WORKTREE_FOLDS_DIR = Path("/home/soroush/Augmented-caching-fairness/configs/fair_cross_family_v1/folds")
+FAIRNESS_WORKTREE_FOLDS_DIR = REPO_ROOT.parent / "Augmented-caching-fairness" / "configs/fair_cross_family_v1/folds"
 
 SCALAR_LABEL_COLUMNS = [
     "eviction_loss_label",
