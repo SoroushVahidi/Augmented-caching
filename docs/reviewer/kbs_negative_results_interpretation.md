@@ -165,9 +165,112 @@ Cleaner same-target comparison to preserve:
   then compare absolute regression on `L(q)` vs pairwise classification on
   `sign(L(A)-L(B))`.
 
-Status:
+### Same-target scalar-vs-pairwise diagnostic
 
-- not yet run.
+Important distinction:
+
+- the earlier objective ablation compared different supervision objectives,
+  including `objective_pairwise` versus `objective_eviction_loss`;
+- the newer learning-curve diagnostic instead fixes the underlying
+  eviction-loss target and only changes the representation:
+  - scalar regression on `L(q)`,
+  - same-target pairwise classification on `sign(L(A) - L(B))`.
+
+Therefore:
+
+- `objective_pairwise` and `eviction_loss_pairwise` are scientifically
+  different conditions,
+- the former changes the target construction itself,
+- the latter keeps the eviction-loss notion fixed and only converts the same
+  underlying labels into pairwise comparisons.
+
+Current local diagnostic:
+
+- runner:
+  `scripts/experiments/run_supervision_objective_learning_curve.py`
+- config:
+  `configs/supervision_objective_learning_curve_v1.json`
+- output:
+  `analysis/supervision_objective_learning_curve_v1/`
+- model directory:
+  `models/supervision_objective_learning_curve_v1/`
+- same-example guarantee:
+  scalar candidate rows and regret-derived pairwise rows are built from the
+  exact same filtered decision ids at each fraction.
+
+PRELIMINARY — campaign still running / incomplete.
+
+During the 2026-08-09 local audit, the active 10-hour local campaign was
+running only the `1%, 2%, 5%, 10%` fractions. Across the currently completed
+cells at those fractions, scalar regression had substantially fewer downstream
+misses than the same-target `eviction_loss_pairwise` condition.
+
+This is not yet a final result because:
+
+- the campaign was still running at audit time,
+- not all folds were complete,
+- the live local run covered only `1%, 2%, 5%, 10%`,
+- the partial rows must not be treated as final manuscript evidence.
+
+Implication if the pattern persists after clean stop and final partial-campaign
+audit:
+
+- it would contradict the simple representation-only hypothesis that pairwise
+  wins mainly because binary or relative supervision is inherently easier or
+  more sample-efficient than scalar regression,
+- it would instead suggest that the earlier `objective_pairwise` advantage is
+  tied to its underlying supervision objective or target construction, not
+  merely to converting eviction-loss labels from scalar form into pairwise
+  form.
+
+Current hypothesis status:
+
+- HYPOTHESIS:
+  pairwise representation may be more sample-efficient.
+- CURRENT EVIDENCE:
+  preliminary same-target learning-curve results contradict that hypothesis
+  over the currently completed `1%` to `10%` cells.
+- NOT YET ESTABLISHED:
+  the hypothesis is not fully disproven until the running campaign reaches its
+  clean stop, completed folds are audited, and the final partial-campaign
+  statistics are summarized.
+
+Possible interpretations if scalar continues to win:
+
+1. pairwise transformation of eviction-loss labels discards useful magnitude
+   information;
+2. noisy near-tie pairs make binary labels unstable;
+3. pairwise row construction creates many correlated training pairs;
+4. the earlier `objective_pairwise` condition encodes a fundamentally better
+   learning target rather than merely a better representation.
+
+These are hypotheses only, not established findings.
+
+### Pairwise label-noise / margin diagnostic
+
+Not yet run.
+
+If the same-target pairwise condition remains weak, the next lightweight
+diagnostic should stratify pairwise examples by `|L(A) - L(B)|`.
+
+Suggested bins:
+
+- near ties,
+- small margin,
+- medium margin,
+- large margin.
+
+Suggested measurements:
+
+- pairwise accuracy,
+- downstream decision effect,
+- fraction of training pairs in each margin bin.
+
+Motivation:
+
+- if many pairwise labels come from nearly equal scalar losses, small
+  counterfactual-label noise can flip the binary label while scalar regression
+  still retains useful magnitude information.
 
 ## 9.5 Horizon truncation / temporal credit assignment
 
@@ -393,6 +496,11 @@ Draft or internal only:
   current controlled objective ablation.
   Evidence:
   `analysis/supervision_objective_ablation_v1/policy_comparison.csv`
+- the current same-target scalar-vs-pairwise diagnostic is preliminary and
+  should be used only to test whether representation alone explains the
+  pairwise advantage.
+  Evidence:
+  `analysis/supervision_objective_learning_curve_v1/`
 - learned deployment induces substantial trajectory divergence from the
   LRU-continuation labeling process.
   Evidence:
@@ -416,8 +524,10 @@ Do not claim:
 - smoke timing is a final controlled runtime result
 - the current method is practically deployment-superior
 - pairwise cyclicity is a practical problem before measuring it
-- insufficient training data explains the gap before learning curves are run
+- insufficient training data explains the gap before the same-target
+  learning-curve campaign reaches a clean audited stopping point
 - `H=4` is the cause before a horizon sensitivity study is run
+- `objective_pairwise` and `eviction_loss_pairwise` are interchangeable
 
 ## 9.11 Reference table
 

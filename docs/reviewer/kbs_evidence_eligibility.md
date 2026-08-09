@@ -30,6 +30,8 @@ Do not mix in:
 Usable with explicit caveats:
 
 - `analysis/supervision_objective_ablation_v1/policy_comparison.csv`
+- completed and audited cells under
+  `analysis/supervision_objective_learning_curve_v1/`
 - objective-ablation registry and final audits preserved in the sibling
   objective-ablation worktree
 - local distribution-shift diagnostic files in
@@ -44,6 +46,7 @@ Supporting-analysis use still requires the status labels in
 
 Use only as diagnostics, not as final evidence:
 
+- `analysis/supervision_objective_learning_curve_v1/`
 - local distribution-shift partial checkpoint
   `analysis/distribution_shift_ablation_v1/`
 - trajectory-divergence and state-shift diagnostics from the same directory
@@ -54,6 +57,10 @@ Diagnostic-only means:
 - useful for explaining what was observed,
 - not usable for a final all-families claim,
 - not usable as proof that a mechanism is the sole cause of the miss gap.
+
+For `analysis/supervision_objective_learning_curve_v1/`, use the explicit
+classification `DIAGNOSTIC_PARTIAL` unless and until a clean stopped campaign
+has been fully audited.
 
 ## Historical context
 
@@ -77,6 +84,10 @@ Explicitly not usable for the primary reviewer table:
 - any practical-significance timing result described without the `SMOKE_ONLY`
   qualifier
 - any header-only or failed held-out evaluation output
+- any incomplete learning-curve aggregate treated as if it were a final
+  manuscript result
+- any learning-curve result pooled with `objective_pairwise` as though it were
+  the same condition
 
 Current local note on failed or header-only held-out runs:
 
@@ -112,6 +123,25 @@ This directory currently contains smoke-scale evidence only. Until controlled
 timing exists, it should be used only for implementation and methodological
 discussion.
 
-### E. Failed or header-only held-out runs
+### E. `analysis/supervision_objective_learning_curve_v1/`
+
+This directory is a local explanatory diagnostic comparing:
+
+- `eviction_loss_scalar`
+- `eviction_loss_pairwise`
+
+under a same-example guarantee derived from the same underlying eviction-loss
+labels.
+
+Guardrails:
+
+- completed and audited cells may be inspected,
+- incomplete fraction or fold aggregates must not be used as final manuscript
+  evidence,
+- results must not be merged with the earlier `objective_pairwise` ablation as
+  though they represented the same condition,
+- the campaign state at clean wall-time stop must be preserved.
+
+### F. Failed or header-only held-out runs
 
 Treat them as historical failure provenance only, never as scientific evidence.
