@@ -99,6 +99,19 @@ Interpretation:
 - scalar scoring has a global-consistency advantage,
 - pairwise methods require aggregation or cycle resolution if their local
   preferences are inconsistent.
+- the current frozen reviewer-science `objective_pairwise` model does **not**
+  emit free-standing pairwise comparisons at deployment time; it is the
+  shared-reward `HALPModel` in `src/lafc/halp_model.py`, so the deployed policy
+  ranks candidates by a single scalar reward `R(x)` and therefore induces an
+  acyclic total preorder up to ties.
+
+Important scope clarification:
+
+- a true cycle diagnostic is therefore structurally null for the current frozen
+  objective-ablation deployment model,
+- cycle frequency becomes a meaningful empirical question only for a future
+  explicit pairwise comparator or context-dependent pair scorer that does not
+  collapse candidates to one scalar reward.
 
 Not yet measured:
 
@@ -251,12 +264,70 @@ Therefore:
   of the miss gap,
 - current local evidence also does not justify claiming that DAgger fixes the
   performance problem.
+- trajectory divergence is not the same thing as harmful divergence: two cache
+  trajectories may differ almost everywhere yet still have similar miss counts,
+  while a small number of early high-impact evictions can dominate the miss gap.
 
 Seven-family Wulver continuation:
 
 - still pending sync-back of the Wulver-only runner and Slurm files,
 - therefore not yet available as local source-backed final evidence in this
   branch.
+
+## 9.6.1 Minimum counterfactual miss attribution
+
+Proposed diagnostic focus:
+
+- analyze **excess misses** first: requests where the learned policy misses but
+  the reference policy hits,
+- treat all-miss analysis as secondary.
+
+Proposed formulation:
+
+- for a target excess miss at request index `t`, search over valid
+  counterfactual eviction-action trajectories that begin from the same
+  pre-history and minimize Hamming distance from the actual learned eviction
+  trajectory, subject to:
+  - deterministic cache-state transitions,
+  - every edited eviction action being feasible in the counterfactual cache
+    state where it is applied,
+  - the target request at `t` becoming a hit.
+
+Useful outputs:
+
+- minimum repair distance `d*(t)`,
+- intervention positions,
+- number of equally minimal repairs when tractable,
+- responsibility or blame scores for decisions that repeatedly appear in
+  minimal repairs,
+- temporal gap between a responsible intervention and the resulting excess miss.
+
+Algorithmic interpretation:
+
+- exact dynamic programming or shortest-path search on a time-expanded reachable
+  state graph is the right starting point,
+- budgeted feasibility questions of the form "can this miss be repaired with at
+  most `k` interventions?" are a natural first relaxation,
+- `A*` or branch-and-bound may be useful if the reachable-state graph becomes
+  too large.
+
+Important cautions:
+
+- the learned policy state is generally larger than cache contents alone
+  (`src/lafc/policies/supervision_objective_ablation_policy.py` tracks cache
+  order, recent request history, recent hit history, bucket metadata, and
+  confidence metadata),
+- therefore a correct replay or DP for the learned reviewer policy cannot
+  assume that resident objects alone define the full state,
+- multiple equally minimal repairs should be treated as a feature of the
+  diagnosis, not collapsed into a single allegedly responsible decision,
+- responsibility attribution is only a diagnostic lens; it does not by itself
+  establish causal uniqueness.
+
+Reference status:
+
+- TODO: verify sequential counterfactual-explanation references before adding
+  them here. Do not cite from memory.
 
 ## 9.7 Fine-grained learned-cache complexity and overhead
 
