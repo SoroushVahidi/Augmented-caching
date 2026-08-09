@@ -3,7 +3,7 @@
 Date: 2026-08-09  
 Canonical checkout: this `kbs/second-revision-science` repository clone  
 Canonical branch: `kbs/second-revision-science`  
-Expected baseline HEAD for the current local documentation pass: `58f486701c304d8db5460cfd559af4051e59b938`
+Expected baseline HEAD for the current local documentation pass: `63e63acb09c39449bda0a28c8ab2d24f63b2547e`
 
 ## Purpose
 
