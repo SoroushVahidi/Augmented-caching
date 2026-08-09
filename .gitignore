@@ -50,6 +50,9 @@ output/
 /analysis/reviewer_fairness_cross_family_v1/
 /analysis/supervision_objective_ablation_v1/
 /analysis/supervision_objective_learning_curve_v1/
+/analysis/exact_target_oracle_diagnostic_v1/
+/analysis/eviction_loss_target_degeneracy_v1/
+/analysis/kbs_comparison_fairness_audit.json
 
 # Slurm job logs
 slurm/logs/

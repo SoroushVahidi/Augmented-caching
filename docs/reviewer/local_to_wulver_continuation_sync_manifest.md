@@ -43,19 +43,18 @@ before launch:
 
 ## Expected Local Hashes
 
-Record these after the final local validation pass and before sync:
+Current local SHA256 hashes for the continuation sync package:
 
-```bash
-sha256sum \
-  src/lafc/continuation_policy_ablation.py \
-  scripts/experiments/run_continuation_policy_causal_ablation_smoke.py \
-  tests/test_continuation_policy_ablation.py \
-  configs/continuation_policy_causal_ablation_v1.json \
-  docs/reviewer/kbs_negative_results_interpretation.md \
-  docs/reviewer_revision_roadmap.md \
-  docs/reviewer/kbs_second_revision_artifact_map.md \
-  docs/reviewer/local_to_wulver_continuation_sync_manifest.md
-```
+| File | SHA256 |
+|---|---|
+| `src/lafc/continuation_policy_ablation.py` | `a5bdc14ceb9269969f570860ac3a7e34ef75c9c3b4efd4dc1d1d0bd27b0b4701` |
+| `scripts/experiments/run_continuation_policy_causal_ablation_smoke.py` | `f44ff9974784debb836fbac0ad7e601c691b0f60ec416e47ace643fbcd00d87a` |
+| `tests/test_continuation_policy_ablation.py` | `c429a8fd957da005d0d0abdbe09ebaa980b4baab8a8407174b83653e805bca60` |
+| `configs/continuation_policy_causal_ablation_v1.json` | `881210c980b3d5615914823a5aa08922f02dd8e660f0dc9c7d7b180ef9ee2400` |
+| `docs/reviewer/kbs_negative_results_interpretation.md` | `93fc0408473bc5cf5d2900d2d21b4f20d4ff739a8a32b644c2e0c04e9e4b0330` |
+| `docs/reviewer_revision_roadmap.md` | `39197c33f15f389199e43510a8b800755570fbef5146d58681faa7c0306e9f3d` |
+| `docs/reviewer/kbs_second_revision_artifact_map.md` | `6133c9dabdd55aef023affb4b6cc0bd7ce312ab0afa35ab82842dcec64876f1f` |
+| `docs/reviewer/local_to_wulver_continuation_sync_manifest.md` | Self-hash is not stable when embedded; compute at transfer time with `sha256sum`. |
 
 ## Launch Preconditions
 

@@ -135,7 +135,7 @@ Status: `CONCEPTUAL_ONLY`
 
 ### Future-aware oracle vs learned-online comparison
 
-Status: `DESIGNED / LOCAL_FOUNDATION_ONLY / NOT YET FULLY RUN` and `HIGH_PRIORITY`
+Status: `SMOKE_VALIDATED / ONE-CELL REAL-TRACE DIAGNOSTIC COMPLETE` and `HIGH_PRIORITY`
 
 - local foundation code now exists in `src/lafc/oracle_diagnostics.py`,
   reusing the exact target kernel in
@@ -156,13 +156,54 @@ Status: `DESIGNED / LOCAL_FOUNDATION_ONLY / NOT YET FULLY RUN` and `HIGH_PRIORIT
   learned-vs-exact decision agreement,
   exact-target regret,
   and downstream miss gap;
+- first local real-trace diagnostic completed for
+  `brightkite`, capacity `64`, horizon `4`, canonical controlled window
+  `[10000,50000)`;
+- output path:
+  `analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/`;
+- result on this single cell:
+  LRU `13225` misses,
+  exact finite-horizon eviction-loss oracle `19079` misses,
+  learned eviction-loss scalar policy `15449` misses,
+  offline Belady `11312` misses;
+- learned model was provenance-eligible:
+  frozen `objective_eviction_loss/brightkite.pkl`, held-out family excluded
+  from training, validation family `citibike`, model hash matched registry;
+- runtime emitted sklearn model-load compatibility warnings:
+  artifact serialized with sklearn `1.9.0`, local runtime `1.8.0`;
 - planned horizon grid for this diagnostic:
   `1, 2, 4, 8, 16`;
-- no full replay has been run yet from this branch because the active `25%`
-  learning-curve campaign must not be disturbed;
+- do not interpret this one-cell output as a horizon sweep or family-general
+  conclusion; Wulver's horizon study and the local learning-curve campaign
+  remain separate;
 - do not collapse oracle context into deployable-baseline claims;
 - this remains separate from the running same-target learning-curve work and
   from minimum-counterfactual suffix attribution.
+
+### Target-degeneracy diagnostic
+
+Status: `ONE_CELL_DIAGNOSTIC_COMPLETE / FULL_SWEEP_NOT_RUN` and `HIGH_PRIORITY`
+
+- local diagnostic code:
+  `src/lafc/target_degeneracy.py`;
+- local runner:
+  `scripts/experiments/analyze_eviction_loss_target_degeneracy.py`;
+- focused validation:
+  `tests/test_target_degeneracy.py`;
+- completed local artifact:
+  `analysis/eviction_loss_target_degeneracy_v1/brightkite_cap64_h4/`;
+- cell:
+  `brightkite`, capacity `64`, base horizon `4`, canonical score window;
+- observed in this cell:
+  all `19079` H=4 scored decisions have ordinary zero margin,
+  `63.0%` have all candidates tied, and median optimal-set size is `64`;
+- longer-horizon tie resolution:
+  H=8 breaks `14.2%`, H=16 breaks `27.6%`, H=32 breaks `39.6%` of H=4 ties;
+- interpretation:
+  H=4 target degeneracy/tie saturation is strong in this cell, and longer
+  horizons increase resolution but leave most H=4 tied sets unresolved;
+- caveat:
+  do not generalize across workloads until additional cells are run.
 
 ### Continuation-policy causal ablation
 

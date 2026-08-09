@@ -129,7 +129,7 @@ Resume and isolation notes:
 
 | Item | Code / protocol | Current local output | Status | Eligibility | Caveats |
 |---|---|---|---|---|---|
-| Exact target oracle vs learned online policy | `src/lafc/oracle_diagnostics.py`, `src/lafc/supervision_objective_ablation.py`, `tests/test_oracle_diagnostics.py` | no scientific replay output yet | `LOCAL_FOUNDATION_ONLY` | Not scientific evidence yet; design and unit-test foundation only | Full replay intentionally deferred while the active `25%` learning-curve campaign is running locally |
+| Exact target oracle vs learned online policy | `src/lafc/oracle_diagnostics.py`, `scripts/experiments/run_exact_target_oracle_diagnostic.py`, `src/lafc/supervision_objective_ablation.py`, `tests/test_oracle_diagnostics.py` | `analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/` | `ONE_CELL_DIAGNOSTIC` | Cell-specific mechanism evidence only | Do not generalize beyond `brightkite`, capacity `64`, H=4 |
 
 Diagnostic intent:
 
@@ -175,6 +175,65 @@ Important distinction:
 - this diagnostic asks whether the learned decision matches the exact target;
 - minimum-counterfactual suffix attribution asks which earlier changed
   decisions are minimally sufficient to remove a later excess miss.
+
+Completed one-cell result:
+
+- family/capacity/H:
+  `brightkite`, `64`, `4`
+- canonical score window:
+  `[10000,50000)`
+- LRU:
+  `13225` misses
+- exact finite-horizon eviction-loss oracle:
+  `19079` misses
+- learned eviction-loss scalar:
+  `15449` misses
+- offline Belady:
+  `11312` misses
+- allowed interpretation:
+  in this diagnostic cell, exact optimization of the finite-H
+  LRU-continuation target is worse than LRU, while the learned policy performs
+  better than that exact target oracle. Target/horizon/continuation limitations
+  are plausible, and pure regression failure is insufficient as the explanation.
+  This is not a family-general conclusion.
+
+## Supplementary local diagnostic: eviction-loss target degeneracy
+
+| Item | Code / protocol | Current local output | Status | Eligibility | Caveats |
+|---|---|---|---|---|---|
+| Target-degeneracy diagnostic | `src/lafc/target_degeneracy.py`, `scripts/experiments/analyze_eviction_loss_target_degeneracy.py`, `tests/test_target_degeneracy.py` | `analysis/eviction_loss_target_degeneracy_v1/brightkite_cap64_h4/` | `ONE_CELL_DIAGNOSTIC` | Cell-specific mechanism evidence only | Do not generalize beyond `brightkite`, capacity `64`, H=4 with longer-horizon tie checks |
+
+Completed one-cell findings:
+
+- scored H=4 decisions:
+  `19079`
+- H=4 multi-optimal fraction:
+  `1.0000`
+- H=4 all-candidates-tie fraction:
+  `0.6302`
+- H=4 median optimal-set size:
+  `64`
+- H=4 mean optimal-set fraction:
+  `0.9932`
+- ordinary zero-margin fraction:
+  `1.0000`
+- strict positive-margin fraction:
+  `0.3698`, with strict margin always `1.0` when non-null
+- H=4 learned choice in exact optimal set:
+  `0.9309`
+- longer-horizon tie-break fractions:
+  `0.1419` at H=8, `0.2761` at H=16, `0.3959` at H=32
+- deterministic H=4 tie-break remains longer-horizon best:
+  `0.9375` at H=8, `0.8748` at H=16, `0.8139` at H=32
+- learned choice, conditional on being in the H=4 tie set, remains
+  longer-horizon best:
+  `0.9725` at H=8, `0.9460` at H=16, `0.9158` at H=32
+
+Cell-specific interpretation:
+
+- H=4 is strongly affected by target degeneracy/tie saturation in this cell.
+- H=8/16/32 increase resolution monotonically but only materially for a
+  minority of H=4 ties; even H=32 leaves most H=4 tied sets unresolved.
 
 ## Reviewer #2 Major 3 and Reviewer #3: distribution-shift diagnosis
 

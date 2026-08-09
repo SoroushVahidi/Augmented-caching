@@ -65,17 +65,32 @@ before final manuscript-facing cleanup:
   `1%, 2%, 5%, 10%`.
 - a separate `25%` local extension is currently running in tmux session
   `kbs_learning_curve_highfrac_20260809` with a clean `10`-hour wall-time
-  budget; no current `25%` scientific claim should be recorded until completed
-  units are audited.
+  budget; the current local audit sees completed `25%` units for
+  `brightkite`, `citibike`, `cloudphysics`, and `metacdn` only. These completed
+  units pass row/hash integrity checks, but the `25%` phase is still
+  `RUNNING_LOCAL`, so no aggregate `25%` convergence claim should be recorded.
 - an exact-target-oracle vs learned-online diagnostic foundation now exists
   locally in `src/lafc/oracle_diagnostics.py` with focused synthetic tests in
-  `tests/test_oracle_diagnostics.py`, but no full scientific replay has been
-  run yet from this branch.
+  `tests/test_oracle_diagnostics.py`; one local real-trace cell has now been
+  run at `analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/`
+  for `brightkite`, capacity `64`, horizon `4`, canonical window
+  `[10000,50000)`.
+- that one-cell diagnostic found LRU `13225` misses, exact finite-horizon
+  eviction-loss oracle `19079` misses, learned eviction-loss scalar policy
+  `15449` misses, and offline Belady `11312` misses; treat this as
+  diagnostic evidence for the target/learning decomposition only, not a
+  family-general or horizon-sweep conclusion.
 - that oracle diagnostic is intentionally distinct from the
   minimum-counterfactual or minimum-Hamming-distance suffix-attribution line:
   the former checks exact-target consistency of a decision, while the latter
   asks which earlier changed decisions are minimally sufficient to remove a
   later excess miss.
+- a target-degeneracy diagnostic cell completed locally at
+  `analysis/eviction_loss_target_degeneracy_v1/brightkite_cap64_h4/`. In this
+  cell, all `19079` H=4 scored decisions have ordinary zero margin, `63.0%`
+  have all candidates tied, and longer horizons break only a minority of H=4
+  tied sets (`14.2%` at H=8, `27.6%` at H=16, `39.6%` at H=32). Treat this as
+  cell-specific mechanism evidence, not a workload-general conclusion.
 - `objective_pairwise` and `eviction_loss_pairwise` are not interchangeable
   labels; the former changes the supervision objective, while the latter keeps
   the eviction-loss target fixed and only changes representation.

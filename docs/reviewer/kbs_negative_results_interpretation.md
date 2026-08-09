@@ -306,7 +306,7 @@ Motivation:
 ## Exact target oracle vs learned online policy
 
 Status:
-`DESIGNED / LOCAL_FOUNDATION_ONLY / NOT YET FULLY RUN`
+`ONE_CELL_DIAGNOSTIC_COMPLETE / FULL_SWEEP_NOT_RUN`
 
 This diagnostic is designed to separate three different questions that should
 not be conflated:
@@ -372,13 +372,39 @@ Objective-by-objective classification:
   ordering, so any multi-candidate exact oracle must be routed through that
   underlying source label rather than treated as an independent global oracle.
 
-Current local foundation only:
+Current local status:
 
 - exact per-decision oracle helpers live in `src/lafc/oracle_diagnostics.py`,
 - they reuse the shared target-construction kernel in
   `src/lafc/supervision_objective_ablation.py`,
 - synthetic tests live in `tests/test_oracle_diagnostics.py`,
-- no full seven-family replay has been run yet from this branch.
+- one diagnostic cell has been run:
+  `analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/`.
+
+Observed one-cell result:
+
+- family/capacity/H:
+  `brightkite`, `64`, `4`;
+- score window:
+  `[10000,50000)`;
+- LRU:
+  `13225` misses;
+- exact finite-horizon eviction-loss oracle:
+  `19079` misses;
+- learned eviction-loss scalar policy:
+  `15449` misses;
+- offline Belady:
+  `11312` misses.
+
+Allowed interpretation:
+
+- in this diagnostic cell, exact optimization of the finite-H
+  LRU-continuation target is worse than LRU;
+- the learned policy performs better than that exact target oracle;
+- therefore target/horizon/continuation limitations are plausible, and pure
+  regression failure is insufficient as the explanation;
+- this is a single-cell diagnostic, not a family-general or horizon-sweep
+  conclusion.
 
 Predeclared later metrics:
 
@@ -434,6 +460,41 @@ Plausible interpretation:
 
 - a candidate may look harmless over four requests yet still have important
   longer-term reuse consequences.
+
+Current target-degeneracy diagnostic:
+
+- one local cell completed:
+  `analysis/eviction_loss_target_degeneracy_v1/brightkite_cap64_h4/`;
+- family/capacity/H:
+  `brightkite`, `64`, base H `4`;
+- scored H=4 decisions:
+  `19079`;
+- all H=4 scored decisions have ordinary zero margin;
+- H=4 all-candidates-tie fraction:
+  `0.6302`;
+- median H=4 optimal-set size:
+  `64`;
+- mean H=4 optimal-set fraction:
+  `0.9932`;
+- strict positive-margin fraction:
+  `0.3698`, with strict margin `1.0` whenever non-null;
+- learned choice is inside the H=4 exact optimal set for `0.9309` of scored
+  decisions.
+
+Longer-horizon resolution inside H=4 tied sets:
+
+- H=8 breaks `0.1419` of H=4 ties;
+- H=16 breaks `0.2761`;
+- H=32 breaks `0.3959`.
+
+Cell-specific interpretation:
+
+- H=4 is strongly affected by target degeneracy / tie saturation in this
+  diagnostic cell;
+- H=8/16/32 increase target resolution monotonically, but even H=32 leaves most
+  H=4 tied sets unresolved;
+- do not generalize this workload-specific finding across families until more
+  cells are run.
 
 Literature context:
 
@@ -528,7 +589,7 @@ Seven-family Wulver continuation:
 - therefore not yet available as local source-backed final evidence in this
   branch.
 
-## 9.6 Continuation-policy causal ablation
+## 9.7 Continuation-policy causal ablation
 
 Status:
 `LOCAL_IMPLEMENTATION_READY / TINY_SMOKE_ONLY / NO FULL RESULT YET`
@@ -604,7 +665,7 @@ Reviewer relevance:
 - do not claim that C2 improves, hurts, or explains the gap until the Wulver
   protocol is run and audited.
 
-## 9.6.1 Minimum counterfactual miss attribution
+## 9.7.1 Minimum counterfactual miss attribution
 
 Proposed diagnostic focus:
 
@@ -659,7 +720,7 @@ Reference status:
 - TODO: verify sequential counterfactual-explanation references before adding
   them here. Do not cite from memory.
 
-## 9.7 Fine-grained learned-cache complexity and overhead
+## 9.8 Fine-grained learned-cache complexity and overhead
 
 Tension to preserve:
 
@@ -696,7 +757,7 @@ Status:
 
 - smoke-only, not a controlled final timing result.
 
-## 9.8 Working multi-factor explanation
+## 9.9 Working multi-factor explanation
 
 Current working interpretation:
 
@@ -710,7 +771,7 @@ Current working interpretation:
 This should remain the default internal explanation unless stronger evidence
 isolates one factor more cleanly.
 
-## 9.9 Potential manuscript claims
+## 9.10 Potential manuscript claims
 
 Draft or internal only:
 
@@ -741,7 +802,7 @@ Draft or internal only:
   Evidence:
   `analysis/practical_significance_ablation_v1/exact_optimization_equivalence.json`
 
-## 9.10 Claims we must not make
+## 9.11 Claims we must not make
 
 Do not claim:
 
@@ -756,7 +817,7 @@ Do not claim:
 - `H=4` is the cause before a horizon sensitivity study is run
 - `objective_pairwise` and `eviction_loss_pairwise` are interchangeable
 
-## 9.11 Reference table
+## 9.12 Reference table
 
 | Reference | Venue/year | DOI or official URL | Relevant concept | How it relates to our evidence | Verified |
 |---|---|---|---|---|---|

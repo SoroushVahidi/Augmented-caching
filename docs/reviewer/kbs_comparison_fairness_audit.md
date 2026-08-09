@@ -1,0 +1,395 @@
+# KBS Comparison Fairness Audit
+
+Date: 2026-08-09
+
+Repository: local `kbs/second-revision-science` checkout
+
+Branch inspected: `kbs/second-revision-science`
+
+Scope: local files only. No Wulver contact, SSH, Slurm, new experiments, result-value edits, pushes, cherry-picks, merges, rebases, resets, or artifact deletion.
+
+## Overall fairness verdict
+
+Score: **76/100**
+
+Classification: **GENERALLY_FAIR_WITH_LIMITATIONS** for the non-evict controlled-window baseline pool; **NEEDS_CAVEATS / PARTIAL** for any claim that directly compares a corrected, eligible `evict_value_v1` model against that pool.
+
+Could unfairness explain `evict_value_v1` losses?: **POSSIBLE overall, but unlikely for the historical losses to LRU/SIEVE/FIFO.**
+
+Plain answer:
+
+The historical `evict_value_v1` losses to LRU/SIEVE/FIFO are unlikely to be explained by unfairness against `evict_value_v1`, because the historical model was trained with confirmed train/test overlap on the same 7 canonical 50k traces. That overlap would tend to help `evict_value_v1`, not hurt it, yet it still lost in the historical full-stream table. However, the current controlled reviewer protocol does **not** yet contain a complete primary-eligible corrected `evict_value_v1` replay. Therefore, the fair conclusion is not "evict_value_v1 is definitively worse under a fully fair corrected protocol"; it is "the available negative result is robust enough against simple anti-evict unfairness concerns, but the corrected fair head-to-head remains incomplete."
+
+## Artifact Inventory And Eligibility
+
+| Artifact | Classification | Rationale |
+|---|---:|---|
+| `analysis/reviewer_fairness/policy_comparison_lru.csv` | PRIMARY_ELIGIBLE | 21 primary rows plus 21 deployment rows; common stream/window/capacity schema; deterministic native baseline. Use only `policy_variant=primary_controlled_window` for primary. |
+| `analysis/reviewer_fairness/policy_comparison_sieve.csv` | PRIMARY_ELIGIBLE | Same as LRU; full 7 families x 3 capacities. |
+| `analysis/reviewer_fairness/policy_comparison_fifo_reinsertion.csv` | PRIMARY_ELIGIBLE | Same as LRU; full 7 families x 3 capacities. |
+| `analysis/reviewer_fairness/policy_comparison_lrb.csv` | PRIMARY_ELIGIBLE_WITH_CAVEATS | 21 primary rows complete. Caveat: reviewer-fairness harness uses documented fixed defaults, not the earlier validation grid. |
+| `analysis/reviewer_fairness/policy_comparison_three_l_cache.csv` | PRIMARY_ELIGIBLE_WITH_CAVEATS | 21 primary rows complete. Caveat: class-default batch size 4096, not per-trace/capacity validation-tuned in this harness. |
+| `analysis/reviewer_fairness/policy_comparison_halp.csv` | PRIMARY_ELIGIBLE_WITH_CAVEATS | 21 primary rows complete. Caveat: no public official code; frozen split is a material adaptation of a production online learner. |
+| `analysis/reviewer_fairness/policy_comparison_cacheus.csv` | PRIMARY_ELIGIBLE | 21 primary rows complete; official unmodified CACHEUS source wrapped through adapter. |
+| `analysis/reviewer_fairness/policy_comparison_blind_oracle_lru_combiner.csv` | SUPPORTING | 21 primary rows complete; online deployable combiner, but reference/prediction-augmented context should be labeled. |
+| `analysis/reviewer_fairness/policy_comparison_rest_v1.csv` | SUPPORTING | 21 primary rows complete; experimental internal baseline, uses `actual_next`-style prediction inputs by design. |
+| `analysis/reviewer_fairness/policy_comparison_predictive_marker.csv` | SUPPORTING | 21 primary rows complete; prediction-augmented reference, not a training-free classical cache. |
+| `analysis/reviewer_fairness/policy_comparison_trust_and_doubt.csv` | SUPPORTING | 21 primary rows complete; stochastic but seed fixed; requires predicted-cache preprocessing. |
+| `analysis/reviewer_fairness/policy_comparison_offline_belady.csv` | DIAGNOSTIC | 21 primary rows complete, but Belady is a future-aware oracle, not an online competitor. |
+| `analysis/reviewer_fairness/policy_comparison_evict_value_v1.csv` | CONTAMINATED / PARTIAL | Only 5 primary rows; all rows explicitly mark `TRAIN_TEST_OVERLAP`; not primary eligible. |
+| `analysis/reviewer_fairness/provenance_*.json` | SUPPORTING | Per-policy provenance records with commits, protocol, capacities, trace hashes, rows written/skipped/failed. |
+| `analysis/reviewer_fairness/fairness_certificate.*` | SUPPORTING | Summarizes protocol state; useful but not a substitute for CSV row audits. |
+| `analysis/reviewer_fairness/evict_value_v1_overlap_audit.*` | CONTAMINATION_EVIDENCE | Confirms critical train/test overlap in the old `evict_value_v1` model. |
+| `analysis/reviewer_fairness/temporal_order_audit.*` | DIAGNOSTIC | Explains why same-source later-slice fair_v1 was rejected as temporally ineligible. |
+| `analysis/external_learned_baselines/cacheus/policy_comparison.csv` | SUPPORTING | Full-stream aggregate external-baseline run; official source; lacks controlled-window split, superseded by `analysis/reviewer_fairness/policy_comparison_cacheus.csv` for primary. |
+| `analysis/external_learned_baselines/cacheus/provenance.json`, `summary.md` | SUPPORTING | Official commit/hash/RNG provenance and aggregate summary. |
+| `analysis/external_learned_baselines/three_l_cache/policy_comparison.csv` | DIAGNOSTIC | 126 full-stream rows across batch-size variants; sensitivity/tuning evidence, not primary controlled-window evidence. |
+| `analysis/external_learned_baselines/three_l_cache/provenance.json`, `summary.md`, `post_run_audit.md` | SUPPORTING / DIAGNOSTIC | Provenance and sensitivity context for 3L-Cache. |
+| `analysis/reviewer_fairness_cross_family_v1/*/model_comparison.csv` | SUPPORTING | Per-fold offline model-selection outputs for corrected cross-family `evict_value_v1`; not downstream replay rows. |
+| `analysis/reviewer_fairness_cross_family_v1/*/train_metrics.json` | SUPPORTING | Per-fold training metrics; model-selection evidence only. |
+| `analysis/reviewer_fairness_cross_family_v1/*/best_config.json` | SUPPORTING_WITH_PROVENANCE_CAVEAT | Points to sibling fairness-worktree model paths, not local model artifacts. |
+| `analysis/reviewer_fairness_cross_family_v1/build_state.json` | SUPPORTING | Indicates fold build stages were complete in the originating worktree. |
+| `analysis/supervision_objective_ablation_v1/policy_comparison.csv` | PRIMARY_ELIGIBLE_FOR_OBJECTIVE_ABLATION | 84/84 primary controlled rows; 4 objectives x 7 families x 3 capacities; zero failed/blocked rows. |
+| `analysis/supervision_objective_ablation_v1/model_registry.json` | PRIMARY_ELIGIBLE_FOR_OBJECTIVE_ABLATION | Frozen 28-model registry with hashes and no missing models. |
+| `analysis/supervision_objective_ablation_v1/provenance.json` | SUPPORTING | Evaluation provenance; zero blocked, zero failed. |
+| `analysis/supervision_objective_ablation_v1/training/*.json` | SUPPORTING | Training budgets and selected models per fold/objective. |
+| `analysis/supervision_objective_ablation_v1/training/*_provenance.json` | SUPPORTING | Per-fold training provenance. |
+| `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1_available_capacities_with_sieve_fifo.csv` | HISTORICAL | Historical full-stream manuscript line; same 7 traces/capacities, but `evict_value_v1` model is contaminated by overlap. |
+| `analysis/kbs_policy_trend_available_capacities.csv` | HISTORICAL / SUPPORTING_SUMMARY | Aggregated historical table; do not use as primary controlled-window evidence. |
+| `analysis/evict_value_artifact_check/*` | DIAGNOSTIC | Tiny/moderate artifact-backed checks; not reviewer primary evidence. |
+
+## Controlled-Window Protocol Audit
+
+Primary protocol: `reviewer_fairness_v1`, with history `[0,10000)` and score `[10000,50000)`. Each primary row scores exactly 40,000 requests after the policy has processed the same 10,000-request prefix.
+
+Eligible primary row counts:
+
+| Policy | Primary rows present | Primary eligible rows | Notes |
+|---|---:|---:|---|
+| LRU | 21 | 21 | Complete. |
+| SIEVE | 21 | 21 | Complete. |
+| FIFO reinsertion | 21 | 21 | Complete. |
+| LRB | 21 | 21 | Complete with fixed-default caveat. |
+| 3L-Cache | 21 | 21 | Complete with batch-size caveat. |
+| HALP | 21 | 21 | Complete with fidelity/adaptation caveat. |
+| CACHEUS | 21 | 21 | Complete. |
+| blind_oracle_lru_combiner | 21 | 21 supporting | Online reference/combiner. |
+| REST | 21 | 21 supporting | Prediction-augmented internal reference. |
+| predictive_marker | 21 | 21 supporting | Prediction-augmented reference. |
+| trust_and_doubt | 21 | 21 supporting | Seeded stochastic reference. |
+| offline Belady | 21 | 0 deployable, 21 diagnostic | Future-aware oracle only. |
+| evict_value_v1 | 5 | 0 | Partial and train/test-overlap contaminated. |
+
+No evidence was found that `deployment_full_stream` rows were mixed into the primary eligibility note. `docs/reviewer/kbs_evidence_eligibility.md` explicitly prohibits that mixing, and the common result schema distinguishes `policy_variant=primary_controlled_window` from `deployment_full_stream`.
+
+## Fairness Dimensions A-Z
+
+| Dimension | Verdict | Notes |
+|---|---:|---|
+| A. Same request stream/window | PASS for primary rows | All eligible primary rows use the same trace hashes and `[10000,50000)` score window. |
+| B. Same family/trace | PASS | 7 canonical families for complete primary rows. |
+| C. Same capacity | PASS | 32/64/128 object slots. |
+| D. Same request count | PASS | 40,000 scored requests per primary row. |
+| E. Same warm-up policy | PASS with interpretation caveat | Every policy processes `[0,10000)`. HALP trains at boundary; LRB/3L/CACHEUS adapt online by design. |
+| F. Same admission semantics | MOSTLY PASS | Every miss is admitted in common simulator contract; 3L has internal quick-demotion candidate logic but physical cache capacity remains bounded. |
+| G. Same object-size semantics | PASS for reported metric | Unit object-size semantics for all primary rows. |
+| H. Same cache capacity units | PASS for data objects | All report object-slot capacity. |
+| I. Same evaluation metric | PASS | Request misses/miss ratio. |
+| J. Same random seed treatment | MINOR_ASYMMETRY | Seeds fixed where available; CACHEUS official seed hardcoded 123; Trust&Doubt seed differs across old scripts but reviewer-fairness row uses seed 0. |
+| K. Same repetitions | MINOR_ASYMMETRY | One seed/repetition per stochastic policy; no variance estimates. |
+| L. Same training/test split | FAIL for old `evict_value_v1`; PASS for objective ablation; PARTIAL for cross-family evict | Historical evict model overlaps test. Objective ablation is leave-one-family-out. Cross-family evict replay incomplete locally. |
+| M. Same held-out-family rule | PASS where applicable | Objective ablation and cross-family manifests exclude held-out family. |
+| N. Same hyperparameter tuning opportunity | MATERIAL_ASYMMETRY | LRB/3L older external scripts had validation grids; reviewer-fairness harness uses fixed defaults; evict historical used offline validation but contaminated; HALP has repository-chosen defaults. |
+| O. Same validation information | MIXED | Objective ablation strong; modern baselines use in-trace prefix or defaults; `evict_value_v1` historical validation overlaps canonical traces. |
+| P. No test-set tuning | PASS for baseline rows; FAIL for historical evict eligibility | No evidence of test-set tuning for controlled baseline rows. Historical evict split contaminates the tested stream. |
+| Q. Same candidate/action set | PARTIAL | Classical policies choose from full cache; HALP shortlists 8 LRU-tail pages; LRB samples; 3L uses candidate heap; these are algorithmic differences, not protocol bugs, but candidate opportunities differ. |
+| R. Same timing boundaries | PASS | Explicit history/score boundaries. |
+| S. Same first-occurrence/censoring treatment | PASS for evaluator; objective labels horizon-controlled | Policy-internal training differs by method; objective ablation censors uniformly at H=4 for primary labels. |
+| T. Same trace preprocessing | PASS for frozen rows by hash; LOCAL_PROVENANCE_CAVEAT | Local checkout lacks processed traces, but rows carry hashes and manifests. |
+| U. Same software/environment | MIXED | Primary rows were generated across several commits/worktrees; schema/provenance record commits. |
+| V. Same policy reset rules | PASS | One `run_policy()` reset per trace/capacity/policy row. |
+| W. Same total evaluation horizon | PASS | 50k replay, 40k primary score suffix. |
+| X. Same definition of miss | PASS | `CacheEvent.hit` over unit requests. |
+| Y. No policy-specific favorable filtering | PASS for primary rows | No evidence of policy-specific trace/capacity filtering in complete primary rows. |
+| Z. No mixing of primary and deployment rows | PASS in docs/protocol | Must still be enforced in manuscript tables. |
+
+## `evict_value_v1` Specific Audit
+
+Findings:
+
+- The historical model `models/evict_value_wulver_v1_best.pkl` is contaminated. The overlap audit records `split_mode=trace_chunk`, `chunk_size=4096`, `max_requests_per_trace=50000`, `trace_count=7`, and the same 7 canonical trace paths. Train/val/test chunks are scattered through the same `[0,50000)` streams later evaluated.
+- The contaminated model was selected through offline validation (`analysis/evict_value_wulver_v1_model_comparison_heavy_r1.csv`, best config horizon 4 hist_gb in the canonical heavy line). That selection is not a fair held-out-family selection.
+- The controlled reviewer harness marks every `evict_value_v1` row as `TRAIN_TEST_OVERLAP -- NOT eligible for primary comparison`.
+- The controlled reviewer `evict_value_v1` CSV is also partial: 5 primary/deployment pairs, not 21 pairs.
+- There is no evidence that the policy fell back to the lightweight surrogate in those rows. The policy uses artifact mode if the model exists; row metadata records `native_pretrained` and status `ok`.
+- There is no complete local held-out cross-family downstream replay for corrected `evict_value_v1`. The local `models/` directory contains only supervision-objective models, not `evict_value_v1_cross_family_v1_*.pkl`, and no `analysis/reviewer_fairness_cross_family_v1/evict_value_v1/policy_comparison.csv` exists.
+- Feature computation is online-local at inference: current request metadata, cached-page metadata, LRU order, and recent request/hit histories. No direct future label column is in `EVICT_VALUE_V1_FEATURE_COLUMNS`.
+
+Fallback/error counts available:
+
+- Reviewer-fairness `evict_value_v1`: 5 ok primary rows, 0 failed rows in the partial CSV, no fallback-count column.
+- Cross-family corrected eval: no local replay rows, so no fallback/error counts available.
+
+## Modern Learned Baseline Fidelity
+
+| Policy | Source | Fidelity | Main concern |
+|---|---|---:|---|
+| LRB | Independent Python reimplementation from paper and pinned `sunnyszy/lrb` commit `9e8b4423383c01c4528deb447f152f0437a37c3a` | MEDIUM | Unit-size specialization, evict-before-add simulator adaptation, short-trace `memory_window`/`batch_size` rescaling, no binary parity with official C++/LightGBM stack. |
+| 3L-Cache | Independent Python reimplementation from paper and pinned `optiq-lab/3L-Cache` commit `134cd159b635cdab75419a4281bed1a330fef31f` | MEDIUM | Unit-size adaptation, evict-before-add adaptation, default batch size in primary harness rather than validation-selected batch size, no binary parity with official artifact. |
+| HALP | Independent implementation from public paper/blog; no public official code found | LOW_TO_MEDIUM | Production HALP is continuous online YouTube CDN system; this repo uses frozen prefix training, deterministic shortlist, repository-chosen MLP/hyperparameters. Strong claims of faithful reproduction would be overstated. |
+| CACHEUS | Official unmodified `sylab/cacheus` source wrapped externally at pinned commit `1eec63ce166502be33ddd1f35bc041ed73a24f4d` | HIGH | No license file and global RNG side effects handled by wrapper isolation; official seed fixed at 123. Algorithmic fidelity is strongest among modern baselines. |
+
+Unit/fidelity tests exist for LRB, 3L, HALP, CACHEUS, common reviewer fairness, cross-family gates, and supervision-objective gates. They check feature/label semantics, no-future-leakage invariants, deterministic seeds, registry/hash failures, and controlled-window slicing. These are meaningful implementation tests, but they are not equivalent to full official-simulator parity for LRB/3L/HALP.
+
+## Training-Budget Fairness
+
+Key asymmetries:
+
+- Historical `evict_value_v1` received offline training signal from the same canonical 7 trace streams it was evaluated on. This is an advantage for `evict_value_v1`, not a disadvantage.
+- Reviewer-fairness LRB and 3L rows are online learners trained/adapted within each trace. They do not get offline cross-trace training data, but they do adapt during the scored suffix.
+- HALP trains on the first 10k requests of the same trace and freezes for the scored suffix. This is in-trace training data that `evict_value_v1` does not use at inference time, but historical `evict_value_v1` used much more offline overlapping trace data.
+- CACHEUS adapts online from a uniform prior with capacity-scaled ghost histories. It has no offline training corpus.
+- Objective ablation scalar objectives each use 150,000 train rows and 30,000 validation rows per fold. Pairwise uses fewer pair rows per fold (34,588 to 45,234), but each pair encodes a candidate relation, not a scalar candidate label. This is not equal row budget; it is best described as same underlying decision/candidate source with different label views.
+
+Training/tuning fairness classification:
+
+| Family | Classification | Reason |
+|---|---:|---|
+| Historical `evict_value_v1` vs LRU/SIEVE/FIFO | MATERIAL_ASYMMETRY_FAVORING_EVICT | Only `evict_value_v1` had overlapping offline training; baselines are training-free. |
+| Controlled learned baselines without eligible evict row | MATERIAL_ASYMMETRY / INCOMPLETE | Baselines are complete, but corrected evict replay is missing. |
+| Objective ablation | GENERALLY_FAIR_WITH_LIMITATIONS | Same folds/features/evaluator; pairwise row semantics differ and scalar objectives get 3-family model selection while pairwise uses fixed shared MLP. |
+| Cross-family evict training | GENERALLY_FAIR_PROTOCOL / PARTIAL_ARTIFACTS | Fold isolation strong; downstream replay artifacts absent locally. |
+
+## Hyperparameter-Selection Fairness
+
+| Method/family | Tuning grid | Selection data | Classification |
+|---|---|---|---:|
+| Historical `evict_value_v1` | horizon/model grid (`ridge`, `random_forest`, `hist_gb`) | contaminated chunk split over same 7 traces | MATERIAL_ASYMMETRY |
+| Cross-family `evict_value_v1` training | horizon 4, model family grid | validation family only | FAIR_PROTOCOL, PARTIAL_ARTIFACTS |
+| LRB external runner | 3 memory windows x 2 batch sizes | 20% prefix | FAIR as diagnostic, but not primary-controlled harness |
+| LRB reviewer-fairness row | fixed documented defaults | no grid in harness | MINOR_TO_MATERIAL_ASYMMETRY |
+| 3L external runner | 6 batch sizes | 20% prefix | FAIR as diagnostic/sensitivity |
+| 3L reviewer-fairness row | fixed batch size 4096 | no grid in harness | MINOR_TO_MATERIAL_ASYMMETRY |
+| HALP | repository-chosen defaults | no official defaults/public grid | MATERIAL_ASYMMETRY for strong fidelity claims |
+| CACHEUS | official defaults | none | FAIR |
+| Objective scalar objectives | 3 model families | validation family only | FAIR |
+| Objective pairwise | fixed shared MLP | no comparable model-family grid | MINOR_ASYMMETRY |
+
+## Offline Future Information
+
+| Method/objective | Classification | Notes |
+|---|---:|---|
+| LRU, SIEVE, FIFO, LRB, 3L, HALP, CACHEUS | ONLINE_DEPLOYABLE | No `actual_next` used for deployed decision in tests/docs. |
+| `evict_value_v1` inference | TRAINED_WITH_FUTURE_LABELS_BUT_ONLINE_AT_INFERENCE | Offline labels use future windows; inference features are online-local. Historical model is also contaminated by train/test overlap. |
+| `objective_eviction_loss`, `objective_next_arrival`, `objective_reuse_distance`, `objective_pairwise` | TRAINED_WITH_FUTURE_LABELS_BUT_ONLINE_AT_INFERENCE | Future labels are training supervision only; frozen inference is online. |
+| predictive_marker, REST, Trust&Doubt | PREDICTION_AUGMENTED_REFERENCE | They consume prediction metadata derived/prepared for this setting; should not be described as pure non-predictive baselines. |
+| offline Belady | FUTURE_AWARE_REFERENCE | Oracle lower bound only, never an online competitor. |
+
+## Capacity And Memory Fairness
+
+Reported data capacity is fair: all primary rows use capacities 32/64/128 as object slots, unit object-size semantics, and request-miss metric.
+
+Total memory is not equal:
+
+- LRB uses in-cache metadata, ghost metadata, pending rows, and LightGBM model state outside nominal cache capacity.
+- 3L-Cache uses ghost metadata, prediction heaps/maps, scan state, and model state outside nominal cache capacity.
+- CACHEUS uses SR-LRU/CR-LFU structures plus two ghost histories of size `capacity // 2`; these ghost entries are not counted against data capacity.
+- HALP records prefix candidate events and trains a model; the model is outside data capacity.
+- `evict_value_v1` uses a pretrained model and recent-history deques outside cache capacity.
+- LRU/SIEVE/FIFO have much smaller metadata.
+
+Classification: **DATA_CAPACITY_FAIR, TOTAL_MEMORY_NOT_EQUAL**.
+
+This does not invalidate miss-ratio comparisons, but the manuscript should not imply equal total memory footprint. Report object-slot capacity and disclose auxiliary metadata/model memory separately.
+
+## Compute Fairness
+
+Quality fairness and systems-cost fairness should be separated.
+
+Average primary-row runtime from `analysis/reviewer_fairness`:
+
+| Policy | Avg seconds per primary row | Notes |
+|---|---:|---|
+| LRU | 0.09 | Native Python simple baseline. |
+| FIFO reinsertion | 0.09 | Native Python simple baseline. |
+| SIEVE | 0.18 | Native Python simple baseline. |
+| offline Belady | 0.37 | Future-aware oracle, diagnostic. |
+| CACHEUS | 0.48 | Official Python source. |
+| predictive_marker | 0.47 | Prediction-augmented reference. |
+| blind_oracle_lru_combiner | 1.20 | Two shadow policies. |
+| 3L-Cache | 1.77 | Python/LightGBM reimplementation. |
+| Trust&Doubt | 2.56 | Interpreted online reference. |
+| REST | 3.75 | Internal adaptive reference. |
+| HALP | 11.30 | One-shot MLP training at boundary. |
+| LRB | 12.72 | Online LightGBM retraining. |
+| evict_value_v1 | 3498.91 | Partial/ineligible rows; very slow per-candidate inference. |
+
+No miss-ratio comparison should be invalidated solely because one method is slower. But practical-significance/system claims need separate controlled timing; current practical-significance artifacts are smoke-only per `docs/reviewer/kbs_second_revision_artifact_map.md`.
+
+## Randomness And Reproducibility
+
+- LRU/SIEVE/FIFO/Belady/rest where deterministic are single-run deterministic.
+- LRB and 3L use seed 0 in reviewer-fairness rows; tests verify same-seed reproducibility and different-seed distinct diagnostics.
+- HALP uses seed 0 for MLP initialization; one seed only.
+- CACHEUS uses official hardcoded global NumPy seed 123; wrapper restores global RNG state after run.
+- Trust&Doubt uses seed 0 in reviewer fairness.
+
+Classification: **MINOR_ASYMMETRY**. One seed is a limitation for stochastic rankings but unlikely to explain large systematic gaps against simple baselines. It is more material for close learned-baseline comparisons.
+
+## Objective-Ablation Fairness
+
+Artifacts:
+
+- `analysis/supervision_objective_ablation_v1/model_registry.json`: 28/28 models, frozen, no missing models.
+- `analysis/supervision_objective_ablation_v1/policy_comparison.csv`: 84 primary rows, no failed/blocked rows.
+- `analysis/supervision_objective_ablation_v1/provenance.json`: `n_blocked=0`, `rows_failed_this_invocation=0`.
+
+Aggregate misses:
+
+| Objective | Rows | Aggregate misses | Mean misses |
+|---|---:|---:|---:|
+| objective_pairwise | 21 | 565127 | 26910.8 |
+| objective_reuse_distance | 21 | 571456 | 27212.2 |
+| objective_next_arrival | 21 | 573059 | 27288.5 |
+| objective_eviction_loss | 21 | 601569 | 28646.1 |
+
+Fairness interpretation:
+
+- Strong: same held-out folds, same 7 x 3 evaluation cells, same feature schema, same downstream evaluator, same horizon-controlled primary label design, registry/hash validation.
+- Caveat: scalar objectives use 150,000 train rows and 30,000 val rows per fold, with a 3-model-family scalar search. Pairwise uses 34,588 to 45,234 training pairs per fold and a fixed shared MLP. This is not equal row budget or equal hyperparameter budget.
+- Best phrasing: **same underlying decision/candidate information source with objective-specific label representation**, not "same number of training rows."
+
+Score: **86/100, GENERALLY_FAIR_WITH_LIMITATIONS**.
+
+## Cross-Family Held-Out Fairness
+
+Protocol strengths:
+
+- For each held-out family, the validation family is the next lexicographic family and the remaining 5 are training.
+- Fold JSON files record `held_out_family_rows_in_train_manifest=0`.
+- Train manifests exclude the held-out family.
+- Feature construction has no global all-family fitted statistics; ridge scaler fits only on fold training rows.
+- Cross-family evaluator rejects contaminated historical artifacts, wrong fold model names, missing models, trace hash mismatch, and unfrozen/tampered registries.
+
+Artifact limitations:
+
+- Local `analysis/reviewer_fairness_cross_family_v1/` contains build state and model-selection artifacts, not final held-out replay rows.
+- Local `models/` does not contain `evict_value_v1_cross_family_v1_*.pkl`.
+- Local `analysis/reviewer_fairness_cross_family_v1/model_registry.json` is absent.
+- `best_config.json` paths point into a sibling fairness worktree, not to local model files.
+
+Classification: **PARTIAL**. The protocol is strong; the local reviewer-facing downstream evidence is incomplete.
+
+## Hidden Bias From Dataset Preprocessing
+
+Evidence:
+
+- All reviewer-facing primary rows are tied to the 7 canonical 50k trace hashes.
+- Preprocessing is common per trace; no evidence of per-policy trace filtering.
+- The current checkout does not contain processed trace files, only manifests and hashes. This is a provenance issue for local reproducibility, not evidence that generated rows differ by policy.
+
+50k truncation concern:
+
+- `PLAUSIBLE_CONCERN`: A 50k prefix may favor recency-heavy policies and disadvantage learners that need longer online history or large batch sizes. This is explicitly visible for LRB/3L official defaults, which are CDN-scale and would not train within 50k without adaptation.
+- However, every primary policy sees the same 50k stream and same 40k scored suffix. The truncation is a workload-design limitation, not a hidden per-policy filter.
+
+Object-size concern:
+
+- `LOW_RISK` for reported request-miss metric because all primary rows declare unit object-size semantics.
+- `MATERIAL_SCOPE_LIMITATION` for claims about byte-cache algorithms, especially LRB/3L, whose original domains include byte/object-size effects.
+
+## Statistical Fairness
+
+Strengths:
+
+- Statistical plans define the experimental unit as `(family, capacity)`, 21 paired instances, not individual requests.
+- Plans call for paired Wilcoxon signed-rank tests, Holm-Bonferroni correction, bootstrap CIs over 21 paired instances, and wins/ties/losses.
+- Plans explicitly prohibit mixing `deployment_full_stream` and `primary_controlled_window`.
+
+Limitations:
+
+- These plans are mostly not applied to final result tables locally.
+- With only 7 families x 3 capacities, inferential power is limited and capacities within a family are not fully independent. Treating 21 cells as paired instances is reasonable for a reviewer table, but family-level heterogeneity should be shown.
+- Claims should emphasize effect sizes and per-family/capacity paired differences, not p-values alone.
+
+Pseudo-replication risk: **LOW if plans are followed; MATERIAL if anyone treats 40,000 requests per row as independent samples.**
+
+## Comparison Scorecard
+
+| Comparison | Fairness score | Classification | Main caveat |
+|---|---:|---:|---|
+| `evict_value_v1` vs LRU/SIEVE/FIFO | 72 | NEEDS_CAVEATS | Historical loss is same stream/capacity but contaminated in a way that favors `evict_value_v1`; corrected primary evict rows are absent. |
+| `evict_value_v1` vs LRB | 58 | MATERIAL_FAIRNESS_PROBLEM_FOR_HEAD_TO_HEAD | LRB has complete controlled rows; eligible corrected evict head-to-head is missing; LRB fixed-default/tuning asymmetry remains. |
+| `evict_value_v1` vs 3L-Cache | 60 | NEEDS_CAVEATS | 3L controlled rows complete, but evict side ineligible; 3L batch-size tuning/sensitivity not folded into primary. |
+| `evict_value_v1` vs HALP | 56 | MATERIAL_FAIRNESS_PROBLEM_FOR_STRONG_CLAIM | HALP fidelity is low-to-medium and evict side is missing/ineligible. |
+| `evict_value_v1` vs CACHEUS | 66 | NEEDS_CAVEATS | CACHEUS side is strong official-source evidence; evict side still lacks eligible corrected replay. |
+| Objective-ablation comparison | 86 | GENERALLY_FAIR_WITH_LIMITATIONS | Same folds/evaluator/features; pairwise has different row/model-selection semantics. |
+| Cross-family held-out evaluation | 70 | NEEDS_CAVEATS / PARTIAL | Protocol and training artifacts strong; final local downstream replay rows missing. |
+
+## Strongest Fairness Guarantees
+
+- Controlled-window protocol uses the same trace hashes, capacities, history prefix, scored suffix, metric, and reset discipline for complete primary rows.
+- Common result schema records training mode, adaptation, future information, hyperparameter source, seed, runtime, and status.
+- `deployment_full_stream` and `primary_controlled_window` are explicitly separated.
+- Historical `evict_value_v1` contamination is documented and not silently used as primary evidence.
+- CACHEUS is run through official unmodified source with integrity checks.
+- Objective ablation has a frozen 28-model registry, hash checks, 84 complete primary rows, and held-out-family isolation.
+- Cross-family protocol excludes held-out and validation families from training by construction.
+
+## Material Asymmetries
+
+| Asymmetry | Methods affected | Severity | Likely effect |
+|---|---|---:|---|
+| Historical train/test overlap | `evict_value_v1` historical model | CRITICAL | Favors `evict_value_v1`; cannot explain losses as anti-evict bias. |
+| Missing eligible corrected evict replay | All modern learned baseline head-to-head claims | CRITICAL | Prevents strong fair head-to-head conclusion. |
+| Total memory not equal | LRB, 3L, CACHEUS, HALP, evict models vs classical | MAJOR | Gives learned/adaptive methods auxiliary memory not counted in object slots. |
+| Hyperparameter budget mismatch | LRB/3L/HALP/evict/objective_pairwise | MAJOR | Could affect close learned-baseline rankings. |
+| Implementation fidelity gaps | LRB, 3L, HALP | MAJOR | Limits manuscript claims that these are exact official baselines. |
+| One seed only | LRB, 3L, HALP, CACHEUS, Trust&Doubt | MINOR_TO_MODERATE | Could affect close comparisons; less likely to explain broad underperformance. |
+| 50k trace truncation | LRB/3L and learning-heavy methods | MODERATE | May understate methods needing longer history; should be disclosed. |
+
+## Top Possible Confounders
+
+1. **No complete primary-eligible corrected `evict_value_v1` replay** against the controlled-window modern-baseline pool.
+2. **Implementation/tuning asymmetry for modern learned baselines**, especially HALP fidelity and LRB/3L fixed/default vs validation-tuned settings.
+3. **Object-slot capacity equality but unequal auxiliary memory**, especially ghost histories, models, heaps, pending rows, and metadata.
+
+Confounders too small or wrong-direction to explain the historical LRU/SIEVE/FIFO negative result:
+
+- Historical train/test overlap is wrong-direction: it likely helped `evict_value_v1`.
+- Same stream/capacity/miss definition was used in the historical full-stream table.
+- No evidence of policy-specific filtering against `evict_value_v1` in the historical classical comparison.
+
+## Required Fixes Before Manuscript
+
+| Fix | Required? | Cost | Reviewer value |
+|---|---:|---:|---:|
+| Produce complete cross-family held-out `evict_value_v1` replay rows, with frozen registry and local model hashes | REQUIRED | High | Very high |
+| Exclude contaminated `policy_comparison_evict_value_v1.csv` and historical heavy evict rows from primary controlled tables | REQUIRED | Low | Very high |
+| Report Belady as oracle only, not as online learned baseline | REQUIRED | Low | High |
+| Report object-slot capacity separately from auxiliary metadata/model memory | REQUIRED | Low | High |
+| Add per-family/capacity paired summaries and apply frozen statistical plans | REQUIRED | Medium | High |
+| Repeat stochastic learned policies across multiple seeds | GOOD_TO_HAVE | Medium | Medium |
+| Add validation-tuned primary rows for LRB and 3L within the controlled-window protocol | GOOD_TO_HAVE | Medium | Medium-high |
+| Strengthen HALP language from "faithful implementation" to "paper/blog-grounded reimplementation/adaptation" | REQUIRED | Low | High |
+| Extend traces beyond 50k or add longer-horizon sensitivity | GOOD_TO_HAVE | High | Medium |
+| Equalize total memory including ghost lists and model state | GOOD_TO_HAVE / DISCLOSE_IF_NOT | High | Medium |
+
+## Final Answer To The Central Question
+
+Could the current negative result of `evict_value_v1` reasonably be explained by unfair comparison?
+
+**POSSIBLE overall, because the complete fair corrected head-to-head is missing.**
+
+But for the specific historical result that `evict_value_v1` loses to LRU/SIEVE/FIFO, unfairness against `evict_value_v1` is **unlikely**. The largest known unfairness in that historical comparison is train/test overlap, and it favors `evict_value_v1`. The existing evidence therefore supports a cautious negative interpretation: the method likely underperforms simple baselines in the tested setting, but the manuscript should not overclaim a fully fair corrected comparison until cross-family held-out replay rows are complete.
+
+## Safety
+
+- Wulver contacted: NO
+- SSH/SCP/rsync used: NO
+- Slurm used: NO
+- Experiments launched: NO
+- Scientific result CSVs modified: NO
+- Scientific result values modified: NO
+- Artifacts deleted: NO
+- Git push/merge/rebase/reset/cherry-pick: NO
