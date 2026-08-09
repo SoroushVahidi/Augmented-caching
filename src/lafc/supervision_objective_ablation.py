@@ -138,6 +138,8 @@ def build_candidate_rows_for_full_cache_state(
     recent_hit_hist: Sequence[PageId],
     occurrence_index: Optional[Dict[PageId, List[int]]] = None,
     distinct_suffix_counts: Optional[Sequence[int]] = None,
+    candidate_subset: Optional[set[PageId]] = None,
+    include_features: bool = True,
 ) -> List[Dict[str, object]]:
     """Compute the shared multi-label candidate rows for one full-cache miss.
 
@@ -153,11 +155,21 @@ def build_candidate_rows_for_full_cache_state(
 
     req = requests[request_index]
     pid = req.page_id
-    candidates = list(cache_order)
-    if not candidates:
+    all_candidates = list(cache_order)
+    if not all_candidates:
         raise ValueError("cache_order must contain the current in-cache candidates")
-    if pid in candidates:
+    if pid in all_candidates:
         raise ValueError("incoming request is already in cache; no eviction decision is required")
+    if candidate_subset is None:
+        candidates = all_candidates
+    else:
+        subset = {str(candidate) for candidate in candidate_subset}
+        candidates = [candidate for candidate in all_candidates if str(candidate) in subset]
+        missing = sorted(subset - {str(candidate) for candidate in all_candidates})
+        if missing:
+            raise ValueError(f"candidate_subset contains non-cache candidates: {missing}")
+        if not candidates:
+            raise ValueError("candidate_subset must include at least one current cache candidate")
 
     H = int(cfg.horizon)
     req_bucket = int(req.metadata.get("bucket", 0))
@@ -176,18 +188,20 @@ def build_candidate_rows_for_full_cache_state(
     for candidate in candidates:
         req_rate = (sum(1 for x in recent_req_hist if x == candidate) / len(recent_req_hist)) if recent_req_hist else 0.0
         hit_rate = (sum(1 for x in recent_hit_hist if x == candidate) / len(recent_hit_hist)) if recent_hit_hist else 0.0
-        feats = compute_candidate_features_v1(
-            request_bucket=req_bucket,
-            request_confidence=req_conf,
-            candidates=candidates,
-            candidate=candidate,
-            bucket_by_page=dict(bucket_by_page),
-            confidence_by_page=dict(confidence_by_page),
-            recent_request_rate=req_rate,
-            recent_hit_rate=hit_rate,
-        ).as_dict()
+        feats: Dict[str, object] = {}
+        if include_features:
+            feats = compute_candidate_features_v1(
+                request_bucket=req_bucket,
+                request_confidence=req_conf,
+                candidates=all_candidates,
+                candidate=candidate,
+                bucket_by_page=dict(bucket_by_page),
+                confidence_by_page=dict(confidence_by_page),
+                recent_request_rate=req_rate,
+                recent_hit_rate=hit_rate,
+            ).as_dict()
 
-        after = [p for p in candidates if p != candidate] + [pid]
+        after = [p for p in all_candidates if p != candidate] + [pid]
         eviction_loss = float(_simulate_lru_misses(after, future_h, capacity=capacity))
         next_raw, reuse_raw = _next_arrival_and_reuse_distance_fast(
             candidate,
