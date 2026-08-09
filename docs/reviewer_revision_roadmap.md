@@ -71,15 +71,23 @@ Status: `SMOKE_ONLY`
 Status: `RUNNING_LOCAL` and `DIAGNOSTIC_PARTIAL`
 
 - tmux session:
-  `kbs_learning_curve_20260809`
-- local wall-time budget:
+  `kbs_learning_curve_highfrac_20260809`
+- currently audited low-fraction checkpoint:
+  `1%, 2%, 5%, 10%`
+- completed families in that audited checkpoint:
+  `brightkite, citibike, cloudphysics, metacdn`
+- validated units / rows:
+  `16` units, `96` rows
+- current live phase:
+  `25%`
+- current live target:
+  all seven held-out folds
+- local wall-time budget for the active `25%` phase:
   `10` hours
+- later planned phases:
+  `50%`, then `100%`
 - output:
   `analysis/supervision_objective_learning_curve_v1/`
-- last inspected local partial state:
-  `14/28` units complete,
-  `84/168` rows complete,
-  active run fractions `1%, 2%, 5%, 10%`
 - no final claim yet.
 
 Scientific distinction to preserve:
@@ -93,14 +101,16 @@ Current preliminary observation:
 
 - completed `1%`, `2%`, `5%`, and `10%` cells currently favor scalar over the
   same-target pairwise condition,
-- this remains preliminary until the running local campaign reaches its clean
-  stop and completed folds are audited.
+- this remains preliminary until the active `25%` phase reaches a clean stop
+  and completed units are audited,
+- later `50%` and `100%` phases remain required for the full learning-
+  convergence question.
 
 ### Horizon sensitivity
 
 Status: `PENDING_CONTROLLED_RUN`
 
-- planned, not run,
+- planned externally on Wulver, not queried from this workstation,
 - requires a v2 protocol and retraining,
 - no current regime claim should be made from `H=4` alone.
 
@@ -122,12 +132,42 @@ Status: `CONCEPTUAL_ONLY`
 - multiple equally minimal repairs must be preserved,
 - trajectory divergence is not itself harmful divergence.
 
+### Future-aware oracle vs learned-online comparison
+
+Status: `CONCEPTUAL_ONLY` and `HIGH_PRIORITY`
+
+- exact future-aware or oracle-style comparison against learned-online behavior
+  remains a high-priority unfinished diagnostic,
+- do not collapse oracle context into deployable-baseline claims,
+- this remains separate from the running same-target learning-curve work.
+
 ### Practical timing
 
 Status: `PENDING_CONTROLLED_RUN`
 
 - smoke-scale exact-optimization and break-even outputs exist,
 - controlled final timing remains pending.
+
+## Current unfinished reviewer-target work
+
+Preserve these as active TODO items:
+
+1. finish and audit the `25%` learning-convergence phase;
+2. later run `50%`;
+3. later run `100%`;
+4. jointly analyze downstream misses, scalar `MAE/RMSE`, and ranking or
+   decision metrics versus fraction;
+5. determine whether scalar performance converges with more data or remains
+   limited despite improved offline prediction;
+6. keep horizon sensitivity explicitly external to this workstation;
+7. complete the future-aware or oracle-vs-learned-online comparison;
+8. complete controlled final timing;
+9. run the pairwise margin/noise diagnostic if same-target pairwise remains
+   weak;
+10. preserve the minimum-counterfactual or minimum-Hamming-distance suffix
+    attribution line;
+11. treat the final R2 Major 1 held-out audit as the next reviewer-target once
+    the external Wulver work completes.
 
 ### Distribution shift
 

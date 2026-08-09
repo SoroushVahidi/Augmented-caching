@@ -62,6 +62,16 @@ For `analysis/supervision_objective_learning_curve_v1/`, use the explicit
 classification `DIAGNOSTIC_PARTIAL` unless and until a clean stopped campaign
 has been fully audited.
 
+Current local checkpoint to preserve:
+
+- validated low-fraction cells at `1%, 2%, 5%, 10%`
+- completed families in that audited checkpoint:
+  `brightkite, citibike, cloudphysics, metacdn`
+- `16` validated units
+- `96` validated rows
+- separate `25%` tmux extension currently running locally across all seven
+  folds; no unaudited `25%` partial should be treated as evidence
+
 ## Historical context
 
 Usable only when explicitly labeled historical:
@@ -138,6 +148,9 @@ Guardrails:
 - completed and audited cells may be inspected,
 - incomplete fraction or fold aggregates must not be used as final manuscript
   evidence,
+- the current `25%` local extension must remain `RUNNING_LOCAL` until it
+  reaches a clean stop and completed units are audited,
+- `50%` and `100%` remain planned follow-up phases, not current evidence,
 - results must not be merged with the earlier `objective_pairwise` ablation as
   though they represented the same condition,
 - the campaign state at clean wall-time stop must be preserved.

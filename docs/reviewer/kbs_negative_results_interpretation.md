@@ -198,19 +198,45 @@ Current local diagnostic:
   scalar candidate rows and regret-derived pairwise rows are built from the
   exact same filtered decision ids at each fraction.
 
-PRELIMINARY — campaign still running / incomplete.
+LOW-FRACTION OBSERVATION — validated local checkpoint only.
 
-During the 2026-08-09 local audit, the active 10-hour local campaign was
-running only the `1%, 2%, 5%, 10%` fractions. Across the currently completed
-cells at those fractions, scalar regression had substantially fewer downstream
-misses than the same-target `eviction_loss_pairwise` condition.
+At the currently audited low-fraction checkpoint:
+
+- completed fractions:
+  `1%, 2%, 5%, 10%`
+- completed families:
+  `brightkite, citibike, cloudphysics, metacdn`
+- validated units:
+  `16`
+- validated rows:
+  `96`
+
+Across those completed low-fraction cells, scalar regression had substantially
+fewer downstream misses than the same-target `eviction_loss_pairwise`
+condition.
 
 This is not yet a final result because:
 
-- the campaign was still running at audit time,
-- not all folds were complete,
-- the live local run covered only `1%, 2%, 5%, 10%`,
+- not all folds were complete at that audited checkpoint,
+- the low-fraction checkpoint covers only `1%, 2%, 5%, 10%`,
 - the partial rows must not be treated as final manuscript evidence.
+
+HIGH-FRACTION QUESTION — currently running locally.
+
+The next active local phase is the `25%` same-target extension, launched in
+tmux session `kbs_learning_curve_highfrac_20260809` with a clean `10`-hour
+wall-time budget and all seven held-out folds targeted. Later `50%` and `100%`
+phases remain TODO.
+
+The open scientific question is not whether a partial `25%` row looks good or
+bad in isolation. It is whether, as fraction increases through `25%`, `50%`,
+and `100%`:
+
+- downstream misses improve materially,
+- scalar `MAE/RMSE` improves materially,
+- ranking and decision-quality metrics improve materially,
+- and, crucially, whether offline prediction improvement continues to translate
+  into online miss improvement.
 
 Implication if the pattern persists after clean stop and final partial-campaign
 audit:
@@ -227,13 +253,18 @@ Current hypothesis status:
 
 - HYPOTHESIS:
   pairwise representation may be more sample-efficient.
-- CURRENT EVIDENCE:
-  preliminary same-target learning-curve results contradict that hypothesis
-  over the currently completed `1%` to `10%` cells.
+- CURRENT LOW-FRACTION EVIDENCE:
+  the audited `1%` to `10%` checkpoint contradicts that hypothesis over the
+  completed low-fraction cells.
+- HIGH-FRACTION QUESTION:
+  the active `25%` phase and later `50%` / `100%` phases are needed to test
+  whether scalar convergence with more data changes the downstream picture.
 - NOT YET ESTABLISHED:
-  the hypothesis is not fully disproven until the running campaign reaches its
-  clean stop, completed folds are audited, and the final partial-campaign
-  statistics are summarized.
+  sample insufficiency is not proven,
+  objective mismatch is not proven,
+  convergence is not proven,
+  and no `25%` conclusion should be recorded before completed units are
+  audited.
 
 Possible interpretations if scalar continues to win:
 

@@ -59,6 +59,14 @@ before final manuscript-facing cleanup:
 - `analysis/supervision_objective_learning_curve_v1/` is a local explanatory
   diagnostic. Completed cells may be inspected, but incomplete aggregates must
   remain `DIAGNOSTIC_PARTIAL`.
+- the last audited low-fraction learning-curve checkpoint contains `16`
+  validated units / `96` rows across
+  `brightkite, citibike, cloudphysics, metacdn` at fractions
+  `1%, 2%, 5%, 10%`.
+- a separate `25%` local extension is currently running in tmux session
+  `kbs_learning_curve_highfrac_20260809` with a clean `10`-hour wall-time
+  budget; no current `25%` scientific claim should be recorded until completed
+  units are audited.
 - `objective_pairwise` and `eviction_loss_pairwise` are not interchangeable
   labels; the former changes the supervision objective, while the latter keeps
   the eviction-loss target fixed and only changes representation.

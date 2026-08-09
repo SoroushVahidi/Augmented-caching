@@ -75,23 +75,34 @@ Diagnostic intent:
 - test whether pairwise representation alone appears more sample-efficient than
   scalar regression.
 
-Live local run characteristics from the 2026-08-09 audit:
+Current locally audited checkpoint to preserve:
 
-- local tmux session:
-  `kbs_learning_curve_20260809`
-- configured fractions in the active run:
-  `1%, 2%, 5%, 10%`
-- capacities:
-  `32, 64, 128`
-- held-out families:
-  `brightkite, citibike, cloudphysics, metacdn, metakv, twemcache, wiki2018`
-- expected shape for this local run:
-  `28` family-fraction units,
-  `56` model files,
-  `168` result rows
-- last inspected partial state:
-  `14/28` units complete,
-  `84/168` rows complete
+- validated low-fraction cells:
+  fractions `1%, 2%, 5%, 10%`
+- completed families at that audited checkpoint:
+  `brightkite, citibike, cloudphysics, metacdn`
+- validated completed units:
+  `16`
+- validated result rows:
+  `96`
+
+Current local high-fraction extension status:
+
+- active tmux session:
+  `kbs_learning_curve_highfrac_20260809`
+- currently launched fraction phase:
+  `25%`
+- target scope for the active phase:
+  all seven held-out folds
+- local wall-time budget:
+  `10` hours
+- later planned phases:
+  `50%`, then `100%`
+- current status:
+  `RUNNING_LOCAL`
+- final conclusion status:
+  none yet; do not infer scientific results from partial `25%` outputs until a
+  completed unit is audited
 
 Same-example fairness guarantee:
 
@@ -110,6 +121,8 @@ Resume and isolation notes:
   `campaign_state.json`,
 - completed cells can be audited independently,
 - partial campaign state must be preserved as-is at clean wall-time stop.
+- the validated `1%` to `10%` checkpoint and the running `25%` extension must
+  remain analytically separate until the active phase reaches a clean stop.
 
 ## Reviewer #2 Major 3 and Reviewer #3: distribution-shift diagnosis
 
