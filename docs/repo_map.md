@@ -1,75 +1,72 @@
 # Repository map
 
-This document is a concise orientation guide for external readers and manuscript reviewers.
+This document is a concise orientation guide for external readers.
 
-## KBS manuscript workflow (submission path)
+## KBS second-revision workflow
 
-For **Knowledge-Based Systems** and the canonical Wulver **`heavy_r1`** `evict_value_v1` line (Slurm drivers, evidence files, `build_kbs_main_manuscript_artifacts.py`, `tables/manuscript/`, `figures/manuscript/`):
+For the current reviewer-science branch and its four reviewer concerns:
 
-- **Checklist (scripts, paths, do-not-cite):** [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md)
-- **Narrative workflow:** `docs/kbs_manuscript_workflow.md`
-- **Reviewer index:** `docs/kbs_manuscript_submission_index.md`
-- **All documentation index:** `docs/README.md`
+- `docs/kbs_manuscript_workflow.md`
+- `docs/kbs_second_revision_repository_state.md`
+- `docs/reviewer/kbs_second_revision_artifact_map.md`
+- `docs/reviewer/kbs_evidence_eligibility.md`
+- `docs/reviewer/kbs_negative_results_interpretation.md`
+
+Historical Wulver `heavy_r1` material is still preserved, but it is no longer
+the best top-level orientation for the current cleanup branch. When needed:
+
+- historical checklist hub: `CANONICAL_KBS_SUBMISSION.md`
+- historical runbook: `docs/wulver_heavy_evict_value_experiment.md`
+- historical artifact set: `docs/evict_value_v1_kbs_canonical_artifacts.md`
 
 ## Top-level layout
 
 - `src/lafc/` — core library implementation (policies, simulator, runners, datasets, offline solvers).
 - `scripts/` — reproducible experiment and dataset-prep entry points.
-- `tests/` — unit/integration tests for policies, datasets, runners, and experiments.
-- `docs/` — method notes, experiment protocols, theorem-development notes, and manuscript-support docs.
-- `analysis/` — generated text artifacts from experiments (`.csv`, `.json`, `.md`).
-- `data/` — small examples in git + raw/processed derived data roots.
-- `slurm/` — cluster batch templates for heavier runs. **KBS canonical Wulver pipeline:** `evict_value_v1_wulver_heavy_train.sbatch`, `evict_value_v1_wulver_heavy_eval.sbatch` (`EXP_TAG=heavy_r1`); index at `docs/kbs_manuscript_submission_index.md`.
+- `tests/` — unit and integration tests.
+- `docs/` — protocols, workflow notes, artifact maps, and scientific notes.
+- `analysis/` — generated text artifacts from experiments plus small tracked audits.
+- `data/` — small examples in git plus raw and derived data roots.
+- `slurm/` — cluster batch templates for heavier runs, including historical
+  `heavy_r1` jobs and newer reviewer-science orchestration templates.
 
 ## `src/lafc/` subpackages
 
-- `policies/` — policy implementations (baseline, robust, and experimental).
-- `simulator/` — cache state and request trace execution logic.
-- `runner/` — CLI entrypoint (`python -m lafc.runner.run_policy`).
-- `datasets/` — dataset ingestion, preprocessing, and CLI glue.
-- `offline/` — offline reference solvers and IO/helpers.
-- `learned_gate/` — v1/v2 learned gate datasets, features, and models.
-- top-level `evict_*` / `offline_teacher_supervision.py` — eviction-learning datasets/models and supervision helpers.
-- `metrics/` — common cost and prediction error metrics.
+- `policies/` — policy implementations.
+- `simulator/` — cache state and trace execution logic.
+- `runner/` — CLI entrypoint (`python3 -m lafc.runner.run_policy`).
+- `datasets/` — dataset ingestion and preprocessing helpers.
+- `offline/` — offline reference solvers and helpers.
+- `learned_gate/` — gate datasets, features, and models.
+- top-level `evict_*` modules — learned eviction datasets and models.
+- `metrics/` — common cost and prediction metrics.
 
 ## `scripts/` families
 
-- `scripts/paper/` — KBS manuscript bundle (`build_kbs_main_manuscript_artifacts.py`); requires canonical `heavy_r1` analysis inputs.
-- `scripts/datasets/` — canonical dataset download/prepare wrappers.
-- `build_*` scripts — build training tables from traces.
-- `train_*` scripts — fit lightweight models and write metrics.
-- `run_*` scripts — first-checks, ablations, and experiment reports.
-- `search_*` / `analyze_*` scripts — theorem/proof or counterexample support utilities.
-- `scripts/experiments/` — lightweight ablation runners (incoming-aware, history-aware, history-objective, joint-state).
+- `scripts/experiments/` — reviewer-science runners and audits plus focused ablations.
+- `scripts/validation/` — read-only repository and campaign status helpers.
+- `scripts/paper/` — historical manuscript bundle builders, including the
+  older `heavy_r1` KBS path.
+- `scripts/datasets/` — dataset download and prepare wrappers.
+- root-level `build_*`, `train_*`, `run_*`, `search_*`, `analyze_*` —
+  experiment-specific entry points kept for backward compatibility.
 
-## `analysis/` organization conventions
+## `analysis/` conventions
 
-- **Experiment directories** (preferred): one directory per experiment with `report.md`, `results.csv`, `summary.json`.
-- **Legacy root-level artifacts**: older single-file outputs kept for history and manuscript traceability.
-- **Manifests/audits**: stable helper artifacts (for example Wulver trace manifests and failure-slice audits).
-- **Exploratory lightweight ablations**: grouped under `analysis/*_light/` (see `docs/lightweight_exploratory_ablations.md`).
+- experiment directories are preferred,
+- historical root-level artifacts are retained for provenance,
+- many reviewer outputs are intentionally preserved locally but not tracked,
+- the eligibility note determines which outputs are usable for which claims.
 
-See `analysis/README.md` for details and naming guidance.
+See `analysis/README.md` and
+`docs/reviewer/kbs_evidence_eligibility.md`.
 
-## Manuscript-support docs to read first
+## Read first
 
-1. `docs/kbs_manuscript_workflow.md` (canonical `heavy_r1` path + builder + outputs + “not canonical” pointers)
-2. `docs/evict_value_v1_kbs_canonical_artifacts.md` (heavy_r1-only inputs for KBS tables/figures)
-3. `docs/reproducibility_and_artifacts.md` (entry points, output locations, manuscript vs exploratory)
-4. `docs/kbs_manuscript_submission_index.md` (reviewer-facing index)
-5. `docs/lightweight_exploratory_ablations.md` (non-canonical lightweight branch index)
-6. `docs/manuscript_evidence_map.md`
-7. `docs/manuscript_open_questions.md`
-8. `docs/baselines.md`
-9. `docs/framework.md`
-10. `docs/internal_research_summary_eviction_value.md` (internal working-state note; not manuscript text, not canonical evidence)
-11. `docs/internal_prior_work_audit_eviction_value.md` (internal prior-work coverage + bibliography-gap audit; non-canonical)
-12. `docs/internal_current_project_decisions.md` (internal record of current agreed framing decisions; non-canonical)
-13. `docs/internal_novelty_positioning_eviction_value.md` (internal novelty-positioning guardrails for related-work and claim scope; non-canonical)
-14. `docs/internal_prior_work_matrix_eviction_value.md` (internal comparison matrix for eviction-value related-work and safest novelty scope; non-canonical)
-15. `docs/internal_bibliography_gap_report.md` (internal bibliography coverage update for closest learned-eviction references; non-canonical)
-
-## Notes on scientific status
-
-- Many docs under `docs/pairwise_*` are intentionally exploratory theorem-development artifacts.
-- Experimental policy docs are conservative by design and should not be read as finalized theorem claims.
+1. `docs/kbs_manuscript_workflow.md`
+2. `docs/reviewer/kbs_second_revision_artifact_map.md`
+3. `docs/reviewer/kbs_evidence_eligibility.md`
+4. `docs/kbs_second_revision_repository_state.md`
+5. `docs/reproducibility_and_artifacts.md`
+6. `docs/baselines.md`
+7. `docs/framework.md`

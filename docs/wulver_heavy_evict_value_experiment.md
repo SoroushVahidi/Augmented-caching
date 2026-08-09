@@ -1,5 +1,11 @@
 # Wulver heavy experiment: artifact-backed `evict_value_v1`
 
+> Historical runbook.
+> For the current KBS second-revision reviewer-science workflow, start at
+> `docs/kbs_manuscript_workflow.md` and `docs/reviewer/`.
+> This file remains useful for the older `heavy_r1` Wulver line and the
+> manuscript-support builder that still expects `*_heavy_r1` filenames.
+
 **Submission index:** `docs/kbs_manuscript_submission_index.md` — links this runbook, canonical filenames, and non-canonical artifacts.
 
 This package is the first serious Wulver-scale run for the current main learned path:

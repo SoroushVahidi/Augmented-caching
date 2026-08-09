@@ -1,185 +1,127 @@
 # Learning-Augmented Caching (`lafc`)
 
-Research code for **learning-augmented caching**: literature-faithful baselines, robust combiners, dataset pipelines for public and manifest-based traces, and reproducible experiment scripts (CSV / JSON / Markdown artifacts).
+`lafc` is a research codebase for learning-augmented caching: cache
+simulation, literature-faithful baselines, learned eviction policies, dataset
+pipelines, and reproducible experiment drivers.
 
----
+## Current repository orientation
 
-## What this repository is
+As of August 9, 2026, the main local reviewer-science branch is
+`kbs/second-revision-science`. It preserves:
 
-- **Simulator and policies:** `python -m lafc.runner.run_policy` (`src/lafc/`) for trace replay of named policies.
-- **Learned eviction (main line):** **`evict_value_v1`** — scores each cache resident (candidate) with a supervised model; evicts a minimizer. Optional **`evict_value_v1_guarded`** wrapper (`docs/guarded_robust_wrapper.md`).
-- **Exploratory research:** pairwise / ranking supervision, sentinel variants, and theorem notes under `docs/pairwise_*` and `analysis/pairwise_*` — **not** the canonical KBS Wulver table path unless explicitly cross-walked.
+- the current KBS second-revision code and audit tooling,
+- earlier historical `heavy_r1` Wulver manuscript material,
+- multiple generations of exploratory learned-caching experiments.
 
-**Evidence caveats:** `docs/manuscript_evidence_map.md`, `docs/manuscript_open_questions.md`.
+The current branch documents a mostly negative or methodological result:
+`evict_value_v1` is scientifically interesting, but the second-revision work is
+about understanding why a seemingly reasonable offline target performs poorly
+in closed-loop deployment, not about claiming a new performance SOTA.
 
----
+## What is here
 
-## Stable baselines (manuscript-safe references)
+- `src/lafc/`: simulator, policies, runners, dataset helpers, offline solvers.
+- `scripts/`: reproducible entry points for experiments and validation.
+- `tests/`: unit and integration tests.
+- `docs/`: protocols, artifact maps, workflow notes, and manuscript-support docs.
+- `analysis/`: generated outputs and small tracked audits.
+- `slurm/`: batch templates for heavier runs.
 
-Classical and robust policies exposed on the main CLI include `lru`, `marker`, `predictive_marker`, `trust_and_doubt`, `robust_ftp_d_marker` (`robust_ftp`), `blind_oracle_lru_combiner`, and the unweighted optimum `offline_belady` (full lookahead via trace construction). **General caching** (variable sizes/costs) uses a separate LP+rounding entry point: `scripts/run_offline_general_caching_approx.py` — see `docs/offline_general_caching_approx.md` (not a `--policy` on `run_policy`).
+More detail: [docs/repo_map.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/repo_map.md).
 
-Full roster and literature pointers: `docs/baselines.md` (summary lists above).
+## Current reviewer-science entry points
 
----
+- Repository state and tracked-vs-generated boundaries:
+  [docs/kbs_second_revision_repository_state.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/kbs_second_revision_repository_state.md)
+- Current KBS second-revision workflow:
+  [docs/kbs_manuscript_workflow.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/kbs_manuscript_workflow.md)
+- Reviewer artifact map:
+  [docs/reviewer/kbs_second_revision_artifact_map.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/reviewer/kbs_second_revision_artifact_map.md)
+- Evidence eligibility rules:
+  [docs/reviewer/kbs_evidence_eligibility.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/reviewer/kbs_evidence_eligibility.md)
+- Internal note on the negative results:
+  [docs/reviewer/kbs_negative_results_interpretation.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/reviewer/kbs_negative_results_interpretation.md)
+- Read-only campaign status tools:
+  `python3 scripts/validation/revision_status.py`
+  and
+  `python3 scripts/validation/revision_readiness.py`
 
-## Canonical KBS manuscript path (Wulver `heavy_r1`)
+Reviewer experiment drivers and audits live mainly under `scripts/experiments/`.
 
-For **Knowledge-Based Systems** and the **only** designated multi-trace Wulver `evict_value_v1` evidence line:
+## Generated evidence vs tracked source
 
-| Step | Resource |
-|------|----------|
-| **One-page checklist** | **[`CANONICAL_KBS_SUBMISSION.md`](CANONICAL_KBS_SUBMISSION.md)** (repo root) |
-| Narrative workflow | [`docs/kbs_manuscript_workflow.md`](docs/kbs_manuscript_workflow.md) |
-| Slurm train → eval | [`slurm/evict_value_v1_wulver_heavy_train.sbatch`](slurm/evict_value_v1_wulver_heavy_train.sbatch), [`slurm/evict_value_v1_wulver_heavy_eval.sbatch`](slurm/evict_value_v1_wulver_heavy_eval.sbatch) with `EXP_TAG=heavy_r1` |
-| Runbook | [`docs/wulver_heavy_evict_value_experiment.md`](docs/wulver_heavy_evict_value_experiment.md) |
-| Exact filenames | [`docs/evict_value_v1_kbs_canonical_artifacts.md`](docs/evict_value_v1_kbs_canonical_artifacts.md) |
-| Tables / figures | `python scripts/paper/build_kbs_main_manuscript_artifacts.py` → `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/` |
+Tracked in Git:
 
-**Do not** cite `analysis/evict_value_wulver_v1_policy_comparison.csv` (unsuffixed) as the main KBS comparison; it may include extra policies from non-heavy drivers. Use **`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`** only when present. See [`analysis/README.md`](analysis/README.md).
+- code under `src/lafc/`,
+- experiment and validation entry points under `scripts/`,
+- tests under `tests/`,
+- protocols, artifact maps, and notes under `docs/`,
+- small canonical audits and fixtures.
 
-### After heavy eval completes (minimal checklist)
+Preserved locally but intentionally not curated as tracked release material:
 
-```bash
-test -f analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
-export PYTHONPATH="${PYTHONPATH:-$(pwd)/src}"
-python scripts/paper/build_kbs_main_manuscript_artifacts.py
-ls tables/manuscript figures/manuscript reports/manuscript_artifacts
-```
+- most reviewer result CSV/JSON/MD outputs under `analysis/`,
+- model artifacts under `models/`,
+- large derived datasets under `data/derived/`.
 
-If the first command fails, finish the eval stage per [`docs/wulver_heavy_evict_value_experiment.md`](docs/wulver_heavy_evict_value_experiment.md).
+The artifact map and eligibility note above are the source of truth for which
+generated outputs are complete, partial, smoke-only, contaminated, historical,
+or currently usable for reviewer-facing tables.
 
----
-
-## Reproduce main artifacts (orientation)
-
-| Goal | Start here |
-|------|------------|
-| KBS `heavy_r1` bundle | [`CANONICAL_KBS_SUBMISSION.md`](CANONICAL_KBS_SUBMISSION.md) |
-| All docs (index) | [`docs/README.md`](docs/README.md) |
-| CLI and output roots | [`docs/reproducibility_and_artifacts.md`](docs/reproducibility_and_artifacts.md) |
-| `analysis/` layout | [`analysis/README.md`](analysis/README.md) |
-| `scripts/` layout | [`scripts/README.md`](scripts/README.md) |
-| Repo layout | [`docs/repo_map.md`](docs/repo_map.md) |
-
-**Method detail (internal support for rewriting Methods):** [`docs/method_detail_support_evict_value_v1.md`](docs/method_detail_support_evict_value_v1.md) (consolidates `docs/evict_value_v1_method_spec.md` and related sources; not a result artifact).
-
----
-
-## Installation
+## Basic setup
 
 ```bash
 pip install -e ".[dev]"
 ```
 
----
-
-## Quick start
-
-### Baseline
+## Basic tests
 
 ```bash
-python -m lafc.runner.run_policy \
-  --policy predictive_marker \
+PYTHONPATH=src pytest tests/ -v
+```
+
+Optional dependencies:
+
+- `lightgbm` is required for some learned-baseline tests and policies such as
+  `lrb` and `three_l_cache`.
+
+## Basic simulator usage
+
+```bash
+python3 -m lafc.runner.run_policy \
+  --policy lru \
   --trace data/example_unweighted.json \
   --capacity 3
 ```
 
-### Robust combiner
+## Reviewer experiment families
 
-```bash
-python -m lafc.runner.run_policy \
-  --policy robust_ftp_d_marker \
-  --trace data/example_unweighted.json \
-  --capacity 3 \
-  --derive-predicted-caches
-```
+- Learned-baseline fairness comparisons and held-out retraining:
+  `scripts/experiments/run_reviewer_fairness.py`,
+  `scripts/experiments/run_evict_cross_family_heldout_eval.py`
+- Supervision-objective ablation:
+  `scripts/experiments/run_supervision_objective_ablation_eval.py`
+  plus the audit and gate scripts in the same directory
+- Distribution-shift diagnosis:
+  `scripts/experiments/run_distribution_shift_ablation.py`
+- Practical-significance analysis:
+  `scripts/experiments/run_practical_significance_ablation.py`
 
-### Local `evict_value_v1` first check (small; not the Wulver `heavy_r1` line)
+These write generated outputs under `analysis/<experiment>/` or related
+reviewer-specific paths documented in
+[docs/reviewer/kbs_second_revision_artifact_map.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/reviewer/kbs_second_revision_artifact_map.md).
 
-```bash
-python scripts/build_evict_value_dataset_v1.py --max-rows 200000
-python scripts/train_evict_value_v1.py --horizon 8
-python scripts/run_evict_value_v1_first_check.py
-```
+## Historical heavy-run material
 
----
+The earlier Wulver `heavy_r1` manuscript path is still preserved, but it is no
+longer the best top-level orientation for this cleanup pass. It remains useful
+as historical provenance and for older manuscript-support builders.
 
-## Policy families (`run_policy` registry)
+- Historical heavy-run workflow:
+  [docs/wulver_heavy_evict_value_experiment.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/wulver_heavy_evict_value_experiment.md)
+- Historical heavy-run artifact set:
+  [docs/evict_value_v1_kbs_canonical_artifacts.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/evict_value_v1_kbs_canonical_artifacts.md)
 
-### Literature baselines and robust references
+## Documentation index
 
-`lru`, `weighted_lru`, `advice_trusting`, `la_det`, `la_det_approx`, `la_det_faithful`, `marker`, `blind_oracle`, `predictive_marker`, `adaptive_query` (`parsimonious_caching`), `trust_and_doubt`, `robust_ftp_d_marker` (`robust_ftp`), `blind_oracle_lru_combiner`, `offline_belady`
-
-### Experimental policies
-
-`atlas_v1`, `atlas_v2`, `atlas_v3`, `atlas_cga_v1` (`atlas_cga`), `atlas_cga_v2`, `rest_v1`, `ml_gate_v1`, `ml_gate_v2`, `evict_value_v1`, `evict_value_v1_guarded`, `sentinel_robust_tripwire_v1`, `sentinel_budgeted_guard_v2`
-
-**Pairwise learned line** (separate scripts, not in `POLICY_REGISTRY`): `scripts/build_evict_value_pairwise_dataset.py`, `scripts/train_evict_value_pairwise_v1.py`, `scripts/run_evict_value_pairwise_first_check.py`.
-
-Details: `docs/baselines.md`, `docs/framework.md`.
-
----
-
-## Datasets
-
-```bash
-python scripts/datasets/prepare_all.py --dataset <brightkite|citibike|spec_cpu2006|wiki2018|twemcache|metakv|metacdn|cloudphysics|all>
-```
-
-- Raw: `data/raw/<dataset>/` — Processed: `data/processed/<dataset>/` — Notes: `docs/datasets.md`
-
----
-
-## Other experiment families (not the canonical KBS `heavy_r1` path unless labeled)
-
-> Sections A–D are useful entry points; they are **not** interchangeable with the Wulver `heavy_r1` manuscript pipeline.
-
-### A) Offline-teacher vs heuristic
-
-```bash
-python scripts/run_offline_teacher_vs_heuristic_experiment.py \
-  --trace-glob "data/example_*.json,data/example_general_caching.json" \
-  --capacities 2,3 --horizon 12 \
-  --output-dir analysis/offline_teacher_vs_heuristic
-```
-
-See `docs/offline_teacher_vs_heuristic_mediumscale.md`.
-
-### B) Pairwise vs pointwise
-
-```bash
-python scripts/run_pairwise_vs_pointwise_experiment.py --output-dir analysis/pairwise_vs_pointwise
-```
-
-Interpret conservatively: `docs/pairwise_vs_pointwise_experiment.md`, `docs/manuscript_evidence_map.md`.
-
-### C) Sentinel / guard refinement
-
-```bash
-python scripts/run_sentinel_budgeted_guard_v2_eval.py
-python scripts/run_sentinel_budgeted_guard_v2_ablation.py
-```
-
----
-
-## Output conventions
-
-Default roots: **`analysis/`** (experiments and manuscript-support), **`output/`** (ad hoc). New work should use `analysis/<experiment_name>/` with `summary.json` + `report.md` when possible.
-
----
-
-## Testing
-
-```bash
-pytest tests/ -v
-```
-
----
-
-## Navigation and hygiene
-
-| Topic | Document |
-|-------|----------|
-| Cleanup / navigation audit (this release) | [`docs/repository_cleanup_report.md`](docs/repository_cleanup_report.md) |
-| KBS hygiene notes | [`docs/kbs_repository_hygiene_report.md`](docs/kbs_repository_hygiene_report.md) |
-| Exploratory lightweight ablations | [`docs/lightweight_exploratory_ablations.md`](docs/lightweight_exploratory_ablations.md) |
+[docs/README.md](/home/soroush/Augmented-caching-kbs-second-revision/docs/README.md)

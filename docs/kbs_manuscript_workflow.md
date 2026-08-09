@@ -1,79 +1,131 @@
-# KBS manuscript workflow (`evict_value_v1` / Wulver `heavy_r1`)
+# KBS second-revision workflow
 
-**Single navigation page** for finalized **Knowledge-Based Systems** submission work: canonical evidence, builder command, LaTeX-oriented outputs, and where exploratory material lives (so it is not mistaken for the main paper line).
+This is the current workflow hub for the repository's KBS second-revision
+science branch. It replaces the old top-level assumption that the historical
+Wulver `heavy_r1` path is the primary orientation for outside readers.
 
-**Checklist hub (scripts + filenames + do-not-cite list):** [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md). **All `docs/` grouped by topic:** [`README.md`](README.md).
+## 1. Start here
 
----
+Read these in order:
 
-## 1. Canonical path (main quantitative Wulver story)
+1. [`kbs_second_revision_repository_state.md`](kbs_second_revision_repository_state.md)
+2. [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md)
+3. [`reviewer/kbs_evidence_eligibility.md`](reviewer/kbs_evidence_eligibility.md)
+4. [`reviewer_revision_roadmap.md`](reviewer_revision_roadmap.md)
+5. [`reviewer/kbs_negative_results_interpretation.md`](reviewer/kbs_negative_results_interpretation.md)
 
-Use **only** this pipeline for primary **multi-trace Wulver** `evict_value_v1` claims:
+These files distinguish:
 
-| Step | What to read or run |
-|------|---------------------|
-| Runbook | `docs/wulver_heavy_evict_value_experiment.md` |
-| Train (Slurm) | `slurm/evict_value_v1_wulver_heavy_train.sbatch` with `EXP_TAG=heavy_r1` |
-| Eval (Slurm) | `slurm/evict_value_v1_wulver_heavy_eval.sbatch` with `EXP_TAG=heavy_r1` |
-| Exact filenames | `docs/evict_value_v1_kbs_canonical_artifacts.md` |
-| Reviewer index | `docs/kbs_manuscript_submission_index.md` |
+- tracked source vs generated evidence,
+- complete vs partial vs smoke-only reviewer outputs,
+- current local evidence vs historical heavy-run material,
+- empirical findings vs interpretation hypotheses.
 
-**Preflight (full main quantitative bundle):** **`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`** must exist to refresh Table~1, Table~3, and Figures~2–3. The builder still runs without it: it refreshes offline/schematic artifacts and writes **explicit unavailable stubs** for policy-dependent tables/figures (see `reports/manuscript_artifacts/manuscript_artifact_report.md`). Do not substitute the unsuffixed `analysis/evict_value_wulver_v1_policy_comparison.csv` for canonical KBS claims.
+## 2. Current reviewer-science concerns
 
-**End-to-end evidence gap (what is missing vs what already helps):** [`../reports/manuscript_artifacts/end_to_end_evidence_gap_report.md`](../reports/manuscript_artifacts/end_to_end_evidence_gap_report.md).
+### Concern 1: learned-baseline comparison
 
----
+- Frozen protocol and fairness rules:
+  [`reviewer_fairness_protocol.md`](reviewer_fairness_protocol.md),
+  [`reviewer_fairness_cross_family_v1.md`](reviewer_fairness_cross_family_v1.md)
+- Current artifact map entry:
+  [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md)
+- Read-only state check:
+  `python3 scripts/validation/revision_status.py`
 
-## 2. Build tables, figures, and submission manifest (after heavy eval)
+Current local state:
 
-From repository root:
+- LRB, 3L-Cache, HALP, and CACHEUS controlled-window comparison rows exist.
+- The old `analysis/reviewer_fairness/policy_comparison_evict_value_v1.csv`
+  remains contaminated and ineligible for the primary reviewer table.
+- Cross-family held-out `evict_value_v1` retraining is complete enough to
+  freeze a registry, but the held-out evaluation rows still remain pending.
 
-```bash
-export PYTHONPATH="${PYTHONPATH:-$(pwd)/src}"
-test -f analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv   # must succeed
-python scripts/paper/build_kbs_main_manuscript_artifacts.py
-```
+### Concern 2: supervision-objective ablation
 
-**Generated outputs** (from `build_kbs_main_manuscript_artifacts.py`):
+- Frozen protocol:
+  [`supervision_objective_ablation_protocol.md`](supervision_objective_ablation_protocol.md)
+- Current artifact map entry:
+  [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md)
 
-| Output area | Role |
-|-------------|------|
-| `tables/manuscript/` | CSV + `.tex` fragments for tables |
-| `figures/manuscript/` | PDF + PNG figures |
-| `reports/manuscript_artifacts/` | `manuscript_artifact_manifest.json`, `manuscript_artifact_report.md`, optional `latex_snippets/` |
+Current local state:
 
-Details: `scripts/paper/README.md`, `reports/manuscript_artifacts/` when present.
+- all 28 models exist,
+- 84 held-out rows exist,
+- same-example audit passed,
+- fairness audit passed,
+- registry freeze passed.
 
----
+### Concern 3: distribution-shift diagnosis
 
-## 3. What is *not* canonical (exploratory / support)
+- Frozen protocol:
+  [`distribution_shift_ablation_protocol.md`](distribution_shift_ablation_protocol.md)
+- Current artifact map entry:
+  [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md)
 
-These are **incoming-aware**, **history-aware**, **history-pairwise-style objectives**, **joint-state** runs, **pairwise campaigns**, **theorem/proof tooling**, and **multi-phase Wulver** drivers—use only with explicit caveats; they do **not** produce the designated `*_heavy_r1` filenames unless you deliberately retag outputs (not recommended for KBS).
+Current local state:
 
-| Bucket | Pointer |
-|--------|---------|
-| Lightweight ablations (`analysis/*_light/`) | `docs/lightweight_exploratory_ablations.md` |
-| Pairwise / publishability / chain-witness campaigns | `analysis/pairwise_*_campaign/`, `docs/wulver_pairwise_*.md`, `docs/manuscript_evidence_map.md` |
-| Non-heavy Slurm drivers (extra policies or dataset-only) | `slurm/evict_value_v1_wulver_multi_phase.sbatch`, `slurm/evict_value_v1_wulver_dataset*.sbatch` — see `scripts/README.md` |
-| Unsuffixed `analysis/evict_value_wulver_v1_*.csv` / `.json` | Legacy or alternate runs; **not** interchangeable with `*_heavy_r1` for KBS main tables—see `analysis/README.md` |
+- the canonical worktree preserves a valid partial local checkpoint
+  (`24/42` primary rows, `4/7` families complete),
+- the missing Wulver family-run orchestration files have not yet been synced
+  back to this local branch,
+- local evidence supports trajectory-divergence diagnostics, but not a final
+  seven-family causal conclusion.
 
----
+### Concern 4: practical significance
 
-## 4. Easy-to-confuse filenames (do not cite for main KBS Wulver line)
+- Frozen protocol:
+  [`practical_significance_ablation_protocol.md`](practical_significance_ablation_protocol.md)
+- Current artifact map entry:
+  [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md)
 
-| Do **not** treat as main KBS comparison | Use instead |
-|----------------------------------------|-------------|
-| `analysis/evict_value_wulver_v1_policy_comparison.csv` | `analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv` |
-| `analysis/evict_value_wulver_v1_train_metrics.json` (no tag) | `..._train_metrics_heavy_r1.json` |
-| `analysis/evict_value_v1_wulver_dataset_summary.md` (no tag) | `..._dataset_summary_heavy_r1.md` |
+Current local state:
 
-Full table: `analysis/README.md`, `docs/evict_value_v1_kbs_canonical_artifacts.md`.
+- smoke-scale exact-optimization and break-even outputs exist,
+- controlled final timing does not yet exist,
+- timing conclusions must stay labeled `SMOKE_ONLY` or
+  `PENDING_CONTROLLED_RUN`.
 
----
+## 3. Read-only audit helpers
 
-## 5. Related reading (interpretation and scope)
+The repository now includes lightweight validation entry points under
+`scripts/validation/`:
 
-- Evidence strength and claims: `docs/manuscript_evidence_map.md`
-- Open questions: `docs/manuscript_open_questions.md`
-- Reproducibility and CLI: `docs/reproducibility_and_artifacts.md`
-- Repository layout: `docs/repo_map.md`
+- `python3 scripts/validation/revision_status.py`
+- `python3 scripts/validation/revision_readiness.py`
+
+These tools do not launch experiments or modify artifacts. They summarize the
+current local state across worktrees and point to the real artifact roots that
+still hold preserved evidence.
+
+## 4. Historical `heavy_r1` material
+
+The earlier Wulver `heavy_r1` path is still preserved because it underlies
+older manuscript-support builders and provenance notes, but it is now treated
+as historical for this cleanup pass.
+
+- Historical runbook:
+  [`wulver_heavy_evict_value_experiment.md`](wulver_heavy_evict_value_experiment.md)
+- Historical artifact set:
+  [`evict_value_v1_kbs_canonical_artifacts.md`](evict_value_v1_kbs_canonical_artifacts.md)
+- Historical checklist hub:
+  [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md)
+
+Use those documents when you need to understand the older heavy-run line or the
+builder-facing `*_heavy_r1` filenames, not as the default orientation for the
+current reviewer-science branch.
+
+## 5. Manuscript integration rules
+
+Before manuscript text is refreshed:
+
+- use [`reviewer/kbs_evidence_eligibility.md`](reviewer/kbs_evidence_eligibility.md)
+  to avoid mixing primary controlled-window rows with `deployment_full_stream`
+  rows,
+- treat smoke-scale timing outputs and partial distribution-shift outputs as
+  non-final,
+- keep the negative-results interpretation note separate from manuscript prose.
+
+The repository note
+[`reviewer/kbs_negative_results_interpretation.md`](reviewer/kbs_negative_results_interpretation.md)
+is an internal scientific notebook for later writing, not manuscript text.
