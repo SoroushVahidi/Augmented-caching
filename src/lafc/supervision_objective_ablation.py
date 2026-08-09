@@ -28,7 +28,7 @@ import collections
 import math
 import random
 from dataclasses import dataclass
-from typing import Deque, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Deque, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 from lafc.evict_value_dataset_v1 import _simulate_lru_misses
 from lafc.evict_value_features_v1 import EVICT_VALUE_V1_FEATURE_COLUMNS, compute_candidate_features_v1
@@ -123,6 +123,103 @@ def _next_arrival_and_reuse_distance_fast(
     return next_raw, reuse_raw
 
 
+def build_candidate_rows_for_full_cache_state(
+    *,
+    requests: Sequence[Request],
+    request_index: int,
+    capacity: int,
+    trace_name: str,
+    trace_family: str,
+    cfg: ObjectiveAblationConfig,
+    cache_order: Sequence[PageId],
+    bucket_by_page: Mapping[PageId, int],
+    confidence_by_page: Mapping[PageId, float],
+    recent_req_hist: Sequence[PageId],
+    recent_hit_hist: Sequence[PageId],
+    occurrence_index: Optional[Dict[PageId, List[int]]] = None,
+    distinct_suffix_counts: Optional[Sequence[int]] = None,
+) -> List[Dict[str, object]]:
+    """Compute the shared multi-label candidate rows for one full-cache miss.
+
+    This is the exact target-construction kernel used by the frozen
+    supervision-objective ablation: identical features, identical H-step
+    LRU continuation for `eviction_loss_label`, and identical
+    next-arrival / reuse-distance labels. It is factored out so the
+    event-level oracle diagnostics can reuse the same per-decision target
+    semantics instead of reimplementing them independently.
+    """
+    if request_index < 0 or request_index >= len(requests):
+        raise IndexError(f"request_index out of range: {request_index}")
+
+    req = requests[request_index]
+    pid = req.page_id
+    candidates = list(cache_order)
+    if not candidates:
+        raise ValueError("cache_order must contain the current in-cache candidates")
+    if pid in candidates:
+        raise ValueError("incoming request is already in cache; no eviction decision is required")
+
+    H = int(cfg.horizon)
+    req_bucket = int(req.metadata.get("bucket", 0))
+    req_conf = float(req.metadata.get("confidence", 0.5))
+    n_requests = len(requests)
+    occ_idx = occurrence_index if occurrence_index is not None else _build_occurrence_index(requests)
+    suffix_counts = (
+        list(distinct_suffix_counts)
+        if distinct_suffix_counts is not None
+        else _build_distinct_suffix_counts(requests)
+    )
+    decision_id = f"{trace_name}|cap={capacity}|t={request_index}"
+    future_h = requests[request_index + 1 : request_index + 1 + H]
+
+    rows: List[Dict[str, object]] = []
+    for candidate in candidates:
+        req_rate = (sum(1 for x in recent_req_hist if x == candidate) / len(recent_req_hist)) if recent_req_hist else 0.0
+        hit_rate = (sum(1 for x in recent_hit_hist if x == candidate) / len(recent_hit_hist)) if recent_hit_hist else 0.0
+        feats = compute_candidate_features_v1(
+            request_bucket=req_bucket,
+            request_confidence=req_conf,
+            candidates=candidates,
+            candidate=candidate,
+            bucket_by_page=dict(bucket_by_page),
+            confidence_by_page=dict(confidence_by_page),
+            recent_request_rate=req_rate,
+            recent_hit_rate=hit_rate,
+        ).as_dict()
+
+        after = [p for p in candidates if p != candidate] + [pid]
+        eviction_loss = float(_simulate_lru_misses(after, future_h, capacity=capacity))
+        next_raw, reuse_raw = _next_arrival_and_reuse_distance_fast(
+            candidate,
+            request_index,
+            n_requests,
+            occ_idx,
+            suffix_counts,
+            requests,
+        )
+        next_censored = min(next_raw, float(H))
+        reuse_censored = min(reuse_raw, float(H))
+
+        row: Dict[str, object] = {
+            "trace_name": trace_name,
+            "trace_family": trace_family,
+            "capacity": int(capacity),
+            "horizon": int(H),
+            "decision_id": decision_id,
+            "decision_t": int(request_index),
+            "candidate_page_id": candidate,
+            "eviction_loss_label": eviction_loss,
+            "next_arrival_label_raw": float(next_raw),
+            "next_arrival_label_censored": float(next_censored),
+            "reuse_distance_label_raw": float(reuse_raw),
+            "reuse_distance_label_censored": float(reuse_censored),
+        }
+        row.update(feats)
+        rows.append(row)
+
+    return rows
+
+
 def iter_multi_label_candidate_rows(
     requests: Sequence[Request],
     capacity: int,
@@ -146,18 +243,15 @@ def iter_multi_label_candidate_rows(
     all label views for the SAME candidate set at each decision instead of
     building four separate datasets.
     """
-    H = cfg.horizon
     order: "collections.OrderedDict[PageId, None]" = collections.OrderedDict()
     bucket_by_page: Dict[PageId, int] = {}
     conf_by_page: Dict[PageId, float] = {}
     recent_req_hist: Deque[PageId] = collections.deque(maxlen=cfg.history_window)
     recent_hit_hist: Deque[PageId] = collections.deque(maxlen=cfg.history_window)
 
-    n_requests = len(requests)
     occurrence_index = _build_occurrence_index(requests)
     distinct_suffix_counts = _build_distinct_suffix_counts(requests)
 
-    rows: List[Dict[str, object]] = []
     for t, req in enumerate(requests):
         pid = req.page_id
         if req.metadata.get("bucket") is not None:
@@ -177,8 +271,6 @@ def iter_multi_label_candidate_rows(
             continue
 
         candidates = list(order.keys())
-        req_bucket = int(req.metadata.get("bucket", 0))
-        req_conf = float(req.metadata.get("confidence", 0.5))
         decision_id = f"{trace_name}|cap={capacity}|t={t}"
         if selected_decision_ids is not None and decision_id not in selected_decision_ids:
             lru_victim = candidates[0]
@@ -186,53 +278,21 @@ def iter_multi_label_candidate_rows(
             order[pid] = None
             recent_req_hist.append(pid)
             continue
-        # Bounded H-step slice only (not the whole remaining trace): the
-        # eviction-loss rollout only ever looks H steps ahead.
-        future_h = requests[t + 1 : t + 1 + H]
-
-        for candidate in candidates:
-            req_rate = (sum(1 for x in recent_req_hist if x == candidate) / len(recent_req_hist)) if recent_req_hist else 0.0
-            hit_rate = (sum(1 for x in recent_hit_hist if x == candidate) / len(recent_hit_hist)) if recent_hit_hist else 0.0
-            feats = compute_candidate_features_v1(
-                request_bucket=req_bucket,
-                request_confidence=req_conf,
-                candidates=candidates,
-                candidate=candidate,
-                bucket_by_page=bucket_by_page,
-                confidence_by_page=conf_by_page,
-                recent_request_rate=req_rate,
-                recent_hit_rate=hit_rate,
-            ).as_dict()
-
-            # A: eviction loss (evict `candidate`, admit `pid`, replay future_h under LRU)
-            after = [p for p in candidates if p != candidate] + [pid]
-            eviction_loss = float(_simulate_lru_misses(after, future_h, capacity=capacity))
-
-            # B/C: next-arrival + forward reuse distance, via the O(log n)
-            # occurrence-index fast path (exact equivalent of
-            # _next_use_distance / _forward_reuse_distance on
-            # requests[t+1:], see _next_arrival_and_reuse_distance_fast).
-            next_raw, reuse_raw = _next_arrival_and_reuse_distance_fast(
-                candidate, t, n_requests, occurrence_index, distinct_suffix_counts, requests
-            )
-            next_censored = min(next_raw, float(H))
-            reuse_censored = min(reuse_raw, float(H))
-
-            row: Dict[str, object] = {
-                "trace_name": trace_name,
-                "trace_family": trace_family,
-                "capacity": int(capacity),
-                "horizon": int(H),
-                "decision_id": decision_id,
-                "decision_t": int(t),
-                "candidate_page_id": candidate,
-                "eviction_loss_label": eviction_loss,
-                "next_arrival_label_raw": float(next_raw),
-                "next_arrival_label_censored": float(next_censored),
-                "reuse_distance_label_raw": float(reuse_raw),
-                "reuse_distance_label_censored": float(reuse_censored),
-            }
-            row.update(feats)
+        for row in build_candidate_rows_for_full_cache_state(
+            requests=requests,
+            request_index=t,
+            capacity=capacity,
+            trace_name=trace_name,
+            trace_family=trace_family,
+            cfg=cfg,
+            cache_order=candidates,
+            bucket_by_page=bucket_by_page,
+            confidence_by_page=conf_by_page,
+            recent_req_hist=recent_req_hist,
+            recent_hit_hist=recent_hit_hist,
+            occurrence_index=occurrence_index,
+            distinct_suffix_counts=distinct_suffix_counts,
+        ):
             yield row
 
         lru_victim = candidates[0]
@@ -354,6 +414,7 @@ def build_pairwise_rows(
 
 __all__ = [
     "ObjectiveAblationConfig",
+    "build_candidate_rows_for_full_cache_state",
     "iter_multi_label_candidate_rows",
     "build_multi_label_candidate_rows",
     "build_pairwise_rows",
