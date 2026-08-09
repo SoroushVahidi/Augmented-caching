@@ -31,6 +31,8 @@ def test_exact_eviction_loss_oracle_chooses_lowest_true_loss_candidate():
     assert first.exact_candidate == "q2"
     assert first.candidate_values == {"q1": 5.0, "q2": 4.0}
     assert first.target_regret == 0.0
+    assert len(summary.hit_sequence) == len(requests)
+    assert summary.total_misses == sum(1 for hit in summary.hit_sequence if not hit)
 
 
 def test_exact_eviction_loss_oracle_horizon_change_can_change_choice():
@@ -145,6 +147,26 @@ def test_score_driven_policy_rejects_infeasible_candidate_choice():
             scorer=lambda rows: {"ghost": 0.0},
             policy_name="invalid_mock",
         )
+
+
+def test_score_driven_policy_tie_break_matches_scalar_policy_cache_order_for_min():
+    page_ids = ["b", "a", "c", "a", "b"]
+    requests, _pages = build_requests_from_lists(page_ids=page_ids)
+
+    summary = replay_score_driven_policy(
+        requests=requests,
+        capacity=2,
+        trace_name="toy",
+        trace_family="fam",
+        cfg=ObjectiveAblationConfig(horizon=4),
+        objective="eviction_loss",
+        scorer=lambda rows: {str(row["candidate_page_id"]): 0.0 for row in rows},
+        policy_name="mock_tied_scalar",
+    )
+
+    first = summary.decisions[0]
+    assert [str(pid) for pid in first.candidate_values] == ["b", "a"]
+    assert first.chosen_candidate == "b"
 
 
 def test_exact_oracle_objective_classification_records_pairwise_as_requires_clarification():

@@ -6,6 +6,8 @@ from typing import Callable, Deque, Dict, List, Mapping, Sequence, Tuple
 
 from lafc.supervision_objective_ablation import (
     ObjectiveAblationConfig,
+    _build_distinct_suffix_counts,
+    _build_occurrence_index,
     build_candidate_rows_for_full_cache_state,
 )
 from lafc.types import PageId, Request
@@ -53,6 +55,7 @@ class OracleReplaySummary:
     horizon: int
     total_hits: int
     total_misses: int
+    hit_sequence: Tuple[bool, ...]
     decisions: Tuple[ExactOracleDecision, ...]
 
 
@@ -205,7 +208,10 @@ def _run_replay(
     recent_hit_hist: Deque[PageId] = collections.deque(maxlen=cfg.history_window)
     hits = 0
     misses = 0
+    hit_sequence: List[bool] = []
     decisions: List[ExactOracleDecision] = []
+    occurrence_index = _build_occurrence_index(requests)
+    distinct_suffix_counts = _build_distinct_suffix_counts(requests)
 
     for t, req in enumerate(requests):
         pid = req.page_id
@@ -217,11 +223,13 @@ def _run_replay(
         if pid in order:
             order.move_to_end(pid)
             hits += 1
+            hit_sequence.append(True)
             recent_req_hist.append(pid)
             recent_hit_hist.append(pid)
             continue
 
         misses += 1
+        hit_sequence.append(False)
         if len(order) < capacity:
             order[pid] = None
             recent_req_hist.append(pid)
@@ -239,6 +247,8 @@ def _run_replay(
             confidence_by_page=conf_by_page,
             recent_req_hist=recent_req_hist,
             recent_hit_hist=recent_hit_hist,
+            occurrence_index=occurrence_index,
+            distinct_suffix_counts=distinct_suffix_counts,
         )
         chosen_candidate = choose_candidate(candidate_rows)
         decision = compare_choice_to_exact_target(candidate_rows, objective, chosen_candidate)
@@ -256,6 +266,7 @@ def _run_replay(
         horizon=int(cfg.horizon),
         total_hits=hits,
         total_misses=misses,
+        hit_sequence=tuple(hit_sequence),
         decisions=tuple(decisions),
     )
 
@@ -304,11 +315,8 @@ def replay_score_driven_policy(
                 f"Scorer must return exactly one score per candidate; missing={missing}, extra={extra}"
             )
         if spec.optimize == MINIMIZE:
-            best = min(scores.values())
-        else:
-            best = max(scores.values())
-        optimal = sorted(pid for pid, value in scores.items() if value == best)
-        return optimal[0]
+            return min(candidate_ids, key=lambda pid: (scores[pid], candidate_ids.index(pid)))
+        return max(candidate_ids, key=lambda pid: (scores[pid], candidate_ids.index(pid)))
 
     return _run_replay(
         requests=requests,
