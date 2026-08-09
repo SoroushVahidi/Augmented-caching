@@ -228,6 +228,16 @@ tmux session `kbs_learning_curve_highfrac_20260809` with a clean `10`-hour
 wall-time budget and all seven held-out folds targeted. Later `50%` and `100%`
 phases remain TODO.
 
+Current operational checkpoint:
+
+- low fractions `1%`, `2%`, `5%`, and `10%` are done in the audited local
+  checkpoint;
+- the `25%` phase is still live and incomplete;
+- the current written `25%` units are
+  `brightkite`, `citibike`, `cloudphysics`, `metacdn`, and `metakv`;
+- `50%` and `100%` are TODO and must not be launched until the active `25%`
+  phase has a clean audited stop.
+
 The open scientific question is not whether a partial `25%` row looks good or
 bad in isolation. It is whether, as fraction increases through `25%`, `50%`,
 and `100%`:
@@ -530,6 +540,52 @@ Possible sensitivity study:
 Status:
 
 - plausible but not established.
+
+## 9.5.1 Target-formulation branch
+
+Keep this branch separate from learning-convergence and decision-rule changes.
+
+Current local evidence:
+
+- the target-degeneracy diagnostic has one completed cell only:
+  `brightkite`, capacity `64`, base H `4`;
+- it supports short-H degeneracy / tie saturation in that cell;
+- it does not prove a family-general target failure.
+
+Open target-formulation possibilities:
+
+- a zero-terminal-value problem may contribute to finite-H target weakness;
+- a learned historical tail, written conceptually as `Q_H + V_tail_hat`, may be
+  a future target formulation;
+- a historical-tail diagnostic must precede any actual new loss definition.
+
+Ownership/status:
+
+- Wulver owns the current historical-tail readiness work;
+- this local workstation audit did not contact Wulver and does not assert the
+  latest Wulver state.
+
+## 9.5.2 Decision-rule branch
+
+Keep this branch separate from target construction.
+
+Current concern:
+
+- a hard argmin over predicted candidate values may be unreliable when
+  predicted values are close relative to uncertainty.
+
+Conditional future candidates:
+
+- margin-gated softmax;
+- uncertainty/Thompson-style selection;
+- confidence-gated LRU fallback;
+- selective learned override of LRU.
+
+Status:
+
+- these are future diagnostic candidates only;
+- they are not current primary method changes and should not be mixed into the
+  present learning-curve, target-degeneracy, or continuation-policy claims.
 
 ## 9.6 Sequential distribution shift
 

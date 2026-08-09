@@ -51,9 +51,9 @@ Current local SHA256 hashes for the continuation sync package:
 | `scripts/experiments/run_continuation_policy_causal_ablation_smoke.py` | `f44ff9974784debb836fbac0ad7e601c691b0f60ec416e47ace643fbcd00d87a` |
 | `tests/test_continuation_policy_ablation.py` | `c429a8fd957da005d0d0abdbe09ebaa980b4baab8a8407174b83653e805bca60` |
 | `configs/continuation_policy_causal_ablation_v1.json` | `881210c980b3d5615914823a5aa08922f02dd8e660f0dc9c7d7b180ef9ee2400` |
-| `docs/reviewer/kbs_negative_results_interpretation.md` | `93fc0408473bc5cf5d2900d2d21b4f20d4ff739a8a32b644c2e0c04e9e4b0330` |
-| `docs/reviewer_revision_roadmap.md` | `39197c33f15f389199e43510a8b800755570fbef5146d58681faa7c0306e9f3d` |
-| `docs/reviewer/kbs_second_revision_artifact_map.md` | `6133c9dabdd55aef023affb4b6cc0bd7ce312ab0afa35ab82842dcec64876f1f` |
+| `docs/reviewer/kbs_negative_results_interpretation.md` | `c5e3420e5223546dc8e5bd65480d7c8d9ea506250195505b5eb6f1f11a1cce1b` |
+| `docs/reviewer_revision_roadmap.md` | `e6dbeb143dec1a1eb498912974fa2cceacfd3be4790be61b4ae101f448b86cb1` |
+| `docs/reviewer/kbs_second_revision_artifact_map.md` | `0ca4c4ca91205e2973bd0fa4eea306f7cbd8f4f31939189ad4164db7faa28b5a` |
 | `docs/reviewer/local_to_wulver_continuation_sync_manifest.md` | Self-hash is not stable when embedded; compute at transfer time with `sha256sum`. |
 
 ## Launch Preconditions

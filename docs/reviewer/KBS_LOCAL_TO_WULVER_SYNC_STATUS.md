@@ -76,7 +76,7 @@ Preserve locally and later consolidate intentionally:
 - `analysis/supervision_objective_learning_curve_v1/`
   - active/running local diagnostic output
   - currently includes 25% units for `brightkite`, `citibike`,
-    `cloudphysics`, and `metacdn`; the phase is not complete
+    `cloudphysics`, `metacdn`, and `metakv`; the phase is not complete
 - `models/supervision_objective_learning_curve_v1/`
   - generated models for completed learning-curve units
 - `analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/`
@@ -141,3 +141,28 @@ Safe transfer strategy:
 - merge documentation by topic, preserving status labels:
   `OBSERVED`, `SUPPORTED HYPOTHESIS`, `OPEN QUESTION`, `RUNNING`, `NOT RUN`,
   and `SMOKE ONLY`.
+
+## F. Current Theory / Work-Map Boundaries
+
+Keep these mechanisms separate during any later sync review:
+
+- target-formulation branch:
+  short-H eviction-loss labels show degeneracy/tie saturation in the completed
+  one-cell diagnostic; a zero-terminal-value problem and a learned historical
+  tail such as `Q_H + V_tail_hat` remain possible future explanations/designs.
+  The historical-tail diagnostic must precede any actual new loss definition.
+  Wulver owns the current historical-tail readiness work, and this local audit
+  did not contact or synchronize Wulver.
+- decision-rule branch:
+  hard argmin may be unreliable when predicted candidate values are close
+  relative to uncertainty. Future candidates include margin-gated softmax,
+  uncertainty/Thompson-style selection, confidence-gated LRU fallback, and
+  selective learned override of LRU. These are conditional future experiments,
+  not current primary method changes.
+- learning branch:
+  low fractions `1%`, `2%`, `5%`, and `10%` have a validated local checkpoint;
+  the `25%` phase is running locally; `50%` and `100%` remain TODO.
+- continuation branch:
+  C1 is `Q_H^LRU -> pi1`; C2 is `Q_H^pi1 -> pi2`. The local implementation is
+  ready, but Wulver real-data validation and later source/result sync are still
+  required before any result claim.

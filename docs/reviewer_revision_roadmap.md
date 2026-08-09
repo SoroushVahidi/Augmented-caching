@@ -81,6 +81,10 @@ Status: `RUNNING_LOCAL` and `DIAGNOSTIC_PARTIAL`
   `16` units, `96` rows
 - current live phase:
   `25%`
+- current 25% checkpoint:
+  `5/7` folds have unit audits and result rows
+- completed 25% folds:
+  `brightkite, citibike, cloudphysics, metacdn, metakv`
 - current live target:
   all seven held-out folds
 - local wall-time budget for the active `25%` phase:

@@ -93,6 +93,10 @@ Current local high-fraction extension status:
   `kbs_learning_curve_highfrac_20260809`
 - currently launched fraction phase:
   `25%`
+- current 25% completion:
+  `5/7` folds have unit audits and result rows
+- current completed 25% folds:
+  `brightkite`, `citibike`, `cloudphysics`, `metacdn`, `metakv`
 - target scope for the active phase:
   all seven held-out folds
 - local wall-time budget:
@@ -235,6 +239,15 @@ Cell-specific interpretation:
 - H=8/16/32 increase resolution monotonically but only materially for a
   minority of H=4 ties; even H=32 leaves most H=4 tied sets unresolved.
 
+Target-formulation branch to keep separate:
+
+- short-H degeneracy/tie saturation is observed in this one diagnostic cell;
+- a zero-terminal-value problem remains a possible future diagnosis;
+- a learned historical tail such as `Q_H + V_tail_hat` remains a possible
+  future target formulation;
+- the historical-tail diagnostic must precede any actual new loss definition;
+- Wulver owns current historical-tail readiness work.
+
 ## Reviewer #2 Major 3 and Reviewer #3: distribution-shift diagnosis
 
 | Item | Code / protocol | Current local output | Status | Eligibility | Caveats |
@@ -254,6 +267,15 @@ Continuation-policy causal-ablation intent:
   `analysis/supervision_objective_ablation_v1/model_registry.json`;
 - report label-agreement and downstream miss metrics only after Wulver
   execution and audit.
+
+Decision-rule branch to keep separate:
+
+- hard argmin may be unreliable when predicted candidate values are close
+  relative to uncertainty;
+- future candidates include margin-gated softmax,
+  uncertainty/Thompson-style selection, confidence-gated LRU fallback, and
+  selective learned override of LRU;
+- these are conditional future experiments, not current primary method changes.
 
 ## Reviewer #2 Major 4: practical significance
 
