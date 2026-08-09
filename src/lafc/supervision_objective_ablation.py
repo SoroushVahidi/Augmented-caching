@@ -129,6 +129,7 @@ def iter_multi_label_candidate_rows(
     trace_name: str,
     trace_family: str,
     cfg: ObjectiveAblationConfig,
+    selected_decision_ids: Optional[set[str]] = None,
 ) -> Iterable[Dict[str, object]]:
     """Generator form of build_multi_label_candidate_rows.
 
@@ -179,6 +180,12 @@ def iter_multi_label_candidate_rows(
         req_bucket = int(req.metadata.get("bucket", 0))
         req_conf = float(req.metadata.get("confidence", 0.5))
         decision_id = f"{trace_name}|cap={capacity}|t={t}"
+        if selected_decision_ids is not None and decision_id not in selected_decision_ids:
+            lru_victim = candidates[0]
+            order.pop(lru_victim)
+            order[pid] = None
+            recent_req_hist.append(pid)
+            continue
         # Bounded H-step slice only (not the whole remaining trace): the
         # eviction-loss rollout only ever looks H steps ahead.
         future_h = requests[t + 1 : t + 1 + H]
@@ -240,10 +247,20 @@ def build_multi_label_candidate_rows(
     trace_name: str,
     trace_family: str,
     cfg: ObjectiveAblationConfig,
+    selected_decision_ids: Optional[set[str]] = None,
 ) -> List[Dict[str, object]]:
     """List-returning convenience wrapper over iter_multi_label_candidate_rows,
     for small traces / tests where materializing the full list is fine."""
-    return list(iter_multi_label_candidate_rows(requests, capacity, trace_name, trace_family, cfg))
+    return list(
+        iter_multi_label_candidate_rows(
+            requests,
+            capacity,
+            trace_name,
+            trace_family,
+            cfg,
+            selected_decision_ids=selected_decision_ids,
+        )
+    )
 
 
 def _max_items_for_pair_budget(budget: int) -> int:

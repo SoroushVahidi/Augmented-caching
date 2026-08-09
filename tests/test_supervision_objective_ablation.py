@@ -120,6 +120,24 @@ def test_deterministic_repeated_construction():
     assert rows_1 == rows_2
 
 
+def test_selected_decision_filter_returns_exact_subset():
+    page_ids = ["a", "b", "c", "a", "d", "b", "c", "e", "a", "b"]
+    reqs, _ = build_requests_from_lists(page_ids=page_ids)
+    cfg = ObjectiveAblationConfig(horizon=4)
+    all_rows = build_multi_label_candidate_rows(reqs, 2, "toy", "fam", cfg)
+    selected = {str(all_rows[0]["decision_id"])}
+    filtered = build_multi_label_candidate_rows(
+        reqs,
+        2,
+        "toy",
+        "fam",
+        cfg,
+        selected_decision_ids=selected,
+    )
+    assert filtered
+    assert {str(row["decision_id"]) for row in filtered} == selected
+
+
 def test_pairwise_next_arrival_source_independent_of_eviction_loss():
     page_ids = ["q1", "q2", "newpid", "q1", "q2", "z1", "q1", "z2", "q1"]
     rows = _rows_for(page_ids, capacity=2, horizon=6)
