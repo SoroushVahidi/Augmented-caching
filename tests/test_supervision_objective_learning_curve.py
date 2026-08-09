@@ -31,14 +31,18 @@ def _base_config(tmp_path: Path) -> dict:
     return {
         "protocol_id": "supervision_objective_learning_curve_v1",
         "source_protocol_id": "supervision_objective_ablation_v1",
+        "description": "test learning-curve config",
         "fractions": [0.5, 1.0],
         "held_out_families": ["brightkite"],
         "capacities": [32],
         "seed": 0,
         "horizon": 4,
+        "pairwise_label_source": "regret",
         "pairwise_max_pairs_per_decision": 6,
         "pairwise_sample_seed": 0,
         "validation_decision_fraction": 1.0,
+        "validation_decision_fraction_note": "test-only",
+        "same_example_guarantee": "test guarantee",
         "conditions": {
             "eviction_loss_scalar": {"fixed_model_family_by_fold": {"brightkite": "ridge"}},
             "eviction_loss_pairwise": {},
@@ -279,6 +283,55 @@ def test_plan_units_supports_repo_relative_external_roots(tmp_path, monkeypatch)
     assert units[0]["trace_name"] == "brightkite_trace"
 
 
+def test_protocol_snapshot_check_allows_path_only_portability_change(tmp_path):
+    m = _import_module()
+    out_dir = tmp_path / "analysis"
+    out_dir.mkdir()
+    raw_snapshot = _base_config(tmp_path)
+    raw_snapshot["dataset_repo_root"] = "/old/absolute/objective"
+    raw_snapshot["dataset_root"] = "/old/absolute/objective/data/derived/supervision_objective_ablation_v1"
+    raw_snapshot["data_read_root"] = "/old/absolute/main"
+    (out_dir / "protocol_snapshot.json").write_text(json.dumps(raw_snapshot), encoding="utf-8")
+
+    current = _base_config(tmp_path)
+    m._check_protocol_snapshot_compatible(out_dir, current)
+
+
+def test_protocol_snapshot_check_allows_output_and_model_path_change(tmp_path):
+    m = _import_module()
+    out_dir = tmp_path / "analysis"
+    out_dir.mkdir()
+    snapshot = _base_config(tmp_path)
+    (out_dir / "protocol_snapshot.json").write_text(json.dumps(snapshot), encoding="utf-8")
+
+    current = _base_config(tmp_path)
+    current["output_dir"] = "analysis/alt_learning_curve"
+    current["models_dir"] = "models/alt_learning_curve"
+    m._check_protocol_snapshot_compatible(out_dir, current)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("pairwise_sample_seed", 7),
+        ("fractions", [0.25, 0.5]),
+        ("seed", 9),
+        ("source_protocol_id", "other_protocol"),
+    ],
+)
+def test_protocol_snapshot_check_blocks_scientific_drift(tmp_path, field, value):
+    m = _import_module()
+    out_dir = tmp_path / "analysis"
+    out_dir.mkdir()
+    snapshot = _base_config(tmp_path)
+    (out_dir / "protocol_snapshot.json").write_text(json.dumps(snapshot), encoding="utf-8")
+
+    drifted = _base_config(tmp_path)
+    drifted[field] = value
+    with pytest.raises(m.ProtocolBlocked, match="protocol_snapshot.json"):
+        m._check_protocol_snapshot_compatible(out_dir, drifted)
+
+
 def test_campaign_state_marks_completed_units(tmp_path):
     m = _import_module()
     state_path = tmp_path / "campaign_state.json"
@@ -286,6 +339,16 @@ def test_campaign_state_marks_completed_units(tmp_path):
     payload = json.loads(state_path.read_text())
     assert payload["completed_units"] == ["brightkite|0.010000"]
     assert payload["unit_seconds"]["brightkite|0.010000"] == 12.5
+
+
+def test_campaign_state_does_not_duplicate_completed_units(tmp_path):
+    m = _import_module()
+    state_path = tmp_path / "campaign_state.json"
+    m._mark_completed_unit(state_path, "brightkite|0.010000", 12.5)
+    m._mark_completed_unit(state_path, "brightkite|0.010000", 15.0)
+    payload = json.loads(state_path.read_text())
+    assert payload["completed_units"] == ["brightkite|0.010000"]
+    assert payload["unit_seconds"]["brightkite|0.010000"] == 15.0
 
 
 def test_incremental_writer_rejects_duplicate_key_via_already_done(tmp_path):
@@ -313,3 +376,50 @@ def test_incremental_writer_rejects_duplicate_key_via_already_done(tmp_path):
     writer2 = m.IncrementalCsvWriter(tmp_path / "policy.csv", m.FIELDNAMES, m.KEY_FIELDS)
     assert writer2.already_done(key)
     writer2.close()
+
+
+def test_existing_result_rows_are_not_overwritten_when_resume_skips(tmp_path):
+    m = _import_module()
+    out = tmp_path / "policy.csv"
+    writer = m.IncrementalCsvWriter(out, m.FIELDNAMES, m.KEY_FIELDS)
+    row = {field: "" for field in m.FIELDNAMES}
+    row.update(
+        {
+            "condition": "eviction_loss_scalar",
+            "fraction": "0.01",
+            "held_out_family": "brightkite",
+            "capacity": "32",
+            "status": "ok",
+        }
+    )
+    key = {
+        "condition": "eviction_loss_scalar",
+        "fraction": "0.01",
+        "held_out_family": "brightkite",
+        "capacity": 32,
+    }
+    writer.write_row(row)
+    writer.close()
+    before = out.read_text(encoding="utf-8")
+
+    writer2 = m.IncrementalCsvWriter(out, m.FIELDNAMES, m.KEY_FIELDS)
+    if not writer2.already_done(key):
+        writer2.write_row({**row, "status": "should_not_happen"})
+    writer2.close()
+    after = out.read_text(encoding="utf-8")
+
+    assert after == before
+    assert after.count("brightkite") == 1
+
+
+def test_scientific_protocol_view_is_deterministic_under_path_only_changes(tmp_path):
+    m = _import_module()
+    left = _base_config(tmp_path)
+    right = _base_config(tmp_path)
+    right["dataset_repo_root"] = "/other/objective_repo"
+    right["dataset_root"] = "/other/objective_repo/data/derived/supervision_objective_ablation_v1"
+    right["data_read_root"] = "/other/main_repo"
+    right["output_dir"] = "analysis/other"
+    right["models_dir"] = "models/other"
+
+    assert m._scientific_protocol_view(left) == m._scientific_protocol_view(right)

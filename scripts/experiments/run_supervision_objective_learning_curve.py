@@ -182,6 +182,39 @@ def _resolve_protocol_paths(
     return resolved
 
 
+def _scientific_protocol_view(config: Mapping[str, object]) -> Dict[str, object]:
+    return {
+        "protocol_id": config["protocol_id"],
+        "source_protocol_id": config["source_protocol_id"],
+        "description": config["description"],
+        "fractions": list(config["fractions"]),
+        "held_out_families": list(config["held_out_families"]),
+        "capacities": list(config["capacities"]),
+        "seed": config["seed"],
+        "horizon": config["horizon"],
+        "pairwise_label_source": config["pairwise_label_source"],
+        "pairwise_max_pairs_per_decision": config["pairwise_max_pairs_per_decision"],
+        "pairwise_sample_seed": config["pairwise_sample_seed"],
+        "validation_decision_fraction": config["validation_decision_fraction"],
+        "validation_decision_fraction_note": config["validation_decision_fraction_note"],
+        "same_example_guarantee": config["same_example_guarantee"],
+        "conditions": config["conditions"],
+    }
+
+
+def _check_protocol_snapshot_compatible(out_dir: Path, raw_config: Mapping[str, object]) -> None:
+    snapshot_path = out_dir / "protocol_snapshot.json"
+    if not snapshot_path.exists():
+        return
+    snapshot = _load_json(snapshot_path)
+    if _scientific_protocol_view(snapshot) != _scientific_protocol_view(raw_config):
+        raise ProtocolBlocked(
+            "Current learning-curve scientific config does not match the protocol_snapshot.json "
+            "recorded in the output directory. Refusing to mix units produced under different "
+            "scientific settings."
+        )
+
+
 def _fraction_label(fraction: float) -> str:
     return f"{fraction:.2f}".rstrip("0").rstrip(".")
 
@@ -1036,6 +1069,7 @@ def main() -> None:
 
     out_dir.mkdir(parents=True, exist_ok=True)
     models_dir.mkdir(parents=True, exist_ok=True)
+    _check_protocol_snapshot_compatible(out_dir, raw_config)
     _atomic_write_json(out_dir / "protocol_snapshot.json", raw_config)
     _atomic_write_json(
         out_dir / "provenance.json",
