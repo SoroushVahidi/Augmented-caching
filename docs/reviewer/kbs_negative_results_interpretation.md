@@ -303,6 +303,126 @@ Motivation:
   counterfactual-label noise can flip the binary label while scalar regression
   still retains useful magnitude information.
 
+## Exact target oracle vs learned online policy
+
+Status:
+`DESIGNED / LOCAL_FOUNDATION_ONLY / NOT YET FULLY RUN`
+
+This diagnostic is designed to separate three different questions that should
+not be conflated:
+
+1. quality of the supervision target itself;
+2. ability of ML to approximate that target from online features;
+3. remaining gap to a global offline oracle.
+
+Clean decomposition:
+
+- EXACT TARGET ORACLE:
+  at each eviction decision, compute the true target value for every valid
+  in-cache candidate using the actual future suffix and choose the target-best
+  candidate with no ML prediction.
+- LEARNED ONLINE POLICY:
+  use a trained model to predict that same target from online-available
+  features and choose accordingly.
+- GLOBAL OFFLINE ORACLE:
+  where meaningful, compare both of the above against `offline_belady`.
+
+Important naming guardrail:
+
+- the exact target oracle is **not** automatically Belady;
+- for the current `eviction_loss` target, it is a local greedy policy that
+  recomputes the exact finite-horizon target at each decision using the
+  policy's actual current cache state,
+- but the target value itself still uses the same frozen label semantics as
+  training: horizon `H`, admit the incoming page, then replay the next `H`
+  requests under `LRU` continuation.
+
+Therefore the first oracle diagnostic must match the existing label definition
+exactly rather than introducing a different continuation policy.
+
+Key gaps to preserve:
+
+- TARGET-QUALITY GAP:
+  exact target oracle vs `offline_belady`
+- LEARNING GAP:
+  learned policy vs exact target oracle
+- TOTAL ONLINE GAP:
+  learned policy vs `offline_belady`
+
+Central interpretation for `eviction_loss`:
+
+- if exact `eviction_loss` oracle is close to `offline_belady` but the learned
+  policy is poor, then learnability or generalization is the main bottleneck;
+- if exact `eviction_loss` oracle is itself poor, then the target or objective
+  is the main bottleneck;
+- if exact-oracle quality improves strongly as `H` grows, then horizon
+  truncation is a major contributor.
+
+Objective-by-objective classification:
+
+- `eviction_loss`:
+  `EXACT_ORACLE_WELL_DEFINED`
+- `next_arrival`:
+  `EXACT_ORACLE_WELL_DEFINED`
+- `reuse_distance`:
+  `EXACT_ORACLE_WELL_DEFINED`
+- `objective_pairwise`:
+  `EXACT_ORACLE_REQUIRES_CLARIFICATION`
+  because the frozen pairwise objective is defined through next-arrival
+  ordering, so any multi-candidate exact oracle must be routed through that
+  underlying source label rather than treated as an independent global oracle.
+
+Current local foundation only:
+
+- exact per-decision oracle helpers live in `src/lafc/oracle_diagnostics.py`,
+- they reuse the shared target-construction kernel in
+  `src/lafc/supervision_objective_ablation.py`,
+- synthetic tests live in `tests/test_oracle_diagnostics.py`,
+- no full seven-family replay has been run yet from this branch.
+
+Predeclared later metrics:
+
+- exact-oracle misses
+- learned-policy misses
+- Belady misses
+- learned vs exact decision agreement
+- exact vs Belady decision agreement
+- top-1 learned target accuracy
+- target regret of the learned decision
+- number and fraction of decisions where learned chooses a non-optimal exact
+  candidate
+- downstream miss gap
+
+Planned evaluation axes:
+
+- family
+- capacity
+- horizon
+
+Planned horizon grid for this diagnostic:
+
+- `H in {1, 2, 4, 8, 16}`
+
+Link to the running learning-convergence study:
+
+- later combine training fraction with prediction `MAE/RMSE`,
+  exact-target decision agreement, exact-target regret, and downstream misses;
+- if `MAE/RMSE` improves while exact-target agreement and misses plateau,
+  surrogate or ranking issues remain plausible;
+- if exact-target agreement improves while misses remain poor, target quality
+  remains suspect;
+- if both improve, sample complexity likely matters.
+
+Important distinction from minimum-counterfactual suffix attribution:
+
+- exact-target oracle diagnostic asks:
+  was the learned eviction decision consistent with the exact target?
+- minimum-counterfactual attribution asks:
+  which earlier changed decisions are minimally sufficient to remove a later
+  excess miss?
+
+Both remain useful and should not be collapsed into the same diagnostic.
+
 ## 9.5 Horizon truncation / temporal credit assignment
 
 Empirical setup:

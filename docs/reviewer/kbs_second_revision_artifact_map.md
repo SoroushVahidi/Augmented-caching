@@ -9,6 +9,7 @@ Status labels used here:
 - `RUNNING_LOCAL`
 - `PARTIAL`
 - `DIAGNOSTIC_PARTIAL`
+- `LOCAL_FOUNDATION_ONLY`
 - `SMOKE_ONLY`
 - `PENDING_CONTROLLED_RUN`
 - `CONTAMINATED_DO_NOT_USE`
@@ -123,6 +124,57 @@ Resume and isolation notes:
 - partial campaign state must be preserved as-is at clean wall-time stop.
 - the validated `1%` to `10%` checkpoint and the running `25%` extension must
   remain analytically separate until the active phase reaches a clean stop.
+
+## Supplementary local diagnostic: exact target oracle vs learned online policy
+
+| Item | Code / protocol | Current local output | Status | Eligibility | Caveats |
+|---|---|---|---|---|---|
+| Exact target oracle vs learned online policy | `src/lafc/oracle_diagnostics.py`, `src/lafc/supervision_objective_ablation.py`, `tests/test_oracle_diagnostics.py` | no scientific replay output yet | `LOCAL_FOUNDATION_ONLY` | Not scientific evidence yet; design and unit-test foundation only | Full replay intentionally deferred while the active `25%` learning-curve campaign is running locally |
+
+Diagnostic intent:
+
+- separate exact target quality from learned approximation quality,
+- compare local exact-target decisions against learned online choices,
+- and keep `offline_belady` as a distinct global offline reference rather than
+  renaming the exact target oracle as Belady.
+
+Current design boundaries:
+
+- for `eviction_loss`, the exact target oracle must match the current training
+  label semantics exactly:
+  finite horizon `H`, admit the incoming page, then replay the local suffix
+  under `LRU` continuation;
+- the same foundation can later evaluate `next_arrival` and `reuse_distance`
+  exact oracles directly;
+- `objective_pairwise` remains `EXACT_ORACLE_REQUIRES_CLARIFICATION` because
+  the frozen pairwise target is defined through next-arrival ordering rather
+  than a standalone global scalar oracle.
+
+Predeclared later metrics:
+
+- exact-oracle misses
+- learned-policy misses
+- Belady misses
+- learned vs exact decision agreement
+- exact vs Belady decision agreement
+- top-1 learned target accuracy
+- target regret of the learned decision
+- non-optimal exact-target choice count and fraction
+- downstream miss gap
+
+Later evaluation axes:
+
+- family
+- capacity
+- horizon
+- planned horizon grid:
+  `1, 2, 4, 8, 16`
+
+Important distinction:
+
+- this diagnostic asks whether the learned decision matches the exact target;
+- minimum-counterfactual suffix attribution asks which earlier changed
+  decisions are minimally sufficient to remove a later excess miss.
 
 ## Reviewer #2 Major 3 and Reviewer #3: distribution-shift diagnosis
 

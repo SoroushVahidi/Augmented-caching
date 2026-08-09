@@ -17,6 +17,7 @@ Evidence-usage rules live in
 | `PARTIAL` | Some valid evidence exists, but the planned campaign is incomplete. |
 | `RUNNING_LOCAL` | A local diagnostic campaign is actively running and must not be treated as final evidence. |
 | `DIAGNOSTIC_PARTIAL` | Some immutable diagnostic cells are valid to inspect, but the aggregate remains partial or incomplete. |
+| `LOCAL_FOUNDATION_ONLY` | Local code, tests, and documentation exist, but the full scientific replay has not been run yet. |
 | `SMOKE_ONLY` | Useful implementation/profiling evidence exists, but not controlled final evidence. |
 | `PENDING_CONTROLLED_RUN` | Protocol exists; final timing or eval still needs a controlled run. |
 | `CONCEPTUAL_ONLY` | The idea is documented, but no dedicated empirical campaign has been run. |
@@ -134,12 +135,34 @@ Status: `CONCEPTUAL_ONLY`
 
 ### Future-aware oracle vs learned-online comparison
 
-Status: `CONCEPTUAL_ONLY` and `HIGH_PRIORITY`
+Status: `DESIGNED / LOCAL_FOUNDATION_ONLY / NOT YET FULLY RUN` and `HIGH_PRIORITY`
 
-- exact future-aware or oracle-style comparison against learned-online behavior
-  remains a high-priority unfinished diagnostic,
-- do not collapse oracle context into deployable-baseline claims,
-- this remains separate from the running same-target learning-curve work.
+- local foundation code now exists in `src/lafc/oracle_diagnostics.py`,
+  reusing the exact target kernel in
+  `src/lafc/supervision_objective_ablation.py`;
+- focused synthetic validation exists in `tests/test_oracle_diagnostics.py`;
+- this diagnostic separates:
+  exact target oracle,
+  learned online approximation,
+  and global offline oracle context from `offline_belady`;
+- for `eviction_loss`, the exact target oracle must use the same frozen label
+  semantics as training:
+  admit the incoming page, evaluate each candidate with finite horizon `H`,
+  and continue the label rollout under `LRU`;
+- later full evaluation should report:
+  exact-oracle misses,
+  learned-policy misses,
+  Belady misses,
+  learned-vs-exact decision agreement,
+  exact-target regret,
+  and downstream miss gap;
+- planned horizon grid for this diagnostic:
+  `1, 2, 4, 8, 16`;
+- no full replay has been run yet from this branch because the active `25%`
+  learning-curve campaign must not be disturbed;
+- do not collapse oracle context into deployable-baseline claims;
+- this remains separate from the running same-target learning-curve work and
+  from minimum-counterfactual suffix attribution.
 
 ### Practical timing
 
@@ -160,7 +183,7 @@ Preserve these as active TODO items:
 5. determine whether scalar performance converges with more data or remains
    limited despite improved offline prediction;
 6. keep horizon sensitivity explicitly external to this workstation;
-7. complete the future-aware or oracle-vs-learned-online comparison;
+7. run and audit the designed exact-target-oracle vs learned-online diagnostic;
 8. complete controlled final timing;
 9. run the pairwise margin/noise diagnostic if same-target pairwise remains
    weak;

@@ -67,6 +67,15 @@ before final manuscript-facing cleanup:
   `kbs_learning_curve_highfrac_20260809` with a clean `10`-hour wall-time
   budget; no current `25%` scientific claim should be recorded until completed
   units are audited.
+- an exact-target-oracle vs learned-online diagnostic foundation now exists
+  locally in `src/lafc/oracle_diagnostics.py` with focused synthetic tests in
+  `tests/test_oracle_diagnostics.py`, but no full scientific replay has been
+  run yet from this branch.
+- that oracle diagnostic is intentionally distinct from the
+  minimum-counterfactual or minimum-Hamming-distance suffix-attribution line:
+  the former checks exact-target consistency of a decision, while the latter
+  asks which earlier changed decisions are minimally sufficient to remove a
+  later excess miss.
 - `objective_pairwise` and `eviction_loss_pairwise` are not interchangeable
   labels; the former changes the supervision objective, while the latter keeps
   the eviction-loss target fixed and only changes representation.
