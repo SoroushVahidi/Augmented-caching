@@ -59,3 +59,14 @@ reviewer-facing runners now also live under `scripts/experiments/`:
 | Joint-state reasoning | `scripts/experiments/run_joint_state_reasoning_ablation.py` | `analysis/joint_state_reasoning_light/` |
 
 Canonical/non-canonical boundary doc: `docs/lightweight_exploratory_ablations.md`.
+
+## Current KBS reviewer-science diagnostics
+
+- `scripts/experiments/run_supervision_objective_ablation_eval.py`:
+  frozen four-objective comparison including `objective_pairwise`
+- `scripts/experiments/run_supervision_objective_learning_curve.py`:
+  local same-target diagnostic comparing `eviction_loss_scalar` against
+  `eviction_loss_pairwise` derived from the same underlying eviction-loss
+  labels and matched decision subsets
+
+Do not conflate those two pairwise conditions in reviewer-facing notes.

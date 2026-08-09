@@ -55,6 +55,10 @@ Current local state:
 - same-example audit passed,
 - fairness audit passed,
 - registry freeze passed.
+- preserve the distinction between:
+  - `objective_pairwise` in the frozen objective ablation,
+  - `eviction_loss_pairwise` in the local same-target learning-curve
+    diagnostic.
 
 ### Concern 3: distribution-shift diagnosis
 
@@ -85,6 +89,33 @@ Current local state:
 - controlled final timing does not yet exist,
 - timing conclusions must stay labeled `SMOKE_ONLY` or
   `PENDING_CONTROLLED_RUN`.
+
+## 2.1 Supplementary local diagnostic: same-target learning curve
+
+- runner:
+  `scripts/experiments/run_supervision_objective_learning_curve.py`
+- config:
+  `configs/supervision_objective_learning_curve_v1.json`
+- status:
+  local `RUNNING_LOCAL` / `DIAGNOSTIC_PARTIAL`
+- output:
+  `analysis/supervision_objective_learning_curve_v1/`
+- models:
+  `models/supervision_objective_learning_curve_v1/`
+
+Purpose:
+
+- compare scalar regression on eviction-loss labels against same-target
+  pairwise labels derived from those same eviction-loss labels,
+- test whether pairwise representation alone looks more sample-efficient once
+  the underlying target notion is held fixed.
+
+Use rule:
+
+- completed cells are useful explanatory diagnostics,
+- incomplete aggregates are not final manuscript evidence,
+- do not pool these results with the earlier `objective_pairwise` ablation as
+  though they were the same scientific condition.
 
 ## 3. Read-only audit helpers
 

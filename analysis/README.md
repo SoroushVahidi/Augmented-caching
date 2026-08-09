@@ -19,6 +19,7 @@ Historical `heavy_r1` builder-oriented material still starts at
 |------|------------------|------------------------|
 | Tracked small audits | `analysis/reviewer_fairness/*_audit.*` | Canonical helper artifacts |
 | Reviewer experiment outputs | `analysis/reviewer_fairness/`, `analysis/distribution_shift_ablation_v1/`, `analysis/practical_significance_ablation_v1/`, `analysis/supervision_objective_ablation_v1/` | Usually generated evidence; check eligibility note |
+| Local explanatory diagnostic | `analysis/supervision_objective_learning_curve_v1/` | `DIAGNOSTIC_PARTIAL` unless a clean stopped campaign has been fully audited |
 | Historical heavy-run root files | `analysis/*_heavy_r1.*` | Historical builder inputs |
 | Legacy or alternate root files | unsuffixed `analysis/evict_value_wulver_v1_*` | Historical or alternate-driver outputs |
 | Experiment directories | `analysis/<name>/` | Experiment-specific generated outputs |

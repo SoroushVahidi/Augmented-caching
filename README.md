@@ -102,6 +102,11 @@ python3 -m lafc.runner.run_policy \
 - Supervision-objective ablation:
   `scripts/experiments/run_supervision_objective_ablation_eval.py`
   plus the audit and gate scripts in the same directory
+- Same-target scalar-vs-pairwise learning curve:
+  `scripts/experiments/run_supervision_objective_learning_curve.py`
+  for the local explanatory diagnostic that compares
+  `eviction_loss_scalar` with `eviction_loss_pairwise` on matched decision
+  subsets derived from the same eviction-loss labels
 - Distribution-shift diagnosis:
   `scripts/experiments/run_distribution_shift_ablation.py`
 - Practical-significance analysis:

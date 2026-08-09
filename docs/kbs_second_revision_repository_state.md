@@ -3,7 +3,7 @@
 Date: 2026-08-09  
 Canonical worktree: `/home/soroush/Augmented-caching-kbs-second-revision`  
 Canonical branch: `kbs/second-revision-science`  
-Expected baseline HEAD for the consolidation pass: `0e24660b829b2b2b72897d8659270113fea6ac5b`
+Expected baseline HEAD for the current local documentation pass: `58f486701c304d8db5460cfd559af4051e59b938`
 
 ## Purpose
 
@@ -35,6 +35,7 @@ before final manuscript-facing cleanup:
 - `analysis/distribution_shift_ablation_v1/`
 - `analysis/practical_significance_ablation_v1/`
 - `analysis/supervision_objective_ablation_v1/`
+- `analysis/supervision_objective_learning_curve_v1/`
 - `analysis/external_learned_baselines/`
 - `models/`
 
@@ -55,6 +56,12 @@ before final manuscript-facing cleanup:
   is still separate work.
 - `analysis/distribution_shift_ablation_v1/` is a valid partial checkpoint, not
   a completed campaign.
+- `analysis/supervision_objective_learning_curve_v1/` is a local explanatory
+  diagnostic. Completed cells may be inspected, but incomplete aggregates must
+  remain `DIAGNOSTIC_PARTIAL`.
+- `objective_pairwise` and `eviction_loss_pairwise` are not interchangeable
+  labels; the former changes the supervision objective, while the latter keeps
+  the eviction-loss target fixed and only changes representation.
 
 ## Unconsolidated items requiring explicit follow-up
 

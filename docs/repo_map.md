@@ -44,6 +44,9 @@ the best top-level orientation for the current cleanup branch. When needed:
 ## `scripts/` families
 
 - `scripts/experiments/` — reviewer-science runners and audits plus focused ablations.
+  This includes the local same-target learning-curve diagnostic
+  `run_supervision_objective_learning_curve.py`, which is separate from the
+  frozen `objective_pairwise` supervision-objective ablation.
 - `scripts/validation/` — read-only repository and campaign status helpers.
 - `scripts/paper/` — historical manuscript bundle builders, including the
   older `heavy_r1` KBS path.

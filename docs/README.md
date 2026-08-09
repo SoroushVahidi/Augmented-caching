@@ -8,10 +8,10 @@ Use this page to find the right document without duplicating long runbooks.
 |----------|---------------------|
 | [`kbs_manuscript_workflow.md`](kbs_manuscript_workflow.md) | Current workflow hub and distinction from historical `heavy_r1` material |
 | [`kbs_second_revision_repository_state.md`](kbs_second_revision_repository_state.md) | Canonical-branch intent and tracked-vs-generated boundaries |
-| [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md) | Concern-by-concern code, outputs, status, and caveats |
+| [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md) | Concern-by-concern code, outputs, status, caveats, and the running same-target learning-curve diagnostic |
 | [`reviewer/kbs_evidence_eligibility.md`](reviewer/kbs_evidence_eligibility.md) | What can be used in primary tables, supporting analysis, or diagnostics only |
-| [`reviewer/kbs_negative_results_interpretation.md`](reviewer/kbs_negative_results_interpretation.md) | Internal note on the negative results and verified literature links |
-| [`reviewer_revision_roadmap.md`](reviewer_revision_roadmap.md) | Current status summary for the four reviewer concerns |
+| [`reviewer/kbs_negative_results_interpretation.md`](reviewer/kbs_negative_results_interpretation.md) | Internal note on the negative results, including the same-target scalar-vs-pairwise diagnostic distinction |
+| [`reviewer_revision_roadmap.md`](reviewer_revision_roadmap.md) | Current status summary for the four reviewer concerns plus supplementary local diagnostics |
 
 ## Historical KBS / Wulver `heavy_r1`
 

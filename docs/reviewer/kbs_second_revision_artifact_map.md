@@ -6,7 +6,9 @@ outputs, current status, and evidence caveats.
 Status labels used here:
 
 - `COMPLETE_VALIDATED`
+- `RUNNING_LOCAL`
 - `PARTIAL`
+- `DIAGNOSTIC_PARTIAL`
 - `SMOKE_ONLY`
 - `PENDING_CONTROLLED_RUN`
 - `CONTAMINATED_DO_NOT_USE`
@@ -50,6 +52,65 @@ Reverified aggregate misses from `analysis/supervision_objective_ablation_v1/pol
 - `objective_next_arrival`: `573059`
 - `objective_eviction_loss`: `601569`
 
+Important naming distinction:
+
+- `objective_pairwise` in this frozen ablation is a different supervision
+  objective from `objective_eviction_loss`;
+- `eviction_loss_pairwise` in the newer learning-curve diagnostic is not that
+  earlier condition. It derives pairwise labels from the same underlying
+  eviction-loss scalar labels and therefore isolates representation rather than
+  target construction.
+
+## Supplementary local diagnostic: same-target scalar-vs-pairwise learning curve
+
+| Item | Code / protocol | Current local output | Status | Eligibility | Caveats |
+|---|---|---|---|---|---|
+| Same-target scalar-vs-pairwise learning curve | `configs/supervision_objective_learning_curve_v1.json`, `scripts/experiments/run_supervision_objective_learning_curve.py`, `src/lafc/reviewer_diagnostics.py`, `tests/test_supervision_objective_learning_curve.py` | `analysis/supervision_objective_learning_curve_v1/`, `models/supervision_objective_learning_curve_v1/` | `RUNNING_LOCAL` | `DIAGNOSTIC_PARTIAL` while active or partially complete | Explanatory diagnostic only, not a primary reviewer comparison |
+
+Diagnostic intent:
+
+- compare `eviction_loss_scalar` against `eviction_loss_pairwise`,
+- hold the underlying eviction-loss notion fixed,
+- vary the amount of training data by fraction,
+- test whether pairwise representation alone appears more sample-efficient than
+  scalar regression.
+
+Live local run characteristics from the 2026-08-09 audit:
+
+- local tmux session:
+  `kbs_learning_curve_20260809`
+- configured fractions in the active run:
+  `1%, 2%, 5%, 10%`
+- capacities:
+  `32, 64, 128`
+- held-out families:
+  `brightkite, citibike, cloudphysics, metacdn, metakv, twemcache, wiki2018`
+- expected shape for this local run:
+  `28` family-fraction units,
+  `56` model files,
+  `168` result rows
+- last inspected partial state:
+  `14/28` units complete,
+  `84/168` rows complete
+
+Same-example fairness guarantee:
+
+- one deterministic nested decision ordering per fold,
+- each fraction reuses an exact prefix of that ordering,
+- scalar rows use every candidate row belonging to the selected decision ids,
+- pairwise rows are derived only from those exact filtered scalar rows,
+- the runner is fail-closed on nested-subset violations, mismatched pairwise
+  label source, missing decision ids, and tie-retention errors.
+
+Resume and isolation notes:
+
+- rows are keyed by `(condition, fraction, held_out_family, capacity)` and
+  written incrementally to an isolated directory,
+- unit completion is checkpointed at the `(held_out_family, fraction)` level in
+  `campaign_state.json`,
+- completed cells can be audited independently,
+- partial campaign state must be preserved as-is at clean wall-time stop.
+
 ## Reviewer #2 Major 3 and Reviewer #3: distribution-shift diagnosis
 
 | Item | Code / protocol | Current local output | Status | Eligibility | Caveats |
@@ -74,3 +135,23 @@ Reverified aggregate misses from `analysis/supervision_objective_ablation_v1/pol
 | `analysis/*_heavy_r1.*` and `scripts/paper/build_kbs_main_manuscript_artifacts.py` inputs | `HISTORICAL` builder/provenance line |
 | `docs/wulver_heavy_evict_value_experiment.md` | `HISTORICAL` runbook |
 | `docs/evict_value_v1_kbs_canonical_artifacts.md` | `HISTORICAL` filename map |
+
+## Standard cache-metric coverage audit
+
+This branch already captures some standard cache metrics directly and can
+derive others cheaply from frozen CSVs. The table below is a repository
+organization note, not a manuscript claim.
+
+| Metric | Classification | Notes |
+|---|---|---|
+| Miss ratio | `AVAILABLE_FROM_EXISTING_ARTIFACTS` | Present in frozen reviewer CSVs and diagnostic CSVs |
+| Runtime / throughput proxy | `AVAILABLE_FROM_EXISTING_ARTIFACTS` | `runtime_seconds` is present in frozen reviewer CSVs; controlled final timing is still separate from smoke timing |
+| Worst-family regret / robustness | `CHEAP_DERIVATION` | Can be derived from current per-family controlled-window CSV rows without retraining |
+| Capacity-wise relative behavior (`32/64/128`) | `CHEAP_DERIVATION` | Present in the frozen reviewer CSVs and objective-ablation CSVs |
+| Variance across workloads | `CHEAP_DERIVATION` | Per-family rows already exist; summary statistics are a post-processing step |
+| Decision-quality metrics (`validation_top1`, `validation_mean_regret`, pairwise accuracy) | `AVAILABLE_FROM_EXISTING_ARTIFACTS` for `analysis/supervision_objective_learning_curve_v1/`; otherwise `REQUIRES_NEW_REPLAY` | The learning-curve diagnostic writes them directly, but the primary reviewer fairness CSVs do not |
+| Top-k candidate agreement | `REQUIRES_NEW_REPLAY` | Current frozen reviewer outputs do not retain candidate-set rankings |
+| Byte miss ratio / bytes fetched | `REQUIRES_NEW_REPLAY` | Some trace families have size metadata, but the current frozen reviewer CSVs record only unit object-slot semantics |
+| Weighted miss cost using real trace costs | `REQUIRES_NEW_DATA` | Current reviewer-science traces and outputs do not preserve heterogeneous real miss costs for the frozen comparisons |
+| Runtime memory footprint | `REQUIRES_NEW_REPLAY` | Model files exist, but controlled runtime RSS profiling was not recorded in the frozen reviewer CSVs |
+| Workload-locality / churn stratification | `CHEAP_DERIVATION` | Requires adding trace-stat summaries and joining them with existing per-family result rows; no retraining needed |

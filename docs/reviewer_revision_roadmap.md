@@ -15,11 +15,13 @@ Evidence-usage rules live in
 |---|---|
 | `COMPLETE_VALIDATED` | Planned artifact set exists and required audits/gates pass. |
 | `PARTIAL` | Some valid evidence exists, but the planned campaign is incomplete. |
+| `RUNNING_LOCAL` | A local diagnostic campaign is actively running and must not be treated as final evidence. |
+| `DIAGNOSTIC_PARTIAL` | Some immutable diagnostic cells are valid to inspect, but the aggregate remains partial or incomplete. |
 | `SMOKE_ONLY` | Useful implementation/profiling evidence exists, but not controlled final evidence. |
 | `PENDING_CONTROLLED_RUN` | Protocol exists; final timing or eval still needs a controlled run. |
+| `CONCEPTUAL_ONLY` | The idea is documented, but no dedicated empirical campaign has been run. |
 | `CONTAMINATED_DO_NOT_USE` | Artifact exists for documentation or provenance only; not valid for the target comparison. |
 | `HISTORICAL` | Kept for provenance or older manuscript tooling; not the default current path. |
-| `BLOCKED_PENDING_SYNC` | Source or artifacts exist elsewhere but are not yet synced into the canonical worktree. |
 
 ## Current concern status
 
@@ -53,9 +55,6 @@ Status: `PARTIAL`
 - The canonical worktree preserves a valid local checkpoint with `24/42` rows.
 - The local evidence already shows strong trajectory divergence, but not a full
   seven-family conclusion.
-- Wulver family-run orchestration files remain unsynced into this branch, so
-  the cluster-side continuation is currently `BLOCKED_PENDING_SYNC` from the
-  repository's point of view.
 
 ### Concern 4: practical significance
 
@@ -64,6 +63,78 @@ Status: `SMOKE_ONLY`
 - Exact-decision-preserving optimization evidence exists.
 - Smoke-scale speedups and break-even calculations exist.
 - Controlled final timing remains `PENDING_CONTROLLED_RUN`.
+
+## Supplementary local diagnostics
+
+### Same-target scalar-vs-pairwise learning curve
+
+Status: `RUNNING_LOCAL` and `DIAGNOSTIC_PARTIAL`
+
+- tmux session:
+  `kbs_learning_curve_20260809`
+- local wall-time budget:
+  `10` hours
+- output:
+  `analysis/supervision_objective_learning_curve_v1/`
+- last inspected local partial state:
+  `14/28` units complete,
+  `84/168` rows complete,
+  active run fractions `1%, 2%, 5%, 10%`
+- no final claim yet.
+
+Scientific distinction to preserve:
+
+- earlier `objective_pairwise` results changed the supervision objective itself;
+- the new diagnostic compares `eviction_loss_scalar` against
+  `eviction_loss_pairwise`, where pairwise labels are derived from the same
+  eviction-loss scalar labels and the same sampled decisions.
+
+Current preliminary observation:
+
+- completed `1%`, `2%`, `5%`, and `10%` cells currently favor scalar over the
+  same-target pairwise condition,
+- this remains preliminary until the running local campaign reaches its clean
+  stop and completed folds are audited.
+
+### Horizon sensitivity
+
+Status: `PENDING_CONTROLLED_RUN`
+
+- planned, not run,
+- requires a v2 protocol and retraining,
+- no current regime claim should be made from `H=4` alone.
+
+### Pairwise-cycle diagnostic
+
+Status: `CONCEPTUAL_ONLY`
+
+- the frozen `objective_pairwise` deployment path uses scalar candidate rewards,
+  so arbitrary pairwise cycles are absent by construction,
+- a real cycle-frequency diagnostic only becomes meaningful for a future
+  explicit pairwise comparator.
+
+### Minimum counterfactual attribution
+
+Status: `CONCEPTUAL_ONLY`
+
+- retain the exact DP or shortest-path framing,
+- bounded-lookback relaxations remain plausible,
+- multiple equally minimal repairs must be preserved,
+- trajectory divergence is not itself harmful divergence.
+
+### Practical timing
+
+Status: `PENDING_CONTROLLED_RUN`
+
+- smoke-scale exact-optimization and break-even outputs exist,
+- controlled final timing remains pending.
+
+### Distribution shift
+
+Status: `PARTIAL`
+
+- the local partial checkpoint remains incomplete,
+- current local evidence is diagnostic only, not a final all-family claim.
 
 ## What changed relative to older roadmap entries
 
