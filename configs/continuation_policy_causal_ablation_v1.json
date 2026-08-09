@@ -1,0 +1,166 @@
+{
+  "protocol_id": "continuation_policy_causal_ablation_v1",
+  "status": "PROTOCOL_FROZEN_NO_RESULTS",
+  "scientific_question": "Does replacing the fixed LRU continuation used for label construction with the already learned pi1 continuation improve the next learned policy pi2?",
+  "conditions": {
+    "C0_BASELINE_LRU": {
+      "decision_policy": "LRU",
+      "label_continuation": "LRU",
+      "trained_policy": null,
+      "deployment_policy": "LRU",
+      "retraining": "none",
+      "role": "baseline_context"
+    },
+    "C1_LRU_CONTINUATION_LEARNED_PI1": {
+      "label_continuation": "LRU",
+      "train_model": "pi1",
+      "deployment_policy": "pi1_recursive",
+      "interpretation": "current method: train on Q_H^{pi0} labels where pi0 is LRU"
+    },
+    "C2_PI1_CONTINUATION_LEARNED_PI2": {
+      "label_continuation": "frozen_pi1",
+      "train_model": "pi2",
+      "deployment_policy": "pi2_recursive",
+      "interpretation": "one continuation-update step: train on Q_H^{pi1} labels while keeping pi1 frozen during dataset generation"
+    },
+    "C1_EXACT_Q_PI0": {
+      "label_continuation": "LRU",
+      "train_model": null,
+      "deployment_policy": "exact_target_policy_induced_by_Q_H^{pi0}",
+      "role": "optional_diagnostic_only_not_the_trained_C1_policy"
+    }
+  },
+  "causal_isolation": {
+    "only_changed_variable_between_C1_and_C2": "label_continuation_policy: LRU -> frozen_pi1",
+    "held_fixed": [
+      "leave-one-family-out folds from configs/fair_cross_family_v1/folds",
+      "training families",
+      "validation family",
+      "held-out family",
+      "capacities",
+      "horizon",
+      "candidate set",
+      "feature schema",
+      "random seed",
+      "scalar model family/grid",
+      "selection metric",
+      "training row budget",
+      "evaluation window",
+      "preprocessing",
+      "downstream miss-ratio metric"
+    ],
+    "causal_interpretation_valid_if": [
+      "C1 and C2 label rows are emitted for the exact same decision_id and candidate_id pairs",
+      "pi1 is loaded from a frozen eligible registry record for the same held-out fold",
+      "held-out family is excluded from pi1 training and validation",
+      "pi1 model artifact hash matches the frozen registry",
+      "pi1 is not updated during C2 dataset generation",
+      "no fallback or substitute pi1 model is used"
+    ]
+  },
+  "folds": {
+    "fold_dir": "configs/fair_cross_family_v1/folds",
+    "held_out_families": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ]
+  },
+  "capacities": [32, 64, 128],
+  "horizon": 4,
+  "feature_schema": "EVICT_VALUE_V1_FEATURE_COLUMNS",
+  "seed": 0,
+  "model_grid": {
+    "ridge": {
+      "alpha": 1.0,
+      "standard_scaler": true
+    },
+    "random_forest": {
+      "n_estimators": 80,
+      "max_depth": 12,
+      "min_samples_leaf": 4,
+      "n_jobs": 1
+    },
+    "hist_gb": {
+      "max_depth": 6,
+      "learning_rate": 0.05,
+      "max_iter": 150
+    }
+  },
+  "selection_metric": [
+    "minimize validation mean_regret_vs_oracle",
+    "tie-break validation MAE",
+    "tie-break validation RMSE"
+  ],
+  "training_budget": {
+    "max_train_rows": 150000,
+    "max_val_rows": 30000,
+    "sampling": "same deterministic row-budget procedure as supervision_objective_ablation_v1"
+  },
+  "evaluation_window": {
+    "history_start": 0,
+    "history_end": 10000,
+    "score_start": 10000,
+    "score_end": 50000,
+    "scored_requests": 40000
+  },
+  "frozen_pi1_provenance": {
+    "registry": "analysis/supervision_objective_ablation_v1/model_registry.json",
+    "required_objective": "objective_eviction_loss",
+    "required_registry_flag": "MODEL_SELECTION_FROZEN=true",
+    "required_fields": [
+      "held_out_family",
+      "training_families",
+      "validation_family",
+      "model_artifact_path",
+      "model_artifact_sha256",
+      "registry_sha256"
+    ]
+  },
+  "row_schema_required_fields": [
+    "decision_id",
+    "candidate_id",
+    "c1_label",
+    "c2_label",
+    "label_delta",
+    "pi1_hash",
+    "horizon",
+    "continuation_mode_c1",
+    "continuation_mode_c2"
+  ],
+  "metrics": [
+    "pi1_misses",
+    "pi2_misses",
+    "miss_ratio",
+    "delta_pi2_minus_pi1",
+    "family_capacity_wins",
+    "C1_vs_C2_label_agreement",
+    "mean_abs_label_delta",
+    "median_abs_label_delta",
+    "fraction_candidate_rankings_changed",
+    "fraction_top1_eviction_choices_changed",
+    "downstream_miss_improvement_or_regression",
+    "runtime_overhead"
+  ],
+  "result_classification_rules": [
+    "LABELS_CHANGED_BUT_POLICY_NOT_IMPROVED",
+    "POLICY_ITERATION_STEP_IMPROVES",
+    "CONTINUATION_UPDATE_HURTS",
+    "NO_MEANINGFUL_EFFECT"
+  ],
+  "outputs": {
+    "dataset_manifest": "analysis/continuation_policy_causal_ablation_v1/<held_out_family>/manifest.json",
+    "label_agreement": "analysis/continuation_policy_causal_ablation_v1/label_agreement.csv",
+    "policy_comparison": "analysis/continuation_policy_causal_ablation_v1/policy_comparison.csv",
+    "provenance": "analysis/continuation_policy_causal_ablation_v1/provenance.json"
+  },
+  "resource_policy": {
+    "local_workstation": "tiny smoke only",
+    "full_campaign": "Wulver later",
+    "no_local_long_running_experiment": true
+  }
+}

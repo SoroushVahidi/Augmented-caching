@@ -164,6 +164,35 @@ Status: `DESIGNED / LOCAL_FOUNDATION_ONLY / NOT YET FULLY RUN` and `HIGH_PRIORIT
 - this remains separate from the running same-target learning-curve work and
   from minimum-counterfactual suffix attribution.
 
+### Continuation-policy causal ablation
+
+Status: `LOCAL_IMPLEMENTATION_READY / PROTOCOL_FROZEN / FULL_RUN_PENDING_WULVER`
+and `HIGH_PRIORITY`
+
+- precise condition names are frozen in
+  `configs/continuation_policy_causal_ablation_v1.json`;
+- current method is interpreted as:
+  `pi0 = LRU`, labels use `Q_H^{pi0}`, train `pi1`, deploy recursive `pi1`;
+- the new diagnostic tests one continuation-update step:
+  labels use `Q_H^{pi1}` with frozen eligible `pi1`, train `pi2`, deploy
+  recursive `pi2`;
+- implementation source:
+  `src/lafc/continuation_policy_ablation.py`;
+- focused validation:
+  `tests/test_continuation_policy_ablation.py`;
+- tiny local smoke runner:
+  `scripts/experiments/run_continuation_policy_causal_ablation_smoke.py`;
+- C1 vs C2 must use the same decision IDs and candidate IDs; the only intended
+  changed variable is label continuation policy (`LRU -> frozen pi1`);
+- frozen `pi1` must come from
+  `analysis/supervision_objective_ablation_v1/model_registry.json`, objective
+  `objective_eviction_loss`, with matching artifact hash and no held-out
+  leakage;
+- no full result exists yet, and no novelty or performance-improvement claim
+  should be made before Wulver execution and audit;
+- reviewer linkage:
+  R2 Major 3 / R3 continuation-mismatch and policy-iteration interpretation.
+
 ### Practical timing
 
 Status: `PENDING_CONTROLLED_RUN`
@@ -184,12 +213,13 @@ Preserve these as active TODO items:
    limited despite improved offline prediction;
 6. keep horizon sensitivity explicitly external to this workstation;
 7. run and audit the designed exact-target-oracle vs learned-online diagnostic;
-8. complete controlled final timing;
-9. run the pairwise margin/noise diagnostic if same-target pairwise remains
+8. synchronize and run the continuation-policy causal ablation on Wulver;
+9. complete controlled final timing;
+10. run the pairwise margin/noise diagnostic if same-target pairwise remains
    weak;
-10. preserve the minimum-counterfactual or minimum-Hamming-distance suffix
+11. preserve the minimum-counterfactual or minimum-Hamming-distance suffix
     attribution line;
-11. treat the final R2 Major 1 held-out audit as the next reviewer-target once
+12. treat the final R2 Major 1 held-out audit as the next reviewer-target once
     the external Wulver work completes.
 
 ### Distribution shift

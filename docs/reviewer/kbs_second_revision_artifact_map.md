@@ -184,6 +184,17 @@ Important distinction:
 | Trajectory-divergence diagnostics | same protocol | `analysis/distribution_shift_ablation_v1/trajectory_divergence.csv` | `PARTIAL` | Diagnostic-only | Divergence alone is not causal evidence |
 | State-shift diagnostics | same protocol | `analysis/distribution_shift_ablation_v1/state_shift_metrics.csv` | `PARTIAL` | Diagnostic-only | Reduced measured shift did not automatically improve misses in the local `metacdn` result |
 | Isolated-family Wulver continuation | Wulver-only runner and Slurm scripts not yet synced back | not present locally | `BLOCKED_PENDING_SYNC` | Not citable from this branch until the source/orchestration is synced and inspected | Missing local files: `run_distribution_shift_family.py` and the related `slurm/kbs_distribution_shift_wulver*.sbatch` drivers |
+| Continuation-policy causal ablation | `src/lafc/continuation_policy_ablation.py`, `tests/test_continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation_smoke.py`, `configs/continuation_policy_causal_ablation_v1.json` | no full scientific output yet | `LOCAL_IMPLEMENTATION_READY` | Protocol and implementation only; tiny smoke allowed, full result pending Wulver | C1 vs C2 changes only label continuation (`LRU -> frozen pi1`) on the same decision/candidate examples; do not cite as result evidence yet |
+
+Continuation-policy causal-ablation intent:
+
+- distinguish current `Q_H^{pi0}` training (`pi0 = LRU`, train/deploy `pi1`)
+  from one additional continuation-update step (`Q_H^{pi1}`, train/deploy
+  `pi2`);
+- require frozen eligible `pi1` provenance from
+  `analysis/supervision_objective_ablation_v1/model_registry.json`;
+- report label-agreement and downstream miss metrics only after Wulver
+  execution and audit.
 
 ## Reviewer #2 Major 4: practical significance
 

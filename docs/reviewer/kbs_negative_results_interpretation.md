@@ -528,6 +528,82 @@ Seven-family Wulver continuation:
 - therefore not yet available as local source-backed final evidence in this
   branch.
 
+## 9.6 Continuation-policy causal ablation
+
+Status:
+`LOCAL_IMPLEMENTATION_READY / TINY_SMOKE_ONLY / NO FULL RESULT YET`
+
+The Wulver audit clarified that the draft "learned continuation" framing must
+not be described as a vague A-to-B or B-to-B condition. The clean
+policy-iteration interpretation is:
+
+- `pi0 = LRU`;
+- current method:
+  labels/candidate values use `Q_H^{pi0}`, train `pi1`, deploy `pi1`
+  recursively;
+- one continuation-update step:
+  labels/candidate values use `Q_H^{pi1}`, train `pi2`, deploy `pi2`
+  recursively.
+
+The immediate scientific question is therefore narrow:
+
+> Does replacing the fixed LRU continuation used for label construction with
+> the already learned frozen `pi1` continuation improve the next learned policy
+> `pi2`?
+
+Frozen condition names:
+
+| Condition | Label continuation | Trained policy | Deployment policy |
+|---|---|---|---|
+| `C0_BASELINE_LRU` | LRU | none | LRU |
+| `C1_LRU_CONTINUATION_LEARNED_PI1` | LRU | `pi1` | recursive `pi1` |
+| `C2_PI1_CONTINUATION_LEARNED_PI2` | frozen `pi1` | `pi2` | recursive `pi2` |
+| `C1_EXACT_Q_PI0` | LRU | none | optional exact target diagnostic only |
+
+This does **not** make the current method invalid. It says the current method
+is a one-step rollout or policy-improvement-style construction from LRU. The
+new C2 diagnostic asks whether one additional approximate-policy-iteration
+step helps.
+
+Isolation rule:
+
+- C1 and C2 must use the exact same folds, training families, validation
+  family, held-out family, capacities, horizon `H=4`, candidate set, feature
+  schema, seed, model family/grid, selection metric, training budget,
+  preprocessing, evaluation window, and downstream miss metric.
+- The only intended change is:
+  `label continuation policy: LRU -> frozen pi1`.
+- C2 must build labels on the same `(decision_id, candidate_id)` examples as
+  C1 and must record `c1_label`, `c2_label`, `label_delta`, `pi1_hash`,
+  horizon, and continuation modes.
+
+Implementation foundation:
+
+- source:
+  `src/lafc/continuation_policy_ablation.py`;
+- smoke runner:
+  `scripts/experiments/run_continuation_policy_causal_ablation_smoke.py`;
+- focused tests:
+  `tests/test_continuation_policy_ablation.py`;
+- frozen protocol config:
+  `configs/continuation_policy_causal_ablation_v1.json`.
+
+Important correctness guardrail:
+
+- when C2 evaluates candidate `a`, it first forces eviction of `a`, admits the
+  incoming item, then continues the H-step suffix by recomputing frozen `pi1`
+  online features from the updated cache/order/history/metadata state at each
+  later decision.
+- It must not substitute a learned score into an LRU rollout or reuse stale
+  pre-decision state.
+
+Reviewer relevance:
+
+- directly addresses R2 Major 3 / R3 continuation-mismatch concerns;
+- no full seven-family result exists yet;
+- do not claim that C2 improves, hurts, or explains the gap until the Wulver
+  protocol is run and audited.
+
 ## 9.6.1 Minimum counterfactual miss attribution
 
 Proposed diagnostic focus:
