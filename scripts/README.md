@@ -9,11 +9,12 @@ This directory contains reproducible entry points for data preparation, model tr
 ## Directory structure
 
 - `scripts/datasets/` — dataset ingestion/preprocessing drivers.
+- `scripts/validation/` — read-only repository / campaign status checks and lightweight validation helpers.
 - `scripts/paper/` — **manuscript-safe (KBS):** `build_kbs_main_manuscript_artifacts.py` only when canonical `heavy_r1` inputs exist (`scripts/paper/README.md`).
 - root-level `build_*` — construct training/evaluation tables.
 - root-level `train_*` — train lightweight models and export metrics.
 - root-level `run_*` — execute experiments and write analysis artifacts.
-- `scripts/experiments/` — exploratory lightweight ablations (incoming-aware/history-aware/history-objective/joint-state).
+- `scripts/experiments/` — reviewer-science orchestration, audits, held-out evaluation, and focused ablation runners.
 - `run_offline_general_caching_approx.py` — offline LP+rounding baseline for general caching (not `python -m lafc.runner.run_policy`).
 - root-level `search_*` / `analyze_*` — targeted analysis/proof-support tooling.
 
@@ -22,6 +23,7 @@ This directory contains reproducible entry points for data preparation, model tr
 - `build_<target>.py`: deterministic data/table generation.
 - `train_<target>.py`: model fitting and model-selection summaries.
 - `run_<experiment>.py`: end-to-end experiment with outputs under `analysis/<experiment>/` when possible.
+- `scripts/validation/<tool>.py`: read-only status, readiness, and lightweight audit helpers.
 - `search_<topic>.py`: exhaustive/heuristic search utilities (typically theorem/counterexample support).
 
 ## Output conventions
@@ -45,7 +47,8 @@ These remain supported for research and scaling experiments; they are **not** th
 
 ## Lightweight exploratory ablations (easy-to-find index)
 
-These scripts and outputs are intentionally grouped as exploratory:
+These scripts and outputs are intentionally exploratory even though other
+reviewer-facing runners now also live under `scripts/experiments/`:
 
 | Family | Script | Default output |
 |---|---|---|

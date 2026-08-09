@@ -38,3 +38,8 @@ output/
 
 # Slurm job logs
 slurm/logs/
+/slurm-*.out
+/slurm-*.err
+
+# Local launcher / tmux / scratch logs
+/logs/
