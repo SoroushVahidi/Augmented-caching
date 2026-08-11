@@ -53,6 +53,7 @@ output/
 /analysis/exact_target_oracle_diagnostic_v1/
 /analysis/eviction_loss_target_degeneracy_v1/
 /analysis/kbs_comparison_fairness_audit.json
+/analysis/kbs_local_current_evidence_synthesis_*/
 
 # Slurm job logs
 slurm/logs/
