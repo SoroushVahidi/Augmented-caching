@@ -19,40 +19,20 @@ launched from scratch.
 
 ---
 
-## P0 -- currently running / must finish first
+## P0 -- completed closeout / do not relaunch
 
-### P0.1 -- Let the `wiki2018|0.5` resume unit finish
+### P0.1 -- Local 50% learning-curve closeout
 
-- **Why:** in-flight evidence for H1 (insufficient training data); the
-  campaign is the decisive test named in the hypothesis map for that
-  hypothesis.
-- **Status:** `RUNNING` -- the original `50%` fraction clean-stopped at
-  6/7 families (`brightkite, citibike, cloudphysics, metacdn, metakv,
-  twemcache` complete, 36/36 rows `status=ok`); the single missing unit,
-  `wiki2018|0.5`, was then launched on explicit user authorization in tmux
-  session `kbs_learning_curve_50pct_wiki2018_resume_20260811`
-  (`--held-out-families wiki2018 --fractions 0.5 --max-wall-hours 3`),
-  currently alive and healthy.
-- **Dependency:** none -- already launched, restricted to exactly this one
-  family/fraction via `--held-out-families`.
-- **Machine:** local workstation, tmux session
-  `kbs_learning_curve_50pct_wiki2018_resume_20260811`.
-- **Entry point:** none to launch -- do-not-touch. If it clean-stops before
-  finishing, the resume command is the same one, unchanged (it is
-  idempotent and will just pick up where it left off via `--resume`).
-- **Expected cost:** within its `3h` budget at observed per-family rates
-  (~87-141 min for this family's siblings at `0.5`).
-- **Stopping rule:** stop when `campaign_state.json` lists all 7 families
-  complete for fraction `0.5` and the standard integrity checks pass
-  (fraction 0.5 rows == 42, unique `(fraction,family,condition,capacity)`
-  keys, all `status=ok`, unit audits == 7, model hashes verified, no
-  duplicate rows, no malformed/NaN/Inf outside the known legitimate
-  zero-pairs case, `<=25%` evidence unchanged/preserved).
-- **What would change our interpretation:** a genuine, non-noise,
-  monotonic improvement in downstream `miss_ratio` (not just offline fit
-  metrics) between `25%` and `50%`/`100%` would reopen H1 (currently
-  `DISFAVORED`). A continuation of the flat pattern already seen through
-  `25%` would further support `DISFAVORED`.
+- **Status:** `COMPLETE`. The final `wiki2018|0.5` resume completed
+  cleanly, and fraction `0.5` is audited at 7/7 families, 42/42 rows, all
+  `status=ok`, duplicate-key count 0, NaN/Inf count 0, 7/7 fraction-0.5
+  audit units, and 0 model SHA mismatches.
+- **Synthesis:** `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`.
+- **Scientific decision:** `STOP_SAMPLE_SIZE_HYPOTHESIS`. Within the tested
+  `1%-50%` range, the sample-size explanation is not supported as the
+  primary cause; this does not claim that more data can never help.
+- **Action:** none. Do not launch `100%` as follow-up work for H1 under the
+  current stopping rule.
 
 ## P1 -- reviewer/publication blockers
 
@@ -243,19 +223,13 @@ launched from scratch.
 
 ### P3.1 -- `100%` fraction of the learning-curve campaign
 
-- **Why:** completes H1's decisive test across the full data range.
-- **Status:** `PENDING`.
-- **Dependency:** P0.1 (the `50%` fraction) must finish and be audited
-  first; do not launch `100%` before that, and do not launch it as a side
-  effect of an unrelated task.
-- **Machine:** local, or Wulver if wall-time cost is prohibitive locally
-  (the `50%` fraction alone is costing most of a `10h` local budget).
-- **Entry point:** same runner as P0.1, `--fractions 1.0`.
-- **Expected cost:** high -- likely the single most expensive remaining
-  local diagnostic given the `0.5` fraction's observed per-family cost.
-- **Stopping rule:** same integrity checks as P0.1, scaled to `1.0`.
-- **What would change our interpretation:** same as P0.1's -- only a real,
-  monotonic downstream-miss improvement would reopen H1.
+- **Status:** `INTENTIONALLY_NOT_RUN_DUE_STOPPING_RULE`.
+- **Reason:** the 50% campaign completed its intended H1 stopping-rule
+  scope. The audited `1%-50%` curve shows no material monotonic downstream
+  improvement, and pairwise remains flat/worse; H1 is now `DISFAVORED`
+  within the tested range.
+- **Action:** remove from active required work. Do not launch `100%` unless
+  a future protocol change explicitly reopens the sample-size question.
 
 ### P3.2 -- Historical-tail diagnostic
 

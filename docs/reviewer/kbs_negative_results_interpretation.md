@@ -149,13 +149,14 @@ Careful wording:
 - it is a claim about the possibility that the pairwise target is closer to the
   decision boundary actually needed at deployment.
 
-Planned learning-curve experiment:
+Completed learning-curve experiment for the H1 stopping-rule scope:
 
-- training fractions: `1%, 2%, 5%, 10%, 25%, 50%, 100%`
+- training fractions tested: `1%, 2%, 5%, 10%, 25%, 50%`
 - compare scalar eviction-loss vs pairwise
 - keep validation and test fixed
 - measure downstream misses, ranking accuracy or regret, scalar MAE or RMSE,
   and pairwise accuracy or margin behavior
+- `100%` intentionally not run after the predefined stopping rule fired
 
 Prediction supporting the hypothesis:
 
@@ -230,27 +231,23 @@ This is not yet a final result because:
 
 HIGH-FRACTION QUESTION — `25%` phase complete locally, not yet interpreted.
 
-The `25%` same-target extension, launched in tmux session
-`kbs_learning_curve_highfrac_20260809` with a clean `10`-hour wall-time
-budget and all seven held-out folds targeted, completed naturally on
-`2026-08-09` (`7h43m` wall time, all `7/7` folds, `42/42` rows, integrity
-verified) per the `2026-08-10` read-only local audit. No scalar-vs-pairwise
-interpretation of the `25%` cells has been performed yet; that analysis and
-any resulting claim remain TODO, as do the later `50%` and `100%` phases.
+The `25%` same-target extension completed naturally on `2026-08-09`
+(`7/7` folds, `42/42` rows, integrity verified). The `50%` extension is now
+also complete and validated (`7/7` families, `42/42` rows, all
+`status=ok`, duplicate-key count 0, NaN/Inf count 0, 7/7 fraction-0.5
+audit units, 0 model SHA mismatches). The final synthesis is
+`analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`.
 
 Current operational checkpoint:
 
 - low fractions `1%`, `2%`, `5%`, and `10%` are done in the audited local
   checkpoint;
-- the `25%` phase is still live and incomplete;
-- the current written `25%` units are
-  `brightkite`, `citibike`, `cloudphysics`, `metacdn`, and `metakv`;
-- `50%` and `100%` are TODO and must not be launched until the active `25%`
-  phase has a clean audited stop.
+- `25%` and `50%` are complete and audited;
+- `100%` is intentionally not run due `STOP_SAMPLE_SIZE_HYPOTHESIS`, not
+  missing required work.
 
-The open scientific question is not whether a partial `25%` row looks good or
-bad in isolation. It is whether, as fraction increases through `25%`, `50%`,
-and `100%`:
+The scientific question was not whether a partial row looked good or bad in
+isolation. It was whether, as fraction increased through `25%` and `50%`:
 
 - downstream misses improve materially,
 - scalar `MAE/RMSE` improves materially,
@@ -276,9 +273,10 @@ Current hypothesis status:
 - CURRENT LOW-FRACTION EVIDENCE:
   the audited `1%` to `10%` checkpoint contradicts that hypothesis over the
   completed low-fraction cells.
-- HIGH-FRACTION QUESTION:
-  the active `25%` phase and later `50%` / `100%` phases are needed to test
-  whether scalar convergence with more data changes the downstream picture.
+- HIGH-FRACTION RESULT:
+  the audited `25%` and `50%` phases show no material monotonic downstream
+  improvement; the stopping decision is `STOP_SAMPLE_SIZE_HYPOTHESIS`, so
+  `100%` is intentionally not run under this campaign scope.
 - NOT YET ESTABLISHED:
   sample insufficiency is not proven,
   objective mismatch is not proven,
@@ -901,8 +899,9 @@ Do not claim:
 - smoke timing is a final controlled runtime result
 - the current method is practically deployment-superior
 - pairwise cyclicity is a practical problem before measuring it
-- insufficient training data explains the gap before the same-target
-  learning-curve campaign reaches a clean audited stopping point
+- insufficient training data explains the gap after the same-target
+  learning-curve campaign reached its clean audited stopping point and
+  recorded `STOP_SAMPLE_SIZE_HYPOTHESIS`
 - `H=4` is the cause before a horizon sensitivity study is run
 - `objective_pairwise` and `eviction_loss_pairwise` are interchangeable
 

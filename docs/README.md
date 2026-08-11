@@ -20,7 +20,7 @@ Use this page to find the right document without duplicating long runbooks.
 | [`reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md`](reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md) | How to actually rerun/resume a second-revision diagnostic, canonical windows/seeds, checkpoint semantics |
 | [`kbs_manuscript_workflow.md`](kbs_manuscript_workflow.md) | Current workflow hub and distinction from historical `heavy_r1` material |
 | [`kbs_second_revision_repository_state.md`](kbs_second_revision_repository_state.md) | Canonical-branch intent, tracked-vs-generated boundaries, and the live status of any active revision-science job |
-| [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md) | Concern-by-concern code, outputs, status, caveats, and the running same-target learning-curve diagnostic |
+| [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md) | Concern-by-concern code, outputs, status, caveats, and the completed 50% same-target learning-curve diagnostic |
 | [`reviewer/kbs_evidence_eligibility.md`](reviewer/kbs_evidence_eligibility.md) | What can be used in primary tables, supporting analysis, or diagnostics only |
 | [`reviewer/kbs_negative_results_interpretation.md`](reviewer/kbs_negative_results_interpretation.md) | Internal note on the negative results, including the same-target scalar-vs-pairwise diagnostic distinction |
 | [`reviewer/kbs_comparison_fairness_audit.md`](reviewer/kbs_comparison_fairness_audit.md) | Cross-cutting fairness audit of the baseline/method comparison pool |

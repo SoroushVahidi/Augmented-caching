@@ -64,15 +64,12 @@ For the full ranked P0-P4 roadmap beyond these five, see
 
 ## Do Not Do
 
-- **Do not kill, signal, attach to, restart, or otherwise interact with**
-  the `kbs_learning_curve_50pct_wiki2018_resume_20260811` tmux worker
-  unless it has already naturally exited and you have confirmed that via
-  `campaign_state.json`, not just an empty-looking tmux pane (Python
-  stdout buffering makes a live pane look empty -- this is expected, not a
-  hang).
-- **Do not launch the `100%` fraction or any other heavy experiment**
-  without first confirming no other heavy job is running and the full
-  `50%` fraction (all 7 families) has been audited.
+- **Do not restart or otherwise interact with the old learning-curve tmux
+  sessions.** The final `wiki2018|0.5` resume completed cleanly, and
+  fraction `0.5` is audited at 7/7 families and 42/42 rows.
+- **Do not launch the `100%` fraction for H1.** The predefined stopping
+  decision is `STOP_SAMPLE_SIZE_HYPOTHESIS`; `100%` is intentionally not
+  run under the current campaign scope, not an active missing task.
 - **Do not overwrite active or generated evidence** under `analysis/`,
   `models/`, or `logs/` -- these are gitignored but are evidence, not
   scratch space.
@@ -93,10 +90,10 @@ For the full ranked P0-P4 roadmap beyond these five, see
   as if it were the other misrepresents the comparison.
 - **Do not treat any one-cell or one-family diagnostic as a universal
   finding.** H2, H3, H4 rest on one cell (brightkite, capacity 64, H=4);
-  H5, H6 rest on one family (metacdn); H1's learning-curve result covers
-  only the fractions completed so far. Replication is the shared
-  precondition for upgrading any of these, per the hypothesis map's own
-  stopping rules.
+  H5, H6 rest on one family (metacdn). H1 is broader but bounded: the
+  completed `1%-50%` learning curve disfavors the sample-size explanation
+  within that tested range; it is not a claim that more data can never
+  help.
 - **Do not use contaminated or superseded artifacts** as evidence -- see
   `DEVELOPMENT_STATUS.md` section 6 and
   [`RESULTS_AND_LIMITATIONS.md`](../../Augmented-caching-main/docs/RESULTS_AND_LIMITATIONS.md)

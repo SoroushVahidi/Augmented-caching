@@ -84,49 +84,34 @@ Status: `SMOKE_ONLY`
 
 ### Same-target scalar-vs-pairwise learning curve
 
-Status: `25_PERCENT_COMPLETE_VALID`; `50%` `RUNNING_LOCAL_RESUME`
-(first attempt launched `2026-08-10` in a foreground SSH shell, not tmux;
-terminated after ~80 minutes when that SSH session closed, `0/42` rows
-committed; relaunched same day in tmux session
-`kbs_learning_curve_50pct_20260810`, confirmed healthy; `4/7` folds done
-as of a `2026-08-10 21:59` read-only re-check, `metakv` in progress);
-`100%` not yet started
+Status: `FINAL_50PCT_VALIDATED`; fractions tested `1%, 2%, 5%, 10%,
+25%, 50%`; final `50%` = 7/7 families, 42/42 rows, all `status=ok`;
+`100%` intentionally not run due `STOP_SAMPLE_SIZE_HYPOTHESIS`.
 
-- tmux session:
-  `kbs_learning_curve_highfrac_20260809` (no longer running; no tmux server
-  process present on this host as of the `2026-08-10` audit)
+- tmux sessions:
+  old learning-curve sessions are no longer active writers; do not restart
+  them or launch `100%`
 - currently audited low-fraction checkpoint:
   `1%, 2%, 5%, 10%`
 - completed families in that audited checkpoint:
   `brightkite, citibike, cloudphysics, metacdn`
 - validated units / rows:
   `16` units, `96` rows
-- last completed phase:
-  `25%`
-- current 25% checkpoint:
-  `7/7` folds have unit audits and result rows (completed naturally,
-  `2026-08-09` `20:17` local time, `7h43m` wall time against a `10`-hour
-  budget)
 - completed 25% folds:
   `brightkite, citibike, cloudphysics, metacdn, metakv, twemcache, wiki2018`
-- local wall-time budget for the `25%` phase:
-  `10` hours (not exhausted; job finished naturally)
+- completed 50% folds:
+  `brightkite, citibike, cloudphysics, metacdn, metakv, twemcache, wiki2018`
+  (`42/42` rows, all `status=ok`, duplicate-key count 0, NaN/Inf count 0,
+  7/7 fraction-0.5 audit units, 0 model SHA mismatches)
 - later planned phases:
-  `50%` (first attempt launched `2026-08-10` outside tmux in a foreground
-  SSH shell; terminated after ~80 minutes when that SSH session closed,
-  `0/42` rows committed; relaunched same day correctly in tmux session
-  `kbs_learning_curve_50pct_20260810` via `--resume --fractions 0.5
-  --max-wall-hours 10`, `7`-fold target, clean 10-hour wall-budget stop
-  semantics, `RUNNING_LOCAL_RESUME`; `4/7` folds complete as of a
-  `2026-08-10 21:59` read-only re-check — `brightkite`, `citibike`,
-  `cloudphysics`, `metacdn` done, `metakv` in progress, `twemcache` and
-  `wiki2018` remaining; observed per-family runtimes suggest this
-  invocation may not finish all `7` folds before its `10`-hour clean-stop
-  and a further resume may be needed), then `100%` (not yet launched)
+  none for H1 under the current stopping rule; `100%` is intentionally not
+  run
 - output:
-  `analysis/supervision_objective_learning_curve_v1/`
-- no final claim yet; `25%` cell integrity is validated but no aggregate
-  learning-curve conclusion has been drawn.
+  `analysis/supervision_objective_learning_curve_v1/` and final synthesis
+  `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`
+- final claim:
+  within the tested `1%-50%` range, H1 is disfavored and the recorded
+  stopping decision is `STOP_SAMPLE_SIZE_HYPOTHESIS`.
 
 Scientific distinction to preserve:
 
@@ -137,12 +122,11 @@ Scientific distinction to preserve:
 
 Current preliminary observation:
 
-- completed `1%`, `2%`, `5%`, and `10%` cells currently favor scalar over the
-  same-target pairwise condition,
-- this remains preliminary until the active `25%` phase reaches a clean stop
-  and completed units are audited,
-- later `50%` and `100%` phases remain required for the full learning-
-  convergence question.
+- completed `1%`, `2%`, `5%`, `10%`, `25%`, and `50%` cells favor scalar
+  over the same-target pairwise condition in the non-tied cells,
+- the full 50% seven-family slice has scalar better on 18/21 cells, ties on
+  3/21, and pairwise better on 0/21,
+- `100%` is not required under the current stopping rule.
 
 ### Horizon sensitivity
 
@@ -214,8 +198,8 @@ Status: `SMOKE_VALIDATED / ONE-CELL REAL-TRACE DIAGNOSTIC COMPLETE` and `HIGH_PR
   conclusion; Wulver's horizon study and the local learning-curve campaign
   remain separate;
 - do not collapse oracle context into deployable-baseline claims;
-- this remains separate from the running same-target learning-curve work and
-  from minimum-counterfactual suffix attribution.
+- this remains separate from the completed 50% same-target learning-curve
+  work and from minimum-counterfactual suffix attribution.
 
 ### Target-degeneracy diagnostic
 
@@ -282,18 +266,12 @@ Status: `PENDING_CONTROLLED_RUN`
 
 Preserve these as active TODO items:
 
-1. finish and audit the `25%` learning-convergence phase (done, `VALID`);
-2. `50%` first attempt was `INTERRUPTED_BEFORE_FIRST_COMPLETED_UNIT`
-   (launched `2026-08-10` outside tmux, killed when the SSH session
-   closed, `0/42` rows); relaunched same day in tmux session
-   `kbs_learning_curve_50pct_20260810`, now `RUNNING_LOCAL_RESUME` —
-   audit on clean stop;
-3. later run `100%`;
-4. jointly analyze downstream misses, scalar `MAE/RMSE`, and ranking or
-   decision metrics versus fraction;
-5. determine whether scalar performance converges with more data or remains
-   limited despite improved offline prediction;
-6. keep horizon sensitivity explicitly external to this workstation;
+1. preserve the completed `25%` and `50%` learning-convergence evidence
+   (done, `FINAL_50PCT_VALIDATED`);
+2. do not launch `100%` under the current H1 stopping rule;
+3. use the final synthesis when discussing downstream misses, scalar
+   `MAE/RMSE`, and ranking or decision metrics versus fraction;
+4. keep horizon sensitivity explicitly external to this workstation;
 7. run and audit the designed exact-target-oracle vs learned-online diagnostic;
 8. synchronize and run the continuation-policy causal ablation on Wulver;
 9. complete controlled final timing;

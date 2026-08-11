@@ -205,14 +205,24 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Reviewer concern: MC3, R3-Issue1/4
 - Machine: LOCAL
 - Protocol: `configs/supervision_objective_learning_curve_v1.json`, frozen; `H=4`, 7 families, capacities `[32,64,128]`, seed `0`
-- Scope: `1/2/5/10%` = 4 families (pilot); `25%` = 7/7 families `FINAL_VALIDATED` for that fraction; `50%` `RUNNING` (4/7 folds as of this pass); `100%` `PENDING`
+- Scope: fractions tested `1%, 2%, 5%, 10%, 25%, 50%`; `25%` = 7/7
+  families, 42/42 rows; `50%` = 7/7 families, 42/42 rows, all
+  `status=ok`; `100%` intentionally not run due the H1 stopping rule, not
+  missing required work.
 - Source entry point: `scripts/experiments/run_supervision_objective_learning_curve.py`
 - Config: `configs/supervision_objective_learning_curve_v1.json`
 - Output path: `analysis/supervision_objective_learning_curve_v1/`
-- Status: `RUNNING` (overall campaign); see `docs/kbs_second_revision_repository_state.md` for the live fold-count snapshot -- do not duplicate that number here
-- Evidence strength: `MECHANISTIC_DIAGNOSTIC` ("explanatory diagnostic only, not a primary reviewer comparison" per artifact map)
+- Status: `FINAL_50PCT_VALIDATED` for the intended stopping-rule scope;
+  H1 stopping decision `STOP_SAMPLE_SIZE_HYPOTHESIS`.
+- Evidence strength: `MECHANISTIC_DIAGNOSTIC_HIGH` for the tested
+  `1%-50%` range ("explanatory diagnostic only, not a primary reviewer
+  comparison" per artifact map).
 - Primary/diagnostic/supporting: diagnostic
-- Next action: let the active tmux worker (`kbs_learning_curve_50pct_20260810`) finish/clean-stop, audit, then decide on `100%`
+- Next action: none for H1 under the current campaign scope. Do not launch
+  `100%`; it is intentionally not run by stopping rule.
+- Synthesis: `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`
+- Source hash: `policy_comparison.csv`
+  SHA-256 `5323eea6e3f6fb9a44b2fab2f6632f61917442ba239eababc1b2cda1fca8612a`
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.4; `KBS_SECOND_REVISION_HYPOTHESIS_MAP.md` H1
 
 ### 10. Continuation-policy causal ablation (C1/C2)

@@ -69,8 +69,9 @@ Current local checkpoint to preserve:
   `brightkite, citibike, cloudphysics, metacdn`
 - `16` validated units
 - `96` validated rows
-- separate `25%` tmux extension currently running locally across all seven
-  folds; no unaudited `25%` partial should be treated as evidence
+- `25%` and `50%` extensions are now complete and audited. The final 50%
+  closeout has 7/7 families, 42/42 rows, all `status=ok`, and synthesis at
+  `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`.
 
 ## Historical context
 
@@ -148,9 +149,9 @@ Guardrails:
 - completed and audited cells may be inspected,
 - incomplete fraction or fold aggregates must not be used as final manuscript
   evidence,
-- the current `25%` local extension must remain `RUNNING_LOCAL` until it
-  reaches a clean stop and completed units are audited,
-- `50%` and `100%` remain planned follow-up phases, not current evidence,
+- the `25%` and `50%` local extensions are complete and audited,
+- `100%` is intentionally not run due `STOP_SAMPLE_SIZE_HYPOTHESIS`, not
+  missing current evidence,
 - results must not be merged with the earlier `objective_pairwise` ablation as
   though they represented the same condition,
 - the campaign state at clean wall-time stop must be preserved.

@@ -9,8 +9,8 @@ work specifically; this file is the whole-branch superset.
 No transfer was performed while building this manifest. No Wulver contact was
 made. This is planning material only.
 
-Last updated: 2026-08-10. Built while `kbs_learning_curve_50pct_20260810` is
-`RUNNING_HEALTHY` (4/7 folds); see Section C for the resulting hold.
+Last updated: 2026-08-11. The local learning-curve `50%` campaign is now
+`FINAL_50PCT_VALIDATED`; see Section C for the completed transfer status.
 
 ---
 
@@ -84,8 +84,8 @@ still-active outputs, per instructions.
 
 | Path | Status | Transfer note |
 |---|---|---|
-| `analysis/supervision_objective_learning_curve_v1/` | `25%` `COMPLETE_VALID` (7/7, 42/42); `50%` `RUNNING_HEALTHY` (4/7 as of this pass); `100%` not started | **`DO_NOT_TRANSFER_WHILE_RUNNING`** -- the `50%` phase is an active tmux job; wait for its clean stop and a completion/integrity audit before any rsync |
-| `models/supervision_objective_learning_curve_v1/` | mirrors the analysis dir's fold state | same hold as above |
+| `analysis/supervision_objective_learning_curve_v1/` | `25%` `COMPLETE_VALID` (7/7, 42/42); `50%` `FINAL_50PCT_VALIDATED` (7/7, 42/42, all `status=ok`); synthesis at `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`; `100%` intentionally not run due `STOP_SAMPLE_SIZE_HYPOTHESIS` | Eligible for intentional transfer after audit; no active learning-curve writer |
+| `models/supervision_objective_learning_curve_v1/` | mirrors the completed 50% analysis dir's fold state | eligible for intentional transfer after audit; do not commit model binaries |
 | `analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/` | one cell, `COMPLETE` | eligible for transfer now (static, not being written to) |
 | `analysis/eviction_loss_target_degeneracy_v1/brightkite_cap64_h4/` | one cell, `COMPLETE` | eligible for transfer now |
 | `analysis/distribution_shift_ablation_v1/` | `PARTIAL`, 24/42 rows, 4/7 families, `STOPPED_CLEANLY_PARTIAL` per `revision_status.py` | eligible for transfer now (not actively running); mark partial |

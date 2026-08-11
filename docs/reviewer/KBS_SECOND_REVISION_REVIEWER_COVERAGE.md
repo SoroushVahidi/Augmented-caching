@@ -27,9 +27,9 @@ verified by this workstation (Wulver was not contacted directly). See
 [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)
 for full detail behind every Wulver-sourced claim in this file, and
 [`../WULVER_TO_GITHUB_PROMOTION_QUEUE.md`](../WULVER_TO_GITHUB_PROMOTION_QUEUE.md)
-for sync priority. Local `50%` learning-curve fraction: 6/7 folds complete
-(clean-stopped before `wiki2018`), with a resume of the single missing unit
-running locally as of this update.
+for sync priority. Local learning-curve fraction `50%` is now complete and
+validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
+`STOP_SAMPLE_SIZE_HYPOTHESIS`; `100%` intentionally not run.
 
 ---
 
@@ -97,11 +97,12 @@ running locally as of this update.
   to alternatives at all." Do not cite horizon-sensitivity progress as
   evidence toward closing or reopening this concern; see the correction
   note in `../DEVELOPMENT_STATUS.md` and this file's mapping above.
-- Running/pending evidence: the same-target scalar-vs-pairwise
+- Mechanistic follow-up evidence: the same-target scalar-vs-pairwise
   learning-convergence diagnostic (a *different*, complementary question --
-  representation, not target construction) is `25_PERCENT_COMPLETE_VALID`,
-  `50%` at 6/7 folds (`wiki2018` resume in progress locally), `100%` not
-  started.
+  representation, not target construction) is `FINAL_50PCT_VALIDATED`.
+  It disfavors the sample-size explanation within the tested `1%-50%`
+  range and records `STOP_SAMPLE_SIZE_HYPOTHESIS`; `100%` is intentionally
+  not run.
 - Remaining experiment: none required to answer the original Major 2 concern
   itself (already `COMPLETE_VALIDATED`); the learning-curve work is
   additional depth, not a gap in this concern. Remaining work for this
@@ -148,6 +149,10 @@ running locally as of this update.
     **not** `READY_TO_RUN`, on either machine -- this corrects the more
     optimistic `LOCAL_IMPLEMENTATION_READY` framing used elsewhere in this
     branch's docs, which is easy to misread as "just needs cluster time."
+- Local sample-size evidence: the completed same-target learning curve
+  narrows the causal space by disfavoring H1 within the tested `1%-50%`
+  range, but it does **not** replace or solve Reviewer #3's missing
+  C0/C1/C2 continuation experiment.
 - Remaining experiment: **fix the `reference_model=` interface mismatch
   first** (this is now the primary concrete blocker, ahead of "needs
   Wulver scale" as the framing), then run the full 7-family C0/C1/C2

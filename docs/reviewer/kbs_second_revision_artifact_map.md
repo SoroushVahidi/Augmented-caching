@@ -73,7 +73,7 @@ Important naming distinction:
 
 | Item | Code / protocol | Current local output | Status | Eligibility | Caveats |
 |---|---|---|---|---|---|
-| Same-target scalar-vs-pairwise learning curve | `configs/supervision_objective_learning_curve_v1.json`, `scripts/experiments/run_supervision_objective_learning_curve.py`, `src/lafc/reviewer_diagnostics.py`, `tests/test_supervision_objective_learning_curve.py` | `analysis/supervision_objective_learning_curve_v1/`, `models/supervision_objective_learning_curve_v1/` | `25_PERCENT_COMPLETE_VALID`; `50%` `RUNNING_LOCAL_RESUME` (first attempt `2026-08-10` outside tmux failed with `0/42` rows; relaunched same day in tmux `kbs_learning_curve_50pct_20260810`); `100%` not started | `DIAGNOSTIC_PARTIAL` (aggregate curve incomplete without `50%`/`100%`) | Explanatory diagnostic only, not a primary reviewer comparison |
+| Same-target scalar-vs-pairwise learning curve | `configs/supervision_objective_learning_curve_v1.json`, `scripts/experiments/run_supervision_objective_learning_curve.py`, `src/lafc/reviewer_diagnostics.py`, `tests/test_supervision_objective_learning_curve.py` | `analysis/supervision_objective_learning_curve_v1/`, `models/supervision_objective_learning_curve_v1/`, `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/` | `FINAL_50PCT_VALIDATED`; fractions tested `1%, 2%, 5%, 10%, 25%, 50%`; final 50% = 7/7 families, 42/42 rows, all `status=ok`; `100%` intentionally not run due stopping rule | `MECHANISTIC_DIAGNOSTIC_HIGH` for H1 within the tested `1%-50%` range | Explanatory diagnostic only, not a primary reviewer comparison; supports `STOP_SAMPLE_SIZE_HYPOTHESIS` |
 
 Diagnostic intent:
 
@@ -94,55 +94,22 @@ Current locally audited checkpoint to preserve:
 - validated result rows:
   `96`
 
-Current local high-fraction extension status (updated `2026-08-10`,
-read-only audit):
+Final high-fraction closeout (updated `2026-08-11`, read-only verification
+followed by documentation/synthesis only):
 
-- tmux session:
-  `kbs_learning_curve_highfrac_20260809` (no longer running; no tmux server
-  process present on this host)
-- last launched fraction phase:
-  `25%`
-- current 25% completion:
-  `7/7` folds have unit audits and result rows (`42/42` CSV rows, all
-  `status=ok`, no duplicate keys, no NaN/Inf, all `14` model artifact hashes
-  verified)
-- completed 25% folds:
-  `brightkite`, `citibike`, `cloudphysics`, `metacdn`, `metakv`, `twemcache`,
-  `wiki2018`
-- completion mode:
-  natural completion at `2026-08-09 20:17` local time (`7h43m` wall time
-  against the `10`-hour budget, `~2.3h` headroom remaining) — not a
-  clean-budget stop
-- later planned phases:
-  `50%` (first attempt `INTERRUPTED_BEFORE_FIRST_COMPLETED_UNIT`,
-  relaunched same day in tmux, now `RUNNING_LOCAL_RESUME`), then `100%`
-  (not yet launched)
-- `50%` history:
-  first attempt launched `2026-08-10` in a foreground SSH shell (not
-  tmux, contrary to plan); terminated after ~80 minutes when that SSH
-  session closed; `0/42` rows committed, `0` unit audits; one orphan
-  model artifact (`brightkite/fraction_0.5/eviction_loss_scalar.pkl`)
-  left on disk, not referenced by any completed unit/audit/CSV/provenance
-  record, safe to overwrite; `<=25%` evidence unaffected. Relaunched
-  same day: tmux session `kbs_learning_curve_50pct_20260810`,
-  `--resume --fractions 0.5 --max-wall-hours 10`, same frozen protocol,
-  targets `7` folds (clean 10-hour wall-budget stop semantics); confirmed
-  healthy (worker PID `3376086` alive, CPU pegged, RSS climbing, no
-  errors) as of this checkpoint. As of a `2026-08-10 21:59` read-only
-  re-check (`~7h09m` into the `10`-hour budget): `4/7` folds complete
-  (`brightkite`, `citibike`, `cloudphysics`, `metacdn`; `24/42` rows,
-  `status=ok`, hashes verified), `metakv` in progress as fold `5/7`,
-  `twemcache` and `wiki2018` remaining. Observed `0.5` fold runtimes
-  (`87-141` min) suggest this invocation may reach its `10`-hour
-  clean-stop before all `3` remaining folds finish; a further tmux resume
-  is plausibly needed.
-- current status:
-  `25_PERCENT_COMPLETE_VALID`; `50%` `RUNNING_LOCAL_RESUME` (`4/7` folds
-  done as of `2026-08-10 21:59`)
-- final conclusion status:
-  `25%` cell integrity is validated, but this remains a single completed
-  fraction; no aggregate learning-curve convergence conclusion should be
-  drawn until `50%`/`100%` are also complete
+- `25%` completed naturally on `2026-08-09`: 7/7 families, 42/42 rows,
+  all `status=ok`.
+- `50%` completed after the final `wiki2018|0.5` resume: 7/7 families,
+  42/42 rows, all `status=ok`, duplicate-key count 0, NaN/Inf count 0,
+  30 audit files total, 7/7 fraction-0.5 audit units, and 0 model SHA
+  mismatches. `campaign_state.json` contains `wiki2018|0.500000`.
+- Synthesis path:
+  `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`.
+- Stopping decision: `STOP_SAMPLE_SIZE_HYPOTHESIS`. `100%` is
+  intentionally not run, not missing evidence.
+- Conclusion status: within the tested `1%-50%` range, H1 (insufficient
+  training data as the primary explanation) is disfavored. This does not
+  claim that more data can never help.
 
 Same-example fairness guarantee:
 
@@ -160,9 +127,9 @@ Resume and isolation notes:
 - unit completion is checkpointed at the `(held_out_family, fraction)` level in
   `campaign_state.json`,
 - completed cells can be audited independently,
-- partial campaign state must be preserved as-is at clean wall-time stop.
-- the validated `1%` to `10%` checkpoint and the running `25%` extension must
-  remain analytically separate until the active phase reaches a clean stop.
+- partial campaign state must be preserved as-is at clean wall-time stop,
+- the validated `1%` to `50%` checkpoints are analytically comparable within
+  the same frozen same-target protocol.
 
 ## Supplementary local diagnostic: exact target oracle vs learned online policy
 
@@ -291,7 +258,7 @@ Target-formulation branch to keep separate:
 | Trajectory-divergence diagnostics | same protocol | `analysis/distribution_shift_ablation_v1/trajectory_divergence.csv` | `PARTIAL` | Diagnostic-only | Divergence alone is not causal evidence |
 | State-shift diagnostics | same protocol | `analysis/distribution_shift_ablation_v1/state_shift_metrics.csv` | `PARTIAL` | Diagnostic-only | Reduced measured shift did not automatically improve misses in the local `metacdn` result |
 | Isolated-family Wulver continuation | Wulver-only runner and Slurm scripts not yet synced back | not present locally | `BLOCKED_PENDING_SYNC` | Not citable from this branch until the source/orchestration is synced and inspected | Missing local files: `run_distribution_shift_family.py` and the related `slurm/kbs_distribution_shift_wulver*.sbatch` drivers |
-| Continuation-policy causal ablation | `src/lafc/continuation_policy_ablation.py`, `tests/test_continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation_smoke.py`, `configs/continuation_policy_causal_ablation_v1.json` | no full scientific output yet | `LOCAL_IMPLEMENTATION_READY` | Protocol and implementation only; tiny smoke allowed, full result pending Wulver | C1 vs C2 changes only label continuation (`LRU -> frozen pi1`) on the same decision/candidate examples; do not cite as result evidence yet |
+| Continuation-policy causal ablation | `src/lafc/continuation_policy_ablation.py`, `tests/test_continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation_smoke.py`, `configs/continuation_policy_causal_ablation_v1.json` | no full scientific output yet | `CONCEPTUAL_BUT_NOT_PRODUCTION_READY` | Protocol and implementation only; tiny smoke allowed, full result blocked by the known `reference_model=` interface mismatch | C1 vs C2 changes only label continuation (`LRU -> frozen pi1`) on the same decision/candidate examples; do not cite as result evidence yet. The learning curve narrows the sample-size explanation but does not solve Reviewer #3's missing C0/C1/C2 continuation experiment |
 
 Continuation-policy causal-ablation intent:
 

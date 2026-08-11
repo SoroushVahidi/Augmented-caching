@@ -81,19 +81,13 @@ Preserve locally and later consolidate intentionally:
 
 - `analysis/supervision_objective_learning_curve_v1/`
   - local diagnostic output; `25%` phase completed naturally `2026-08-09`
-    (as of the `2026-08-10` read-only audit): all `7/7` families
-    (`brightkite`, `citibike`, `cloudphysics`, `metacdn`, `metakv`,
-    `twemcache`, `wiki2018`), `42/42` rows, integrity verified. `50%`
-    first attempt `INTERRUPTED_BEFORE_FIRST_COMPLETED_UNIT` (launched
-    `2026-08-10` outside tmux in a foreground SSH shell, terminated after
-    ~80 minutes when the SSH session closed, `0/42` rows committed);
-    relaunched same day in tmux session
-    `kbs_learning_curve_50pct_20260810`, now `RUNNING_LOCAL_RESUME` and
-    confirmed healthy; `4/7` folds complete as of a `2026-08-10 21:59`
-    read-only re-check (`brightkite`, `citibike`, `cloudphysics`,
-    `metacdn`; `metakv` in progress; `twemcache`, `wiki2018` remaining;
-    a further resume may be needed if the `10`-hour clean-stop is hit
-    first); `100%` not yet started.
+    with all `7/7` families and `42/42` rows. The `50%` phase is now also
+    complete and validated: `7/7` families, `42/42` rows, all `status=ok`,
+    duplicate-key count 0, NaN/Inf count 0, 30 audit files total, 7/7
+    fraction-0.5 audit units, and 0 model SHA mismatches. Final synthesis:
+    `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`.
+    Stopping decision: `STOP_SAMPLE_SIZE_HYPOTHESIS`; `100%` intentionally
+    not run.
 - `models/supervision_objective_learning_curve_v1/`
   - generated models for completed learning-curve units
 - `analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/`
@@ -178,12 +172,9 @@ Keep these mechanisms separate during any later sync review:
   not current primary method changes.
 - learning branch:
   low fractions `1%`, `2%`, `5%`, and `10%` have a validated local checkpoint;
-  the `25%` phase completed naturally and locally on `2026-08-09` (verified
-  `2026-08-10`); `50%` first attempt was `INTERRUPTED_BEFORE_FIRST_COMPLETED_UNIT`
-  (launched `2026-08-10` outside tmux, killed when that SSH session
-  closed, `0/42` rows); relaunched same day in tmux session
-  `kbs_learning_curve_50pct_20260810`, now `RUNNING_LOCAL_RESUME`; `100%`
-  remains TODO.
+  the `25%` phase completed naturally and locally on `2026-08-09`; the
+  `50%` phase is complete and audited at 7/7 families and 42/42 rows.
+  `100%` is intentionally not run due `STOP_SAMPLE_SIZE_HYPOTHESIS`.
 - continuation branch:
   C1 is `Q_H^LRU -> pi1`; C2 is `Q_H^pi1 -> pi2`. The local implementation is
   ready, but Wulver real-data validation and later source/result sync are still

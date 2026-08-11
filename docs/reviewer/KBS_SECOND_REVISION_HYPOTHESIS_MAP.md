@@ -11,17 +11,12 @@ Those files should now point here for the hypothesis matrix itself rather
 than repeating it; they retain their own narrative/evidence detail and
 references.
 
-Do not overclaim from the actively running `50%` learning-curve phase.
-Partial `50%` rows are excluded from the evidence below; see
-`docs/kbs_second_revision_repository_state.md` for the live progress
-snapshot.
+The local `50%` learning-curve campaign is complete and audited. Do not
+launch `100%`: the predefined stopping rule has fired for H1, and `100%` is
+now intentionally not run rather than missing required work.
 
-Last updated: 2026-08-10, while `50%` fraction 5/7 folds complete
-(`brightkite, citibike, cloudphysics, metacdn, metakv`; `twemcache` in
-progress, `wiki2018` remaining). As always, treat this fold count as a
-timestamped snapshot (see `docs/kbs_second_revision_repository_state.md`),
-not a finalized number -- it will already be stale by the time this file is
-next read.
+Last updated: 2026-08-11, after the final `wiki2018|0.5` resume completed
+cleanly and the 50% integrity audit passed.
 
 ---
 
@@ -31,22 +26,26 @@ next read.
   undertrained; more labeled examples would close it.
 - Motivation: standard first hypothesis for any ML underperformance; directly
   testable via the same-target learning-curve campaign.
-- Current evidence: same-target scalar-vs-pairwise learning curve, 4-family
-  apples-to-apples across `1%->25%` (a 25x data increase): scalar MAE
-  `0.9867->0.9826`, RMSE `1.1922->1.1882`, miss_ratio `0.6256->0.6137`
-  (non-monotonic, effectively flat); pairwise miss_ratio
-  `0.8299->0.8296` (flat to the 4th decimal). No offline or downstream metric
-  shows a real monotonic improvement.
-- Status: `DISFAVORED` (over the tested `1%-25%` range; not fully closed).
-- Decisive next experiment: complete and audit `50%`/`100%` of the same-target
-  learning curve.
-- Stopping rule: stop blaming sample size if `50%`/`100%` improve offline
-  metrics but downstream `miss_ratio` does not move materially, or if they
-  show the same flat pattern already seen through `25%`.
+- Current evidence: same-target scalar-vs-pairwise learning curve through
+  audited `50%`. The apples-to-apples `1%->50%` curve over the four families
+  present at every fraction shows scalar miss ratio `0.6256->0.6126` and
+  pairwise miss ratio `0.8299->0.8300`; this is not a material monotonic
+  downstream improvement. The full 50% seven-family slice has `42/42` rows,
+  all `status=ok`; scalar is better on `18/21` family/capacity cells, ties on
+  `3/21`, and pairwise is better on `0/21`, with mean pairwise-minus-scalar
+  miss-ratio gap `+0.1611`.
+- Status: `DISFAVORED` within the tested `1%-50%` range. This does not prove
+  that more data can never help; it means the sample-size explanation is not
+  supported as the primary cause by this campaign's tested range.
+- Decisive next experiment: complete for this stopping-rule scope. The
+  synthesized closeout is
+  `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`.
+- Stopping rule: `STOP_SAMPLE_SIZE_HYPOTHESIS`. `100%` is intentionally not
+  run under this rule, not an active missing requirement.
 - Reviewer relevance: MC3, R3-Issue1/4.
 - Owner of next work: LOCAL.
-- Experiment state: `50%` RUNNING (in tmux `kbs_learning_curve_50pct_20260810`,
-  do not disturb); `100%` NOT_STARTED.
+- Experiment state: `50%` COMPLETE_7_OF_7 and validated; `100%`
+  INTENTIONALLY_NOT_RUN_DUE_STOPPING_RULE.
 
 ## H2 -- model-fitting / function-approximation failure
 
@@ -360,5 +359,5 @@ pages** between two accesses to the same page. Below, `T` denotes
   extension H4/H9/H10/H11), secondarily a **combination** weighted toward
   target/deployment interaction (H5/H6), with pure **model-fitting failure**
   (H2) and **argmin instability** (H7) currently the least supported.
-- Do not launch any new diagnostic while the `50%` learning-curve tmux worker
-  (`kbs_learning_curve_50pct_20260810`) is active.
+- Do not launch `100%` for H1 unless a future, separately justified
+  protocol change explicitly reopens the sample-size question.

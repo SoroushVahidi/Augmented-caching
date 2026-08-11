@@ -82,9 +82,9 @@ protocol merely for convenience).
 - Nested training-fraction subsets are built once via
   `lafc.reviewer_diagnostics.build_nested_fraction_subsets`: every decision
   id gets a stable per-seed hash rank, and each fraction takes a prefix of
-  that single global order. This guarantees strict subset nesting
-  (`subset(1%) ⊂ subset(2%) ⊂ ... ⊂ subset(100%)`) and full determinism for
-  a fixed seed -- verified directly in source, Pass #2.
+  that single global order. This guarantees strict subset nesting for the
+  tested fractions (`subset(1%) ⊂ subset(2%) ⊂ ... ⊂ subset(50%)`) and full
+  determinism for a fixed seed -- verified directly in source, Pass #2.
 
 ## G. Generated-output policy
 
@@ -162,8 +162,8 @@ protocol merely for convenience).
   double check" without a specific reason -- these already have recorded
   hashes/provenance; recomputation risk (different machine, different
   library versions) is a real threat to reproducibility claims.
-- Do not resume or relaunch the learning-curve campaign while its tmux
-  worker is already running (check `tmux ls` first).
+- Do not resume or relaunch the completed learning-curve campaign, and do
+  not launch `100%` under the current H1 stopping rule.
 - Do not treat a currently-`RUNNING` fraction's partial rows as evidence;
   wait for a clean stop and an integrity audit.
 - Do not hand-edit a frozen `configs/*.json` protocol file to make a

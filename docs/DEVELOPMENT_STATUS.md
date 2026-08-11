@@ -136,9 +136,9 @@ Status vocabulary used below (canonical on this branch, see the registry):
 | Target-degeneracy / horizon tie-resolution diagnostic | 1 cell | `COMPLETE_DIAGNOSTIC` | Strongest-supported mechanistic finding on this branch: 99.3% of candidates tie for "optimal" under H=4; 8x horizon only breaks a minority of ties | `analysis/eviction_loss_target_degeneracy_v1/brightkite_cap64_h4/` | High for this cell only; not family-general |
 | Historical-tail diagnostic | -- | `BLOCKED` locally (`NOT_LOCAL`) | Not implemented locally; ownership per older local docs is Wulver-side, **not independently reverified this pass** | n/a | n/a -- see `LAST_KNOWN_REMOTE_STATUS` caveat below |
 | Distribution-shift / continuation-policy preliminary check | 1 family (metacdn) | `COMPLETE_PARTIAL_SCOPE` | Trajectory divergence real (97-99.8% at 3 capacities); DAgger relabeling made misses *worse*, not better | `analysis/distribution_shift_ablation_v1/` | Medium; single family |
-| Continuation-policy causal ablation (C1/C2, frozen protocol) | -- | `IMPLEMENTATION_READY` | Only `TINY_SMOKE_ONLY` run so far (`decision_count=3`); no scientific result yet | `src/lafc/continuation_policy_ablation.py`, `configs/continuation_policy_causal_ablation_v1.json` | None yet (not run at scale) |
+| Continuation-policy causal ablation (C0/C1/C2, frozen protocol) | -- | `CONCEPTUAL_BUT_NOT_PRODUCTION_READY` | Only `TINY_SMOKE_ONLY` run so far (`decision_count=3`); no scientific result yet. Known production blocker: the current runner/protected-source interface has a `reference_model=` mismatch and does not yet implement all three needed conditions. The learning-curve closeout does not solve this Reviewer #3 item. | `src/lafc/continuation_policy_ablation.py`, `configs/continuation_policy_causal_ablation_v1.json` | None yet (not run at scale) |
 | Continuation-policy light ablation (earlier, historical) | 4 traces | `SUPERSEDED` by C1/C2 above | Kept for provenance only; do not conflate with the frozen C1/C2 protocol | -- | n/a -- superseded |
-| Learning convergence (scalar vs pairwise, same target) | Fraction sweep `1%..100%` | `RUNNING` overall | `25%`: `FINAL_VALIDATED`, 7/7 families, 42/42 rows, flat/non-monotonic offline+downstream metrics through 25% of data. `50%`: `RUNNING` -- see section 7 for live state. `100%`: `PENDING` | `analysis/supervision_objective_learning_curve_v1/`, `configs/supervision_objective_learning_curve_v1.json` | High through `25%`; `50%`/`100%` not yet evidence |
+| Learning convergence (scalar vs pairwise, same target) | Fraction sweep `1%, 2%, 5%, 10%, 25%, 50%` | `FINAL_50PCT_VALIDATED` | `50%`: 7/7 families, 42/42 rows, all `status=ok`, duplicate-key count 0, NaN/Inf count 0, 30 audit files total, 7/7 fraction-0.5 audit units, 0 model SHA mismatches. Apples-to-apples `1%->50%` shows no material monotonic downstream improvement; pairwise remains flat/worse. Stopping decision: `STOP_SAMPLE_SIZE_HYPOTHESIS`; `100%` intentionally not run. | `analysis/supervision_objective_learning_curve_v1/`, `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`, `configs/supervision_objective_learning_curve_v1.json` | High for intended stopping-rule scope |
 | Practical significance / controlled timing | -- | Equivalence check `COMPLETE_DIAGNOSTIC` (`SMOKE_ONLY` for timing numbers) | A vectorized reimplementation makes identical decisions to the reference implementation in checked cells; final controlled timing campaign not yet run | `analysis/practical_significance_ablation_v1/` | High for equivalence; timing numbers not citable as final |
 | Cross-cutting comparison-fairness audit | -- | `FINAL_VALIDATED` (as an audit) | Overall fairness score 76/100, `GENERALLY_FAIR_WITH_LIMITATIONS`; the historical `evict_value_v1` loss to LRU/SIEVE/FIFO is unlikely explained by protocol unfairness (the one confirmed unfairness, train/test overlap, would have *favored* `evict_value_v1`, yet it still lost) | `docs/reviewer/kbs_comparison_fairness_audit.md` | High as an audit of methodology, not a performance claim |
 | Distribution-shift (Wulver-merged 24/42) | -- | `WULVER_ONLY_VALIDATED` | 24/42 rows (up from the local 18/42 checkpoint). Across 12 paired cells: measured state shift decreased in 9, misses improved in **0**, misses worsened in **9**, misses tied in 3 -- reinforces, does not resolve, the existing negative-result narrative | Not locally present | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
@@ -178,32 +178,37 @@ Do not use these for final claims:
 | `docs/manuscript_open_questions.md`, `docs/manuscript_evidence_map.md` | Last touched 2026-04-10/11, ~4 months before this branch's current work; reference an earlier TIST-framing pairwise-vs-pointwise research line and do not mention `evict_value_v1`, the H1-H11 hypothesis map, or the second-revision experiment registry at all | `LIKELY_SUPERSEDED / ORPHANED` -- not cross-referenced by any current second-revision doc; flagged here rather than deleted (do not delete historical evidence) |
 | Any header-only or failed held-out evaluation output | Not usable scientific evidence | Historical failure provenance only |
 
-## 7. Active local work
+## 7. Completed local learning-curve closeout
 
-**Confirmed via direct inspection at 2026-08-11 09:30 EDT** (this pass; read-only except for the one deliberate, explicitly-authorized launch described below):
+**Confirmed via direct inspection at 2026-08-11 after the final
+`wiki2018|0.5` resume completed naturally.** This closeout was
+documentation/synthesis-only: no new experiment was launched, no 100%
+fraction was run, no Wulver contact occurred, and no tmux session was
+stopped or signaled.
 
-- The original `kbs_learning_curve_50pct_20260810` worker (PID `3376086`) **clean-stopped on its own**
-  overnight: its log shows `[budget] remaining=-400s < avg_unit_cost=6067s -- stopping before
-  starting unit=wiki2018|0.500000` -- a deliberate budget check refusing to start a unit it couldn't
-  finish, not a crash. Final state: **6/7 families complete for fraction 0.5**
-  (`brightkite, citibike, cloudphysics, metacdn, metakv, twemcache`), 36/36 rows `status=ok`, no
-  duplicate keys, no NaN/Inf. `wiki2018|0.5` never started; classification
-  `CLEAN_VALID_CHECKPOINT_INCOMPLETE`, not `COMPLETE_7_OF_7`.
-- On explicit user authorization, the single missing unit was then launched: tmux session
-  `kbs_learning_curve_50pct_wiki2018_resume_20260811`, worker PID `3395442`, command
-  `--resume --held-out-families wiki2018 --fractions 0.5 --max-wall-hours 3` (restricted via
-  `--held-out-families` so it cannot touch the other six already-complete families or any other
-  fraction). As of this reconciliation pass it is alive and healthy, correctly scoped to
-  `wiki2018|0.5` only. **This pass did not otherwise interact with it** (no signal, no attach that
-  changes state, no restart) and did not launch `100%` or any other heavy experiment.
-- Apples-to-apples learning-curve summary through the 6/7-complete `50%` state (4 families present
-  at every fraction: brightkite, citibike, cloudphysics, metacdn) --
+- Fraction `0.5` is complete: 7/7 families, 42/42 rows, all `status=ok`,
+  capacities `32/64/128`, both conditions (`eviction_loss_scalar`,
+  `eviction_loss_pairwise`), duplicate-key count 0, NaN/Inf count 0.
+- Artifact integrity passed: expected 50% model files are present, 0 model
+  SHA mismatches, 30 audit files total, 7/7 fraction-0.5 audit units, and
+  `campaign_state.json` contains all seven `family|0.500000` units including
+  `wiki2018|0.500000`.
+- Synthesis path:
+  `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`.
+- Apples-to-apples learning-curve summary over the four families present at
+  every fraction (`brightkite`, `citibike`, `cloudphysics`, `metacdn`):
   scalar MAE / scalar miss_ratio / pairwise miss_ratio:
-  `1%`: 0.9867 / 0.6256 / 0.8299; `10%`: 0.9825 / 0.6110 / 0.8297; `25%`: 0.9826 / 0.6137 / 0.8296;
-  `50%` (partial): 0.9827 / 0.6126 / 0.8300. The flat/non-monotonic pattern already seen through
-  `25%` continues at `50%` -- no material, monotonic downstream improvement in either condition.
-  This **leans toward disfavoring H1** (insufficient training data) per the hypothesis map's own
-  stopping rule, but is not yet a final call: `wiki2018|0.5` and all of `100%` remain outstanding.
+  `1%`: 0.9867 / 0.6256 / 0.8299; `10%`: 0.9825 / 0.6110 / 0.8297;
+  `25%`: 0.9826 / 0.6137 / 0.8296; `50%`: 0.9827 / 0.6126 / 0.8300.
+  The `1%->50%` curve does not show material monotonic downstream
+  improvement.
+- Full 50% seven-family comparison: scalar better on 18/21
+  family/capacity cells, ties on 3/21, pairwise better on 0/21; mean
+  pairwise-minus-scalar miss-ratio gap is approximately `+0.1611`.
+- Scientific conclusion for H1: `STOP_SAMPLE_SIZE_HYPOTHESIS`. Within the
+  tested `1%-50%` range, the sample-size explanation is not supported as
+  the primary cause. This is not a claim that more data can never help;
+  it is the campaign's predefined stopping-rule conclusion.
 
 ## 8. Open experiments (ranked by priority)
 
@@ -239,7 +244,8 @@ completed them):
   win, only a tie-resolution measurement.
 - **Insufficient-data / pure model-fit explanations are currently
   disfavored.** H1 (more data would close the gap) shows flat offline and
-  downstream metrics from 1% to 25% of training data. H2 (model fails to
+  downstream metrics from 1% to 50% of training data, and the predefined
+  stopping decision is `STOP_SAMPLE_SIZE_HYPOTHESIS`. H2 (model fails to
   fit its target) is contradicted by 96.5% exact-target agreement with low
   mean regret in the one audited cell -- the model's small departures from
   its own target are net beneficial, not harmful.
@@ -316,10 +322,10 @@ Wulver this pass):
   is, locally, actually a clean promotion opportunity rather than a merge
   conflict. Whether Wulver independently modified this file is still
   unverified.
-- Generated evidence explicitly marked `DO_NOT_TRANSFER_WHILE_RUNNING`: the
-  `50%` learning-curve output tree (section 7). Eligible for transfer once
-  complete and audited: the one-cell oracle/degeneracy diagnostics, the
-  metacdn distribution-shift partial checkpoint.
+- Generated evidence now eligible for intentional transfer after audit: the
+  completed 50% learning-curve output tree and final synthesis (section 7),
+  the one-cell oracle/degeneracy diagnostics, and the metacdn
+  distribution-shift partial checkpoint.
 - Do not treat any of the above as current fact; re-verify by actually
   contacting Wulver in a session explicitly authorized to do so.
 - **2026-08-11 update:** several of the open items above have since been
