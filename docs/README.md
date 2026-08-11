@@ -2,11 +2,19 @@
 
 Use this page to find the right document without duplicating long runbooks.
 
+## New to this repository, or a new agent with no conversation history?
+
+| Document | Use when you need… |
+|----------|---------------------|
+| [`DEVELOPMENT_STATUS.md`](DEVELOPMENT_STATUS.md) | **Start here.** Authoritative developer/research handoff: project purpose, current scientific question, branch roles, evidence summary, invalid artifacts, active local work, and a startup checklist |
+| [`NEW_AGENT_HANDOFF.md`](NEW_AGENT_HANDOFF.md) | Crisp "what do I do right now" -- immediate next actions (with machine/entry point/stopping condition) and a hard safety "Do Not Do" list |
+| [`NEXT_STEPS.md`](NEXT_STEPS.md) | Full P0-P4 roadmap, each item with why/status/dependency/machine/entry point/cost/stopping rule |
+
 ## Current KBS second-revision reviewer science
 
 | Document | Use when you need… |
 |----------|---------------------|
-| [`reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md`](reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md) | **Start here.** Canonical index of every reviewer-relevant experiment: question, protocol, scope, status, evidence strength, next action |
+| [`reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md`](reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md) | Canonical index of every reviewer-relevant experiment: question, protocol, scope, status, evidence strength, next action |
 | [`reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`](reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md) | What answers each reviewer concern, and how completely (`ANSWERED`/`PARTIAL`/`MISSING`/...) |
 | [`reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`](reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md) | The mechanistic-hypothesis matrix (H1-H11): evidence, status, decisive next experiment, stopping rule |
 | [`reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md`](reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md) | How to actually rerun/resume a second-revision diagnostic, canonical windows/seeds, checkpoint semantics |
@@ -52,8 +60,8 @@ Use this page to find the right document without duplicating long runbooks.
 
 | Document | Use when you need… |
 |----------|---------------------|
-| [`manuscript_open_questions.md`](manuscript_open_questions.md) | Priority-ordered research and positioning risks |
-| [`manuscript_evidence_map.md`](manuscript_evidence_map.md) | Claim-by-claim table for older manuscript-support work |
+| [`manuscript_open_questions.md`](manuscript_open_questions.md) | Priority-ordered research and positioning risks. **Likely superseded/orphaned**: last touched 2026-04, predates the H1-H11 hypothesis map and the second-revision experiment registry, and describes an earlier TIST pairwise-vs-pointwise framing not otherwise referenced by current second-revision docs -- flagged here rather than deleted |
+| [`manuscript_evidence_map.md`](manuscript_evidence_map.md) | Claim-by-claim table for older manuscript-support work. Same staleness caveat as above; points to `kbs_manuscript_workflow.md` for the current canonical pipeline |
 | [`manuscript_tist_positioning.md`](manuscript_tist_positioning.md) | TIST-oriented positioning notes |
 
 ## Exploratory and internal material

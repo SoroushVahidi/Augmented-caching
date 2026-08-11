@@ -16,8 +16,12 @@ Partial `50%` rows are excluded from the evidence below; see
 `docs/kbs_second_revision_repository_state.md` for the live progress
 snapshot.
 
-Last updated: 2026-08-10, while `50%` fraction 4/7 folds complete
-(`brightkite, citibike, cloudphysics, metacdn`; `metakv` in progress).
+Last updated: 2026-08-10, while `50%` fraction 5/7 folds complete
+(`brightkite, citibike, cloudphysics, metacdn, metakv`; `twemcache` in
+progress, `wiki2018` remaining). As always, treat this fold count as a
+timestamped snapshot (see `docs/kbs_second_revision_repository_state.md`),
+not a finalized number -- it will already be stale by the time this file is
+next read.
 
 ---
 
@@ -295,6 +299,54 @@ Last updated: 2026-08-10, while `50%` fraction 4/7 folds complete
   active.
 
 ---
+
+## Refined horizon-adequacy framing (H10/H11 candidate quantities)
+
+Added during the 2026-08-10 finalization pass, based on a literature
+synthesis. This section fixes vocabulary for future H10/H11 work; nothing
+below has been measured yet on this branch.
+
+**Terminology guardrail:** `H` here is a count of future *requests* (the
+`eviction_loss` target looks `H` requests ahead). Do not conflate this with
+classical *stack distance* / *reuse distance*, which counts **distinct
+pages** between two accesses to the same page. Below, `T` denotes
+`next_reuse_time_requests` -- a request-count quantity in the same units as
+`H` -- never a distinct-object stack-distance figure.
+
+- **Primary candidate -- `P(T > H | resident)`.** Probability that a
+  cache-resident object's next reuse falls beyond the horizon window. This is
+  the dimensionally direct quantity (same units as `H`, no normalization
+  assumption needed) and is the natural first thing to compute for H11's
+  `POTENTIAL_CONSEQUENCE` bucket -- it is essentially the same computation
+  already planned there, just expressed as a probability conditioned on
+  residency rather than a raw delay-bucket histogram.
+- **Secondary, competing candidates** (each needs an extra assumption
+  `P(T>H)` does not, and none is currently implemented):
+  - `H / C` -- `COARSE COMPETING HYPOTHESIS -- NOT ESTABLISHED LAW`. This is
+    the quantity implicitly behind H10's framing; treat it as one candidate
+    covariate to check against `P(T>H)`, not as a derived normalization.
+  - `distinct-future-page coverage / C` -- closer to classical stack
+    distance (distinct objects, not request count); must be reported under a
+    different symbol than `T`, never interchanged with it.
+  - `H / q90(T)` or `H / q95(T)` -- horizon relative to a high quantile of
+    the resident reuse-time distribution; an alternative summary statistic
+    of the same distribution `P(T > H)` comes from.
+  - `footprint(H) / C` -- working-set footprint over the next `H` requests
+    relative to capacity; capacity-dependent normalization not yet defined
+    anywhere in this codebase -- do not use until defined.
+- **What none of these establish yet:** `H` scaling linearly with `C`
+  universally; H3 degeneracy vanishing iff `H` exceeds some boundary of any
+  quantity above; LRU as a formal terminal-value estimator; or that
+  `P(T > H)` causally explains the offline/online gap before it is measured
+  and checked against downstream misses (consistent-with is not the same as
+  causal-of -- see the potential-consequence vs. causal-excess-miss
+  distinction already drawn in H11).
+- Reviewer relevance: MC1 (extends H10/H11's next-diagnostic scope).
+- Owner of next work: LOCAL (P(T>H) is computable from existing decision
+  logs + raw trace, same inputs H11 already identified as sufficient for its
+  first pass).
+- Experiment state: NOT_STARTED; blocked from launching while `50%` worker is
+  active, same as H9/H10/H11.
 
 ## Cross-cutting notes
 
