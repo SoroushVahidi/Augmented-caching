@@ -24,13 +24,17 @@ Re-verify git and tmux state yourself before acting -- see the checklist in
    local integrity checks pass (hash match, unique keys, no NaN/Inf, all
    `status=ok`) and the script writes the final comparison.
 
-2. **Priority P1.** Machine: local. Decide whether to launch the
-   continuation-policy C0/C1/C2 production runner (`NEXT_STEPS.md` P2.5).
-   Status is `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED`: the runner, preflight,
-   atomic units, same-example/leakage/model gates, tiny smoke, and resume
-   smoke are validated. Prerequisite: explicit launch authorization.
-   Stopping condition for the next task: the real campaign completes and
-   passes integrity checks, or a unit fails closed with an actionable error.
+2. **Priority P1.** Machine: local. Monitor the launched continuation-policy
+   C0/C1/C2 production runner (`NEXT_STEPS.md` P2.5). Status is
+   `PRODUCTION_RUNNING_LOCAL_TMUX`: tmux session
+   `kbs_continuation_c0_c1_c2_production_20260811`, source SHA
+   `a813617f36822f793b0e48b0ee3e6009d56ee324`, config SHA-256
+   `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`,
+   expected 21 units / 63 policy rows / 21 label-agreement rows / 21
+   pi2-training rows, serial thread caps, `--resume`, and 8-hour wall-time
+   guard. Stopping condition for the next task: the real campaign completes
+   and passes integrity checks, or a unit fails closed with an actionable
+   error.
 
 3. **Priority P2.** Machine: local. Replicate the exact-target-oracle
    diagnostic across the remaining 6 families x 3 capacities
@@ -68,9 +72,9 @@ For the full ranked P0-P4 roadmap beyond these five, see
   confirmed via direct Wulver contact from here. Re-verify job IDs/hashes
   directly when a task explicitly authorizes contacting Wulver, especially
   before citing them in anything manuscript-facing.
-- **Continuation-policy C0/C1/C2 is runner-ready, not result-complete.** Do
-  not mark it complete or cite outcomes until the real 21-unit campaign has
-  been launched, completed, and audited.
+- **Continuation-policy C0/C1/C2 is running, not result-complete.** Do not
+  mark it complete or cite outcomes until the real 21-unit campaign completes
+  and the aggregate integrity manifest passes.
 - **Do not relaunch exact controlled-window LRB/3L-Cache/CACHEUS locally just
   because Wulver jobs `1171965`-`1171967` are pending.** The local
   `analysis/reviewer_fairness/policy_comparison_{lrb,three_l_cache,cacheus}.csv`

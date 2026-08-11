@@ -232,16 +232,17 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
   the already-learned frozen `pi1` continuation improve the next learned
   policy `pi2`?
 - Reviewer concern: Reviewer #2 Major 3 / Reviewer #3 continuation-mismatch
-- Machine: LOCAL production runner ready / full campaign not launched
+- Machine: LOCAL tmux session `kbs_continuation_c0_c1_c2_production_20260811`
 - Protocol: `configs/continuation_policy_causal_ablation_v1.json`, `PROTOCOL_FROZEN_NO_RESULTS`
-- Scope: production runner + tests complete; only tiny production-runner smoke executed
+- Scope: 21 planned `(held_out_family, capacity)` production units; expected 63 policy rows, 21 label-agreement rows, 21 pi2-training rows
 - Source entry point: `src/lafc/continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation.py`
 - Config: `configs/continuation_policy_causal_ablation_production_v1.json`
-- Output path: no full-campaign output yet; smoke is stdout-only (`analysis/continuation_policy_causal_ablation*` explicitly excluded from sync)
-- Status: `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED`
-- Evidence strength: `IMPLEMENTATION_ONLY`
+- Output path: `analysis/continuation_policy_causal_ablation_production_v1/`; models in `models/continuation_policy_causal_ablation_production_v1/`
+- Status: `PRODUCTION_RUNNING_LOCAL_TMUX`
+- Evidence strength: `RUNNING_NO_RESULTS_YET`
 - Primary/diagnostic/supporting: diagnostic (planned)
-- Next action: explicit local launch decision for the 21-unit production campaign
+- Next action: monitor/resume; do not relaunch duplicate campaign; do not cite outcomes until final integrity passes
+- Launch provenance: launched 2026-08-11 from source SHA `a813617f36822f793b0e48b0ee3e6009d56ee324`, config SHA-256 `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`, serial thread caps, `--resume --max-wall-hours 8`
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.7 (includes this pass's cross-reference to the older, distinct `evict_value_v2_rollout.py` continuation exploration); `docs/reviewer/local_to_wulver_continuation_sync_manifest.md`
 
 ### 11. Practical-significance / controlled timing

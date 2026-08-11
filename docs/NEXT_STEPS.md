@@ -207,16 +207,20 @@ launched from scratch.
 
 - **Why:** H5's decisive test; currently only smoke-scale
   (`decision_count=3`).
-- **Status (updated 2026-08-11):** `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED`.
-  Local production runner now emits C0 LRU, C1 frozen `pi1`, and C2 trained
-  from frozen-`pi1` continuation labels; writes atomic `(held_out_family,
-  capacity)` units; rebuilds aggregate CSVs from completed units; and has a
-  validated resume path. No full-scale scientific result exists yet.
-- **Dependency:** explicit launch decision only. The old
+- **Status (updated 2026-08-11):** `PRODUCTION_RUNNING_LOCAL_TMUX`.
+  Local production runner is active in tmux session
+  `kbs_continuation_c0_c1_c2_production_20260811` from source SHA
+  `a813617f36822f793b0e48b0ee3e6009d56ee324` and config SHA-256
+  `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`.
+  It emits C0 LRU, C1 frozen `pi1`, and C2 trained from frozen-`pi1`
+  continuation labels; writes atomic `(held_out_family, capacity)` units;
+  rebuilds aggregate CSVs from completed units; and runs with `--resume`,
+  serial thread caps, and an 8-hour wall-time guard. No full-scale scientific
+  result exists until final integrity passes.
+- **Dependency:** monitor/resume only; do not relaunch a duplicate session. The old
   `build_rollout_candidate_rows_v2(..., reference_model=...)` path remains
   irrelevant to the frozen protocol and should not be used.
-- **Machine:** local production runner is ready for a conservative tmux
-  launch decision.
+- **Machine:** local production runner is executing conservatively in tmux.
 - **Entry point:** `scripts/experiments/run_continuation_policy_causal_ablation.py`
   with `configs/continuation_policy_causal_ablation_production_v1.json`.
 - **Expected cost:** high for the full 7-family scale run.
