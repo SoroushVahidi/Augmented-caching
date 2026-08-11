@@ -4,6 +4,22 @@ Use this page to find the **right** document without duplicating long runbooks. 
 
 ---
 
+## Experimental evidence and scientific organization
+
+**Start here for the science.** These pages are organized by scientific
+question, not by manuscript-revision bookkeeping, and are the intended
+public entry points.
+
+| Document | Use when you need… |
+|----------|---------------------|
+| [`EXPERIMENTAL_EVIDENCE.md`](EXPERIMENTAL_EVIDENCE.md) | The scientific questions this project investigates and where the evidence for each stands |
+| [`RESULTS_AND_LIMITATIONS.md`](RESULTS_AND_LIMITATIONS.md) | Honest account of what worked, what didn't, and what remains open, including negative results |
+| [`EXPERIMENT_REGISTRY.md`](EXPERIMENT_REGISTRY.md) | Canonical index of every experiment: question, scope, status, evidence strength, reproducibility |
+| [`HYPOTHESIS_MAP.md`](HYPOTHESIS_MAP.md) | Mechanistic hypotheses for the offline-to-online gap, evidence, and decisive next tests |
+| [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) | Stable install/setup, protocol conventions, and reproduction commands |
+
+---
+
 ## Canonical KBS / Wulver `heavy_r1` (main submission line)
 
 | Document | Use when you need… |

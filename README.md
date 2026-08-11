@@ -14,6 +14,43 @@ Research code for **learning-augmented caching**: literature-faithful baselines,
 
 ---
 
+## Key ideas
+
+`evict_value_v1` learns a candidate-level eviction score from a
+finite-horizon supervision target and evicts the minimizer at each miss.
+Investigating *why* that offline-learnable target does not always translate
+into a matching online (deployed) performance gain is an active part of
+this project's evidence -- see below.
+
+## Experimental evidence
+
+- **[Experimental evidence](docs/EXPERIMENTAL_EVIDENCE.md)** -- the
+  scientific questions this project investigates and where the evidence for
+  each currently stands.
+- **[Results and limitations](docs/RESULTS_AND_LIMITATIONS.md)** -- an
+  honest account of what worked, what didn't, and what remains open,
+  including negative results.
+- **[Experiment registry](docs/EXPERIMENT_REGISTRY.md)** -- the canonical
+  index of every experiment: question, scope, status, evidence strength,
+  reproducibility, and (where relevant) which branch its code currently
+  lives on.
+- **[Hypothesis map](docs/HYPOTHESIS_MAP.md)** -- the mechanistic
+  hypotheses for the offline-to-online gap, their current evidence, and the
+  decisive test that would move each one forward.
+- **[Reproducibility](docs/REPRODUCIBILITY.md)** -- stable install/setup,
+  protocol conventions, and reproduction commands.
+
+## Publication / manuscript context
+
+Some of this work is being prepared for submission to *Knowledge-Based
+Systems*; the manuscript-specific reproduction bundle is documented below
+under "Canonical KBS manuscript path." That publication context does not
+define this repository's organization -- the documents above are organized
+by scientific question and are intended to remain useful independent of any
+particular submission's status.
+
+---
+
 ## Stable baselines (manuscript-safe references)
 
 Classical and robust policies exposed on the main CLI include `lru`, `marker`, `predictive_marker`, `trust_and_doubt`, `robust_ftp_d_marker` (`robust_ftp`), `blind_oracle_lru_combiner`, and the unweighted optimum `offline_belady` (full lookahead via trace construction). **General caching** (variable sizes/costs) uses a separate LP+rounding entry point: `scripts/run_offline_general_caching_approx.py` — see `docs/offline_general_caching_approx.md` (not a `--policy` on `run_policy`).
