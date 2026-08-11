@@ -24,6 +24,13 @@ Status labels used here:
 - Wulver-only orchestration files are still missing locally as of 2026-08-09
   because non-interactive SSH inspection failed on authentication. Treat that
   sync as `BLOCKED_PENDING_SYNC`; do not fabricate those files.
+- This file maps reviewer concerns to code/config/output *paths*. For the
+  authoritative per-concern *status* summary (answered/partial/missing,
+  remaining experiment, text-only fixes) see
+  [`KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`](KBS_SECOND_REVISION_REVIEWER_COVERAGE.md);
+  for the mechanistic-hypothesis matrix see
+  [`KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`](KBS_SECOND_REVISION_HYPOTHESIS_MAP.md).
+  Do not duplicate those tables here.
 
 ## Reviewer #2 Major 1: learned-baseline comparison
 
@@ -66,7 +73,7 @@ Important naming distinction:
 
 | Item | Code / protocol | Current local output | Status | Eligibility | Caveats |
 |---|---|---|---|---|---|
-| Same-target scalar-vs-pairwise learning curve | `configs/supervision_objective_learning_curve_v1.json`, `scripts/experiments/run_supervision_objective_learning_curve.py`, `src/lafc/reviewer_diagnostics.py`, `tests/test_supervision_objective_learning_curve.py` | `analysis/supervision_objective_learning_curve_v1/`, `models/supervision_objective_learning_curve_v1/` | `RUNNING_LOCAL` | `DIAGNOSTIC_PARTIAL` while active or partially complete | Explanatory diagnostic only, not a primary reviewer comparison |
+| Same-target scalar-vs-pairwise learning curve | `configs/supervision_objective_learning_curve_v1.json`, `scripts/experiments/run_supervision_objective_learning_curve.py`, `src/lafc/reviewer_diagnostics.py`, `tests/test_supervision_objective_learning_curve.py` | `analysis/supervision_objective_learning_curve_v1/`, `models/supervision_objective_learning_curve_v1/` | `25_PERCENT_COMPLETE_VALID`; `50%` `RUNNING_LOCAL_RESUME` (first attempt `2026-08-10` outside tmux failed with `0/42` rows; relaunched same day in tmux `kbs_learning_curve_50pct_20260810`); `100%` not started | `DIAGNOSTIC_PARTIAL` (aggregate curve incomplete without `50%`/`100%`) | Explanatory diagnostic only, not a primary reviewer comparison |
 
 Diagnostic intent:
 
@@ -87,27 +94,55 @@ Current locally audited checkpoint to preserve:
 - validated result rows:
   `96`
 
-Current local high-fraction extension status:
+Current local high-fraction extension status (updated `2026-08-10`,
+read-only audit):
 
-- active tmux session:
-  `kbs_learning_curve_highfrac_20260809`
-- currently launched fraction phase:
+- tmux session:
+  `kbs_learning_curve_highfrac_20260809` (no longer running; no tmux server
+  process present on this host)
+- last launched fraction phase:
   `25%`
 - current 25% completion:
-  `5/7` folds have unit audits and result rows
-- current completed 25% folds:
-  `brightkite`, `citibike`, `cloudphysics`, `metacdn`, `metakv`
-- target scope for the active phase:
-  all seven held-out folds
-- local wall-time budget:
-  `10` hours
+  `7/7` folds have unit audits and result rows (`42/42` CSV rows, all
+  `status=ok`, no duplicate keys, no NaN/Inf, all `14` model artifact hashes
+  verified)
+- completed 25% folds:
+  `brightkite`, `citibike`, `cloudphysics`, `metacdn`, `metakv`, `twemcache`,
+  `wiki2018`
+- completion mode:
+  natural completion at `2026-08-09 20:17` local time (`7h43m` wall time
+  against the `10`-hour budget, `~2.3h` headroom remaining) — not a
+  clean-budget stop
 - later planned phases:
-  `50%`, then `100%`
+  `50%` (first attempt `INTERRUPTED_BEFORE_FIRST_COMPLETED_UNIT`,
+  relaunched same day in tmux, now `RUNNING_LOCAL_RESUME`), then `100%`
+  (not yet launched)
+- `50%` history:
+  first attempt launched `2026-08-10` in a foreground SSH shell (not
+  tmux, contrary to plan); terminated after ~80 minutes when that SSH
+  session closed; `0/42` rows committed, `0` unit audits; one orphan
+  model artifact (`brightkite/fraction_0.5/eviction_loss_scalar.pkl`)
+  left on disk, not referenced by any completed unit/audit/CSV/provenance
+  record, safe to overwrite; `<=25%` evidence unaffected. Relaunched
+  same day: tmux session `kbs_learning_curve_50pct_20260810`,
+  `--resume --fractions 0.5 --max-wall-hours 10`, same frozen protocol,
+  targets `7` folds (clean 10-hour wall-budget stop semantics); confirmed
+  healthy (worker PID `3376086` alive, CPU pegged, RSS climbing, no
+  errors) as of this checkpoint. As of a `2026-08-10 21:59` read-only
+  re-check (`~7h09m` into the `10`-hour budget): `4/7` folds complete
+  (`brightkite`, `citibike`, `cloudphysics`, `metacdn`; `24/42` rows,
+  `status=ok`, hashes verified), `metakv` in progress as fold `5/7`,
+  `twemcache` and `wiki2018` remaining. Observed `0.5` fold runtimes
+  (`87-141` min) suggest this invocation may reach its `10`-hour
+  clean-stop before all `3` remaining folds finish; a further tmux resume
+  is plausibly needed.
 - current status:
-  `RUNNING_LOCAL`
+  `25_PERCENT_COMPLETE_VALID`; `50%` `RUNNING_LOCAL_RESUME` (`4/7` folds
+  done as of `2026-08-10 21:59`)
 - final conclusion status:
-  none yet; do not infer scientific results from partial `25%` outputs until a
-  completed unit is audited
+  `25%` cell integrity is validated, but this remains a single completed
+  fraction; no aggregate learning-curve convergence conclusion should be
+  drawn until `50%`/`100%` are also complete
 
 Same-example fairness guarantee:
 

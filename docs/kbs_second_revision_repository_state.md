@@ -5,6 +5,12 @@ Canonical checkout: this `kbs/second-revision-science` repository clone
 Canonical branch: `kbs/second-revision-science`  
 Expected baseline HEAD for the current local documentation pass: `63e63acb09c39449bda0a28c8ab2d24f63b2547e`
 
+For the consolidated mechanistic-hypothesis matrix see
+[`reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`](reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md);
+for the per-reviewer-concern status matrix see
+[`reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`](reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md).
+This file stays focused on repository/branch/run-progress status.
+
 ## Purpose
 
 This note records the structural intent of the local KBS second-revision branch
@@ -63,12 +69,53 @@ before final manuscript-facing cleanup:
   validated units / `96` rows across
   `brightkite, citibike, cloudphysics, metacdn` at fractions
   `1%, 2%, 5%, 10%`.
-- a separate `25%` local extension is currently running in tmux session
-  `kbs_learning_curve_highfrac_20260809` with a clean `10`-hour wall-time
-  budget; the current local audit sees completed `25%` units for
-  `brightkite`, `citibike`, `cloudphysics`, and `metacdn` only. These completed
-  units pass row/hash integrity checks, but the `25%` phase is still
-  `RUNNING_LOCAL`, so no aggregate `25%` convergence claim should be recorded.
+- as of the `2026-08-10` read-only local audit, the `25%` local extension
+  has **completed naturally**: the tmux session `kbs_learning_curve_highfrac_20260809`
+  is no longer running (no tmux server process is present on this host), and
+  no experiment process remains in the process table. `campaign_state.json`,
+  `provenance.json`, and `policy_comparison.csv` all agree that all `7/7`
+  families (`brightkite`, `citibike`, `cloudphysics`, `metacdn`, `metakv`,
+  `twemcache`, `wiki2018`) finished for fraction `0.25`, producing `42/42`
+  expected rows, all with `status=ok`, no duplicate
+  `(fraction, family, condition, capacity)` keys, no literal NaN/Inf strings,
+  and all `14` model artifact SHA-256 hashes verified against the CSV. Total
+  logged unit runtime (`27753.65s` / `7.71h`) matches observed wall time
+  (`12:34:09`-`20:17:16` on `2026-08-09`, `7h43m`) with no gaps, so this was a
+  natural completion, not the `10`-hour clean-budget stop (`~2.3h` of budget
+  headroom remained). One data characteristic to carry forward: the
+  `eviction_loss_pairwise` condition for `twemcache` at fraction `0.25`
+  produced zero validation pairs at all three capacities, so
+  `validation_pairwise_accuracy` is legitimately `NaN` (encoded as a blank
+  CSV cell by `run_supervision_objective_learning_curve.py`), not a data
+  integrity failure. Classification: `25_PERCENT_FINAL = VALID`,
+  `READY_FOR_50_PERCENT = YES`. A first `50%` launch attempt on
+  `2026-08-10` was **not** started in tmux as planned; it ran in a
+  foreground SSH shell, which was terminated after ~80 minutes when that
+  SSH session closed, with `0/42` rows committed
+  (`50% = INTERRUPTED_BEFORE_FIRST_COMPLETED_UNIT`, cause: foreground SSH
+  session terminated, not a clean 10-hour budget stop). One orphan model
+  artifact
+  (`models/supervision_objective_learning_curve_v1/brightkite/fraction_0.5/eviction_loss_scalar.pkl`)
+  was left on disk, not referenced by any completed unit audit, CSV row,
+  or provenance record. The phase was relaunched correctly the same day
+  in tmux session `kbs_learning_curve_50pct_20260810`
+  (`--resume --fractions 0.5 --max-wall-hours 10`) and is
+  `RUNNING_LOCAL_RESUME` as of a `2026-08-10 21:59` read-only checkpoint
+  (confirmed healthy: worker PID `3376086` alive `~7h09m` into the
+  `10`-hour budget, CPU pegged at `~141%`, RSS `~24.2GiB`, `51` threads, no
+  errors, `<=25%` evidence unaffected). `4/7` folds complete for `0.5`
+  (`brightkite`, `citibike`, `cloudphysics`, `metacdn`; `24/42` rows, all
+  `status=ok`, hashes verified against the CSV), `metakv` in progress as
+  fold `5/7`, `twemcache` and `wiki2018` remaining. Per-family `0.5`
+  runtimes observed so far range `~87-141` minutes; at that pace this
+  invocation is likely to clean-stop at its `10`-hour budget with `metakv`
+  complete but `twemcache`/`wiki2018` only partially through, or not
+  started — a further tmux resume of the remaining folds should be
+  expected. No `1.0` fraction units have been started. (Note: the tmux
+  pane/log shows no stdout — this is a known Python stdout-buffering
+  artifact, not a hang; `stdbuf -oL` does not intercept Python's internal
+  `TextIOWrapper` buffering. Progress is confirmed via file-timestamp and
+  hash evidence instead.)
 - an exact-target-oracle vs learned-online diagnostic foundation now exists
   locally in `src/lafc/oracle_diagnostics.py` with focused synthetic tests in
   `tests/test_oracle_diagnostics.py`; one local real-trace cell has now been

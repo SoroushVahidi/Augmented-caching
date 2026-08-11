@@ -8,6 +8,13 @@ This is not manuscript prose. It distinguishes:
 - literature-supported interpretation,
 - hypotheses that remain untested.
 
+For the consolidated hypothesis status matrix (H1-H11, status, decisive next
+experiment, stopping rule, owner) see
+[`KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`](KBS_SECOND_REVISION_HYPOTHESIS_MAP.md),
+which supersedes any hypothesis table duplicated elsewhere. This notebook
+keeps the full narrative evidence, literature references, and
+section-by-section reasoning that the consolidated map only summarizes.
+
 ## 9.1 Core empirical puzzle
 
 Empirical puzzle:
@@ -221,12 +228,15 @@ This is not yet a final result because:
 - the low-fraction checkpoint covers only `1%, 2%, 5%, 10%`,
 - the partial rows must not be treated as final manuscript evidence.
 
-HIGH-FRACTION QUESTION — currently running locally.
+HIGH-FRACTION QUESTION — `25%` phase complete locally, not yet interpreted.
 
-The next active local phase is the `25%` same-target extension, launched in
-tmux session `kbs_learning_curve_highfrac_20260809` with a clean `10`-hour
-wall-time budget and all seven held-out folds targeted. Later `50%` and `100%`
-phases remain TODO.
+The `25%` same-target extension, launched in tmux session
+`kbs_learning_curve_highfrac_20260809` with a clean `10`-hour wall-time
+budget and all seven held-out folds targeted, completed naturally on
+`2026-08-09` (`7h43m` wall time, all `7/7` folds, `42/42` rows, integrity
+verified) per the `2026-08-10` read-only local audit. No scalar-vs-pairwise
+interpretation of the `25%` cells has been performed yet; that analysis and
+any resulting claim remain TODO, as do the later `50%` and `100%` phases.
 
 Current operational checkpoint:
 

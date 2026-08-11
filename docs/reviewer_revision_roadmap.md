@@ -8,6 +8,11 @@ Detailed artifact classification lives in
 [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md).
 Evidence-usage rules live in
 [`reviewer/kbs_evidence_eligibility.md`](reviewer/kbs_evidence_eligibility.md).
+The authoritative per-concern status matrix lives in
+[`reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`](reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md);
+the mechanistic-hypothesis matrix lives in
+[`reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`](reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md).
+This file should not duplicate either table.
 
 ## Status labels
 
@@ -69,31 +74,49 @@ Status: `SMOKE_ONLY`
 
 ### Same-target scalar-vs-pairwise learning curve
 
-Status: `RUNNING_LOCAL` and `DIAGNOSTIC_PARTIAL`
+Status: `25_PERCENT_COMPLETE_VALID`; `50%` `RUNNING_LOCAL_RESUME`
+(first attempt launched `2026-08-10` in a foreground SSH shell, not tmux;
+terminated after ~80 minutes when that SSH session closed, `0/42` rows
+committed; relaunched same day in tmux session
+`kbs_learning_curve_50pct_20260810`, confirmed healthy; `4/7` folds done
+as of a `2026-08-10 21:59` read-only re-check, `metakv` in progress);
+`100%` not yet started
 
 - tmux session:
-  `kbs_learning_curve_highfrac_20260809`
+  `kbs_learning_curve_highfrac_20260809` (no longer running; no tmux server
+  process present on this host as of the `2026-08-10` audit)
 - currently audited low-fraction checkpoint:
   `1%, 2%, 5%, 10%`
 - completed families in that audited checkpoint:
   `brightkite, citibike, cloudphysics, metacdn`
 - validated units / rows:
   `16` units, `96` rows
-- current live phase:
+- last completed phase:
   `25%`
 - current 25% checkpoint:
-  `5/7` folds have unit audits and result rows
+  `7/7` folds have unit audits and result rows (completed naturally,
+  `2026-08-09` `20:17` local time, `7h43m` wall time against a `10`-hour
+  budget)
 - completed 25% folds:
-  `brightkite, citibike, cloudphysics, metacdn, metakv`
-- current live target:
-  all seven held-out folds
-- local wall-time budget for the active `25%` phase:
-  `10` hours
+  `brightkite, citibike, cloudphysics, metacdn, metakv, twemcache, wiki2018`
+- local wall-time budget for the `25%` phase:
+  `10` hours (not exhausted; job finished naturally)
 - later planned phases:
-  `50%`, then `100%`
+  `50%` (first attempt launched `2026-08-10` outside tmux in a foreground
+  SSH shell; terminated after ~80 minutes when that SSH session closed,
+  `0/42` rows committed; relaunched same day correctly in tmux session
+  `kbs_learning_curve_50pct_20260810` via `--resume --fractions 0.5
+  --max-wall-hours 10`, `7`-fold target, clean 10-hour wall-budget stop
+  semantics, `RUNNING_LOCAL_RESUME`; `4/7` folds complete as of a
+  `2026-08-10 21:59` read-only re-check — `brightkite`, `citibike`,
+  `cloudphysics`, `metacdn` done, `metakv` in progress, `twemcache` and
+  `wiki2018` remaining; observed per-family runtimes suggest this
+  invocation may not finish all `7` folds before its `10`-hour clean-stop
+  and a further resume may be needed), then `100%` (not yet launched)
 - output:
   `analysis/supervision_objective_learning_curve_v1/`
-- no final claim yet.
+- no final claim yet; `25%` cell integrity is validated but no aggregate
+  learning-curve conclusion has been drawn.
 
 Scientific distinction to preserve:
 
@@ -249,8 +272,12 @@ Status: `PENDING_CONTROLLED_RUN`
 
 Preserve these as active TODO items:
 
-1. finish and audit the `25%` learning-convergence phase;
-2. later run `50%`;
+1. finish and audit the `25%` learning-convergence phase (done, `VALID`);
+2. `50%` first attempt was `INTERRUPTED_BEFORE_FIRST_COMPLETED_UNIT`
+   (launched `2026-08-10` outside tmux, killed when the SSH session
+   closed, `0/42` rows); relaunched same day in tmux session
+   `kbs_learning_curve_50pct_20260810`, now `RUNNING_LOCAL_RESUME` —
+   audit on clean stop;
 3. later run `100%`;
 4. jointly analyze downstream misses, scalar `MAE/RMSE`, and ranking or
    decision metrics versus fraction;

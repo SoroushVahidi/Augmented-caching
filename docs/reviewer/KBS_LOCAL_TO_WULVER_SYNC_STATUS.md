@@ -5,6 +5,12 @@ Date: 2026-08-09
 Scope: local repository audit only. No Wulver contact was performed during this
 pass, so Wulver runtime state is intentionally not asserted here.
 
+For the mechanistic-hypothesis matrix see
+[`KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`](KBS_SECOND_REVISION_HYPOTHESIS_MAP.md);
+for the per-reviewer-concern status matrix see
+[`KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`](KBS_SECOND_REVISION_REVIEWER_COVERAGE.md).
+This file stays focused on what is/isn't synced between local and Wulver.
+
 ## A. Already On Both / No Sync Needed
 
 These are believed to be common baseline branch material or already represented
@@ -74,9 +80,20 @@ source-only sync package.
 Preserve locally and later consolidate intentionally:
 
 - `analysis/supervision_objective_learning_curve_v1/`
-  - active/running local diagnostic output
-  - currently includes 25% units for `brightkite`, `citibike`,
-    `cloudphysics`, `metacdn`, and `metakv`; the phase is not complete
+  - local diagnostic output; `25%` phase completed naturally `2026-08-09`
+    (as of the `2026-08-10` read-only audit): all `7/7` families
+    (`brightkite`, `citibike`, `cloudphysics`, `metacdn`, `metakv`,
+    `twemcache`, `wiki2018`), `42/42` rows, integrity verified. `50%`
+    first attempt `INTERRUPTED_BEFORE_FIRST_COMPLETED_UNIT` (launched
+    `2026-08-10` outside tmux in a foreground SSH shell, terminated after
+    ~80 minutes when the SSH session closed, `0/42` rows committed);
+    relaunched same day in tmux session
+    `kbs_learning_curve_50pct_20260810`, now `RUNNING_LOCAL_RESUME` and
+    confirmed healthy; `4/7` folds complete as of a `2026-08-10 21:59`
+    read-only re-check (`brightkite`, `citibike`, `cloudphysics`,
+    `metacdn`; `metakv` in progress; `twemcache`, `wiki2018` remaining;
+    a further resume may be needed if the `10`-hour clean-stop is hit
+    first); `100%` not yet started.
 - `models/supervision_objective_learning_curve_v1/`
   - generated models for completed learning-curve units
 - `analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/`
@@ -161,7 +178,12 @@ Keep these mechanisms separate during any later sync review:
   not current primary method changes.
 - learning branch:
   low fractions `1%`, `2%`, `5%`, and `10%` have a validated local checkpoint;
-  the `25%` phase is running locally; `50%` and `100%` remain TODO.
+  the `25%` phase completed naturally and locally on `2026-08-09` (verified
+  `2026-08-10`); `50%` first attempt was `INTERRUPTED_BEFORE_FIRST_COMPLETED_UNIT`
+  (launched `2026-08-10` outside tmux, killed when that SSH session
+  closed, `0/42` rows); relaunched same day in tmux session
+  `kbs_learning_curve_50pct_20260810`, now `RUNNING_LOCAL_RESUME`; `100%`
+  remains TODO.
 - continuation branch:
   C1 is `Q_H^LRU -> pi1`; C2 is `Q_H^pi1 -> pi2`. The local implementation is
   ready, but Wulver real-data validation and later source/result sync are still
