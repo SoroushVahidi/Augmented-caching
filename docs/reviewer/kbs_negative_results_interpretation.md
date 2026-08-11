@@ -660,6 +660,29 @@ Seven-family Wulver continuation:
 Status:
 `LOCAL_IMPLEMENTATION_READY / TINY_SMOKE_ONLY / NO FULL RESULT YET`
 
+Relationship to prior exploratory continuation work (source-of-truth note):
+
+- an older, independent "label-continuation policy" exploration already
+  exists (`src/lafc/evict_value_v2_rollout.py`'s `simulate_rollout_misses`/
+  `_choose_victim`, exercised by
+  `scripts/experiments/run_continuation_policy_light_ablation.py`, results in
+  `analysis/continuation_policy_light/`), with `lru`/`blind_oracle`/`fifo`
+  choices;
+- that prior work is recorded as exploratory only in
+  `docs/internal_current_project_decisions.md` (6-7): continuation choice
+  "appeared to affect label proxies more than replay outcomes," and LRU was
+  kept as the practical default, explicitly not part of the novelty claim;
+- `src/lafc/continuation_policy_ablation.py` (this section's C1/C2 work) is
+  a **different, newer, causally-cleaner formalization** of a related
+  question (policy-iteration-style continuation: LRU vs frozen `pi1`), built
+  specifically to answer R2 Major 3 / R3 continuation-mismatch reviewer
+  concerns. It does not import from or reuse `evict_value_v2_rollout.py`;
+  it has its own independent implementation. Treat
+  `continuation_policy_ablation.py` as authoritative for the frozen C1/C2
+  protocol; treat `evict_value_v2_rollout.py`'s continuation options and
+  `continuation_policy_light` as historical/exploratory context only, not a
+  competing current implementation of the same protocol.
+
 The Wulver audit clarified that the draft "learned continuation" framing must
 not be described as a vague A-to-B or B-to-B condition. The clean
 policy-iteration interpretation is:
