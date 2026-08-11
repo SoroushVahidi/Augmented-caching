@@ -139,26 +139,26 @@ Classification vocabulary:
   whether the missing Wulver config JSON contains an additional constraint
   not recorded in local docs/source.
 
-## 9. Continuation causal driver, only after semantic/interface repair
+## 9. Continuation causal driver, only after production-runner audit
 
 - **What:** `src/lafc/continuation_policy_ablation.py` and its production
   runner.
-- **Classification:** **`DO_NOT_PROMOTE`** -- a real defect blocks
-  production use: the runner expects a `reference_model=` keyword that the
-  protected/pinned source does not provide, causing an unexpected-keyword
-  failure. The existing draft also only implements two conditions (of the
-  three needed for a full C0/C1/C2 comparison, per the design in
-  `KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md` #10). Status must read
-  `CONCEPTUAL_BUT_NOT_PRODUCTION_READY`, not `READY_TO_RUN`, until this is
-  fixed -- on either machine. This is currently the single largest
-  remaining gap for R2 Major 3 / R3's causal-explanation concern.
+- **Classification:** **`DO_NOT_PROMOTE`** -- local smoke is now
+  `IMPLEMENTATION_REPAIRED_SMOKE_VALIDATED` for all three conditions, but no
+  production campaign runner/resume/output-writer is present locally. The
+  `reference_model=` unexpected-keyword failure is reproducible against the
+  older v2 rollout kernel, but the offending production caller was not found
+  locally; if it is later synced, route it through
+  `continuation_policy_ablation.py` rather than changing the older
+  exploratory rollout semantics. Status must remain
+  `NOT_PRODUCTION_LAUNCH_READY` until the production runner is audited.
 
 ---
 
 ## Priority summary (top 5)
 
 1. **Corrected held-out `evict_value_v1` (item 1)** -- unblocks R2 Major 1's final synthesis; `NEEDS_REVIEW` before use.
-2. **Continuation C0/C1/C2 interface repair (item 9)** -- the primary remaining gap for the causal-explanation reviewer concern (R3); `DO_NOT_PROMOTE` until the `reference_model=` mismatch is fixed.
+2. **Continuation C0/C1/C2 production runner (item 9)** -- the primary remaining gap for the causal-explanation reviewer concern (R3); `DO_NOT_PROMOTE` until a full runner/resume/output path is audited.
 3. **Controlled timing (item 2)** -- complete and ready; `PROMOTE_NOW`.
 4. **Broad degeneracy (item 3)** -- important generalizing confirmation of the local single-cell finding; `NEEDS_REVIEW` pending driver-source location.
 5. **Exact-protocol LRB/3L/CACHEUS (item 8)** -- replication/provenance strengthening only; not required for R2 Major 1 synthesis unless config audit later finds a material difference.

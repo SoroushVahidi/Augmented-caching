@@ -16,7 +16,10 @@ from lafc.continuation_policy_ablation import (
     train_pi2_from_c2_labels,
 )
 from lafc.evict_value_features_v1 import EVICT_VALUE_V1_FEATURE_COLUMNS
+from lafc.policies.lru import LRUPolicy
+from lafc.runner.run_policy import run_policy
 from lafc.simulator.request_trace import build_requests_from_lists
+from scripts.experiments.run_continuation_policy_causal_ablation_smoke import _misses_for_policy
 
 
 class LruLikeModel:
@@ -155,6 +158,18 @@ def test_same_example_decision_alignment():
     pairs = {(r["decision_id"], r["candidate_id"]) for r in rows}
     assert len(pairs) == len(rows)
     assert all({"c1_label", "c2_label", "label_delta", "pi1_hash"}.issubset(r.keys()) for r in rows)
+
+
+def test_c0_lru_smoke_metric_matches_plain_lru_replay():
+    reqs, pages = build_requests_from_lists(page_ids=["a", "b", "a", "c", "b", "a"])
+
+    direct = run_policy(LRUPolicy(), reqs, pages, capacity=2)
+    smoke_metric = _misses_for_policy(LRUPolicy(), reqs, pages, capacity=2)
+
+    assert direct.total_misses == 5
+    assert smoke_metric["misses"] == float(direct.total_misses)
+    assert smoke_metric["requests"] == float(len(reqs))
+    assert smoke_metric["miss_ratio"] == float(direct.total_misses / len(reqs))
 
 
 def test_deterministic_tie_behavior_matches_lru():

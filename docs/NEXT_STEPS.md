@@ -207,27 +207,26 @@ launched from scratch.
 
 - **Why:** H5's decisive test; currently only smoke-scale
   (`decision_count=3`).
-- **Status (updated 2026-08-11):** **not merely `IMPLEMENTATION_READY` --
-  actively blocked.** Per user-relayed Wulver facts, a production defect
-  was found: the existing draft implements only two of the three needed
-  conditions, and the production runner expects a `reference_model=`
-  keyword the protected/pinned source does not provide, causing an
-  unexpected-keyword failure. Correct status is
-  `CONCEPTUAL_BUT_NOT_PRODUCTION_READY` on **either** machine, not
-  `READY_TO_RUN`. **This is now the single largest concrete blocker for
-  R2 Major 3 / R3's causal-explanation concern** -- fixing it is
-  higher-value than most other open items in this file.
-- **Dependency:** fix the `reference_model=` interface mismatch (add the
-  parameter to the protected source's supported surface, or change the
-  runner's call signature) before any full-scale run, on either machine.
-- **Machine:** local implementation exists; full campaign likely needs
-  Wulver-scale compute once the interface is fixed.
-- **Entry point:** `src/lafc/continuation_policy_ablation.py` +
-  `configs/continuation_policy_causal_ablation_v1.json` -- start by adding
-  the missing third condition and resolving the `reference_model=`
-  signature mismatch.
-- **Expected cost:** medium for the interface fix; high for the subsequent
-  full 7-family scale run.
+- **Status (updated 2026-08-11):** `IMPLEMENTATION_REPAIRED_SMOKE_VALIDATED`
+  but **not production-launch-ready**. Local audit reproduced the protected
+  `build_rollout_candidate_rows_v2(..., reference_model=...)`
+  unexpected-keyword failure, but no local continuation production caller was
+  found in source, history, or sibling worktrees. The local smoke path now
+  emits all three intended conditions: C0 LRU, C1 frozen `pi1`, and C2
+  trained from frozen-`pi1` continuation labels.
+- **Dependency:** build or sync a real production campaign runner with
+  resume/output/provenance handling before any full-scale run. If a
+  Wulver-side runner is later synced and still calls
+  `build_rollout_candidate_rows_v2(..., reference_model=...)`, repair that
+  caller to use `continuation_policy_ablation.py`'s frozen protocol API
+  rather than changing the older v2 rollout kernel.
+- **Machine:** local smoke implementation exists; full campaign is feasible
+  only after the production runner is audited.
+- **Entry point:** `src/lafc/continuation_policy_ablation.py`,
+  `scripts/experiments/run_continuation_policy_causal_ablation_smoke.py`,
+  and `configs/continuation_policy_causal_ablation_v1.json`.
+- **Expected cost:** medium for production-runner implementation/audit; high
+  for the subsequent full 7-family scale run.
 - **Stopping rule:** all 7 families produce a comparison between
   LRU-continuation and frozen-`pi1`-continuation labels on matched
   decision/candidate examples.

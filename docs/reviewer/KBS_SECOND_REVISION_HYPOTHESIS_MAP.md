@@ -131,19 +131,19 @@ cleanly and the 50% integrity audit passed.
   trajectory divergence `97.15%`/`99.52%`/`99.84%` at capacities `32/64/128`
   under `DAGGER_ITER1` vs off-policy LRU, but misses *worsened* under DAgger
   at all three capacities despite a reduced measured state-shift index. The
-  frozen C1/C2 continuation-policy causal ablation (`src/lafc/continuation_policy_ablation.py`,
+  frozen C0/C1/C2 continuation-policy causal ablation (`src/lafc/continuation_policy_ablation.py`,
   `configs/continuation_policy_causal_ablation_v1.json`) is source/test-ready
-  but only `TINY_SMOKE_ONLY` (4 traces, <=300 requests/trace,
-  `decision_count=3`) -- no full result.
+  with a repaired three-condition local smoke, but only `TINY_SMOKE_ONLY`
+  (`decision_count=3`) -- no full result and no audited production runner.
 - Status: `INCONCLUSIVE` (single family, smoke-only for the frozen protocol).
-- Decisive next experiment: full 7-family C1/C2 causal ablation comparing
+- Decisive next experiment: full 7-family C0/C1/C2 causal ablation comparing
   LRU-continuation vs frozen-`pi1`-continuation labels on the same
   decision/candidate examples.
 - Stopping rule: stop prioritizing continuation mismatch as primary if
   full-scale C2 fails to improve over C1 on downstream misses.
 - Reviewer relevance: MC3, R2-Major3, R3-Issue4.
-- Owner of next work: WULVER (full campaign); LOCAL implementation is already
-  frozen and sync-ready.
+- Owner of next work: LOCAL first for production-runner audit; full campaign
+  launch only after that path is verified.
 - Experiment state: smoke NOT_RUN_AT_SCALE; full campaign NOT_STARTED
   (requires Wulver, not contacted in this pass).
 

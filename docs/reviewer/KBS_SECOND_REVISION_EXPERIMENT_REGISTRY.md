@@ -227,21 +227,21 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
   SHA-256 `5323eea6e3f6fb9a44b2fab2f6632f61917442ba239eababc1b2cda1fca8612a`
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.4; `KBS_SECOND_REVISION_HYPOTHESIS_MAP.md` H1
 
-### 10. Continuation-policy causal ablation (C1/C2)
+### 10. Continuation-policy causal ablation (C0/C1/C2)
 - Scientific question: does replacing the fixed LRU label-continuation with
   the already-learned frozen `pi1` continuation improve the next learned
   policy `pi2`?
 - Reviewer concern: Reviewer #2 Major 3 / Reviewer #3 continuation-mismatch
-- Machine: LOCAL implementation / WULVER for full campaign
+- Machine: LOCAL smoke implementation / production runner still needed
 - Protocol: `configs/continuation_policy_causal_ablation_v1.json`, `PROTOCOL_FROZEN_NO_RESULTS`
-- Scope: implementation + tests complete; only `TINY_SMOKE_ONLY` executed (`decision_count=3`)
+- Scope: implementation + tests repaired; only `TINY_SMOKE_ONLY` executed (`decision_count=3`)
 - Source entry point: `src/lafc/continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation_smoke.py`
 - Config: `configs/continuation_policy_causal_ablation_v1.json`
 - Output path: no full-campaign output yet; smoke is stdout-only (`analysis/continuation_policy_causal_ablation*` explicitly excluded from sync)
-- Status: `IMPLEMENTATION_READY`
+- Status: `IMPLEMENTATION_REPAIRED_SMOKE_VALIDATED` / `NOT_PRODUCTION_LAUNCH_READY`
 - Evidence strength: `IMPLEMENTATION_ONLY`
 - Primary/diagnostic/supporting: diagnostic (planned)
-- Next action: full 7-family C1/C2 campaign at Wulver scale
+- Next action: build or sync and audit the production C0/C1/C2 campaign runner before any full launch
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.7 (includes this pass's cross-reference to the older, distinct `evict_value_v2_rollout.py` continuation exploration); `docs/reviewer/local_to_wulver_continuation_sync_manifest.md`
 
 ### 11. Practical-significance / controlled timing

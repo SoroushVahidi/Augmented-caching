@@ -27,6 +27,8 @@ from lafc.continuation_policy_ablation import (
 )
 from lafc.distribution_shift_ablation import DistributionShiftEvalPolicy
 from lafc.evict_value_wulver_v1 import load_trace_from_any
+from lafc.policies.lru import LRUPolicy
+from lafc.policies.base import BasePolicy
 from lafc.runner.run_policy import run_policy
 
 
@@ -87,8 +89,7 @@ def _collect_rows_for_split(
     return rows
 
 
-def _misses_for_model(model_path: Path, reqs, pages, capacity: int) -> Dict[str, float]:
-    policy = DistributionShiftEvalPolicy(model_path=str(model_path))
+def _misses_for_policy(policy: BasePolicy, reqs, pages, capacity: int) -> Dict[str, float]:
     t0 = time.time()
     result = run_policy(policy, reqs, pages, capacity)
     wall_s = time.time() - t0
@@ -98,6 +99,15 @@ def _misses_for_model(model_path: Path, reqs, pages, capacity: int) -> Dict[str,
         "miss_ratio": float(result.total_misses / max(len(result.events), 1)),
         "runtime_seconds": wall_s,
     }
+
+
+def _misses_for_model(model_path: Path, reqs, pages, capacity: int) -> Dict[str, float]:
+    return _misses_for_policy(
+        DistributionShiftEvalPolicy(model_path=str(model_path)),
+        reqs,
+        pages,
+        capacity,
+    )
 
 
 def main() -> None:
@@ -160,6 +170,7 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="lafc_continuation_smoke_") as td:
         pi2_path = Path(td) / "pi2.pkl"
         pi2.save(pi2_path)
+        c0_result = _misses_for_policy(LRUPolicy(), held_reqs, held_pages, args.capacity)
         pi1_result = _misses_for_model(Path(pi1_prov.model_path), held_reqs, held_pages, args.capacity)
         pi2_result = _misses_for_model(pi2_path, held_reqs, held_pages, args.capacity)
         pi2_hash = sha256_of_file(pi2_path)
@@ -177,8 +188,11 @@ def main() -> None:
         "val_decisions": len({r["decision_id"] for r in val_rows}),
         "pi1_hash": pi1_prov.model_sha256,
         "pi2_hash": pi2_hash,
+        "c0_lru_result": c0_result,
         "pi1_result": pi1_result,
         "pi2_result": pi2_result,
+        "delta_pi1_minus_c0_misses": pi1_result["misses"] - c0_result["misses"],
+        "delta_pi2_minus_c0_misses": pi2_result["misses"] - c0_result["misses"],
         "delta_pi2_minus_pi1_misses": pi2_result["misses"] - pi1_result["misses"],
         "label_metrics": label_metrics,
         "runtime_seconds": time.time() - started,
