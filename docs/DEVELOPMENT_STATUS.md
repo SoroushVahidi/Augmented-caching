@@ -5,7 +5,10 @@ not reviewers and not a manuscript response document. If you are a new
 agent with no conversation history, start here, then follow the checklist
 in section 10.
 
-**Last consolidated:** 2026-08-10 (local finalization/handoff pass). Live
+**Last consolidated:** 2026-08-11 (local finalization/handoff pass, plus a
+same-day reconciliation pass against fresh Wulver-side facts relayed by the
+user -- see [`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)
+for the full detail behind every Wulver-sourced claim in this file). Live
 run numbers in this file are timestamped snapshots -- see the convention
 explained in [`kbs_second_revision_repository_state.md`](kbs_second_revision_repository_state.md)
 and treat any fold/row count here as stale the moment time has passed.
@@ -138,13 +141,26 @@ Status vocabulary used below (canonical on this branch, see the registry):
 | Learning convergence (scalar vs pairwise, same target) | Fraction sweep `1%..100%` | `RUNNING` overall | `25%`: `FINAL_VALIDATED`, 7/7 families, 42/42 rows, flat/non-monotonic offline+downstream metrics through 25% of data. `50%`: `RUNNING` -- see section 7 for live state. `100%`: `PENDING` | `analysis/supervision_objective_learning_curve_v1/`, `configs/supervision_objective_learning_curve_v1.json` | High through `25%`; `50%`/`100%` not yet evidence |
 | Practical significance / controlled timing | -- | Equivalence check `COMPLETE_DIAGNOSTIC` (`SMOKE_ONLY` for timing numbers) | A vectorized reimplementation makes identical decisions to the reference implementation in checked cells; final controlled timing campaign not yet run | `analysis/practical_significance_ablation_v1/` | High for equivalence; timing numbers not citable as final |
 | Cross-cutting comparison-fairness audit | -- | `FINAL_VALIDATED` (as an audit) | Overall fairness score 76/100, `GENERALLY_FAIR_WITH_LIMITATIONS`; the historical `evict_value_v1` loss to LRU/SIEVE/FIFO is unlikely explained by protocol unfairness (the one confirmed unfairness, train/test overlap, would have *favored* `evict_value_v1`, yet it still lost) | `docs/reviewer/kbs_comparison_fairness_audit.md` | High as an audit of methodology, not a performance claim |
-| Distribution shift (7-family), historical-tail full campaign, corrected held-out full campaign | -- | `LAST_KNOWN_REMOTE_STATUS -- NOT RECHECKED IN THIS PASS` | Prior local sync docs assert additional Wulver-side orchestration/results may exist for these; **not verified in this pass, Wulver was not contacted** | n/a | Unverified -- treat as unconfirmed belief, not fact |
+| Distribution-shift (Wulver-merged 24/42) | -- | `WULVER_ONLY_VALIDATED` | 24/42 rows (up from the local 18/42 checkpoint). Across 12 paired cells: measured state shift decreased in 9, misses improved in **0**, misses worsened in **9**, misses tied in 3 -- reinforces, does not resolve, the existing negative-result narrative | Not locally present | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
+| Broad target-degeneracy (21 cells, 7 families x 3 capacities) | -- | `WULVER_ONLY_VALIDATED` | Wulver job `1169513`. Unique-winner fraction = 0 and multi-winner fraction = 1 across **all 21 cells** -- generalizes the local single-cell H3 finding well beyond one cell. Capacity trend (zero-margin fraction and optimal-set fraction both rise with capacity) is **empirical evidence, not a mathematical H/C law** | Not locally present | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
+| Horizon sensitivity sweep | -- | `RUNNING` (Wulver-side) | Wulver job `1169299`, **17/35 complete**, 18 pending. H=1 and H=2 complete for all families; H=4 complete for brightkite/citibike/cloudphysics only; remaining H=4 cells and all H=8/H=16 pending | Not locally present | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
+| Historical-tail diagnostic (H8) | -- | `WULVER_ONLY_VALIDATED` | Wulver job `1169665`, complete. H=8 resolves ~24.6% of H=4-tied decisions; H=16 resolves ~38.7%; history-linear tie-breaking produces only tiny gains; leakage audit passed. Weak support for horizon/tail concerns, **not a downstream policy win** | Not locally present, not previously implemented locally at all | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
+| Corrected held-out `evict_value_v1` (cross-family, 42/42) | -- | `WULVER_ONLY_VALIDATED` | Complete, 42/42 rows, 7 families x 3 capacities x 2 variants, all `ok`. SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296` | `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv` (Wulver path; not yet synced locally) | `NEEDS_REVIEW` before use, see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1 |
+| Exact-protocol LRB / 3L-Cache / CACHEUS (matched to the corrected split) | -- | `PENDING` (`BLOCKED_ON_WULVER_MAINTENANCE`, not failed) | Jobs `1171965` (3L-Cache), `1171966` (LRB), `1171967` (CACHEUS). Distinct from, and not yet resolving, the already-`FINAL_VALIDATED` original-protocol local results for these same three baselines -- see `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` for why both can be true at once | n/a | Wait for jobs to clear maintenance |
+| Controlled timing campaign | -- | `WULVER_ONLY_VALIDATED` | Wulver job `1171758`, complete. 420/420 rows (7 families x 3 capacities x 4 policies x 5 repetitions). Mean per-request runtime: LRU 4.68us, FIFO-Reinsertion 5.17us, SIEVE 9.52us, HALP-causal 870.66us (~186x LRU) | Not locally present | `PROMOTE_NOW`, see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #2 |
+| Continuation-policy causal ablation (C0/C1/C2) | -- | `CONCEPTUAL_BUT_NOT_PRODUCTION_READY` | A production blocker was found: the existing draft implements only two of three needed conditions, and the production runner expects a `reference_model=` keyword the protected source does not provide (unexpected-keyword failure). **Not** `READY_TO_RUN` on either machine until fixed | n/a | `DO_NOT_PROMOTE`, see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #9 |
 
-For remote-only/Wulver-adjacent evidence: **this pass did not contact
-Wulver, SSH to Wulver, or query Slurm, per explicit task constraints.**
-Anything above labeled `LAST_KNOWN_REMOTE_STATUS` reflects only what prior
-local documentation (the sync manifests in `docs/reviewer/`) asserted as of
-their own last local edit, not a fresh check.
+For remote-only/Wulver-adjacent evidence: **this workstation still does not
+contact Wulver, SSH to Wulver, or query Slurm directly.** Every row above
+labeled `WULVER_ONLY_VALIDATED` or `PENDING`/`RUNNING` (Wulver-side) was
+relayed by the user from a separately audited Wulver-side session on
+2026-08-11, not independently verified by this workstation -- see the
+provenance note at the top of
+[`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md).
+This supersedes the previous, more conservative `LAST_KNOWN_REMOTE_STATUS --
+NOT RECHECKED IN THIS PASS` framing for the specific items listed above;
+anything *not* listed above (e.g. `P(T > H | resident)`, confirmed absent
+by a fresh local grep this pass) remains genuinely unimplemented anywhere.
 
 ## 6. Invalid / superseded evidence
 
@@ -164,60 +180,83 @@ Do not use these for final claims:
 
 ## 7. Active local work
 
-**Confirmed via direct inspection at 2026-08-10 23:48 EDT** (this pass; read-only, no interaction with the process):
+**Confirmed via direct inspection at 2026-08-11 09:30 EDT** (this pass; read-only except for the one deliberate, explicitly-authorized launch described below):
 
-- tmux session `kbs_learning_curve_50pct_20260810` is alive (`tmux ls` confirms), running
-  `scripts/experiments/run_supervision_objective_learning_curve.py --resume --fractions 0.5 --max-wall-hours 10`
-  in `/home/soroush/Augmented-caching-kbs-second-revision`.
-- Worker PID `3376086`: elapsed `~8h58m` of the `10h` wall-time budget, `~158%` CPU, RSS `~34 GiB`.
-- `campaign_state.json` / `policy_comparison.csv` confirm **5/7 families complete for fraction 0.5**
-  (`brightkite, citibike, cloudphysics, metacdn, metakv`), consistent with 169 total CSV rows
-  (168 data rows, all `status=ok`, zero failures) and 28 unit-audit files across all fractions run so far.
-- `twemcache` is the current in-progress family (its `models/.../twemcache/fraction_0.5/` directory
-  was created at 23:48:22, the same moment as this check -- actively training, not stalled; an
-  empty stdout in the tmux pane is expected Python buffering behavior, not a hang).
-- `wiki2018` is the one remaining family for fraction `0.5`, not yet started.
-- At observed per-family runtimes for this fraction (~87-141 minutes each), the job is likely to
-  either finish `wiki2018` or hit its `10h` clean-stop budget (around 00:50 local time) with
-  `wiki2018` partially or not started, requiring a further `--resume` at some later point.
-- **This pass did not kill, signal, attach to, resume, or otherwise interact with this worker,
-  and did not launch the `100%` fraction or any other heavy experiment.**
+- The original `kbs_learning_curve_50pct_20260810` worker (PID `3376086`) **clean-stopped on its own**
+  overnight: its log shows `[budget] remaining=-400s < avg_unit_cost=6067s -- stopping before
+  starting unit=wiki2018|0.500000` -- a deliberate budget check refusing to start a unit it couldn't
+  finish, not a crash. Final state: **6/7 families complete for fraction 0.5**
+  (`brightkite, citibike, cloudphysics, metacdn, metakv, twemcache`), 36/36 rows `status=ok`, no
+  duplicate keys, no NaN/Inf. `wiki2018|0.5` never started; classification
+  `CLEAN_VALID_CHECKPOINT_INCOMPLETE`, not `COMPLETE_7_OF_7`.
+- On explicit user authorization, the single missing unit was then launched: tmux session
+  `kbs_learning_curve_50pct_wiki2018_resume_20260811`, worker PID `3395442`, command
+  `--resume --held-out-families wiki2018 --fractions 0.5 --max-wall-hours 3` (restricted via
+  `--held-out-families` so it cannot touch the other six already-complete families or any other
+  fraction). As of this reconciliation pass it is alive and healthy, correctly scoped to
+  `wiki2018|0.5` only. **This pass did not otherwise interact with it** (no signal, no attach that
+  changes state, no restart) and did not launch `100%` or any other heavy experiment.
+- Apples-to-apples learning-curve summary through the 6/7-complete `50%` state (4 families present
+  at every fraction: brightkite, citibike, cloudphysics, metacdn) --
+  scalar MAE / scalar miss_ratio / pairwise miss_ratio:
+  `1%`: 0.9867 / 0.6256 / 0.8299; `10%`: 0.9825 / 0.6110 / 0.8297; `25%`: 0.9826 / 0.6137 / 0.8296;
+  `50%` (partial): 0.9827 / 0.6126 / 0.8300. The flat/non-monotonic pattern already seen through
+  `25%` continues at `50%` -- no material, monotonic downstream improvement in either condition.
+  This **leans toward disfavoring H1** (insufficient training data) per the hypothesis map's own
+  stopping rule, but is not yet a final call: `wiki2018|0.5` and all of `100%` remain outstanding.
 
 ## 8. Open experiments (ranked by priority)
 
-See [`NEXT_STEPS.md`](NEXT_STEPS.md) for the full P0-P4 roadmap with entry points,
-costs, and stopping rules. Summary ranking:
+See [`NEXT_STEPS.md`](NEXT_STEPS.md) for the full P0-P4 roadmap and
+[`WULVER_TO_GITHUB_PROMOTION_QUEUE.md`](WULVER_TO_GITHUB_PROMOTION_QUEUE.md)
+for the Wulver-side sync/promotion priority order. Summary ranking, updated
+for the 2026-08-11 Wulver reconciliation (two items below are now
+sync/review tasks rather than experiments to run, since Wulver already
+completed them):
 
-1. Finish the `50%` learning-curve fraction currently running (P0, passive -- do not launch anything).
-2. Audit the `50%` checkpoint once it naturally completes or clean-stops; decide on `100%`.
-3. Complete the target-degeneracy and exact-target-oracle diagnostics across all 7 families / 3
-   capacities (currently 1 cell each) -- highest information-per-cost mechanistic work.
-4. Compute the `P(T > H | resident)` reuse-time-tail diagnostic (new, see section 9 below) from
-   already-recorded decision logs -- no new replay engine needed for a first pass.
-5. Run the full 7-family continuation-policy C1/C2 causal ablation (currently smoke-only).
-6. Complete the corrected held-out cross-family `evict_value_v1` replay (top fairness-audit priority).
-7. Complete the controlled timing campaign for practical-significance claims.
+1. Finish the `wiki2018|0.5` resume unit currently running locally (P0, passive -- do not launch anything else).
+2. Sync and review the corrected held-out cross-family `evict_value_v1` replay (42/42, Wulver-complete) -- now the top priority for R2 Major 1, but needs the review steps in `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1 before citation, not a re-run.
+3. Fix the continuation-policy C0/C1/C2 `reference_model=` interface mismatch -- the primary remaining blocker for R2 Major 3 / R3's causal-explanation concern.
+4. Complete the target-degeneracy and exact-target-oracle diagnostics across all 7 families / 3 capacities locally (currently 1 cell each on this workstation; Wulver has already generalized target-degeneracy to 21 cells -- see item 3 in `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` for syncing that instead of re-running it locally).
+5. Compute the `P(T > H | resident)` reuse-time-tail diagnostic (still genuinely `NOT_STARTED` anywhere, confirmed by a fresh grep this pass) from already-recorded decision logs.
+6. Sync the controlled timing campaign (420/420, Wulver-complete, `PROMOTE_NOW`) -- no local work needed, just sync.
+7. Wait for the exact-protocol LRB/3L-Cache/CACHEUS jobs (`1171965`-`1171967`) to clear Wulver maintenance, then sync.
 
 ## 9. Current scientific interpretation
 
-- **Target-formulation problem is currently the strongest explanation.**
-  H3 (target degeneracy) is `STRONGLY_SUPPORTED` in the one cell audited so
-  far: 99.3% of eviction candidates tie for "optimal" under the H=4 target,
-  and extending the horizon 8x only resolves a minority of those ties (H4).
-  This is the leading mechanistic story, not yet shown to generalize beyond
-  one trace family and one capacity.
+- **Target-formulation problem is currently the strongest explanation, and
+  is no longer resting on a single cell.** H3 (target degeneracy) is
+  `STRONGLY_SUPPORTED` in the original locally-audited cell (99.3% of
+  candidates tie for "optimal" under H=4), and per the Wulver-relayed
+  21-cell broad degeneracy result (job `1169513`, see
+  `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`), the unique-winner fraction is
+  **zero across all 21 family/capacity cells** -- this generalizes the
+  local single-cell finding substantially, though it is not yet
+  independently reproduced on this workstation. The Wulver-relayed
+  historical-tail result (job `1169665`: H=8/H=16 resolve only ~24.6%/38.7%
+  of H=4 ties) provides *weak* additional support for the horizon/tail
+  side of this story specifically -- explicitly not a downstream policy
+  win, only a tie-resolution measurement.
 - **Insufficient-data / pure model-fit explanations are currently
   disfavored.** H1 (more data would close the gap) shows flat offline and
   downstream metrics from 1% to 25% of training data. H2 (model fails to
   fit its target) is contradicted by 96.5% exact-target agreement with low
   mean regret in the one audited cell -- the model's small departures from
   its own target are net beneficial, not harmful.
-- **Continuation-policy mismatch (H5/H6) is unresolved, not disfavored.**
-  The one preliminary check (metacdn only) found large trajectory divergence
-  under DAgger-style relabeling, but relabeling made misses *worse*, which
-  is itself informative but does not resolve the mismatch hypothesis either
-  way. The properly causal C1/C2 test exists but has not been run beyond a
-  tiny smoke scale.
+- **Continuation-policy mismatch (H5/H6) is unresolved, not disfavored --
+  and the Wulver-merged distribution-shift state reinforces caution rather
+  than resolving anything.** The Wulver-merged 24/42 distribution-shift
+  state (up from the local 18/42 checkpoint) analyzed 12 paired cells:
+  measured state shift decreased in 9 of them, but misses improved in
+  **zero** of those 9 and worsened in 9 of the 12 overall. This is
+  consistent with, but does not prove, a continuation-mismatch mechanism --
+  do not read it as evidence that fixing distribution shift would fix the
+  gap. The properly causal C1/C2 test remains the decisive experiment for
+  H5, and it is currently blocked: a production interface mismatch
+  (the runner expects a `reference_model=` keyword the protected source
+  does not provide) means its status must read
+  `CONCEPTUAL_BUT_NOT_PRODUCTION_READY`, not `READY_TO_RUN`, on either
+  machine, until that's fixed (see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #9).
 - **Horizon/truncation mechanism (H4, H8-H11) is plausible but
   under-specified.** The newly added `P(T > H | resident)` framing (see the
   hypothesis map's "Refined horizon-adequacy framing" section) gives this a
@@ -283,6 +322,17 @@ Wulver this pass):
   metacdn distribution-shift partial checkpoint.
 - Do not treat any of the above as current fact; re-verify by actually
   contacting Wulver in a session explicitly authorized to do so.
+- **2026-08-11 update:** several of the open items above have since been
+  addressed via user-relayed facts from a separately-audited Wulver
+  session (not independent verification by this workstation) -- see
+  section 5's Wulver-sourced rows and
+  [`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)
+  for the full detail. In particular, the file-existence gap flagged above
+  (`run_distribution_shift_family.py`,
+  `upgrade_cross_family_manifest_metadata.py`, four `slurm/kbs_*.sbatch`
+  drivers) was **not** resolved by this update and remains open -- the new
+  facts are about experiment *results*, not about locating these missing
+  orchestration files.
 
 ## 12. Git state / pending consolidation
 

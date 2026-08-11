@@ -14,6 +14,16 @@ the mechanistic-hypothesis matrix lives in
 [`reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`](reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md).
 This file should not duplicate either table.
 
+**2026-08-11 note:** the coverage map above was reconciled against fresh
+Wulver-side facts on this date (corrected held-out `evict_value_v1` 42/42
+complete, controlled timing 420/420 complete, broad degeneracy 21-cell
+result, historical-tail result, continuation C0/C1/C2 interface blocker) --
+see [`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)
+and [`WULVER_TO_GITHUB_PROMOTION_QUEUE.md`](WULVER_TO_GITHUB_PROMOTION_QUEUE.md).
+Some concern-status labels below (particularly Concern 4) predate that
+reconciliation -- treat the coverage map as authoritative if the two
+disagree.
+
 ## Status labels
 
 | Label | Meaning |

@@ -20,8 +20,16 @@ this is noted explicitly per row rather than asserted as verified.
 Statuses used: `ANSWERED`, `ANSWERED_WITH_CAVEATS`, `PARTIAL`, `RUNNING`,
 `MISSING`, `TEXT_ONLY`.
 
-Last updated: 2026-08-10, while `50%` learning-curve fraction is 4/7 folds
-complete. Does not count unsynced Wulver numerical evidence as local.
+Last updated: 2026-08-11. This update incorporates fresh Wulver-side facts
+relayed by the user from a separately audited Wulver session -- these are
+labeled `WULVER_ONLY_VALIDATED` per row below and are **not** independently
+verified by this workstation (Wulver was not contacted directly). See
+[`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)
+for full detail behind every Wulver-sourced claim in this file, and
+[`../WULVER_TO_GITHUB_PROMOTION_QUEUE.md`](../WULVER_TO_GITHUB_PROMOTION_QUEUE.md)
+for sync priority. Local `50%` learning-curve fraction: 6/7 folds complete
+(clean-stopped before `wiki2018`), with a resume of the single missing unit
+running locally as of this update.
 
 ---
 
@@ -34,24 +42,39 @@ complete. Does not count unsynced Wulver numerical evidence as local.
   `COMPLETE_VALIDATED` for controlled-window rows
   (`analysis/reviewer_fairness/policy_comparison_*.csv`), cross-checked by
   `analysis/kbs_comparison_fairness_audit.json` (overall_score `76`).
-- Known Wulver evidence from existing docs only: none asserted; held-out
-  `evict_value_v1` retraining is explicitly `BLOCKED_PENDING_SYNC` /
-  `PARTIAL` per the artifact map, not a Wulver-only gap.
-- Running/pending evidence: corrected primary `evict_value_v1` head-to-head
-  replay against these baselines remains `PARTIAL` (`analysis/reviewer_fairness_cross_family_v1/`
-  not yet a usable primary table); the old fair-window comparison
-  (`analysis/reviewer_fairness/policy_comparison_evict_value_v1.csv`) is
-  `CONTAMINATED_DO_NOT_USE` due to recorded train/test overlap.
-- Remaining experiment: complete cross-family held-out `evict_value_v1`
-  replay with the frozen registry and local model hashes (fairness audit's
-  top required fix, cost `high`, reviewer_value `very_high`).
+- Known Wulver evidence (updated 2026-08-11, `WULVER_ONLY_VALIDATED`,
+  relayed by the user, not independently verified here):
+  - **The corrected held-out `evict_value_v1` head-to-head replay is
+    COMPLETE**: 42/42 rows, 7 families x 3 capacities x 2 variants, all
+    `ok`, SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`,
+    at `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv`
+    (Wulver path, not yet synced locally). This resolves what was, until
+    this update, the largest single gap in this concern.
+  - The three modern learned baselines still need an **exact-protocol
+    re-run matched to this same corrected split** before a fully coherent
+    comparison table exists: 3L-Cache job `1171965`, LRB job `1171966`,
+    CACHEUS job `1171967`, all `PENDING`, blocked by Wulver maintenance
+    (not failed). The existing local `FINAL_VALIDATED` results for these
+    three baselines used the *original* `reviewer_fairness_v1` protocol,
+    not this corrected split -- both are true at once, see
+    `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` for why.
+  - LRU/SIEVE/FIFO and HALP-causal do not need the exact-protocol re-run
+    (no training/split dependency for the first three; HALP's existing
+    result is already counted as valid comparison evidence) -- their
+    existing local `FINAL_VALIDATED` rows stand.
+- Remaining experiment: sync and review the corrected 42/42 result (see
+  `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1), then wait for jobs
+  `1171965`-`1171967` to clear maintenance (item #8) so the primary
+  comparison table lands as one coherent unit.
 - Text-only fix: label `offline_belady` explicitly as oracle context, not a
   deployable baseline, everywhere it appears (already flagged as required in
   the fairness audit; verify consistently applied).
-- Status: `ANSWERED_WITH_CAVEATS` for the baseline pool itself;
-  `PARTIAL` for the `evict_value_v1` head-to-head claim specifically.
-  Per-baseline fidelity caveats: HALP `LOW_TO_MEDIUM`, LRB/3L-Cache
-  `MEDIUM`, CACHEUS `HIGH`.
+- **Status (updated 2026-08-11, per explicit reviewer-completion
+  reconciliation): `PARTIAL`, awaiting jobs `1171965`-`1171967`.** The
+  corrected `evict_value_v1` treatment is complete on Wulver; the exact-
+  protocol LRB/3L-Cache/CACHEUS jobs are pending; LRU/SIEVE/FIFO/HALP-causal
+  comparison evidence is already valid. Per-baseline fidelity caveats
+  unchanged: HALP `LOW_TO_MEDIUM`, LRB/3L-Cache `MEDIUM`, CACHEUS `HIGH`.
 
 ## Reviewer #2 Major 2: supervision-objective ablation
 
@@ -65,22 +88,35 @@ complete. Does not count unsynced Wulver numerical evidence as local.
   `objective_reuse_distance` `0.680` < `objective_next_arrival` `0.682` <
   `objective_eviction_loss` `0.716`; `eviction_loss` is worst or tied-worst
   in every one of 7 families.
-- Known Wulver evidence from existing docs only: none asserted for this
-  concern.
+- Known Wulver evidence (updated 2026-08-11): **none belongs to this
+  concern.** The Wulver horizon-sensitivity sweep (job `1169299`) and the
+  broad target-degeneracy campaign (job `1169513`) are explicitly *not*
+  part of Major 2 -- they answer "is `H=4` an adequate horizon for the
+  chosen objective" (MC1 / H3-H4/H9-H11 in the hypothesis map), a different
+  question from Major 2's "is `eviction_loss` the right objective compared
+  to alternatives at all." Do not cite horizon-sensitivity progress as
+  evidence toward closing or reopening this concern; see the correction
+  note in `../DEVELOPMENT_STATUS.md` and this file's mapping above.
 - Running/pending evidence: the same-target scalar-vs-pairwise
   learning-convergence diagnostic (a *different*, complementary question --
   representation, not target construction) is `25_PERCENT_COMPLETE_VALID`,
-  `50%` `RUNNING`, `100%` not started.
+  `50%` at 6/7 folds (`wiki2018` resume in progress locally), `100%` not
+  started.
 - Remaining experiment: none required to answer the original Major 2 concern
   itself (already `COMPLETE_VALIDATED`); the learning-curve work is
-  additional depth, not a gap in this concern.
+  additional depth, not a gap in this concern. Remaining work for this
+  concern is manuscript integration, not further experimentation.
 - Text-only fix: keep the naming distinction explicit in manuscript prose --
   `objective_pairwise` (different target construction) is not the same
   condition as `eviction_loss_pairwise` (same target, pairwise
   representation only); conflating them is an identified `claim we must not
   make` in the negative-results notebook.
-- Status: `ANSWERED_WITH_CAVEATS` (pairwise-model-selection-semantics caveat
-  noted in the fairness audit, score `86`).
+- **Status (reconfirmed 2026-08-11, do not downgrade to `PARTIAL` on
+  account of horizon-sensitivity work being unfinished -- that is a
+  different concern): `COMPLETE_VALIDATED` / `FINAL_VALIDATED`** for the
+  intended objective-comparison scope, `ANSWERED_WITH_CAVEATS` at the
+  reviewer-coverage level (pairwise-model-selection-semantics caveat noted
+  in the fairness audit, score `86`).
 
 ## Reviewer #2 Major 3 and Reviewer #3: distribution-shift / continuation-mismatch diagnosis
 
@@ -88,27 +124,44 @@ complete. Does not count unsynced Wulver numerical evidence as local.
   construction and learned-policy deployment (sequential distribution shift)
   explain some or all of the performance gap?
 - Evidence complete locally: `PARTIAL` --
-  `analysis/distribution_shift_ablation_v1/` covers only `metacdn`, `24/42`
-  primary rows, `4/7` families. Trajectory divergence is large (97-99.8% at
-  3 capacities) but downstream misses *worsened* under the one directional
-  test run (`DAGGER_ITER1`) despite a reduced measured state-shift index --
-  divergence exists, but the one causal-adjacent test does not show a simple
-  fix.
-- Known Wulver evidence from existing docs only: seven-family continuation
-  work is described in local docs as Wulver-owned / pending sync-back of the
-  Wulver-only runner and Slurm files; not asserted as a numerical result here.
-- Running/pending evidence: continuation-policy C1/C2 causal ablation source,
-  tests, and frozen config exist and are sync-ready
-  (`src/lafc/continuation_policy_ablation.py`,
-  `configs/continuation_policy_causal_ablation_v1.json`), but only
-  `TINY_SMOKE_ONLY` (`decision_count=3`) has actually been run locally -- no
-  full result.
-- Remaining experiment: full 7-family C1/C2 causal ablation at Wulver scale.
+  `analysis/distribution_shift_ablation_v1/` covers `brightkite, citibike,
+  cloudphysics` (3/7 families), 18/42 primary rows, as of the local
+  checkpoint (superseded by the Wulver-merged 24/42 figure below).
+  Trajectory divergence is large (97-99.8% at 3 capacities) but downstream
+  misses *worsened* under the one directional test run (`DAGGER_ITER1`)
+  despite a reduced measured state-shift index -- divergence exists, but
+  the one causal-adjacent test does not show a simple fix.
+- Known Wulver evidence (updated 2026-08-11, `WULVER_ONLY_VALIDATED`,
+  relayed by the user):
+  - Distribution-shift **merged state is now 24/42 rows** (up from the
+    local 18/42 checkpoint). Across the 12 paired cells analyzed: measured
+    state shift decreased in 9, misses improved in **zero**, misses
+    worsened in **9**, misses tied in 3. This reinforces, and does not
+    resolve, the existing negative finding -- do not claim distribution-
+    shift correction solves the online-performance gap.
+  - **A production blocker was found in the continuation-policy C0/C1/C2
+    implementation**: the existing draft implements only two of the three
+    needed conditions, and the production runner expects a
+    `reference_model=` keyword argument the protected/pinned source does
+    not provide, causing an unexpected-keyword failure. This means the
+    correct status for C0/C1/C2 is `CONCEPTUAL_BUT_NOT_PRODUCTION_READY`,
+    **not** `READY_TO_RUN`, on either machine -- this corrects the more
+    optimistic `LOCAL_IMPLEMENTATION_READY` framing used elsewhere in this
+    branch's docs, which is easy to misread as "just needs cluster time."
+- Remaining experiment: **fix the `reference_model=` interface mismatch
+  first** (this is now the primary concrete blocker, ahead of "needs
+  Wulver scale" as the framing), then run the full 7-family C0/C1/C2
+  causal ablation.
 - Text-only fix: none required beyond what is already stated; the local docs
   already avoid claiming continuation mismatch is proven or that DAgger fixes
   the gap.
-- Status: `PARTIAL` (distribution-shift evidence) / `MISSING` (full-scale
-  causal C1/C2 result, `LOCAL_IMPLEMENTATION_READY` only).
+- **Status (updated 2026-08-11): `PARTIAL`.** Primary missing experiment:
+  the true causal C0/C1/C2 continuation test -- this, not the LRB/3L-Cache/
+  CACHEUS gap in Major 1, is the central unresolved issue for Reviewer #3's
+  causal-explanation concern specifically. Distribution-shift evidence
+  remains `PARTIAL` (24/42); full-scale causal C0/C1/C2 result remains
+  `MISSING`, now blocked by a concrete interface defect rather than only by
+  compute scale.
 
 ## Reviewer #2 Major 4: practical significance (computational cost)
 
@@ -119,15 +172,25 @@ complete. Does not count unsynced Wulver numerical evidence as local.
   shows `all_variants_exact_across_all_trace_capacity_pairs=true` with
   smoke speedups roughly `14.29x-99.99x`, but the artifact itself records
   `speedup_numbers_are_final_reviewer_evidence=false`.
-- Known Wulver evidence from existing docs only: none asserted.
-- Running/pending evidence: controlled final timing campaign is
-  `PENDING_CONTROLLED_RUN`, no final result present locally.
-- Remaining experiment: controlled timing campaign, kept separate from smoke
-  conclusions.
-- Text-only fix: continue to state smoke-only status explicitly wherever
-  these numbers are cited.
-- Status: `PARTIAL` (implementation-equivalence result exists and is
-  usable as supporting evidence; final timing claim is `MISSING`).
+- Known Wulver evidence (updated 2026-08-11, `WULVER_ONLY_VALIDATED`,
+  relayed by the user): **the controlled timing campaign is now COMPLETE**,
+  Wulver job `1171758`. Raw campaign 420/420 rows = 7 families x 3
+  capacities x 4 policies x 5 repetitions. Audited mean per-request
+  runtime: LRU `4.68us`, FIFO-Reinsertion `5.17us`, SIEVE `9.52us`,
+  HALP-causal `870.66us` (~186x LRU in this implementation/protocol).
+- Remaining experiment: none for the timed-policy set above; sync the
+  result (see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #2, `PROMOTE_NOW`).
+  Modern LRB/3L/CACHEUS timing is not included in this 4-policy campaign
+  and may still need a separate pass if required for a complete
+  practical-significance table.
+- Text-only fix: carry forward two caveats on promotion -- this is
+  **wall-clock implementation evidence, not an algorithmic complexity
+  theorem**, and the smoke-scale equivalence check remains a separate,
+  still-valid supporting result (not superseded by the timing campaign).
+- **Status (updated 2026-08-11): `COMPLETE_WITH_CAVEATS`.** Controlled
+  timing is now complete for the four timed policies; caveats: wall-clock
+  implementation evidence only, and modern learned-baseline timing
+  (LRB/3L/CACHEUS) may still be a separate item if needed.
 
 ## R3-Issue2 / R3-Issue3 (subset of Major 1): HALP and SIEVE/FIFO differentiation
 
@@ -186,12 +249,27 @@ complete. Does not count unsynced Wulver numerical evidence as local.
 
 ## Summary
 
+**Authoritative reviewer-completion table (reconciled 2026-08-11):**
+
+| Concern | Status | Primary remaining gap |
+|---|---|---|
+| R2 Major 1 (learned-baseline comparison) | `PARTIAL`, awaiting jobs `1171965`-`1171967` | Exact-protocol LRB/3L-Cache/CACHEUS re-run matched to the corrected split (Wulver-side, maintenance-blocked); corrected `evict_value_v1` result itself is complete and needs sync+review |
+| R2 Major 2 (supervision-objective ablation) | `COMPLETE_VALIDATED` / `FINAL_VALIDATED` (scope as originally defined) | None -- manuscript integration only |
+| R2 Major 3 (offline/online failure explanation) | `PARTIAL` | True causal C0/C1/C2 continuation test (blocked by a `reference_model=` interface defect, not just compute scale) |
+| R2 Major 4 (practical significance / timing) | `COMPLETE_WITH_CAVEATS` | None for the 4 timed policies (sync only); modern-baseline timing may be separate if needed |
+| Reviewer #3 (causal explanation) | `PARTIAL` | Same as R2 Major 3 -- the C0/C1/C2 causal test is the central unresolved issue, **not** the LRB/3L-Cache/CACHEUS gap |
+
 - Most complete concern: **Reviewer #2 Major 2 (supervision-objective
   ablation)** -- `COMPLETE_VALIDATED`, frozen 28-model registry, consistent
-  7-family result.
+  7-family result. Do not mark this `PARTIAL` on account of unfinished
+  horizon-sensitivity work -- that answers a different question (MC1, not
+  Major 2).
 - Most under-addressed concern: **R3-Issue6 (fallback mechanism)** -- no
   local evidence exists at all, not even a smoke-scale implementation.
-- Second most under-addressed: **Reviewer #2 Major 3 / R3 continuation
-  mismatch** -- real implementation exists but only smoke-tested
-  (`decision_count=3`); the one directional test available (DAgger) muddies
-  rather than confirms a simple story.
+- Second most under-addressed, and now the **central unresolved issue for
+  Reviewer #3 specifically**: **Reviewer #2 Major 3 / R3 continuation
+  mismatch** -- real implementation exists but is blocked by a concrete
+  `reference_model=` interface defect, not merely awaiting cluster time;
+  the one directional distribution-shift test available (DAgger) worsened
+  misses in 9 of 12 paired cells and improved none, muddying rather than
+  confirming a simple story.

@@ -35,6 +35,21 @@ rewritten there (see Pass #3 report); this registry uses the vocabulary
 above going forward and gives the mapping inline per row where the two
 differ.
 
+**2026-08-11 note:** experiments #2 (distribution-shift), #3 (corrected
+held-out replay), #5 (learned-baseline comparison), #7 (target-degeneracy),
+#8 (historical-tail), #9 (learning convergence), #10 (continuation C1/C2),
+and #11 (controlled timing) below now have additional, more current
+Wulver-side facts than what's written in their individual rows (the corrected
+held-out replay and controlled timing are now complete on Wulver; broad
+degeneracy and historical-tail results exist at Wulver scale; distribution-
+shift's merged state is 24/42, not the row's stated local checkpoint;
+continuation C1/C2 has a concrete production blocker, not just a scale gap).
+Rows below were not individually rewritten to avoid duplicating detail --
+see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)
+(authoritative for cross-environment status) and
+[`../WULVER_TO_GITHUB_PROMOTION_QUEUE.md`](../WULVER_TO_GITHUB_PROMOTION_QUEUE.md)
+(sync priority) before citing any of these rows' `Status` field as current.
+
 ## Evidence-strength hierarchy
 
 | Class | Meaning |

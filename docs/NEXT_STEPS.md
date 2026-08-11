@@ -7,30 +7,41 @@ depends on, which machine it belongs on, its entry point, an expected cost,
 a stopping rule, and what result would actually change the project's
 scientific interpretation -- not just "do more experiments."
 
+**2026-08-11 update:** several items below were reconciled against fresh
+Wulver-side facts relayed by the user (not independently verified by this
+workstation -- see
+[`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)).
+Some items that used to read "run this experiment" now read "sync and
+review this already-completed Wulver result" instead -- check
+[`WULVER_TO_GITHUB_PROMOTION_QUEUE.md`](WULVER_TO_GITHUB_PROMOTION_QUEUE.md)
+for the sync-priority order before assuming an item still needs to be
+launched from scratch.
+
 ---
 
 ## P0 -- currently running / must finish first
 
-### P0.1 -- Let the `50%` learning-curve fraction finish
+### P0.1 -- Let the `wiki2018|0.5` resume unit finish
 
 - **Why:** in-flight evidence for H1 (insufficient training data); the
   campaign is the decisive test named in the hypothesis map for that
   hypothesis.
-- **Status:** `RUNNING` -- 5/7 families complete as of the last check in
-  `DEVELOPMENT_STATUS.md` section 7, `twemcache` in progress, `wiki2018`
-  remaining.
-- **Dependency:** none -- already launched.
-- **Machine:** local workstation (`al-khwarizmi`), tmux session
-  `kbs_learning_curve_50pct_20260810`.
-- **Entry point:** none to launch -- this is a **do-not-touch** item. If it
-  has clean-stopped at its `10h` wall-time budget before finishing
-  `wiki2018`, the resume command is
-  `python3 scripts/experiments/run_supervision_objective_learning_curve.py --resume --fractions 0.5 --max-wall-hours 10 --config configs/supervision_objective_learning_curve_v1.json --out-dir analysis/supervision_objective_learning_curve_v1 --models-dir models/supervision_objective_learning_curve_v1`
-  -- but do not run this automatically; confirm via `tmux ls` and
-  `campaign_state.json` first, and only resume as a deliberate, explicit
-  next action, not as part of an unrelated task.
-- **Expected cost:** ~1-2.5 more hours of wall time for `wiki2018` at
-  observed per-family rates (~87-141 min/family at this fraction).
+- **Status:** `RUNNING` -- the original `50%` fraction clean-stopped at
+  6/7 families (`brightkite, citibike, cloudphysics, metacdn, metakv,
+  twemcache` complete, 36/36 rows `status=ok`); the single missing unit,
+  `wiki2018|0.5`, was then launched on explicit user authorization in tmux
+  session `kbs_learning_curve_50pct_wiki2018_resume_20260811`
+  (`--held-out-families wiki2018 --fractions 0.5 --max-wall-hours 3`),
+  currently alive and healthy.
+- **Dependency:** none -- already launched, restricted to exactly this one
+  family/fraction via `--held-out-families`.
+- **Machine:** local workstation, tmux session
+  `kbs_learning_curve_50pct_wiki2018_resume_20260811`.
+- **Entry point:** none to launch -- do-not-touch. If it clean-stops before
+  finishing, the resume command is the same one, unchanged (it is
+  idempotent and will just pick up where it left off via `--resume`).
+- **Expected cost:** within its `3h` budget at observed per-family rates
+  (~87-141 min for this family's siblings at `0.5`).
 - **Stopping rule:** stop when `campaign_state.json` lists all 7 families
   complete for fraction `0.5` and the standard integrity checks pass
   (fraction 0.5 rows == 42, unique `(fraction,family,condition,capacity)`
@@ -50,65 +61,90 @@ scientific interpretation -- not just "do more experiments."
 - **Why:** named the single highest-priority open item by the comparison-
   fairness audit; without it, no citable head-to-head comparison exists
   between `evict_value_v1` and modern learned baselines (LRB/3L/CACHEUS/HALP).
-- **Status:** `COMPLETE_PARTIAL_SCOPE`.
-- **Dependency:** none blocking; independent of the learning-curve campaign.
-- **Machine:** local for the protocol/code; full cross-family scale may need
-  cluster time depending on runtime -- check current partial-run timings
-  before assuming laptop-scale is sufficient.
-- **Entry point:** `analysis/reviewer_fairness_cross_family_v1/` +
-  `docs/reviewer_fairness_cross_family_v1.md` for the frozen protocol.
-- **Expected cost:** high (explicitly rated "cost: High, reviewer_value:
-  Very High" by the fairness audit).
-- **Stopping rule:** all 7 held-out folds produce primary-eligible rows
-  with no train/test overlap, matching the `primary_controlled_window`
-  eligibility rules in `kbs_evidence_eligibility.md`.
+- **Status (updated 2026-08-11):** per user-relayed Wulver facts, this is
+  now `WULVER_ONLY_VALIDATED` -- **COMPLETE, 42/42 rows**, SHA-256
+  `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`. This
+  item is **no longer "run it," it is "sync and review it"** -- see
+  `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1 for the specific review steps
+  (integrity check, registry-match confirmation, decide whether to wait for
+  the exact-protocol LRB/3L/CACHEUS jobs so the primary table lands as one
+  coherent unit) before citing it. The exact-protocol LRB/3L-Cache/CACHEUS
+  re-runs matched to this same split (jobs `1171965`-`1171967`) remain
+  `PENDING`, blocked by Wulver maintenance, not failed.
+- **Dependency:** none blocking the sync/review itself; the "wait for one
+  coherent table" question depends on jobs `1171965`-`1171967`.
+- **Machine:** Wulver (already done); this workstation only needs to sync
+  the result once access is available.
+- **Entry point:** `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv`
+  (Wulver path, not yet locally present).
+- **Expected cost:** low, now that the compute itself is done -- just a
+  sync + review pass.
+- **Stopping rule:** integrity checks pass locally after sync (unique keys,
+  no NaN/Inf, all `status=ok`, hash matches the value above).
 - **What would change our interpretation:** if `evict_value_v1` beats the
-  modern learned baselines once this is fixed, the "target problem"
-  narrative would need to be reconciled with a competitive result; if it
-  still loses under a clean comparison, it strengthens the current negative-
-  result narrative without the lingering unfairness caveat.
+  modern learned baselines once reviewed, the "target problem" narrative
+  would need to be reconciled with a competitive result; if it still loses
+  under this clean comparison, it strengthens the current negative-result
+  narrative without the lingering unfairness caveat.
 
 ### P1.2 -- Controlled timing / practical-significance campaign
 
-- **Why:** current timing numbers are `SMOKE_ONLY` and explicitly marked
-  not-final by their own artifact; any practical-deployment claim needs a
-  real controlled measurement.
-- **Status:** equivalence check `COMPLETE_DIAGNOSTIC`; timing `PENDING`.
-- **Dependency:** none.
-- **Machine:** local (controlled, low-noise environment preferred -- avoid
-  running alongside the learning-curve worker to avoid CPU contention
-  skewing timing).
-- **Entry point:** `analysis/practical_significance_ablation_v1/`.
-- **Expected cost:** low-medium (a few hours of controlled, low-contention
-  wall time).
-- **Stopping rule:** timing numbers collected under controlled, single-job
-  conditions across the standard capacity/family grid.
-- **What would change our interpretation:** a large real overhead would
-  matter for any deployability claim, independent of the target-formulation
-  question; does not by itself bear on H1-H11.
+- **Why:** current local timing numbers are `SMOKE_ONLY` and explicitly
+  marked not-final by their own artifact; any practical-deployment claim
+  needs a real controlled measurement.
+- **Status (updated 2026-08-11):** per user-relayed Wulver facts, this is
+  now `WULVER_ONLY_VALIDATED` -- **COMPLETE**, Wulver job `1171758`,
+  420/420 rows (7 families x 3 capacities x 4 policies x 5 repetitions).
+  Mean per-request runtime: LRU 4.68us, FIFO-Reinsertion 5.17us, SIEVE
+  9.52us, HALP-causal 870.66us (~186x LRU). This item is now `PROMOTE_NOW`
+  per `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #2 -- **no local run needed**,
+  just sync.
+- **Dependency:** none; already complete on Wulver.
+- **Machine:** Wulver (already done); sync to this workstation when access
+  is available.
+- **Entry point:** Wulver job `1171758` output (path not yet given
+  locally).
+- **Expected cost:** low -- sync only.
+- **Stopping rule:** synced result passes the same integrity bar as any
+  other promoted artifact (row count, no duplicate keys, provenance intact).
+- **What would change our interpretation:** the result is already in --
+  HALP-causal's ~186x overhead vs. LRU is a real, citable finding for any
+  deployability discussion; it does not bear on H1-H11 (the target-
+  formulation question is separate from computational cost). Modern
+  LRB/3L/CACHEUS timing is not included in this 4-policy campaign and may
+  need a separate pass if required.
 
 ## P2 -- highest-information mechanistic experiments
 
 ### P2.1 -- Multi-cell replication of target-degeneracy + exact-target-oracle
 
 - **Why:** H2 and H3 currently rest on exactly one cell (brightkite, cap
-  64, H=4) -- the single most important generalization gap in the current
-  evidence base.
-- **Status:** `COMPLETE_DIAGNOSTIC` (one cell); replication `NOT_STARTED`.
-- **Dependency:** none; existing tooling, no code changes needed.
-- **Machine:** local.
-- **Entry point:** the existing degeneracy/oracle scripts
-  (`scripts/experiments/analyze_eviction_loss_target_degeneracy.py` and the
-  exact-target-oracle runner), re-run across the remaining 6 families x 3
-  capacities.
+  64, H=4) locally -- the single most important generalization gap in the
+  local evidence base.
+- **Status (updated 2026-08-11):** **target-degeneracy replication is
+  already done on Wulver** (job `1169513`, 21/21 cells, unique-winner
+  fraction = 0 across all of them) -- per `WULVER_TO_GITHUB_PROMOTION_QUEUE.md`
+  #3 this is `NEEDS_REVIEW` (sync + locate the driver source) rather than
+  something to re-run locally. **Exact-target-oracle replication remains
+  genuinely `NOT_STARTED`** anywhere (no Wulver fact was given for this
+  specific diagnostic beyond the original single cell) -- this is now the
+  narrower, still-open half of this item.
+- **Dependency:** none for the oracle-diagnostic replication; existing
+  tooling, no code changes needed.
+- **Machine:** local, for the still-open exact-target-oracle replication.
+- **Entry point:** `scripts/experiments/run_exact_target_oracle_diagnostic.py`,
+  re-run across the remaining 6 families x 3 capacities.
 - **Expected cost:** medium (one cell already took non-trivial wall time;
   18 more cells at similar cost).
 - **Stopping rule:** a majority of cells reported, with consistent
   direction (or a clearly characterized split by family/capacity).
-- **What would change our interpretation:** if most other cells show
-  materially *lower* tie fractions / higher target entropy than the
-  brightkite cell, H3 would be disfavored as a general phenomenon per its
-  own stated stopping rule.
+- **What would change our interpretation:** the degeneracy side already
+  points toward H3 generalizing (see the Wulver result above); if the
+  oracle-diagnostic replication instead shows the learned model *not*
+  beating the exact target oracle in most other cells, that would qualify
+  (not overturn) the current H2/H3 reading -- the "model departure from
+  target is net-beneficial" finding would need to be shown cell-specific
+  rather than general.
 
 ### P2.2 -- `P(T > H | resident)` reuse-time-tail diagnostic
 
@@ -174,15 +210,27 @@ scientific interpretation -- not just "do more experiments."
 
 - **Why:** H5's decisive test; currently only smoke-scale
   (`decision_count=3`).
-- **Status:** `IMPLEMENTATION_READY`, protocol frozen and sync-ready.
-- **Dependency:** none code-wise; likely needs cluster-scale compute for
-  the full 7-family campaign given the smoke run's cost profile.
+- **Status (updated 2026-08-11):** **not merely `IMPLEMENTATION_READY` --
+  actively blocked.** Per user-relayed Wulver facts, a production defect
+  was found: the existing draft implements only two of the three needed
+  conditions, and the production runner expects a `reference_model=`
+  keyword the protected/pinned source does not provide, causing an
+  unexpected-keyword failure. Correct status is
+  `CONCEPTUAL_BUT_NOT_PRODUCTION_READY` on **either** machine, not
+  `READY_TO_RUN`. **This is now the single largest concrete blocker for
+  R2 Major 3 / R3's causal-explanation concern** -- fixing it is
+  higher-value than most other open items in this file.
+- **Dependency:** fix the `reference_model=` interface mismatch (add the
+  parameter to the protected source's supported surface, or change the
+  runner's call signature) before any full-scale run, on either machine.
 - **Machine:** local implementation exists; full campaign likely needs
-  Wulver per prior local docs (unverified this pass -- do not assume
-  without rechecking).
+  Wulver-scale compute once the interface is fixed.
 - **Entry point:** `src/lafc/continuation_policy_ablation.py` +
-  `configs/continuation_policy_causal_ablation_v1.json`.
-- **Expected cost:** high (full 7-family scale).
+  `configs/continuation_policy_causal_ablation_v1.json` -- start by adding
+  the missing third condition and resolving the `reference_model=`
+  signature mismatch.
+- **Expected cost:** medium for the interface fix; high for the subsequent
+  full 7-family scale run.
 - **Stopping rule:** all 7 families produce a comparison between
   LRU-continuation and frozen-`pi1`-continuation labels on matched
   decision/candidate examples.
@@ -213,37 +261,49 @@ scientific interpretation -- not just "do more experiments."
 
 - **Why:** H8's decisive test; a finite-horizon target implicitly assumes
   zero terminal value beyond `H`.
-- **Status:** `BLOCKED` locally -- not implemented in this worktree.
-- **Dependency:** unclear whether Wulver-side work exists; per section 11
-  of `DEVELOPMENT_STATUS.md`, this is `LAST_KNOWN_REMOTE_STATUS -- NOT
-  RECHECKED IN THIS PASS`. Do not fabricate the missing implementation;
-  check remote state first when explicitly authorized to do so.
-- **Machine:** unknown until rechecked.
-- **Entry point:** none locally yet.
-- **Expected cost:** unknown.
-- **Stopping rule:** n/a until a first diagnostic exists.
-- **What would change our interpretation:** a dedicated `Q_H + V_tail_hat`
-  comparison beating the plain finite-horizon target would support H8
-  directly.
+- **Status (updated 2026-08-11):** **already complete on Wulver** (job
+  `1169665`): H=8 resolves ~24.6% of H=4-tied decisions, H=16 resolves
+  ~38.7%, history-linear tie-breaking produces only tiny gains, leakage
+  audit passed. This is `WULVER_ONLY_VALIDATED`, not implemented anywhere
+  locally (confirmed absent by a fresh grep) -- item is now "locate and
+  sync the source + result," not "design and implement from scratch."
+- **Dependency:** none for reviewing the result; locating the source
+  requires Wulver access.
+- **Machine:** Wulver (already done); sync when access is available.
+- **Entry point:** Wulver job `1169665` output/source (path not yet given
+  locally).
+- **Expected cost:** low once synced -- the compute is already done.
+- **Stopping rule:** synced result passes the same integrity bar as any
+  other promoted diagnostic.
+- **What would change our interpretation:** the result is already in and
+  is **weak support** for the horizon/tail concern (tie resolution, not a
+  downstream miss-ratio improvement) -- do not read it as a policy win.
 
 ## P4 -- optional / deferred research
 
 ### P4.1 -- LRB / 3L-Cache / CACHEUS exact-protocol replication under the corrected held-out split
 
-- **Why:** completeness -- ensures the already-`FINAL_VALIDATED` baseline
-  comparison also holds under the corrected split from P1.1, not just the
-  original protocol.
-- **Status:** depends on P1.1 completing.
-- **Dependency:** P1.1.
-- **Machine:** local.
-- **Entry point:** re-run the existing baseline harness against the
-  corrected split once available.
-- **Expected cost:** low, given the existing harness.
-- **Stopping rule:** results consistent (or characterized as inconsistent)
-  with the original-protocol comparison.
+- **Why:** ensures the already-`FINAL_VALIDATED` (original-protocol)
+  baseline comparison also holds under the corrected cross-family split
+  used for P1.1, not just the original protocol.
+- **Status (updated 2026-08-11): reclassify out of "optional/deferred" --
+  this is now an active P1-tier blocker, not P4.** Per user-relayed Wulver
+  facts, this is already submitted and in progress: 3L-Cache job
+  `1171965`, LRB job `1171966`, CACHEUS job `1171967` -- all `PENDING`,
+  blocked by Wulver maintenance, not failed. It is the other half of
+  P1.1's final comparison table (see `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`
+  for why the existing local `FINAL_VALIDATED` results for these three
+  baselines are a *different* protocol variant, not this one).
+- **Dependency:** Wulver maintenance clearing; no local dependency.
+- **Machine:** Wulver (already queued); sync once complete.
+- **Entry point:** Wulver jobs `1171965`-`1171967` output (not yet given
+  locally).
+- **Expected cost:** low once unblocked -- sync only.
+- **Stopping rule:** results synced and integrity-checked, ideally reviewed
+  alongside P1.1 as one coherent primary comparison table.
 - **What would change our interpretation:** a material change in relative
   baseline ranking under the corrected split would be an important caveat
-  on the existing `FINAL_VALIDATED` comparison.
+  on the existing `FINAL_VALIDATED` (original-protocol) comparison.
 
 ### P4.2 -- Reconcile the two independently-evolved revision-status tools
 
