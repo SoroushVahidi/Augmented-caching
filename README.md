@@ -31,12 +31,29 @@ More detail: [docs/repo_map.md](docs/repo_map.md).
 
 ## Current reviewer-science entry points
 
-- Repository state and tracked-vs-generated boundaries:
+- Repository state, tracked-vs-generated boundaries, and the live status of
+  any active revision-science job:
   [docs/kbs_second_revision_repository_state.md](docs/kbs_second_revision_repository_state.md)
+  -- durable status disclaimer: active KBS second-revision experiment
+  progress (fold counts, running phases) is tracked only in that file and in
+  the experiment registry below, never in this README.
 - Current KBS second-revision workflow:
   [docs/kbs_manuscript_workflow.md](docs/kbs_manuscript_workflow.md)
-- Reviewer artifact map:
+- **Experiment registry** (canonical index of every reviewer-relevant
+  experiment -- start here to find a specific diagnostic):
+  [docs/reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md](docs/reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md)
+- **Reviewer-concern coverage map** (what answers each reviewer concern, and
+  how completely):
+  [docs/reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md](docs/reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md)
+- **Mechanistic-hypothesis map** (H1-H11, status, decisive next experiment):
+  [docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md](docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md)
+- **Reproducibility guide** for the second-revision diagnostics specifically
+  (distinct from the older `heavy_r1` guide below):
+  [docs/reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md](docs/reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md)
+- Reviewer artifact map (code/config/output paths per reviewer concern):
   [docs/reviewer/kbs_second_revision_artifact_map.md](docs/reviewer/kbs_second_revision_artifact_map.md)
+- Revision roadmap (status summary for the four reviewer concerns):
+  [docs/reviewer_revision_roadmap.md](docs/reviewer_revision_roadmap.md)
 - Evidence eligibility rules:
   [docs/reviewer/kbs_evidence_eligibility.md](docs/reviewer/kbs_evidence_eligibility.md)
 - Internal note on the negative results:
@@ -98,9 +115,9 @@ python3 -m lafc.runner.run_policy \
 
 - Learned-baseline fairness comparisons and held-out retraining:
   `scripts/experiments/run_reviewer_fairness.py`,
-  `scripts/experiments/run_evict_cross_family_heldout_eval.py`
+  `scripts/experiments/run_cross_family_heldout_eval.py`
 - Supervision-objective ablation:
-  `scripts/experiments/run_supervision_objective_ablation_eval.py`
+  `scripts/experiments/run_supervision_objective_ablation.py`
   plus the audit and gate scripts in the same directory
 - Same-target scalar-vs-pairwise learning curve:
   `scripts/experiments/run_supervision_objective_learning_curve.py`

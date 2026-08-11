@@ -62,7 +62,7 @@ Canonical/non-canonical boundary doc: `docs/lightweight_exploratory_ablations.md
 
 ## Current KBS reviewer-science diagnostics
 
-- `scripts/experiments/run_supervision_objective_ablation_eval.py`:
+- `scripts/experiments/run_supervision_objective_ablation.py`:
   frozen four-objective comparison including `objective_pairwise`
 - `scripts/experiments/run_supervision_objective_learning_curve.py`:
   local same-target diagnostic comparing `eviction_loss_scalar` against

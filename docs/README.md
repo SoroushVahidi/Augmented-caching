@@ -6,12 +6,26 @@ Use this page to find the right document without duplicating long runbooks.
 
 | Document | Use when you need… |
 |----------|---------------------|
+| [`reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md`](reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md) | **Start here.** Canonical index of every reviewer-relevant experiment: question, protocol, scope, status, evidence strength, next action |
+| [`reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`](reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md) | What answers each reviewer concern, and how completely (`ANSWERED`/`PARTIAL`/`MISSING`/...) |
+| [`reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`](reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md) | The mechanistic-hypothesis matrix (H1-H11): evidence, status, decisive next experiment, stopping rule |
+| [`reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md`](reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md) | How to actually rerun/resume a second-revision diagnostic, canonical windows/seeds, checkpoint semantics |
 | [`kbs_manuscript_workflow.md`](kbs_manuscript_workflow.md) | Current workflow hub and distinction from historical `heavy_r1` material |
-| [`kbs_second_revision_repository_state.md`](kbs_second_revision_repository_state.md) | Canonical-branch intent and tracked-vs-generated boundaries |
+| [`kbs_second_revision_repository_state.md`](kbs_second_revision_repository_state.md) | Canonical-branch intent, tracked-vs-generated boundaries, and the live status of any active revision-science job |
 | [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md) | Concern-by-concern code, outputs, status, caveats, and the running same-target learning-curve diagnostic |
 | [`reviewer/kbs_evidence_eligibility.md`](reviewer/kbs_evidence_eligibility.md) | What can be used in primary tables, supporting analysis, or diagnostics only |
 | [`reviewer/kbs_negative_results_interpretation.md`](reviewer/kbs_negative_results_interpretation.md) | Internal note on the negative results, including the same-target scalar-vs-pairwise diagnostic distinction |
+| [`reviewer/kbs_comparison_fairness_audit.md`](reviewer/kbs_comparison_fairness_audit.md) | Cross-cutting fairness audit of the baseline/method comparison pool |
 | [`reviewer_revision_roadmap.md`](reviewer_revision_roadmap.md) | Current status summary for the four reviewer concerns plus supplementary local diagnostics |
+
+## Local-Wulver consolidation
+
+| Document | Use when you need… |
+|----------|---------------------|
+| [`reviewer/KBS_LOCAL_WULVER_CONFLICT_MATRIX.md`](reviewer/KBS_LOCAL_WULVER_CONFLICT_MATRIX.md) | Per-file conflict-risk classification before any future push/merge with Wulver |
+| [`reviewer/KBS_LOCAL_TO_WULVER_MASTER_MANIFEST.md`](reviewer/KBS_LOCAL_TO_WULVER_MASTER_MANIFEST.md) | Whole-branch transfer plan: git payload, living docs, generated results, do-not-transfer |
+| [`reviewer/KBS_LOCAL_TO_WULVER_SYNC_STATUS.md`](reviewer/KBS_LOCAL_TO_WULVER_SYNC_STATUS.md) | What's believed already on both sides vs. local-only, at a whole-branch level |
+| [`reviewer/local_to_wulver_continuation_sync_manifest.md`](reviewer/local_to_wulver_continuation_sync_manifest.md) | Protocol-specific sync manifest for the C1/C2 continuation work, with pinned source/test/config hashes |
 
 ## Historical KBS / Wulver `heavy_r1`
 

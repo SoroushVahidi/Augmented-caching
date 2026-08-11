@@ -11,6 +11,25 @@ for the per-reviewer-concern status matrix see
 [`reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`](reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md).
 This file stays focused on repository/branch/run-progress status.
 
+**Snapshot convention:** this file (and the sync-status docs it links to)
+records a *current snapshot* of an actively evolving branch, not a final
+scientific result. Read every number in it as one of three kinds:
+
+- **CURRENT SNAPSHOT** -- a timestamped read of in-progress state (e.g.
+  "`4/7` folds complete as of `2026-08-10 21:59`"). Expected to go stale;
+  trust the timestamp, not the number, once time has passed.
+- **LAST FINALIZED SCIENTIFIC RESULT** -- a phase that reached a clean stop
+  and passed an integrity audit (e.g. the `25%` learning-curve fraction,
+  `7/7` folds, `42/42` rows). These do not change until a deliberate new
+  audit supersedes them.
+- **RUNNING EXPERIMENT** -- explicitly still executing; never cite its
+  partial numbers as a scientific result, only as progress context.
+
+The durable theory documents (hypothesis map, reviewer coverage map,
+experiment registry) intentionally avoid embedding live fold counts for this
+reason -- they reference *phase-level* status (`RUNNING`, `FINAL_VALIDATED`,
+...) and point back here for the live number.
+
 ## Purpose
 
 This note records the structural intent of the local KBS second-revision branch
@@ -100,17 +119,19 @@ before final manuscript-facing cleanup:
   or provenance record. The phase was relaunched correctly the same day
   in tmux session `kbs_learning_curve_50pct_20260810`
   (`--resume --fractions 0.5 --max-wall-hours 10`) and is
-  `RUNNING_LOCAL_RESUME` as of a `2026-08-10 21:59` read-only checkpoint
-  (confirmed healthy: worker PID `3376086` alive `~7h09m` into the
-  `10`-hour budget, CPU pegged at `~141%`, RSS `~24.2GiB`, `51` threads, no
-  errors, `<=25%` evidence unaffected). `4/7` folds complete for `0.5`
-  (`brightkite`, `citibike`, `cloudphysics`, `metacdn`; `24/42` rows, all
-  `status=ok`, hashes verified against the CSV), `metakv` in progress as
-  fold `5/7`, `twemcache` and `wiki2018` remaining. Per-family `0.5`
+  `RUNNING_LOCAL_RESUME` as of a `2026-08-10 22:10` read-only checkpoint
+  (confirmed healthy: worker PID `3376086` alive `~8h11m` into the
+  `10`-hour budget, CPU pegged at `~164%`, RSS dropped to `~18.6GiB` right
+  after `metakv` finished, `51` threads, no errors, `<=25%` evidence
+  unaffected). `5/7` folds complete for `0.5`
+  (`brightkite`, `citibike`, `cloudphysics`, `metacdn`, `metakv`; `metakv`
+  fold confirmed via its `unit_audits/metakv/fraction_0.5.json` and both
+  model artifacts on disk), `twemcache` now in progress as fold `6/7`,
+  `wiki2018` remaining. Per-family `0.5`
   runtimes observed so far range `~87-141` minutes; at that pace this
-  invocation is likely to clean-stop at its `10`-hour budget with `metakv`
-  complete but `twemcache`/`wiki2018` only partially through, or not
-  started — a further tmux resume of the remaining folds should be
+  invocation is likely to clean-stop at its `10`-hour budget with `twemcache`
+  complete but `wiki2018` only partially through, or not
+  started — a further tmux resume of the remaining fold should be
   expected. No `1.0` fraction units have been started. (Note: the tmux
   pane/log shows no stdout — this is a known Python stdout-buffering
   artifact, not a hang; `stdbuf -oL` does not intercept Python's internal
