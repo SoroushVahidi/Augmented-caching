@@ -97,12 +97,18 @@ cleanly and the 50% integrity audit passed.
   significant longer-term reuse consequences the target cannot see.
 - Motivation: complements H3 -- even a non-degenerate short horizon can still
   truncate relevant future information.
-- Current evidence: longer-horizon tie-break analysis on the same cell: H=8/
-  16/32 break only `14.2%`/`27.6%`/`39.6%` of H=4 ties -- most degeneracy
-  persists even at 8x the horizon. The naive deterministic tie-break's
-  agreement with longer-horizon-optimal choice declines as horizon grows
-  (`93.75%->87.48%->81.39%`).
-- Status: `PARTIALLY_SUPPORTED` (single cell).
+- Current evidence: longer-horizon tie-break analysis on the original
+  brightkite/cap64 cell: H=8/16/32 break only
+  `14.2%`/`27.6%`/`39.6%` of H=4 ties -- most degeneracy persists even at
+  8x the horizon. The multi-cell reuse-tail diagnostic
+  (`analysis/reuse_tail_horizon_diagnostic_v1/`) now directly measures the
+  resident-candidate next-reuse delay distribution across seven families
+  and three capacities. At H=4,
+  `P(T>4 | resident)=0.9938544459677984`; even after conditioning on
+  eventual reuse, `P(T>4 | resident, eventually reused)=0.9793302186526528`.
+  The never-reused fraction is `0.7026792916224847`.
+- Status: `SUPPORTED_AS_OBSERVABILITY_LIMITATION`. This is not yet a
+  causal excess-miss result.
 - Decisive next experiment: H11's eviction-to-reuse-delay diagnostic, plus a
   broader-H degeneracy sweep across families, to separate pure truncation
   from tie-break design.
@@ -242,11 +248,14 @@ cleanly and the 50% integrity audit passed.
   `H/C`).
 - Motivation: user-proposed; would explain why a single fixed `H` might be
   adequate at small `C` but degenerate at large `C`.
-- Current evidence: only `(H=4, C=64)` has been run for the degeneracy/oracle
-  diagnostics. The learning-curve and objective-ablation CSVs do sweep
-  capacity (`32/64/128`) but do not carry the target-resolution metrics
-  (optimal-set fraction, entropy) this hypothesis needs.
-- Status: `UNTESTED`.
+- Current evidence: the Wulver-relayed broad target-degeneracy diagnostic
+  shows an empirical capacity trend at H=4: zero-margin pair fraction rises
+  from about `0.968` at C=32 to `0.983` at C=64 and `0.991` at C=128, while
+  mean optimal-set fraction rises from about `0.984` to `0.991` to `0.995`.
+  The local reuse-tail diagnostic shows a matching direction for
+  `P(T>4 | resident)`: `0.987377360773` at C=32,
+  `0.992891528854` at C=64, and `0.996078682684` at C=128.
+- Status: `EMPIRICALLY_STRENGTHENED`, but not established as an `H/C` law.
 - Decisive next experiment: rerun the existing degeneracy script at fixed
   `H=4` across `C in {32,64,128}` first (cheapest), using
   `mean_optimal_set_fraction` and `target_entropy_bits` as resolution
@@ -270,21 +279,23 @@ cleanly and the 50% integrity audit passed.
   would quantify this.
 - Motivation: user-proposed; a direct, trace-level way to test horizon
   adequacy independent of the degeneracy/tie-break framing in H3/H4.
-- Current evidence: none computed yet. The exact-target-oracle's
-  `learned_decisions.csv` (one completed cell) already records
-  `decision_id`, `request_t`, and `chosen_candidate` per decision, which is
-  enough to compute the `POTENTIAL_CONSEQUENCE` bucket (next-request distance
-  of the evicted object) purely by scanning the raw trace against
-  already-completed decision logs -- no new replay engine needed for that
-  bucket. The stronger `CAUSAL_EXCESS_MISS` question (whether the eviction
-  actually caused an avoidable miss) requires the not-yet-implemented
+- Current evidence: the first, non-causal resident-candidate pass is
+  complete locally in `analysis/reuse_tail_horizon_diagnostic_v1/`; synthesis
+  is tracked in `docs/reuse_tail_horizon_diagnostic_v1_synthesis.md`. Across
+  21 family-capacity cells, the H=4 window misses nearly all future resident
+  reuse signal:
+  `P(T>4 | resident)=0.9938544459677984`,
+  `P(T>4 | resident, eventually reused)=0.9793302186526528`, and
+  never-reused fraction `0.7026792916224847`. The stronger
+  `CAUSAL_EXCESS_MISS` question (whether the eviction actually caused an
+  avoidable miss) still requires the not-yet-implemented
   minimum-counterfactual-attribution mechanism sketched in the notebook's
   9.7.1.
-- Status: `UNTESTED`.
-- Decisive next experiment: compute the `POTENTIAL_CONSEQUENCE` reuse-delay
-  distribution (buckets `1-4, 5-8, 9-16, 17-32, >32, never reused`) from
-  existing decision logs + raw trace as a first, cheap pass; implement
-  minimum-counterfactual attribution later for `CAUSAL_EXCESS_MISS`.
+- Status: `POTENTIAL_CONSEQUENCE_SUPPORTED`; `CAUSAL_EXCESS_MISS` remains
+  `UNTESTED`.
+- Decisive next experiment: implement minimum-counterfactual attribution for
+  `CAUSAL_EXCESS_MISS` only if the project needs causal attribution beyond
+  the now-completed observability diagnostic.
 - Stopping rule: disfavor truncation as the primary mechanism if most future
   reuses of evicted objects already fall within `H=4` (concentrated in the
   `1-4` bucket); continue investigating if a large fraction fall beyond `H=4`
@@ -294,16 +305,17 @@ cleanly and the 50% integrity audit passed.
 - Owner of next work: LOCAL (potential-consequence bucket, cheap); LOCAL or
   WULVER (causal-excess-miss bucket, needs new implementation, more
   expensive either way).
-- Experiment state: NOT_STARTED; blocked from launching while `50%` worker is
-  active.
+- Experiment state: first-pass resident reuse-tail diagnostic
+  `LOCAL_COMPLETE`; causal excess-miss attribution `NOT_STARTED`.
 
 ---
 
 ## Refined horizon-adequacy framing (H10/H11 candidate quantities)
 
 Added during the 2026-08-10 finalization pass, based on a literature
-synthesis. This section fixes vocabulary for future H10/H11 work; nothing
-below has been measured yet on this branch.
+synthesis, and updated after the 2026-08-11 reuse-tail diagnostic completed
+locally. This section fixes vocabulary for H10/H11 work and distinguishes
+the now-measured resident reuse-tail quantity from causal attribution.
 
 **Terminology guardrail:** `H` here is a count of future *requests* (the
 `eviction_loss` target looks `H` requests ahead). Do not conflate this with
@@ -315,10 +327,8 @@ pages** between two accesses to the same page. Below, `T` denotes
 - **Primary candidate -- `P(T > H | resident)`.** Probability that a
   cache-resident object's next reuse falls beyond the horizon window. This is
   the dimensionally direct quantity (same units as `H`, no normalization
-  assumption needed) and is the natural first thing to compute for H11's
-  `POTENTIAL_CONSEQUENCE` bucket -- it is essentially the same computation
-  already planned there, just expressed as a probability conditioned on
-  residency rather than a raw delay-bucket histogram.
+  assumption needed). The 2026-08-11 local diagnostic completed this pass for
+  21 family-capacity cells and found H=4 values near one across the board.
 - **Secondary, competing candidates** (each needs an extra assumption
   `P(T>H)` does not, and none is currently implemented):
   - `H / C` -- `COARSE COMPETING HYPOTHESIS -- NOT ESTABLISHED LAW`. This is
@@ -336,23 +346,26 @@ pages** between two accesses to the same page. Below, `T` denotes
 - **What none of these establish yet:** `H` scaling linearly with `C`
   universally; H3 degeneracy vanishing iff `H` exceeds some boundary of any
   quantity above; LRU as a formal terminal-value estimator; or that
-  `P(T > H)` causally explains the offline/online gap before it is measured
-  and checked against downstream misses (consistent-with is not the same as
+  `P(T > H)` causally explains the offline/online gap without a
+  counterfactual excess-miss analysis (consistent-with is not the same as
   causal-of -- see the potential-consequence vs. causal-excess-miss
   distinction already drawn in H11).
 - Reviewer relevance: MC1 (extends H10/H11's next-diagnostic scope).
 - Owner of next work: LOCAL (P(T>H) is computable from existing decision
   logs + raw trace, same inputs H11 already identified as sufficient for its
   first pass).
-- Experiment state: NOT_STARTED; blocked from launching while `50%` worker is
-  active, same as H9/H10/H11.
+- Experiment state: `P(T>H | resident)` is `LOCAL_COMPLETE`; competing
+  normalized quantities and causal attribution remain unimplemented.
 
 ## Cross-cutting notes
 
-- No hypothesis above should be treated as family-general from a single cell.
-  H2, H3, H4 currently rest on one cell (`brightkite`, capacity `64`,
-  `H=4`); H5, H6 rest on one family (`metacdn`). Replication is the shared
-  precondition for upgrading any of these beyond their current status.
+- No hypothesis above should be treated beyond its measured scope. H2 and
+  the original exact-target/tie-break H3/H4 diagnostics rest on one cell
+  (`brightkite`, capacity `64`, `H=4`), while the reuse-tail component of
+  H4/H10/H11 now spans 21 family-capacity cells. H5 and H6 rest on one
+  family (`metacdn`). Replication or causal attribution remains the shared
+  precondition for upgrading any of these beyond their current evidentiary
+  scope.
 - Ranked coherent explanation (see
   `analysis/kbs_local_current_evidence_synthesis_20260810/CURRENT_LOCAL_EVIDENCE_SYNTHESIS.md`
   section 7 for full reasoning): primarily a **target problem** (H3, and by

@@ -125,10 +125,12 @@ Classification vocabulary:
 
 - **What:** the matched-to-corrected-split re-run of LRB (`1171966`),
   3L-Cache (`1171965`), CACHEUS (`1171967`).
-- **Classification:** **`WAIT_FOR_RUNNING_JOB`** -- all three are
-  `PENDING`, blocked by Wulver maintenance (not failed). Nothing to
-  promote until they run. This is the second-highest-priority item once
-  unblocked, since it's the other half of item 1's final comparison table.
+- **Classification:** **`WULVER_PENDING_REPLICATION`** -- all three are
+  `PENDING`, blocked by Wulver maintenance (not failed), but a fresh local
+  audit found complete controlled-window CSVs for all three policies under
+  `analysis/reviewer_fairness/`. When Wulver returns, promote these jobs only
+  as independent replication or to check whether the missing Wulver config
+  JSON contains an additional constraint not recorded in local docs/source.
 
 ## 9. Continuation causal driver, only after semantic/interface repair
 

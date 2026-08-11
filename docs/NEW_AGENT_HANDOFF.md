@@ -13,17 +13,7 @@ Re-verify git and tmux state yourself before acting -- see the checklist in
 
 ## Immediate Next Actions
 
-1. **Priority P0.** Machine: local workstation. Do **nothing** -- let the
-   running `wiki2018|0.5` resume tmux worker
-   (`kbs_learning_curve_50pct_wiki2018_resume_20260811`) finish on its own
-   (it is restricted via `--held-out-families wiki2018` and cannot touch
-   the other six already-complete families). Prerequisite: none. Stopping
-   condition: `tmux ls` no longer shows the session, or
-   `campaign_state.json` shows `wiki2018|0.5` complete -- then run the
-   integrity checks described in `DEVELOPMENT_STATUS.md` section 7 /
-   `NEXT_STEPS.md` P0.1 before citing the full `50%` fraction as complete.
-
-2. **Priority P1.** Machine: none (Wulver already did this). Sync and
+1. **Priority P1.** Machine: none (Wulver already did this). Sync and
    review the corrected held-out cross-family `evict_value_v1` replay
    (42/42, SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`)
    -- see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1 for the exact review
@@ -31,7 +21,7 @@ Re-verify git and tmux state yourself before acting -- see the checklist in
    condition: local integrity checks pass (hash match, unique keys, no
    NaN/Inf, all `status=ok`).
 
-3. **Priority P1.** Machine: local. Fix the continuation-policy C0/C1/C2
+2. **Priority P1.** Machine: local. Fix the continuation-policy C0/C1/C2
    `reference_model=` interface mismatch (`NEXT_STEPS.md` P2.5) -- the
    production runner expects a keyword the protected source doesn't
    provide, and the existing draft only implements two of three needed
@@ -41,7 +31,7 @@ Re-verify git and tmux state yourself before acting -- see the checklist in
    example without the unexpected-keyword failure, and all three
    conditions are implemented.
 
-4. **Priority P2.** Machine: local. Replicate the exact-target-oracle
+3. **Priority P2.** Machine: local. Replicate the exact-target-oracle
    diagnostic across the remaining 6 families x 3 capacities
    (`NEXT_STEPS.md` P2.1) -- entry point:
    `scripts/experiments/run_exact_target_oracle_diagnostic.py`. (Target-
@@ -50,13 +40,11 @@ Re-verify git and tmux state yourself before acting -- see the checklist in
    #3, not a local re-run.) Prerequisite: none blocking. Stopping
    condition: a majority of cells reported with a consistent direction.
 
-5. **Priority P2.** Machine: local. Compute the `P(T > H | resident)`
-   reuse-time-tail diagnostic (`NEXT_STEPS.md` P2.2) from the existing
-   `learned_decisions.csv` in `analysis/exact_target_oracle_diagnostic_v1/`
-   plus the raw trace -- confirmed genuinely `NOT_STARTED` anywhere (fresh
-   grep this pass found zero implementation). Prerequisite: none. Stopping
-   condition: a first bucketed `P(T>H)` distribution exists for at least
-   the brightkite cell.
+4. **Priority P0.** Machine: local. Do not rerun the `P(T > H | resident)`
+   reuse-tail diagnostic. It is `LOCAL_COMPLETE` at
+   `analysis/reuse_tail_horizon_diagnostic_v1/` and synthesized in
+   `docs/reuse_tail_horizon_diagnostic_v1_synthesis.md`. Only causal
+   excess-miss attribution remains unimplemented.
 
 For the full ranked P0-P4 roadmap beyond these five, see
 [`NEXT_STEPS.md`](NEXT_STEPS.md); for Wulver-side sync priority, see
@@ -83,17 +71,18 @@ For the full ranked P0-P4 roadmap beyond these five, see
   launch** just because earlier docs say `IMPLEMENTATION_READY` -- there is
   a known `reference_model=` interface mismatch blocking production use;
   see `NEXT_STEPS.md` P2.5.
-- **Do not conflate the original-protocol and exact-protocol LRB/3L-Cache/
-  CACHEUS results.** The local `FINAL_VALIDATED` CSVs use the original
-  `reviewer_fairness_v1` protocol; the Wulver jobs `1171965`-`1171967` are
-  a separate re-run matched to the corrected cross-family split. Citing one
-  as if it were the other misrepresents the comparison.
-- **Do not treat any one-cell or one-family diagnostic as a universal
-  finding.** H2, H3, H4 rest on one cell (brightkite, capacity 64, H=4);
-  H5, H6 rest on one family (metacdn). H1 is broader but bounded: the
-  completed `1%-50%` learning curve disfavors the sample-size explanation
-  within that tested range; it is not a claim that more data can never
-  help.
+- **Do not relaunch exact controlled-window LRB/3L-Cache/CACHEUS locally just
+  because Wulver jobs `1171965`-`1171967` are pending.** The local
+  `analysis/reviewer_fairness/policy_comparison_{lrb,three_l_cache,cacheus}.csv`
+  files are complete for the controlled-window rows. Sync Wulver later only
+  for replication or if its missing config proves materially different.
+- **Do not overgeneralize beyond each diagnostic's scope.** H2 and the
+  original exact-target/tie-break H3/H4 diagnostics rest on one cell
+  (brightkite, capacity 64, H=4), while the reuse-tail component of
+  H4/H10/H11 now spans 21 family-capacity cells. H5 and H6 rest on one
+  family (metacdn). H1 is broader but bounded: the completed `1%-50%`
+  learning curve disfavors the sample-size explanation within that tested
+  range; it is not a claim that more data can never help.
 - **Do not use contaminated or superseded artifacts** as evidence -- see
   `DEVELOPMENT_STATUS.md` section 6 and
   [`RESULTS_AND_LIMITATIONS.md`](../../Augmented-caching-main/docs/RESULTS_AND_LIMITATIONS.md)

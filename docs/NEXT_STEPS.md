@@ -34,6 +34,20 @@ launched from scratch.
 - **Action:** none. Do not launch `100%` as follow-up work for H1 under the
   current stopping rule.
 
+### P0.2 -- Local reuse-tail horizon diagnostic closeout
+
+- **Status:** `LOCAL_COMPLETE`. The local
+  `reuse_tail_horizon_diagnostic_v1` run completed 21/21 family-capacity
+  cells, with all seven families, capacities `32/64/128`, and horizons
+  `1/2/4/8/16`.
+- **Synthesis:** `docs/reuse_tail_horizon_diagnostic_v1_synthesis.md`.
+- **Scientific decision:** H4/H11 are supported as a horizon-observability
+  limitation: at H=4, `P(T>4 | resident)=0.9938544459677984` and
+  `P(T>4 | resident, eventually reused)=0.9793302186526528`. This is not a
+  causal excess-miss claim.
+- **Action:** none. Do not relaunch this diagnostic unless the protocol is
+  deliberately changed.
+
 ## P1 -- reviewer/publication blockers
 
 ### P1.1 -- Corrected held-out cross-family `evict_value_v1` replay
@@ -46,13 +60,14 @@ launched from scratch.
   `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`. This
   item is **no longer "run it," it is "sync and review it"** -- see
   `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1 for the specific review steps
-  (integrity check, registry-match confirmation, decide whether to wait for
-  the exact-protocol LRB/3L/CACHEUS jobs so the primary table lands as one
-  coherent unit) before citing it. The exact-protocol LRB/3L-Cache/CACHEUS
-  re-runs matched to this same split (jobs `1171965`-`1171967`) remain
-  `PENDING`, blocked by Wulver maintenance, not failed.
-- **Dependency:** none blocking the sync/review itself; the "wait for one
-  coherent table" question depends on jobs `1171965`-`1171967`.
+  (integrity check, registry-match confirmation, and comparison against the
+  locally complete controlled-window LRB/3L/CACHEUS CSVs) before citing it.
+  Wulver jobs `1171965`-`1171967` remain pending because of maintenance, but
+  the local controlled-window rows already cover those baseline cells unless
+  the missing Wulver config later proves materially different.
+- **Dependency:** none blocking the sync/review itself; Wulver jobs
+  `1171965`-`1171967` are replication/config-audit follow-up, not a local
+  compute prerequisite.
 - **Machine:** Wulver (already done); this workstation only needs to sync
   the result once access is available.
 - **Entry point:** `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv`
@@ -132,29 +147,28 @@ launched from scratch.
   horizon adequacy (see the hypothesis map's "Refined horizon-adequacy
   framing" section) -- more principled than the `H/C` ratio, and computable
   from data that already exists.
-- **Status:** `NOT_STARTED` (new item from this pass).
-- **Dependency:** none -- the exact-target-oracle's `learned_decisions.csv`
-  already records `decision_id`, `request_t`, `chosen_candidate` per
-  decision, sufficient to compute `T` by scanning the raw trace.
+- **Status:** `LOCAL_COMPLETE`. The run in
+  `analysis/reuse_tail_horizon_diagnostic_v1/` completed 21/21
+  family-capacity cells and passed integrity. Synthesis:
+  `docs/reuse_tail_horizon_diagnostic_v1_synthesis.md`.
+- **Dependency:** none remaining for the resident-candidate diagnostic.
 - **Machine:** local.
-- **Entry point:** new small analysis script (not yet written) over
-  existing decision logs + raw trace; no new replay engine required for
-  this first pass.
-- **Expected cost:** low (a few hours of implementation + fast batch
-  computation over existing logs).
-- **Stopping rule:** first pass computes `P(T>H)` bucketed distribution
-  (e.g. `1-4, 5-8, 9-16, 17-32, >32, never reused`) for at least the
-  existing brightkite cell; extend to other cells only if the first pass
-  shows a meaningful fraction beyond `H`.
-- **What would change our interpretation:** a high `P(T>H)` (most resident
-  objects' next reuse falls outside the horizon) would strengthen H4/H11 as
-  a plausible mechanism (not yet causal proof); a low `P(T>H)` would
-  disfavor horizon truncation as primary, per H11's own stopping rule.
+- **Entry point:** `scripts/experiments/run_reuse_tail_horizon_diagnostic.py`
+  and `src/lafc/reuse_tail_horizon.py`.
+- **Expected cost:** complete; no further local cost.
+- **Stopping rule:** satisfied for the non-causal resident-candidate pass.
+- **What changed our interpretation:** the high H=4 tail strengthens H4/H11
+  as an observability limitation. It does not establish that reuse after H
+  causes an avoidable miss; causal excess-miss attribution remains a
+  separate, unimplemented question.
 
 ### P2.3 -- `H/C` and capacity-scaling diagnostic sweep
 
 - **Why:** tests H10 directly; currently only run at one fixed capacity.
-- **Status:** `UNTESTED`.
+- **Status:** `EMPIRICALLY_STRENGTHENED_BUT_NOT_PROVEN_AS_LAW`. The
+  Wulver-relayed broad degeneracy result and the local reuse-tail diagnostic
+  both worsen with capacity at H=4, but this is still descriptive evidence,
+  not a derived `H/C` scaling law.
 - **Dependency:** P2.1's degeneracy script, re-run at fixed `H=4` across
   `C in {32,64,128}` (cheapest first pass; the learning-curve/objective-
   ablation CSVs already sweep capacity but don't carry the needed
@@ -260,19 +274,22 @@ launched from scratch.
 - **Why:** ensures the already-`FINAL_VALIDATED` (original-protocol)
   baseline comparison also holds under the corrected cross-family split
   used for P1.1, not just the original protocol.
-- **Status (updated 2026-08-11): reclassify out of "optional/deferred" --
-  this is now an active P1-tier blocker, not P4.** Per user-relayed Wulver
-  facts, this is already submitted and in progress: 3L-Cache job
-  `1171965`, LRB job `1171966`, CACHEUS job `1171967` -- all `PENDING`,
-  blocked by Wulver maintenance, not failed. It is the other half of
-  P1.1's final comparison table (see `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`
-  for why the existing local `FINAL_VALIDATED` results for these three
-  baselines are a *different* protocol variant, not this one).
-- **Dependency:** Wulver maintenance clearing; no local dependency.
-- **Machine:** Wulver (already queued); sync once complete.
-- **Entry point:** Wulver jobs `1171965`-`1171967` output (not yet given
-  locally).
-- **Expected cost:** low once unblocked -- sync only.
+- **Status (updated 2026-08-11):** `LOCAL_COMPLETE` for the local
+  controlled-window CSVs, plus `WULVER_PENDING` for the independently
+  submitted Wulver copies. Fresh local audit found
+  `analysis/reviewer_fairness/policy_comparison_{three_l_cache,lrb,cacheus}.csv`
+  complete at 42 rows per policy, 21 primary controlled-window rows per
+  policy, all seven families, capacities `32/64/128`, all `ok`, no
+  duplicates, and no NaN/Inf. Wulver jobs `1171965`-`1171967` remain
+  pending because of maintenance, not failure.
+- **Dependency:** none for local use of the audited CSVs. Sync the Wulver
+  copies later for independent replication, or if the missing
+  `configs/reviewer_fairness_exact_protocol_modern_20260811.json` proves to
+  contain an additional constraint not recorded in local docs/source.
+- **Machine:** local artifact is complete; Wulver remains queued.
+- **Entry point:** local CSVs in `analysis/reviewer_fairness/`; Wulver jobs
+  `1171965`-`1171967` later for replication.
+- **Expected cost:** no local rerun needed.
 - **Stopping rule:** results synced and integrity-checked, ideally reviewed
   alongside P1.1 as one coherent primary comparison table.
 - **What would change our interpretation:** a material change in relative

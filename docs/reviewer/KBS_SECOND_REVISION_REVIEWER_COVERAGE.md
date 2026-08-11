@@ -18,7 +18,7 @@ internal notes is mapped by topic where it does not have a literal doc label;
 this is noted explicitly per row rather than asserted as verified.
 
 Statuses used: `ANSWERED`, `ANSWERED_WITH_CAVEATS`, `PARTIAL`, `RUNNING`,
-`MISSING`, `TEXT_ONLY`.
+`LOCAL_COMPLETE`, `WULVER_PENDING`, `MISSING`, `TEXT_ONLY`.
 
 Last updated: 2026-08-11. This update incorporates fresh Wulver-side facts
 relayed by the user from a separately audited Wulver session -- these are
@@ -50,31 +50,32 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
     at `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv`
     (Wulver path, not yet synced locally). This resolves what was, until
     this update, the largest single gap in this concern.
-  - The three modern learned baselines still need an **exact-protocol
-    re-run matched to this same corrected split** before a fully coherent
-    comparison table exists: 3L-Cache job `1171965`, LRB job `1171966`,
-    CACHEUS job `1171967`, all `PENDING`, blocked by Wulver maintenance
-    (not failed). The existing local `FINAL_VALIDATED` results for these
-    three baselines used the *original* `reviewer_fairness_v1` protocol,
-    not this corrected split -- both are true at once, see
-    `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` for why.
+  - Fresh local audit found complete exact controlled-window CSVs for the
+    three modern learned baselines: 3L-Cache, LRB, and CACHEUS each have 42
+    local rows, including 21 primary `[10000,50000)` controlled-window rows
+    across all seven families and capacities `32/64/128`, all `ok`, with no
+    duplicate keys and no NaN/Inf. Wulver jobs `1171965`, `1171966`, and
+    `1171967` remain `PENDING` because of maintenance, but they are now
+    replication/config-audit follow-up rather than a blocker to local
+    baseline availability unless their missing config JSON proves materially
+    different.
   - LRU/SIEVE/FIFO and HALP-causal do not need the exact-protocol re-run
     (no training/split dependency for the first three; HALP's existing
     result is already counted as valid comparison evidence) -- their
     existing local `FINAL_VALIDATED` rows stand.
-- Remaining experiment: sync and review the corrected 42/42 result (see
-  `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1), then wait for jobs
-  `1171965`-`1171967` to clear maintenance (item #8) so the primary
-  comparison table lands as one coherent unit.
+- Remaining experiment: sync and review the corrected 42/42 `evict_value_v1`
+  result (see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1), then compare it
+  against the locally complete modern-baseline controlled-window CSVs. Sync
+  jobs `1171965`-`1171967` later for replication/config audit.
 - Text-only fix: label `offline_belady` explicitly as oracle context, not a
   deployable baseline, everywhere it appears (already flagged as required in
   the fairness audit; verify consistently applied).
-- **Status (updated 2026-08-11, per explicit reviewer-completion
-  reconciliation): `PARTIAL`, awaiting jobs `1171965`-`1171967`.** The
-  corrected `evict_value_v1` treatment is complete on Wulver; the exact-
-  protocol LRB/3L-Cache/CACHEUS jobs are pending; LRU/SIEVE/FIFO/HALP-causal
-  comparison evidence is already valid. Per-baseline fidelity caveats
-  unchanged: HALP `LOW_TO_MEDIUM`, LRB/3L-Cache `MEDIUM`, CACHEUS `HIGH`.
+- **Status (updated 2026-08-11): `PARTIAL`, awaiting sync/review of the
+  corrected `evict_value_v1` result.** The exact controlled-window
+  LRB/3L-Cache/CACHEUS rows are locally complete; their Wulver jobs remain
+  pending only as replication/config-audit follow-up. Per-baseline fidelity
+  caveats unchanged: HALP `LOW_TO_MEDIUM`, LRB/3L-Cache `MEDIUM`, CACHEUS
+  `HIGH`.
 
 ## Reviewer #2 Major 2: supervision-objective ablation
 
@@ -258,7 +259,7 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
 
 | Concern | Status | Primary remaining gap |
 |---|---|---|
-| R2 Major 1 (learned-baseline comparison) | `PARTIAL`, awaiting jobs `1171965`-`1171967` | Exact-protocol LRB/3L-Cache/CACHEUS re-run matched to the corrected split (Wulver-side, maintenance-blocked); corrected `evict_value_v1` result itself is complete and needs sync+review |
+| R2 Major 1 (learned-baseline comparison) | `PARTIAL`, awaiting corrected `evict_value_v1` sync/review | Corrected `evict_value_v1` result is complete on Wulver and needs sync+review; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally complete, with Wulver copies pending as replication/config audit |
 | R2 Major 2 (supervision-objective ablation) | `COMPLETE_VALIDATED` / `FINAL_VALIDATED` (scope as originally defined) | None -- manuscript integration only |
 | R2 Major 3 (offline/online failure explanation) | `PARTIAL` | True causal C0/C1/C2 continuation test (blocked by a `reference_model=` interface defect, not just compute scale) |
 | R2 Major 4 (practical significance / timing) | `COMPLETE_WITH_CAVEATS` | None for the 4 timed policies (sync only); modern-baseline timing may be separate if needed |

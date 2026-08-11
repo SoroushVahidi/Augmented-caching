@@ -145,8 +145,9 @@ Status vocabulary used below (canonical on this branch, see the registry):
 | Broad target-degeneracy (21 cells, 7 families x 3 capacities) | -- | `WULVER_ONLY_VALIDATED` | Wulver job `1169513`. Unique-winner fraction = 0 and multi-winner fraction = 1 across **all 21 cells** -- generalizes the local single-cell H3 finding well beyond one cell. Capacity trend (zero-margin fraction and optimal-set fraction both rise with capacity) is **empirical evidence, not a mathematical H/C law** | Not locally present | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
 | Horizon sensitivity sweep | -- | `RUNNING` (Wulver-side) | Wulver job `1169299`, **17/35 complete**, 18 pending. H=1 and H=2 complete for all families; H=4 complete for brightkite/citibike/cloudphysics only; remaining H=4 cells and all H=8/H=16 pending | Not locally present | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
 | Historical-tail diagnostic (H8) | -- | `WULVER_ONLY_VALIDATED` | Wulver job `1169665`, complete. H=8 resolves ~24.6% of H=4-tied decisions; H=16 resolves ~38.7%; history-linear tie-breaking produces only tiny gains; leakage audit passed. Weak support for horizon/tail concerns, **not a downstream policy win** | Not locally present, not previously implemented locally at all | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
+| Reuse-tail horizon diagnostic (`P(T > H | resident)`) | -- | `LOCAL_COMPLETE` | 21/21 family-capacity cells, capacities `32/64/128`, horizons `1/2/4/8/16`, integrity passed. H=4: `P(T>4 | resident)=0.9938544459677984`, `P(T>4 | resident, eventually reused)=0.9793302186526528`, never-reused fraction `0.7026792916224847`. Supports horizon observability limits, **not causal excess-miss attribution** | `analysis/reuse_tail_horizon_diagnostic_v1/`; synthesis in `docs/reuse_tail_horizon_diagnostic_v1_synthesis.md` | No rerun needed |
 | Corrected held-out `evict_value_v1` (cross-family, 42/42) | -- | `WULVER_ONLY_VALIDATED` | Complete, 42/42 rows, 7 families x 3 capacities x 2 variants, all `ok`. SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296` | `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv` (Wulver path; not yet synced locally) | `NEEDS_REVIEW` before use, see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1 |
-| Exact-protocol LRB / 3L-Cache / CACHEUS (matched to the corrected split) | -- | `PENDING` (`BLOCKED_ON_WULVER_MAINTENANCE`, not failed) | Jobs `1171965` (3L-Cache), `1171966` (LRB), `1171967` (CACHEUS). Distinct from, and not yet resolving, the already-`FINAL_VALIDATED` original-protocol local results for these same three baselines -- see `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` for why both can be true at once | n/a | Wait for jobs to clear maintenance |
+| Exact controlled-window LRB / 3L-Cache / CACHEUS | -- | `LOCAL_COMPLETE` plus `WULVER_PENDING` | Fresh 2026-08-11 local audit: `analysis/reviewer_fairness/policy_comparison_{lrb,three_l_cache,cacheus}.csv` each has 42 rows, 21 primary `[10000,50000)` rows, all seven families, capacities `32/64/128`, all `ok`, no duplicate keys, and no NaN/Inf. Wulver jobs `1171965` (3L-Cache), `1171966` (LRB), `1171967` (CACHEUS) remain pending because of maintenance. The named Wulver JSON config is absent locally; local source/docs record the same controlled-window protocol and fixed policy settings, but sync/audit the Wulver copy later if its config includes additional constraints | `analysis/reviewer_fairness/` | No local rerun needed; Wulver copy is optional replication unless config differs |
 | Controlled timing campaign | -- | `WULVER_ONLY_VALIDATED` | Wulver job `1171758`, complete. 420/420 rows (7 families x 3 capacities x 4 policies x 5 repetitions). Mean per-request runtime: LRU 4.68us, FIFO-Reinsertion 5.17us, SIEVE 9.52us, HALP-causal 870.66us (~186x LRU) | Not locally present | `PROMOTE_NOW`, see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #2 |
 | Continuation-policy causal ablation (C0/C1/C2) | -- | `CONCEPTUAL_BUT_NOT_PRODUCTION_READY` | A production blocker was found: the existing draft implements only two of three needed conditions, and the production runner expects a `reference_model=` keyword the protected source does not provide (unexpected-keyword failure). **Not** `READY_TO_RUN` on either machine until fixed | n/a | `DO_NOT_PROMOTE`, see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #9 |
 
@@ -158,9 +159,10 @@ relayed by the user from a separately audited Wulver-side session on
 provenance note at the top of
 [`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md).
 This supersedes the previous, more conservative `LAST_KNOWN_REMOTE_STATUS --
-NOT RECHECKED IN THIS PASS` framing for the specific items listed above;
-anything *not* listed above (e.g. `P(T > H | resident)`, confirmed absent
-by a fresh local grep this pass) remains genuinely unimplemented anywhere.
+NOT RECHECKED IN THIS PASS` framing for the specific items listed above.
+The reuse-tail `P(T > H | resident)` diagnostic is now explicitly listed as
+`LOCAL_COMPLETE`; items not listed above still need fresh local inspection
+before they are treated as implemented.
 
 ## 6. Invalid / superseded evidence
 
@@ -219,13 +221,13 @@ for the 2026-08-11 Wulver reconciliation (two items below are now
 sync/review tasks rather than experiments to run, since Wulver already
 completed them):
 
-1. Finish the `wiki2018|0.5` resume unit currently running locally (P0, passive -- do not launch anything else).
-2. Sync and review the corrected held-out cross-family `evict_value_v1` replay (42/42, Wulver-complete) -- now the top priority for R2 Major 1, but needs the review steps in `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1 before citation, not a re-run.
+1. Sync and review the corrected held-out cross-family `evict_value_v1` replay (42/42, Wulver-complete) -- now the top priority for R2 Major 1, but needs the review steps in `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1 before citation, not a re-run.
+2. Use the locally complete exact controlled-window LRB/3L-Cache/CACHEUS CSVs as the available local baseline side of that table; sync Wulver jobs `1171965`-`1171967` later only for replication or if their missing config records a material difference.
 3. Fix the continuation-policy C0/C1/C2 `reference_model=` interface mismatch -- the primary remaining blocker for R2 Major 3 / R3's causal-explanation concern.
 4. Complete the target-degeneracy and exact-target-oracle diagnostics across all 7 families / 3 capacities locally (currently 1 cell each on this workstation; Wulver has already generalized target-degeneracy to 21 cells -- see item 3 in `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` for syncing that instead of re-running it locally).
-5. Compute the `P(T > H | resident)` reuse-time-tail diagnostic (still genuinely `NOT_STARTED` anywhere, confirmed by a fresh grep this pass) from already-recorded decision logs.
+5. No-op closeout for the `P(T > H | resident)` reuse-time-tail diagnostic: it is now locally complete and synthesized; only causal excess-miss attribution remains unimplemented.
 6. Sync the controlled timing campaign (420/420, Wulver-complete, `PROMOTE_NOW`) -- no local work needed, just sync.
-7. Wait for the exact-protocol LRB/3L-Cache/CACHEUS jobs (`1171965`-`1171967`) to clear Wulver maintenance, then sync.
+7. Sync the exact-protocol LRB/3L-Cache/CACHEUS Wulver jobs (`1171965`-`1171967`) later only for independent replication or if their missing config records a material difference from the locally audited controlled-window CSVs.
 
 ## 9. Current scientific interpretation
 
@@ -263,12 +265,17 @@ completed them):
   does not provide) means its status must read
   `CONCEPTUAL_BUT_NOT_PRODUCTION_READY`, not `READY_TO_RUN`, on either
   machine, until that's fixed (see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #9).
-- **Horizon/truncation mechanism (H4, H8-H11) is plausible but
-  under-specified.** The newly added `P(T > H | resident)` framing (see the
-  hypothesis map's "Refined horizon-adequacy framing" section) gives this a
-  concrete, dimensionally correct quantity to compute next, distinct from
-  the `H/C` ratio, which remains an unestablished coarse covariate, not a
-  law.
+- **Horizon/truncation mechanism (H4, H8-H11) is now supported as an
+  observability limitation, but not as a causal excess-miss mechanism.** The
+  local reuse-tail diagnostic shows that the H=4 window sees very little of
+  resident objects' eventual reuse behavior:
+  `P(T>4 | resident)=0.9938544459677984`, and even among objects eventually
+  reused, `P(T>4 | resident, eventually reused)=0.9793302186526528`.
+  The trend worsens with capacity (`0.987377360773`, `0.992891528854`,
+  `0.996078682684` for C=32/64/128), directionally matching the
+  Wulver-relayed broad H=4 degeneracy trend. This strengthens H4/H10/H11
+  conservatively, but it remains potential unseen future reuse, not proof
+  that reuse after H caused an avoidable miss.
 - **No causal claims are established yet.** Every finding above is
   correlational/diagnostic on one or a few cells. In particular: `P(T>H)`
   being large would be *consistent with* a truncation explanation but is
