@@ -141,7 +141,21 @@ classification per experiment. In particular:
   merged to `main`; see [`EXPERIMENT_REGISTRY.md`](EXPERIMENT_REGISTRY.md)
   for exactly which experiments that applies to.
 
-## F. What remains under investigation
+## F. Invalid or superseded artifacts
+
+These specific artifacts must not be used to support a claim, even though
+they remain on disk for provenance. Historical evidence is never deleted;
+it is labeled instead.
+
+| Artifact | Why invalid / superseded | Replacement | Safe to use? | Status |
+|---|---|---|---|---|
+| An earlier `evict_value_v1` fair-window comparison CSV (`kbs/second-revision-science`) | Confirmed train/test overlap: the same trace streams were used for both training and evaluation | The corrected held-out cross-family replay (experiment 9 in [`EXPERIMENT_REGISTRY.md`](EXPERIMENT_REGISTRY.md)), currently `COMPLETE_PARTIAL_SCOPE` | No -- never cite | `CONTAMINATED_DO_NOT_USE` |
+| `deployment_full_stream`-tagged rows in any fairness-protocol comparison | Not the primary controlled-evaluation-window comparison; included for supporting context only | The `primary_controlled_window`-tagged rows in the same files | Supporting context only, not for a primary comparison | Exclude from primary claims |
+| An earlier, smaller continuation-policy exploration (predates the causal C1/C2 formulation in experiment 7) | Superseded by a purpose-built causal test of the same hypothesis | Experiment 7's causal continuation-policy comparison (`kbs/second-revision-science`, currently `IMPLEMENTATION_READY`/`SMOKE_ONLY`) | No -- do not conflate with experiment 7's result once it exists | `HISTORICAL_SUPERSEDED`, kept for provenance only |
+| Smoke-scale computational-overhead timing numbers | Explicitly non-canonical; the artifact itself is not a controlled timing measurement | The pending controlled timing campaign (experiment 8) | No -- do not cite as a final performance number | `SMOKE_ONLY`, not citable as final |
+| Treating a same-target scalar-vs-pairwise finding (experiment 6) as equivalent to the objective-comparison finding (experiment 3) | These compare different things: experiment 6 fixes the target and varies representation; experiment 3 varies the target itself. They use similarly-named conditions that are easy to conflate | Check which experiment (3 vs. 6) and which exact condition a result comes from before citing it | N/A -- a citation-care note, not an artifact | Always verify source experiment before citing |
+
+## G. What remains under investigation
 
 See [`HYPOTHESIS_MAP.md`](HYPOTHESIS_MAP.md) for the full mechanistic
 hypothesis matrix (why the offline-to-online gap exists) and

@@ -71,6 +71,40 @@ hashed (SHA-256); treat a hash mismatch between a recorded provenance file
 and the actual file on disk as an integrity problem to investigate, not to
 paper over.
 
+A few more specific provenance mechanisms used across this line of work,
+in case you need to trace where a specific number came from:
+
+- **Trace hashes.** Fairness-protocol comparisons record a `trace_sha256`
+  column alongside each row, hashing the exact input trace file used for
+  that row. This lets you confirm two rows that claim to use "the same
+  trace" actually used byte-identical input, not just a file with the same
+  name.
+- **Split / fold provenance.** Cross-family comparisons use a `fold_id`
+  naming convention (`cross_family_v1_<held_out_family>`) that records
+  which single family was held out for that fold, alongside explicit
+  `history_start`/`history_end`/`score_start`/`score_end` request-index
+  columns defining the exact evaluation window used.
+- **Leakage gates.** Where a split is meant to be held-out (no family used
+  for both training and evaluation), the eligibility rule is checked
+  explicitly rather than assumed from the config alone -- a split that
+  fails this check (e.g. re-using the same trace streams for train and
+  eval) must be labeled contaminated and excluded from primary comparisons,
+  never silently included; see
+  [`RESULTS_AND_LIMITATIONS.md`](RESULTS_AND_LIMITATIONS.md) section F for
+  a concrete example of a split that failed this check.
+- **Seeds.** See section D above; a fixed seed is recorded per run and
+  should match across anything being compared.
+- **Generated-result status.** A generated result is only as trustworthy as
+  its accompanying `provenance.json`/hash pair -- a CSV or model file
+  without a matching provenance record next to it should not be treated as
+  reproducible evidence, only as an unverified artifact.
+- **Why bulk data stays outside git.** Large derived datasets, trained
+  model weights, and most per-experiment result trees are reproducible from
+  tracked source + tracked config + a recorded seed, so they are
+  deliberately not committed (see section F above) -- committing them would
+  bloat the repository without adding anything the tracked inputs plus
+  provenance records don't already determine.
+
 ## H. Stable reproduction commands
 
 ```bash
@@ -101,7 +135,25 @@ python scripts/run_evict_value_v1_first_check.py
 # Dataset preparation
 python scripts/datasets/prepare_all.py \
   --dataset <brightkite|citibike|spec_cpu2006|wiki2018|twemcache|metakv|metacdn|cloudphysics|all>
+
+# Target-degeneracy diagnostic (trace-only; skips the trained-model leg)
+python scripts/experiments/analyze_eviction_loss_target_degeneracy.py \
+  --family brightkite --capacity 64 --horizon 4 --no-learned
+
+# Exact-target-oracle diagnostic (trace-only; skips the trained-model leg)
+python scripts/experiments/run_exact_target_oracle_diagnostic.py \
+  --family brightkite --capacity 64 --horizon 4 --no-learned
 ```
+
+Both diagnostics above default to comparing against a trained
+`evict_value_v1` model loaded from a model registry
+(`analysis/supervision_objective_ablation_v1/model_registry.json`) produced
+by the objective-ablation campaign, which is not yet on `main` -- pass
+`--no-learned` to run only the trace-derived legs (LRU / exact-target-oracle
+/ Belady for the oracle diagnostic; tie-fraction / entropy metrics for the
+degeneracy diagnostic) without that dependency. See
+[`EXPERIMENT_REGISTRY.md`](EXPERIMENT_REGISTRY.md) experiments 4 and 5 for
+what each diagnostic measures and its current evidence status.
 
 See the root [`README.md`](../README.md) for the full policy roster and the
 canonical Knowledge-Based Systems manuscript reproduction path

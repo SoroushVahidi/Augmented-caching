@@ -218,6 +218,67 @@ single-family evidence as exactly that, not as a general conclusion.
 
 ---
 
+## Refined horizon-adequacy framing (H10/H11 candidate quantities)
+
+H10 and H11 both ask, in different ways, whether a fixed horizon `H` is
+*adequate*. "Adequate" needs a concrete quantity before it is testable, and
+several non-equivalent candidates exist in the caching/RL literature. None of
+these has been tested yet -- this section only fixes vocabulary and ranks
+candidates by how directly they connect to what `H` actually measures, so
+future diagnostics compute the right thing the first time.
+
+**Terminology guardrail:** `H` is defined in this codebase as a count of
+future *requests* (the eviction-loss target looks `H` requests ahead). This
+is **not** the same quantity as classical *stack distance* / *reuse
+distance*, which counts the number of **distinct pages** requested between
+two accesses to the same page (a *distinct-object* count, used for LRU stack
+analysis and footprint models). Below, `T` always denotes a *request-count*
+quantity (`next_reuse_time_requests`), matching the units `H` is already in.
+Do not substitute a distinct-object stack-distance figure for `T` -- they can
+differ substantially on the same trace, and conflating them silently changes
+what a horizon-adequacy diagnostic is actually measuring.
+
+- **Primary candidate -- `P(T > H | resident)`.** For an object resident in
+  the cache, `T` is the number of future requests until that object is next
+  requested. `P(T > H | resident)` is the probability that a resident
+  object's next reuse falls outside the horizon window, i.e. is invisible to
+  the finite-horizon target. This is the literature-motivated, dimensionally
+  direct quantity: `H` is measured in requests, and `T` is measured in the
+  same units, so no normalization or auxiliary assumption is required to
+  compare them. This is the natural first quantity to compute for H11's
+  "potential consequence" diagnostic.
+- **Secondary, competing candidates** (listed for completeness; each requires
+  an extra assumption or normalization `P(T>H)` does not):
+  - `H / C` -- horizon requests per unit of cache capacity. **Marked
+    `COARSE COMPETING HYPOTHESIS -- NOT ESTABLISHED LAW`.** It is a cheap
+    ratio, not a derived or theoretically justified normalization; do not
+    treat it as more than a candidate covariate to check against `P(T>H)`.
+  - `distinct-future-page coverage / C` -- how many distinct pages appear in
+    the next `H` requests, relative to capacity. This is closer to a
+    classical stack-distance notion (distinct objects, not request count)
+    and must not be reported using the same symbol/units as `T`.
+  - `H / q90(T)` or `H / q95(T)` -- horizon relative to a high quantile of
+    the resident-object reuse-time distribution, rather than a raw
+    probability. A reasonable alternative summary of the same underlying
+    distribution `P(T > H)` is drawn from.
+  - `footprint(H) / C` -- the working-set footprint accumulated over the next
+    `H` requests, relative to capacity. Capacity-dependent by construction;
+    if used, its normalization must be defined precisely before any
+    cross-capacity claim is made -- no such definition currently exists in
+    this codebase.
+- **What none of these establish (explicitly out of scope until tested):**
+  - No claim that `H` must universally scale linearly with `C`.
+  - No claim that target degeneracy (H3) vanishes if and only if `H` exceeds
+    some boundary value of any of the quantities above.
+  - No claim that LRU is, formally, a terminal-value estimator for anything
+    beyond `H` -- H8's "missing terminal value" framing is a target-design
+    question, not a statement about what LRU computes.
+  - No claim that `P(T > H)` *causally* explains the observed offline/online
+    regret gap before it has actually been measured and checked against
+    downstream misses -- a high `P(T > H)` would be consistent with H4/H11
+    but is not by itself evidence of a causal excess-miss mechanism (see the
+    potential-consequence vs. causal-excess-miss distinction under H11).
+
 ## Cross-cutting notes
 
 - No hypothesis above should be treated as general from a single cell or
