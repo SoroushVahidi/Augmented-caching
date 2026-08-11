@@ -32,9 +32,12 @@ Classification vocabulary:
   audit (unique keys, no NaN/Inf, all `status=ok`); (b) confirmation the
   model registry it scored against matches the frozen, held-out-eligible
   `evict_value_v1_cross_family_v1` registry already trained locally
-  (7/7 folds); (c) a decision on whether it can sit alongside the still-
-  pending exact-protocol LRB/3L-Cache/CACHEUS baselines (item 8 below) or
-  should wait for them so the primary table lands as one coherent unit.
+  (7/7 folds); (c) rerunning
+  `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...` to
+  materialize the final matched comparison against the locally validated
+  LRB/3L-Cache/CACHEUS controlled-window rows. It does **not** need to wait
+  for Wulver jobs `1171965`-`1171967` unless their missing config later
+  proves materially different from the local protocol.
 - **Why highest priority:** this is the item every other R2 Major 1 gap
   depends on; without it, the method's own headline comparison has no
   valid primary row at all (see `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`).
@@ -128,9 +131,13 @@ Classification vocabulary:
 - **Classification:** **`WULVER_PENDING_REPLICATION`** -- all three are
   `PENDING`, blocked by Wulver maintenance (not failed), but a fresh local
   audit found complete controlled-window CSVs for all three policies under
-  `analysis/reviewer_fairness/`. When Wulver returns, promote these jobs only
-  as independent replication or to check whether the missing Wulver config
-  JSON contains an additional constraint not recorded in local docs/source.
+  `analysis/reviewer_fairness/`: LRB
+  `LOCAL_EXACT_PROTOCOL_VALIDATED`, 3L-Cache
+  `LOCAL_EXACT_PROTOCOL_VALIDATED_WITH_CAVEAT`, and CACHEUS
+  `LOCAL_EXACT_PROTOCOL_VALIDATED_WITH_PROVENANCE_CAVEAT`. When Wulver
+  returns, promote these jobs only as independent replication or to check
+  whether the missing Wulver config JSON contains an additional constraint
+  not recorded in local docs/source.
 
 ## 9. Continuation causal driver, only after semantic/interface repair
 
@@ -150,8 +157,8 @@ Classification vocabulary:
 
 ## Priority summary (top 5)
 
-1. **Corrected held-out `evict_value_v1` (item 1)** -- unblocks R2 Major 1's headline comparison; `NEEDS_REVIEW` before use.
-2. **Exact-protocol LRB/3L/CACHEUS (item 8)** -- completes the same comparison; `WAIT_FOR_RUNNING_JOB` (maintenance-blocked).
-3. **Continuation C0/C1/C2 interface repair (item 9)** -- the primary remaining gap for the causal-explanation reviewer concern (R3); `DO_NOT_PROMOTE` until the `reference_model=` mismatch is fixed.
-4. **Controlled timing (item 2)** -- complete and ready; `PROMOTE_NOW`.
-5. **Broad degeneracy (item 3)** -- important generalizing confirmation of the local single-cell finding; `NEEDS_REVIEW` pending driver-source location.
+1. **Corrected held-out `evict_value_v1` (item 1)** -- unblocks R2 Major 1's final synthesis; `NEEDS_REVIEW` before use.
+2. **Continuation C0/C1/C2 interface repair (item 9)** -- the primary remaining gap for the causal-explanation reviewer concern (R3); `DO_NOT_PROMOTE` until the `reference_model=` mismatch is fixed.
+3. **Controlled timing (item 2)** -- complete and ready; `PROMOTE_NOW`.
+4. **Broad degeneracy (item 3)** -- important generalizing confirmation of the local single-cell finding; `NEEDS_REVIEW` pending driver-source location.
+5. **Exact-protocol LRB/3L/CACHEUS (item 8)** -- replication/provenance strengthening only; not required for R2 Major 1 synthesis unless config audit later finds a material difference.

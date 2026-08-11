@@ -58,13 +58,14 @@ launched from scratch.
 - **Status (updated 2026-08-11):** per user-relayed Wulver facts, this is
   now `WULVER_ONLY_VALIDATED` -- **COMPLETE, 42/42 rows**, SHA-256
   `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`. This
-  item is **no longer "run it," it is "sync and review it"** -- see
-  `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1 for the specific review steps
-  (integrity check, registry-match confirmation, and comparison against the
-  locally complete controlled-window LRB/3L/CACHEUS CSVs) before citing it.
+  item is **no longer "run it," it is "sync and review it"**. A 2026-08-11
+  local evidence-prep pass validated the baseline side and created
+  `analysis/kbs_r2_major1_evidence_prep_20260811/` plus the reusable
+  comparison procedure `scripts/analysis/prepare_r2_major1_evidence.py`.
   Wulver jobs `1171965`-`1171967` remain pending because of maintenance, but
-  the local controlled-window rows already cover those baseline cells unless
-  the missing Wulver config later proves materially different.
+  the local controlled-window LRB/3L/CACHEUS rows already cover those
+  baseline cells unless the missing Wulver config later proves materially
+  different.
 - **Dependency:** none blocking the sync/review itself; Wulver jobs
   `1171965`-`1171967` are replication/config-audit follow-up, not a local
   compute prerequisite.
@@ -75,7 +76,9 @@ launched from scratch.
 - **Expected cost:** low, now that the compute itself is done -- just a
   sync + review pass.
 - **Stopping rule:** integrity checks pass locally after sync (unique keys,
-  no NaN/Inf, all `status=ok`, hash matches the value above).
+  no NaN/Inf, all `status=ok`, hash matches the value above), then
+  `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...`
+  writes the final matched comparison table.
 - **What would change our interpretation:** if `evict_value_v1` beats the
   modern learned baselines once reviewed, the "target problem" narrative
   would need to be reconciled with a competitive result; if it still loses

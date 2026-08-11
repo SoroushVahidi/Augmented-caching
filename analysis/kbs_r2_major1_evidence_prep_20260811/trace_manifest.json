@@ -1,0 +1,86 @@
+{
+  "all_available": true,
+  "all_hashes_match_baseline_provenance": true,
+  "preprocessing_identifier": "processed 50k JSONL traces listed in analysis/wulver_trace_manifest_full.csv",
+  "source_manifest": "/home/soroush/Augmented-caching-kbs-second-revision/analysis/wulver_trace_manifest_full.csv",
+  "temporary_manifest_gap_repaired_by": "actual local trace files plus stored baseline trace_hashes_sha256",
+  "traces": [
+    {
+      "data_root": "/home/soroush/Augmented-caching",
+      "exists": true,
+      "file_size_bytes": 15526561,
+      "logical_family": "brightkite",
+      "manifest_relative_path": "data/processed/brightkite/trace.jsonl",
+      "matches_baseline_provenance": true,
+      "request_count": 50000,
+      "sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de",
+      "trace_name": "brightkite_50k"
+    },
+    {
+      "data_root": "/home/soroush/Augmented-caching",
+      "exists": true,
+      "file_size_bytes": 11936074,
+      "logical_family": "citibike",
+      "manifest_relative_path": "data/processed/citibike/trace.jsonl",
+      "matches_baseline_provenance": true,
+      "request_count": 50000,
+      "sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130",
+      "trace_name": "citibike_202401_50k"
+    },
+    {
+      "data_root": "/home/soroush/Augmented-caching",
+      "exists": true,
+      "file_size_bytes": 8751706,
+      "logical_family": "wiki2018",
+      "manifest_relative_path": "data/processed/wiki2018/trace.jsonl",
+      "matches_baseline_provenance": true,
+      "request_count": 50000,
+      "sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608",
+      "trace_name": "wiki2018_pageviews_en_50k"
+    },
+    {
+      "data_root": "/home/soroush/Augmented-caching",
+      "exists": true,
+      "file_size_bytes": 27775024,
+      "logical_family": "twemcache",
+      "manifest_relative_path": "data/processed/twemcache/trace.jsonl",
+      "matches_baseline_provenance": true,
+      "request_count": 50000,
+      "sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9",
+      "trace_name": "twemcache_cluster26_sample100_50k"
+    },
+    {
+      "data_root": "/home/soroush/Augmented-caching",
+      "exists": true,
+      "file_size_bytes": 22392344,
+      "logical_family": "metakv",
+      "manifest_relative_path": "data/processed/metakv/trace.jsonl",
+      "matches_baseline_provenance": true,
+      "request_count": 50000,
+      "sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de",
+      "trace_name": "metakv_kvcache_202206_head_50k"
+    },
+    {
+      "data_root": "/home/soroush/Augmented-caching",
+      "exists": true,
+      "file_size_bytes": 29973762,
+      "logical_family": "metacdn",
+      "manifest_relative_path": "data/processed/metacdn/trace.jsonl",
+      "matches_baseline_provenance": true,
+      "request_count": 50000,
+      "sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73",
+      "trace_name": "metacdn_cdn_202303_head_50k"
+    },
+    {
+      "data_root": "/home/soroush/Augmented-caching",
+      "exists": true,
+      "file_size_bytes": 17472871,
+      "logical_family": "cloudphysics",
+      "manifest_relative_path": "data/processed/cloudphysics/trace.jsonl",
+      "matches_baseline_provenance": true,
+      "request_count": 50000,
+      "sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57",
+      "trace_name": "cloudphysics_alibaba_block_head_50k"
+    }
+  ]
+}

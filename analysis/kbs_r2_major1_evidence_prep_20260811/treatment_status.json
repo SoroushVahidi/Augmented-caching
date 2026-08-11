@@ -1,0 +1,8 @@
+{
+  "classification": "WULVER_ONLY_VALIDATED",
+  "comparison_status": "FINAL_COMPARISON_PENDING",
+  "expected_path": "analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv",
+  "expected_sha256": "982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296",
+  "found_locally": false,
+  "old_contaminated_local_file_excluded": "analysis/reviewer_fairness/policy_comparison_evict_value_v1.csv"
+}

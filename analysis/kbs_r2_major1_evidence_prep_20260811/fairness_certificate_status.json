@@ -1,0 +1,55 @@
+{
+  "can_one_certificate_cover_all_three": false,
+  "certificate_path": "/home/soroush/Augmented-caching-kbs-second-revision/analysis/reviewer_fairness/fairness_certificate.json",
+  "policy_status": {
+    "cacheus": {
+      "caveat": "Certificate covers this policy.",
+      "checks": {
+        "CAPACITY": "PASS",
+        "FUTURE_LEAKAGE": "PASS",
+        "HYPERPARAMETER_PROTOCOL": "PASS",
+        "IMPLEMENTATION_PROVENANCE": "PASS",
+        "METRIC": "PASS",
+        "NO_FAILURE_ROWS": "PASS",
+        "OBJECT_SIZE": "PASS",
+        "SCORING_WINDOW": "PASS",
+        "SEED": "PASS",
+        "TRACE": "PASS",
+        "TRAIN_TEST_SEPARATION": "PASS"
+      },
+      "covered_by_certificate": true,
+      "n_deployment_rows": 21,
+      "n_failed_rows": 0,
+      "n_primary_rows": 21,
+      "overall": "PASS"
+    },
+    "lrb": {
+      "caveat": "Not in this certificate; covered by direct CSV/provenance audit instead.",
+      "covered_by_certificate": false,
+      "overall": "NOT_PRESENT"
+    },
+    "three_l_cache": {
+      "caveat": "3L-Cache carries PASS_WITH_CAVEAT on hyperparameter protocol.",
+      "checks": {
+        "CAPACITY": "PASS",
+        "FUTURE_LEAKAGE": "PASS",
+        "HYPERPARAMETER_PROTOCOL": "PASS_WITH_CAVEAT",
+        "IMPLEMENTATION_PROVENANCE": "PASS",
+        "METRIC": "PASS",
+        "NO_FAILURE_ROWS": "PASS",
+        "OBJECT_SIZE": "PASS",
+        "SCORING_WINDOW": "PASS",
+        "SEED": "PASS",
+        "TRACE": "PASS",
+        "TRAIN_TEST_SEPARATION": "PASS"
+      },
+      "covered_by_certificate": true,
+      "n_deployment_rows": 21,
+      "n_failed_rows": 0,
+      "n_primary_rows": 21,
+      "overall": "PASS"
+    }
+  },
+  "protocol_version": "reviewer_fairness_v1",
+  "reason": "The strongest local certificate covers CACHEUS and 3L-Cache, but not LRB; LRB is covered by the direct exact-row audit and provenance JSON."
+}

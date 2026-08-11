@@ -1,0 +1,221 @@
+{
+  "cacheus": {
+    "capacities": [
+      32,
+      64,
+      128
+    ],
+    "checks": {
+      "all_status_ok": true,
+      "both_expected_variants": true,
+      "capacities_32_64_128": true,
+      "deployment_window_exact": true,
+      "duplicate_keys_zero": true,
+      "hits_plus_misses_equals_scored": true,
+      "nan_inf_zero": true,
+      "primary_rows_21": true,
+      "primary_window_exact": true,
+      "rows_42": true,
+      "seven_families": true,
+      "sha256_matches_expected": true
+    },
+    "duplicate_key_count": 0,
+    "expected_sha256": "dc0c501002713a1ed1005e764b28b72f207c02a9cc40fe7b2d36db0c6fc50645",
+    "families": [
+      "brightkite_50k",
+      "citibike_202401_50k",
+      "cloudphysics_alibaba_block_head_50k",
+      "metacdn_cdn_202303_head_50k",
+      "metakv_kvcache_202206_head_50k",
+      "twemcache_cluster26_sample100_50k",
+      "wiki2018_pageviews_en_50k"
+    ],
+    "integrity": "PASS",
+    "nan_inf_count": 0,
+    "path": "/home/soroush/Augmented-caching-kbs-second-revision/analysis/reviewer_fairness/policy_comparison_cacheus.csv",
+    "policy": "cacheus",
+    "primary_mean_miss_ratio": 0.6756,
+    "primary_median_miss_ratio": 0.7132,
+    "primary_row_count": 21,
+    "primary_total_misses": 567504,
+    "row_count": 42,
+    "sha256": "dc0c501002713a1ed1005e764b28b72f207c02a9cc40fe7b2d36db0c6fc50645",
+    "status_distribution": {
+      "ok": 42
+    },
+    "variants": [
+      "deployment_full_stream",
+      "primary_controlled_window"
+    ],
+    "windows": [
+      [
+        "deployment_full_stream",
+        0,
+        10000,
+        0,
+        50000,
+        0,
+        50000,
+        "object_slots",
+        "unit"
+      ],
+      [
+        "primary_controlled_window",
+        0,
+        10000,
+        10000,
+        50000,
+        10000,
+        40000,
+        "object_slots",
+        "unit"
+      ]
+    ]
+  },
+  "lrb": {
+    "capacities": [
+      32,
+      64,
+      128
+    ],
+    "checks": {
+      "all_status_ok": true,
+      "both_expected_variants": true,
+      "capacities_32_64_128": true,
+      "deployment_window_exact": true,
+      "duplicate_keys_zero": true,
+      "hits_plus_misses_equals_scored": true,
+      "nan_inf_zero": true,
+      "primary_rows_21": true,
+      "primary_window_exact": true,
+      "rows_42": true,
+      "seven_families": true,
+      "sha256_matches_expected": true
+    },
+    "duplicate_key_count": 0,
+    "expected_sha256": "1972f359c2419d5470fe9c897ba74cd7a17ac8b48574734257e259e1c76410fa",
+    "families": [
+      "brightkite_50k",
+      "citibike_202401_50k",
+      "cloudphysics_alibaba_block_head_50k",
+      "metacdn_cdn_202303_head_50k",
+      "metakv_kvcache_202206_head_50k",
+      "twemcache_cluster26_sample100_50k",
+      "wiki2018_pageviews_en_50k"
+    ],
+    "integrity": "PASS",
+    "nan_inf_count": 0,
+    "path": "/home/soroush/Augmented-caching-kbs-second-revision/analysis/reviewer_fairness/policy_comparison_lrb.csv",
+    "policy": "lrb",
+    "primary_mean_miss_ratio": 0.6877345238095238,
+    "primary_median_miss_ratio": 0.70355,
+    "primary_row_count": 21,
+    "primary_total_misses": 577697,
+    "row_count": 42,
+    "sha256": "1972f359c2419d5470fe9c897ba74cd7a17ac8b48574734257e259e1c76410fa",
+    "status_distribution": {
+      "ok": 42
+    },
+    "variants": [
+      "deployment_full_stream",
+      "primary_controlled_window"
+    ],
+    "windows": [
+      [
+        "deployment_full_stream",
+        0,
+        10000,
+        0,
+        50000,
+        0,
+        50000,
+        "object_slots",
+        "unit"
+      ],
+      [
+        "primary_controlled_window",
+        0,
+        10000,
+        10000,
+        50000,
+        10000,
+        40000,
+        "object_slots",
+        "unit"
+      ]
+    ]
+  },
+  "three_l_cache": {
+    "capacities": [
+      32,
+      64,
+      128
+    ],
+    "checks": {
+      "all_status_ok": true,
+      "both_expected_variants": true,
+      "capacities_32_64_128": true,
+      "deployment_window_exact": true,
+      "duplicate_keys_zero": true,
+      "hits_plus_misses_equals_scored": true,
+      "nan_inf_zero": true,
+      "primary_rows_21": true,
+      "primary_window_exact": true,
+      "rows_42": true,
+      "seven_families": true,
+      "sha256_matches_expected": true
+    },
+    "duplicate_key_count": 0,
+    "expected_sha256": "9f666aadc036eac8abc690a3028f63bc889c7892705bb713a0c1846c8a2f46a6",
+    "families": [
+      "brightkite_50k",
+      "citibike_202401_50k",
+      "cloudphysics_alibaba_block_head_50k",
+      "metacdn_cdn_202303_head_50k",
+      "metakv_kvcache_202206_head_50k",
+      "twemcache_cluster26_sample100_50k",
+      "wiki2018_pageviews_en_50k"
+    ],
+    "integrity": "PASS",
+    "nan_inf_count": 0,
+    "path": "/home/soroush/Augmented-caching-kbs-second-revision/analysis/reviewer_fairness/policy_comparison_three_l_cache.csv",
+    "policy": "three_l_cache",
+    "primary_mean_miss_ratio": 0.6926261904761905,
+    "primary_median_miss_ratio": 0.74515,
+    "primary_row_count": 21,
+    "primary_total_misses": 581806,
+    "row_count": 42,
+    "sha256": "9f666aadc036eac8abc690a3028f63bc889c7892705bb713a0c1846c8a2f46a6",
+    "status_distribution": {
+      "ok": 42
+    },
+    "variants": [
+      "deployment_full_stream",
+      "primary_controlled_window"
+    ],
+    "windows": [
+      [
+        "deployment_full_stream",
+        0,
+        10000,
+        0,
+        50000,
+        0,
+        50000,
+        "object_slots",
+        "unit"
+      ],
+      [
+        "primary_controlled_window",
+        0,
+        10000,
+        10000,
+        50000,
+        10000,
+        40000,
+        "object_slots",
+        "unit"
+      ]
+    ]
+  }
+}

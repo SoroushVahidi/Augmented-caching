@@ -17,7 +17,8 @@ Cross-reference shorthand (`MC1..MC3`, `R3-Issue1..6`) used in some prior
 internal notes is mapped by topic where it does not have a literal doc label;
 this is noted explicitly per row rather than asserted as verified.
 
-Statuses used: `ANSWERED`, `ANSWERED_WITH_CAVEATS`, `PARTIAL`, `RUNNING`,
+Statuses used: `ANSWERED`, `ANSWERED_WITH_CAVEATS`,
+`EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING`, `PARTIAL`, `RUNNING`,
 `LOCAL_COMPLETE`, `WULVER_PENDING`, `MISSING`, `TEXT_ONLY`.
 
 Last updated: 2026-08-11. This update incorporates fresh Wulver-side facts
@@ -38,10 +39,11 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
 - Concern paraphrase: does the method actually beat strong existing learned
   and non-learned caching baselines under a fair protocol (LRU, SIEVE, FIFO,
   LRB, 3L-Cache, HALP, CACHEUS, offline Belady as oracle context)?
-- Evidence complete locally: baseline rows themselves are
-  `COMPLETE_VALIDATED` for controlled-window rows
-  (`analysis/reviewer_fairness/policy_comparison_*.csv`), cross-checked by
-  `analysis/kbs_comparison_fairness_audit.json` (overall_score `76`).
+- Evidence complete locally: baseline rows themselves are validated for
+  controlled-window rows, cross-checked by
+  `analysis/kbs_comparison_fairness_audit.json` (overall_score `76`) and
+  the 2026-08-11 compact evidence package
+  `analysis/kbs_r2_major1_evidence_prep_20260811/`.
 - Known Wulver evidence (updated 2026-08-11, `WULVER_ONLY_VALIDATED`,
   relayed by the user, not independently verified here):
   - **The corrected held-out `evict_value_v1` head-to-head replay is
@@ -51,31 +53,36 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
     (Wulver path, not yet synced locally). This resolves what was, until
     this update, the largest single gap in this concern.
   - Fresh local audit found complete exact controlled-window CSVs for the
-    three modern learned baselines: 3L-Cache, LRB, and CACHEUS each have 42
+    three modern learned baselines: LRB is
+    `LOCAL_EXACT_PROTOCOL_VALIDATED`, 3L-Cache is
+    `LOCAL_EXACT_PROTOCOL_VALIDATED_WITH_CAVEAT`, and CACHEUS is
+    `LOCAL_EXACT_PROTOCOL_VALIDATED_WITH_PROVENANCE_CAVEAT`. Each has 42
     local rows, including 21 primary `[10000,50000)` controlled-window rows
     across all seven families and capacities `32/64/128`, all `ok`, with no
-    duplicate keys and no NaN/Inf. Wulver jobs `1171965`, `1171966`, and
-    `1171967` remain `PENDING` because of maintenance, but they are now
-    replication/config-audit follow-up rather than a blocker to local
-    baseline availability unless their missing config JSON proves materially
-    different.
+    duplicate keys, no NaN/Inf, and matching SHA-256 values. Wulver jobs
+    `1171965`, `1171966`, and `1171967` remain `PENDING` because of
+    maintenance, but they are now replication/config-audit follow-up rather
+    than a blocker to local baseline availability unless their missing
+    config JSON proves materially different.
   - LRU/SIEVE/FIFO and HALP-causal do not need the exact-protocol re-run
     (no training/split dependency for the first three; HALP's existing
     result is already counted as valid comparison evidence) -- their
     existing local `FINAL_VALIDATED` rows stand.
-- Remaining experiment: sync and review the corrected 42/42 `evict_value_v1`
-  result (see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1), then compare it
-  against the locally complete modern-baseline controlled-window CSVs. Sync
-  jobs `1171965`-`1171967` later for replication/config audit.
+- Remaining task: sync and review the corrected 42/42 `evict_value_v1`
+  result (see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1), then run
+  `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...` to
+  compare it against the locally complete modern-baseline controlled-window
+  CSVs. Sync jobs `1171965`-`1171967` later for replication/config audit.
 - Text-only fix: label `offline_belady` explicitly as oracle context, not a
   deployable baseline, everywhere it appears (already flagged as required in
   the fairness audit; verify consistently applied).
-- **Status (updated 2026-08-11): `PARTIAL`, awaiting sync/review of the
-  corrected `evict_value_v1` result.** The exact controlled-window
-  LRB/3L-Cache/CACHEUS rows are locally complete; their Wulver jobs remain
-  pending only as replication/config-audit follow-up. Per-baseline fidelity
-  caveats unchanged: HALP `LOW_TO_MEDIUM`, LRB/3L-Cache `MEDIUM`, CACHEUS
-  `HIGH`.
+- **Status (updated 2026-08-11): `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING`,
+  awaiting sync/review of the corrected `evict_value_v1` result.** The exact
+  controlled-window LRB/3L-Cache/CACHEUS rows are locally validated; their
+  Wulver jobs remain pending only as replication/config-audit follow-up.
+  Per-baseline fidelity caveats unchanged: HALP `LOW_TO_MEDIUM`,
+  LRB/3L-Cache `MEDIUM`, CACHEUS `HIGH` with the current live-source
+  provenance caveat.
 
 ## Reviewer #2 Major 2: supervision-objective ablation
 
@@ -259,7 +266,7 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
 
 | Concern | Status | Primary remaining gap |
 |---|---|---|
-| R2 Major 1 (learned-baseline comparison) | `PARTIAL`, awaiting corrected `evict_value_v1` sync/review | Corrected `evict_value_v1` result is complete on Wulver and needs sync+review; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally complete, with Wulver copies pending as replication/config audit |
+| R2 Major 1 (learned-baseline comparison) | `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING` | Corrected `evict_value_v1` result is complete on Wulver and needs sync+review; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally validated, with Wulver copies pending as replication/config audit |
 | R2 Major 2 (supervision-objective ablation) | `COMPLETE_VALIDATED` / `FINAL_VALIDATED` (scope as originally defined) | None -- manuscript integration only |
 | R2 Major 3 (offline/online failure explanation) | `PARTIAL` | True causal C0/C1/C2 continuation test (blocked by a `reference_model=` interface defect, not just compute scale) |
 | R2 Major 4 (practical significance / timing) | `COMPLETE_WITH_CAVEATS` | None for the 4 timed policies (sync only); modern-baseline timing may be separate if needed |

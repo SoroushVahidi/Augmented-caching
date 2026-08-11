@@ -40,7 +40,9 @@ held-out replay), #5 (learned-baseline comparison), #7 (target-degeneracy),
 #8 (historical-tail), #9 (learning convergence), #10 (continuation C1/C2),
 and #11 (controlled timing) below now have additional, more current
 Wulver-side facts than what's written in their individual rows (the corrected
-held-out replay and controlled timing are now complete on Wulver; broad
+held-out replay and controlled timing are now complete on Wulver; R2 Major 1
+baseline-side evidence is locally exact-protocol validated with per-baseline
+caveats and final synthesis is pending only the corrected treatment sync; broad
 degeneracy and historical-tail results exist at Wulver scale; distribution-
 shift's merged state is 24/42, not the row's stated local checkpoint;
 continuation C1/C2 has a concrete production blocker, not just a scale gap).
@@ -104,14 +106,14 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Reviewer concern: Reviewer #2 Major 1 / R3-Issue1 (end-to-end evidence)
 - Machine: LOCAL (partial) / BOTH for full completion
 - Protocol: `docs/reviewer_fairness_cross_family_v1.md`
-- Scope: `PARTIAL` -- not yet a usable primary table
+- Scope: treatment artifact complete on Wulver, absent locally; baseline side locally exact-protocol validated
 - Source entry point: `scripts/experiments/run_evict_cross_family_pipeline.py`, `scripts/experiments/run_cross_family_heldout_eval.py`
 - Config: `configs/fair_cross_family_v1/folds/*.json`
 - Output path: `analysis/reviewer_fairness_cross_family_v1/`
-- Status: `COMPLETE_PARTIAL_SCOPE`
-- Evidence strength: `SUPPORTING_EVIDENCE` (not yet primary -- this is the fairness audit's top required fix)
-- Primary/diagnostic/supporting: intended as primary, currently supporting-only
-- Next action: complete cross-family held-out replay with frozen registry and local model hashes (fairness-audit required fix, cost `high`, reviewer_value `very_high`)
+- Status: `WULVER_ONLY_VALIDATED` for treatment artifact; R2 Major 1 overall `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING`
+- Evidence strength: `PRIMARY_REVIEWER_EVIDENCE` after sync/review; locally supporting-only until the verified treatment CSV is present
+- Primary/diagnostic/supporting: intended as primary; final numeric table pending local synchronization/synthesis
+- Next action: sync the corrected 42/42 Wulver CSV and provenance, verify SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`, then run `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...`
 - Canonical documentation: `docs/reviewer/kbs_second_revision_artifact_map.md` Reviewer #2 Major 1; `analysis/kbs_comparison_fairness_audit.json`
 
 ### 4. Simple exact-protocol baselines (LRU / SIEVE / FIFO)
@@ -140,10 +142,10 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Source entry point: `scripts/experiments/run_reviewer_fairness.py`
 - Config: `configs/reviewer_fairness_protocol.json`
 - Output path: `analysis/reviewer_fairness/policy_comparison_{lrb,three_l_cache,cacheus,halp}.csv`
-- Status: `FINAL_VALIDATED`
+- Status: `FINAL_VALIDATED` for baseline side; LRB `LOCAL_EXACT_PROTOCOL_VALIDATED`, 3L-Cache `LOCAL_EXACT_PROTOCOL_VALIDATED_WITH_CAVEAT`, CACHEUS `LOCAL_EXACT_PROTOCOL_VALIDATED_WITH_PROVENANCE_CAVEAT`
 - Evidence strength: `PRIMARY_REVIEWER_EVIDENCE`, with fidelity caveats: CACHEUS `HIGH` fidelity (official source); LRB/3L-Cache `MEDIUM` (independent reimplementation); **HALP `LOW_TO_MEDIUM`** -- no public official HALP implementation exists, this is an adapted reimplementation of a continuous production algorithm against a frozen offline split, not the vendor's own code
 - Primary/diagnostic/supporting: primary, with the HALP caveat always attached
-- Next action: none planned; keep the fidelity caveats attached in any manuscript citation
+- Next action: none for baseline compute; keep the fidelity/provenance caveats attached in any manuscript citation and use `analysis/kbs_r2_major1_evidence_prep_20260811/` for compact provenance
 - Canonical documentation: `docs/reviewer/kbs_second_revision_artifact_map.md` Reviewer #2 Major 1; `analysis/kbs_comparison_fairness_audit.json`
 
 ### 6. Exact-target oracle diagnostic

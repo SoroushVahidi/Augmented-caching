@@ -16,10 +16,13 @@ Re-verify git and tmux state yourself before acting -- see the checklist in
 1. **Priority P1.** Machine: none (Wulver already did this). Sync and
    review the corrected held-out cross-family `evict_value_v1` replay
    (42/42, SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`)
-   -- see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1 for the exact review
-   steps. Prerequisite: Wulver access to pull the artifact. Stopping
-   condition: local integrity checks pass (hash match, unique keys, no
-   NaN/Inf, all `status=ok`).
+   -- then rerun
+   `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...` to
+   materialize the final matched table. The baseline side is already locally
+   validated in `analysis/kbs_r2_major1_evidence_prep_20260811/`.
+   Prerequisite: Wulver access to pull the artifact. Stopping condition:
+   local integrity checks pass (hash match, unique keys, no NaN/Inf, all
+   `status=ok`) and the script writes the final comparison.
 
 2. **Priority P1.** Machine: local. Fix the continuation-policy C0/C1/C2
    `reference_model=` interface mismatch (`NEXT_STEPS.md` P2.5) -- the
@@ -74,8 +77,12 @@ For the full ranked P0-P4 roadmap beyond these five, see
 - **Do not relaunch exact controlled-window LRB/3L-Cache/CACHEUS locally just
   because Wulver jobs `1171965`-`1171967` are pending.** The local
   `analysis/reviewer_fairness/policy_comparison_{lrb,three_l_cache,cacheus}.csv`
-  files are complete for the controlled-window rows. Sync Wulver later only
-  for replication or if its missing config proves materially different.
+  files are complete and audited for the controlled-window rows:
+  `LOCAL_EXACT_PROTOCOL_VALIDATED` for LRB,
+  `LOCAL_EXACT_PROTOCOL_VALIDATED_WITH_CAVEAT` for 3L-Cache, and
+  `LOCAL_EXACT_PROTOCOL_VALIDATED_WITH_PROVENANCE_CAVEAT` for CACHEUS. Sync
+  Wulver later only for replication or if its missing config proves
+  materially different.
 - **Do not overgeneralize beyond each diagnostic's scope.** H2 and the
   original exact-target/tie-break H3/H4 diagnostics rest on one cell
   (brightkite, capacity 64, H=4), while the reuse-tail component of
