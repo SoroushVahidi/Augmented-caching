@@ -232,16 +232,16 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
   the already-learned frozen `pi1` continuation improve the next learned
   policy `pi2`?
 - Reviewer concern: Reviewer #2 Major 3 / Reviewer #3 continuation-mismatch
-- Machine: LOCAL smoke implementation / production runner still needed
+- Machine: LOCAL production runner ready / full campaign not launched
 - Protocol: `configs/continuation_policy_causal_ablation_v1.json`, `PROTOCOL_FROZEN_NO_RESULTS`
-- Scope: implementation + tests repaired; only `TINY_SMOKE_ONLY` executed (`decision_count=3`)
-- Source entry point: `src/lafc/continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation_smoke.py`
-- Config: `configs/continuation_policy_causal_ablation_v1.json`
+- Scope: production runner + tests complete; only tiny production-runner smoke executed
+- Source entry point: `src/lafc/continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation.py`
+- Config: `configs/continuation_policy_causal_ablation_production_v1.json`
 - Output path: no full-campaign output yet; smoke is stdout-only (`analysis/continuation_policy_causal_ablation*` explicitly excluded from sync)
-- Status: `IMPLEMENTATION_REPAIRED_SMOKE_VALIDATED` / `NOT_PRODUCTION_LAUNCH_READY`
+- Status: `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED`
 - Evidence strength: `IMPLEMENTATION_ONLY`
 - Primary/diagnostic/supporting: diagnostic (planned)
-- Next action: build or sync and audit the production C0/C1/C2 campaign runner before any full launch
+- Next action: explicit local launch decision for the 21-unit production campaign
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.7 (includes this pass's cross-reference to the older, distinct `evict_value_v2_rollout.py` continuation exploration); `docs/reviewer/local_to_wulver_continuation_sync_manifest.md`
 
 ### 11. Practical-significance / controlled timing

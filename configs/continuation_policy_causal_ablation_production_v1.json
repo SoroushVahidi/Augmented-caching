@@ -1,0 +1,100 @@
+{
+  "protocol_id": "continuation_policy_causal_ablation_production_v1",
+  "version": 1,
+  "status": "PRODUCTION_PROTOCOL_NO_RESULTS",
+  "scientific_question": "Does replacing the fixed LRU continuation used for label construction with the already learned frozen pi1 continuation improve the next learned policy pi2?",
+  "source_protocol": "configs/continuation_policy_causal_ablation_v1.json",
+  "conditions": {
+    "C0_BASELINE_LRU": {
+      "decision_policy": "LRU",
+      "label_continuation": "LRU",
+      "trained_policy": null,
+      "deployment_policy": "LRU",
+      "retraining": "none"
+    },
+    "C1_LRU_CONTINUATION_LEARNED_PI1": {
+      "label_continuation": "LRU",
+      "train_model": "pi1",
+      "deployment_policy": "pi1_recursive",
+      "interpretation": "current method: train on Q_H^{pi0} labels where pi0 is LRU"
+    },
+    "C2_PI1_CONTINUATION_LEARNED_PI2": {
+      "label_continuation": "frozen_pi1",
+      "train_model": "pi2",
+      "deployment_policy": "pi2_recursive",
+      "interpretation": "one continuation-update step: train on Q_H^{pi1} labels while keeping pi1 frozen during dataset generation"
+    }
+  },
+  "causal_isolation": {
+    "only_changed_variable_between_C1_and_C2": "label_continuation_policy: LRU -> frozen_pi1",
+    "same_example_required": true,
+    "fixed_across_conditions": [
+      "held_out_family",
+      "capacity",
+      "fold",
+      "training_families",
+      "validation_family",
+      "candidate decision_id/candidate_id population",
+      "feature schema",
+      "seed",
+      "horizon",
+      "training row budget",
+      "validation row budget",
+      "evaluation window",
+      "downstream miss-ratio metric"
+    ]
+  },
+  "folds": {
+    "fold_dir": "configs/fair_cross_family_v1/folds",
+    "held_out_families": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ]
+  },
+  "capacities": [32, 64, 128],
+  "horizon": 4,
+  "feature_schema": "EVICT_VALUE_V1_FEATURE_COLUMNS",
+  "seed": 0,
+  "training_budget": {
+    "max_train_rows": 150000,
+    "max_val_rows": 30000,
+    "sampling": "deterministic manifest order with exact same C1/C2 rows"
+  },
+  "evaluation_window": {
+    "history_start": 0,
+    "history_end": 10000,
+    "score_start": 10000,
+    "score_end": 50000,
+    "scored_requests": 40000
+  },
+  "frozen_pi1_provenance": {
+    "registry": "analysis/supervision_objective_ablation_v1/model_registry.json",
+    "required_objective": "objective_eviction_loss",
+    "required_registry_flag": "MODEL_SELECTION_FROZEN=true"
+  },
+  "output": {
+    "analysis_root": "analysis/continuation_policy_causal_ablation_production_v1",
+    "model_root": "models/continuation_policy_causal_ablation_production_v1",
+    "unit_granularity": "held_out_family_x_capacity",
+    "global_files": [
+      "policy_comparison.csv",
+      "label_agreement.csv",
+      "training_summary.csv",
+      "unit_completion_manifest.json",
+      "integrity_summary.json",
+      "provenance.json",
+      "config_snapshot.json",
+      "README.md"
+    ]
+  },
+  "expected_counts": {
+    "downstream_policy_cells": 63,
+    "label_agreement_cells": 21,
+    "pi2_training_cells": 21
+  }
+}

@@ -148,20 +148,17 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
     worsened in **9**, misses tied in 3. This reinforces, and does not
     resolve, the existing negative finding -- do not claim distribution-
     shift correction solves the online-performance gap.
-  - **The continuation-policy C0/C1/C2 implementation is smoke-repaired but
-    not production-launch-ready**: the local smoke path now includes C0 LRU,
-    C1 frozen `pi1`, and C2 trained from frozen-`pi1` continuation labels.
-    The `reference_model=` unexpected-keyword defect is reproducible against
-    the older v2 rollout kernel, but the offending production caller was not
-    found locally. A real production runner/resume/output path still needs to
-    be built or synced and audited before any full launch.
+  - **The continuation-policy C0/C1/C2 runner is production-ready at smoke
+    scale**: the local production runner now includes C0 LRU, C1 frozen
+    `pi1`, and C2 trained from frozen-`pi1` continuation labels, with atomic
+    unit completion, resume, same-example/leakage/model gates, and integrity
+    outputs. No full scientific result exists yet.
 - Local sample-size evidence: the completed same-target learning curve
   narrows the causal space by disfavoring H1 within the tested `1%-50%`
   range, but it does **not** replace or solve Reviewer #3's missing
   C0/C1/C2 continuation experiment.
-- Remaining experiment: build or sync and audit the full C0/C1/C2 production
-  runner first, then run the full 7-family causal ablation. Do not launch
-  from the repaired smoke script as if it were a campaign runner.
+- Remaining experiment: explicitly launch and complete the full 7-family
+  C0/C1/C2 production campaign, then audit integrity before interpretation.
 - Text-only fix: none required beyond what is already stated; the local docs
   already avoid claiming continuation mismatch is proven or that DAgger fixes
   the gap.
@@ -265,7 +262,7 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
 |---|---|---|
 | R2 Major 1 (learned-baseline comparison) | `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING` | Corrected `evict_value_v1` result is complete on Wulver and needs sync+review; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally validated, with Wulver copies pending as replication/config audit |
 | R2 Major 2 (supervision-objective ablation) | `COMPLETE_VALIDATED` / `FINAL_VALIDATED` (scope as originally defined) | None -- manuscript integration only |
-| R2 Major 3 (offline/online failure explanation) | `PARTIAL` | True causal C0/C1/C2 continuation test (local smoke repaired; full production runner still missing) |
+| R2 Major 3 (offline/online failure explanation) | `PARTIAL` | True causal C0/C1/C2 continuation test (production runner ready; full result still missing) |
 | R2 Major 4 (practical significance / timing) | `COMPLETE_WITH_CAVEATS` | None for the 4 timed policies (sync only); modern-baseline timing may be separate if needed |
 | Reviewer #3 (causal explanation) | `PARTIAL` | Same as R2 Major 3 -- the C0/C1/C2 causal test is the central unresolved issue, **not** the LRB/3L-Cache/CACHEUS gap |
 
@@ -278,8 +275,8 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
   local evidence exists at all, not even a smoke-scale implementation.
 - Second most under-addressed, and now the **central unresolved issue for
   Reviewer #3 specifically**: **Reviewer #2 Major 3 / R3 continuation
-  mismatch** -- local smoke implementation exists and is repaired, but no
-  audited production runner/resume/output path exists yet; the one
-  directional distribution-shift test available (DAgger) worsened
+  mismatch** -- production runner is ready and smoke-validated, but the full
+  result does not exist yet; the one directional distribution-shift test
+  available (DAgger) worsened
   misses in 9 of 12 paired cells and improved none, muddying rather than
   confirming a simple story.

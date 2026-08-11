@@ -24,16 +24,13 @@ Re-verify git and tmux state yourself before acting -- see the checklist in
    local integrity checks pass (hash match, unique keys, no NaN/Inf, all
    `status=ok`) and the script writes the final comparison.
 
-2. **Priority P1.** Machine: local. Build or sync and audit the
+2. **Priority P1.** Machine: local. Decide whether to launch the
    continuation-policy C0/C1/C2 production runner (`NEXT_STEPS.md` P2.5).
-   The local smoke path is `IMPLEMENTATION_REPAIRED_SMOKE_VALIDATED`, but
-   no full campaign runner/resume/output-writer is present locally. The
-   reported `reference_model=` unexpected-keyword defect is reproducible
-   against the older v2 rollout kernel, but the offending production caller
-   was not found in local source/history/worktrees. Prerequisite: none.
-   Stopping condition: the runner executes end-to-end on a small real
-   example without the unexpected-keyword failure, and all three
-   conditions are implemented.
+   Status is `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED`: the runner, preflight,
+   atomic units, same-example/leakage/model gates, tiny smoke, and resume
+   smoke are validated. Prerequisite: explicit launch authorization.
+   Stopping condition for the next task: the real campaign completes and
+   passes integrity checks, or a unit fails closed with an actionable error.
 
 3. **Priority P2.** Machine: local. Replicate the exact-target-oracle
    diagnostic across the remaining 6 families x 3 capacities
@@ -71,10 +68,9 @@ For the full ranked P0-P4 roadmap beyond these five, see
   confirmed via direct Wulver contact from here. Re-verify job IDs/hashes
   directly when a task explicitly authorizes contacting Wulver, especially
   before citing them in anything manuscript-facing.
-- **Do not assume the continuation-policy C0/C1/C2 experiment is ready to
-  launch** just because the local smoke is repaired. Full execution still
-  needs an audited production runner/resume/output path; see
-  `NEXT_STEPS.md` P2.5.
+- **Continuation-policy C0/C1/C2 is runner-ready, not result-complete.** Do
+  not mark it complete or cite outcomes until the real 21-unit campaign has
+  been launched, completed, and audited.
 - **Do not relaunch exact controlled-window LRB/3L-Cache/CACHEUS locally just
   because Wulver jobs `1171965`-`1171967` are pending.** The local
   `analysis/reviewer_fairness/policy_comparison_{lrb,three_l_cache,cacheus}.csv`

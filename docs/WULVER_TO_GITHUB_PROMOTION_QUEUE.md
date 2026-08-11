@@ -139,26 +139,22 @@ Classification vocabulary:
   whether the missing Wulver config JSON contains an additional constraint
   not recorded in local docs/source.
 
-## 9. Continuation causal driver, only after production-runner audit
+## 9. Continuation causal driver, after production-runner smoke
 
 - **What:** `src/lafc/continuation_policy_ablation.py` and its production
   runner.
-- **Classification:** **`DO_NOT_PROMOTE`** -- local smoke is now
-  `IMPLEMENTATION_REPAIRED_SMOKE_VALIDATED` for all three conditions, but no
-  production campaign runner/resume/output-writer is present locally. The
-  `reference_model=` unexpected-keyword failure is reproducible against the
-  older v2 rollout kernel, but the offending production caller was not found
-  locally; if it is later synced, route it through
-  `continuation_policy_ablation.py` rather than changing the older
-  exploratory rollout semantics. Status must remain
-  `NOT_PRODUCTION_LAUNCH_READY` until the production runner is audited.
+- **Classification:** **`RUNNER_READY_NOT_RESULT_COMPLETE`** -- local
+  production runner is `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED` with atomic
+  unit completion, preflight, same-example/leakage/model gates, and resume
+  skip/no-duplicate behavior. No full scientific result exists yet; promote
+  only the runner/source, not any production result.
 
 ---
 
 ## Priority summary (top 5)
 
 1. **Corrected held-out `evict_value_v1` (item 1)** -- unblocks R2 Major 1's final synthesis; `NEEDS_REVIEW` before use.
-2. **Continuation C0/C1/C2 production runner (item 9)** -- the primary remaining gap for the causal-explanation reviewer concern (R3); `DO_NOT_PROMOTE` until a full runner/resume/output path is audited.
+2. **Continuation C0/C1/C2 production run (item 9)** -- the primary remaining gap for the causal-explanation reviewer concern (R3); runner is ready, result still needs explicit launch and completion audit.
 3. **Controlled timing (item 2)** -- complete and ready; `PROMOTE_NOW`.
 4. **Broad degeneracy (item 3)** -- important generalizing confirmation of the local single-cell finding; `NEEDS_REVIEW` pending driver-source location.
 5. **Exact-protocol LRB/3L/CACHEUS (item 8)** -- replication/provenance strengthening only; not required for R2 Major 1 synthesis unless config audit later finds a material difference.
