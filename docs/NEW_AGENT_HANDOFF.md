@@ -29,7 +29,7 @@ Re-verify git and tmux state yourself before acting -- see the checklist in
 ## Active local compute -- do not touch
 
 A reviewer-critical C0/C1/C2 causal-continuation production campaign is
-running in tmux session `kbs_continuation_c0_c1_c2_production_20260811`
+running in tmux session `kbs_continuation_c0_c1_c2_production_resume_20260812`
 (runner: `scripts/experiments/run_continuation_policy_causal_ablation.py`;
 output: `analysis/continuation_policy_causal_ablation_production_v1/`;
 models: `models/continuation_policy_causal_ablation_production_v1/`; log:
@@ -64,7 +64,7 @@ do not remove those `.gitignore` entries while the campaign is active.
 2. **Priority P1.** Machine: local. Monitor the launched continuation-policy
    C0/C1/C2 production runner (`NEXT_STEPS.md` P2.5). Status is
    `PRODUCTION_RUNNING_LOCAL_TMUX`: tmux session
-   `kbs_continuation_c0_c1_c2_production_20260811`, source SHA
+   `kbs_continuation_c0_c1_c2_production_resume_20260812`, source SHA
    `a813617f36822f793b0e48b0ee3e6009d56ee324`, config SHA-256
    `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`,
    expected 21 units / 63 policy rows / 21 label-agreement rows / 21
@@ -94,14 +94,13 @@ For the full ranked P0-P4 roadmap beyond these five, see
 
 ## Other local-only generated artifacts (not reviewer-blocking)
 
-- `analysis/huggingface_dataset_preview_v0_2/` -- a ~134 MB staged preview
-  package for a possible future Hugging Face dataset update
-  (`SoroushVahidi/lafc-evict-sample`, `NOT_UPLOADED`). Gitignored
-  deliberately (large real derived-data files); do not commit it or
-  duplicate dataset-release tooling from the separate
-  `/home/soroush/lafc-evict-dataset` repo into this one. Public dataset
-  reference: <https://huggingface.co/datasets/SoroushVahidi/lafc-evict>;
-  Zenodo v0.2: <https://doi.org/10.5281/zenodo.21895844>.
+- `analysis/huggingface_dataset_preview_v0_2/` -- a ~134 MB gitignored
+  staging artifact retained for provenance. It is not the public release
+  source and must not be uploaded or treated as a second dataset repository.
+  The authoritative current public release is maintained in the separate
+  `/home/soroush/lafc-evict-dataset` repository: Hugging Face
+  <https://huggingface.co/datasets/SoroushVahidi/lafc-evict> and Zenodo v0.2
+  <https://doi.org/10.5281/zenodo.21895844>.
 - `analysis/kbs_reviewer_synthesis_prep_20260811/` -- lightweight (~60 KB)
   reviewer-evidence synthesis notes (evidence table, manuscript-safe
   numerical summaries, a stale-reference scan that found no active stale

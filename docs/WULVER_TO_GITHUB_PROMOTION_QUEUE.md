@@ -143,11 +143,11 @@ Classification vocabulary:
 
 - **What:** `src/lafc/continuation_policy_ablation.py` and its production
   runner.
-- **Classification:** **`RUNNER_READY_NOT_RESULT_COMPLETE`** -- local
-  production runner is `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED` with atomic
-  unit completion, preflight, same-example/leakage/model gates, and resume
-  skip/no-duplicate behavior. No full scientific result exists yet; promote
-  only the runner/source, not any production result.
+- **Classification:** **`RUNNING_LOCAL_NOT_RESULT_COMPLETE`** -- local
+  production runner is active in tmux session
+  `kbs_continuation_c0_c1_c2_production_resume_20260812`; the last read-only
+  audit found 8/21 completed units. No full scientific result exists yet;
+  promote only the runner/source, not any production result.
 
 ---
 

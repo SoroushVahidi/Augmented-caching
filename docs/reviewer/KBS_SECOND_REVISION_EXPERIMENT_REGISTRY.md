@@ -232,7 +232,7 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
   the already-learned frozen `pi1` continuation improve the next learned
   policy `pi2`?
 - Reviewer concern: Reviewer #2 Major 3 / Reviewer #3 continuation-mismatch
-- Machine: LOCAL tmux session `kbs_continuation_c0_c1_c2_production_20260811`
+- Machine: LOCAL tmux session `kbs_continuation_c0_c1_c2_production_resume_20260812`
 - Protocol: `configs/continuation_policy_causal_ablation_v1.json`, `PROTOCOL_FROZEN_NO_RESULTS`
 - Scope: 21 planned `(held_out_family, capacity)` production units; expected 63 policy rows, 21 label-agreement rows, 21 pi2-training rows
 - Source entry point: `src/lafc/continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation.py`

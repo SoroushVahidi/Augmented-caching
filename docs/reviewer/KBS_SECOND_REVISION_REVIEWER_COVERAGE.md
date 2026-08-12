@@ -150,7 +150,7 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
     shift correction solves the online-performance gap.
   - **The continuation-policy C0/C1/C2 full production campaign is now
     RUNNING locally**: launched 2026-08-11 in tmux session
-    `kbs_continuation_c0_c1_c2_production_20260811` (source SHA
+    `kbs_continuation_c0_c1_c2_production_resume_20260812` (source SHA
     `a813617f36822f793b0e48b0ee3e6009d56ee324`), covering C0 LRU, C1 frozen
     `pi1`, and C2 trained from frozen-`pi1` continuation labels, with atomic
     unit completion, resume, same-example/leakage/model gates, and integrity

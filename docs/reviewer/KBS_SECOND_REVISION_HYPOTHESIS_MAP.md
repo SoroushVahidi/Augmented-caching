@@ -139,7 +139,7 @@ cleanly and the 50% integrity audit passed.
   from `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED` to
   `PRODUCTION_RUNNING_LOCAL_TMUX`: the full 21-unit C0/C1/C2 campaign is
   actively executing locally (tmux session
-  `kbs_continuation_c0_c1_c2_production_20260811`, source SHA
+  `kbs_continuation_c0_c1_c2_production_resume_20260812`, source SHA
   `a813617f36822f793b0e48b0ee3e6009d56ee324`) as of 2026-08-11. No scientific
   result yet -- do not cite an outcome until the 21-unit integrity manifest
   passes.

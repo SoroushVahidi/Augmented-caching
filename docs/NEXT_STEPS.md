@@ -23,7 +23,7 @@ launched from scratch.
 
 **NOW (this workstation, right now):**
 - Leave the C0/C1/C2 production campaign running in tmux session
-  `kbs_continuation_c0_c1_c2_production_20260811` (P2.5 below). Do not stop,
+  `kbs_continuation_c0_c1_c2_production_resume_20260812` (P2.5 below). Do not stop,
   signal, restart, or attach interactively.
 - Do not launch a second heavy local experiment while it runs.
 - No-compute work only (see below) is safe to do in parallel.
@@ -259,7 +259,7 @@ rule -- relaunching would waste compute and contradict a recorded decision):**
   (`decision_count=3`).
 - **Status (updated 2026-08-11):** `PRODUCTION_RUNNING_LOCAL_TMUX`.
   Local production runner is active in tmux session
-  `kbs_continuation_c0_c1_c2_production_20260811` from source SHA
+  `kbs_continuation_c0_c1_c2_production_resume_20260812` from source SHA
   `a813617f36822f793b0e48b0ee3e6009d56ee324` and config SHA-256
   `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`.
   It emits C0 LRU, C1 frozen `pi1`, and C2 trained from frozen-`pi1`
