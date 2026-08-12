@@ -36,6 +36,7 @@ output/
 /models/supervision_objective_learning_curve_v1/
 /models/fair_v1_staging/
 /models/cross_family_v1_staging/
+/models/continuation_policy_causal_ablation_production_v1/
 /analysis/family_winner_selection/models/*.pkl
 
 # Local reviewer-science generated evidence. Keep analysis/ broadly visible so
@@ -55,6 +56,18 @@ output/
 /analysis/eviction_loss_target_degeneracy_v1/
 /analysis/kbs_comparison_fairness_audit.json
 /analysis/kbs_local_current_evidence_synthesis_*/
+
+# Active/running production campaign output -- do not commit mid-run
+# evidence. See docs/DEVELOPMENT_STATUS.md and the active-compute warning
+# in docs/NEW_AGENT_HANDOFF.md.
+/analysis/continuation_policy_causal_ablation_production_v1/
+
+# Large (100+ MB) staged dataset-release preview containing real derived
+# data files; not upload-ready and not meant to be duplicated into git
+# history. See analysis/huggingface_dataset_preview_v0_2/README.md and
+# https://huggingface.co/datasets/SoroushVahidi/lafc-evict for the public
+# release target.
+/analysis/huggingface_dataset_preview_v0_2/
 
 # Slurm job logs
 slurm/logs/

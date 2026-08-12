@@ -1,0 +1,442 @@
+{
+  "created_utc": "2026-08-11T17:11:34.048654+00:00",
+  "distribution_shift_current_local": {
+    "artifact": "analysis/distribution_shift_ablation_v1/policy_comparison.csv",
+    "capacities": [
+      32,
+      64,
+      128
+    ],
+    "conditions": [
+      "DAGGER_ITER1",
+      "OFF_POLICY_LRU"
+    ],
+    "expected_rows": 42,
+    "families": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "metacdn"
+    ],
+    "mean_dagger_minus_offpolicy_miss_ratio": 0.014414583333333337,
+    "mean_dagger_miss_ratio": 0.6212375,
+    "mean_offpolicy_miss_ratio": 0.6068229166666667,
+    "mean_state_shift_delta": -7.358333333333334e-05,
+    "misses_improved_cells": 2,
+    "misses_tied_cells": 0,
+    "misses_worsened_cells": 10,
+    "ok_rows": 24,
+    "paired_cells": 12,
+    "rows": 24,
+    "state_shift_decreased_cells": 10
+  },
+  "exact_target_oracle": {
+    "artifact": "analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/summary.json",
+    "cell": "brightkite/capacity64/H4",
+    "learned_agreement_rate": 0.9646579066606252,
+    "learned_mean_target_regret": 0.035342093339374714,
+    "policies": {
+      "exact_finite_horizon_eviction_loss_oracle": {
+        "excess_misses_relative_to_lru": 5854,
+        "gap_to_belady_misses": 7767,
+        "information_class": "FUTURE_AWARE_DIAGNOSTIC_TARGET_ORACLE",
+        "miss_ratio": 0.476975,
+        "misses": 19079
+      },
+      "learned_eviction_loss_scalar": {
+        "excess_misses_relative_to_lru": 2224,
+        "gap_to_belady_misses": 4137,
+        "information_class": "TRAINED_WITH_FUTURE_LABELS_BUT_ONLINE_AT_INFERENCE",
+        "miss_ratio": 0.386225,
+        "misses": 15449
+      },
+      "lru": {
+        "excess_misses_relative_to_lru": 0,
+        "gap_to_belady_misses": 1913,
+        "information_class": "ONLINE_DEPLOYABLE",
+        "miss_ratio": 0.330625,
+        "misses": 13225
+      },
+      "offline_belady": {
+        "excess_misses_relative_to_lru": -1913,
+        "gap_to_belady_misses": 0,
+        "information_class": "FUTURE_AWARE_REFERENCE",
+        "miss_ratio": 0.2828,
+        "misses": 11312
+      }
+    },
+    "status": "COMPLETE"
+  },
+  "four_objective_comparison": {
+    "artifact": "analysis/supervision_objective_ablation_v1/policy_comparison.csv",
+    "expected_rows": 84,
+    "family_worst_or_tied_worst_counts": {
+      "objective_eviction_loss": 7,
+      "objective_next_arrival": 1,
+      "objective_pairwise": 1,
+      "objective_reuse_distance": 1
+    },
+    "objectives": {
+      "objective_eviction_loss": {
+        "aggregate_misses": 601569,
+        "capacities": [
+          32,
+          64,
+          128
+        ],
+        "families": [
+          "brightkite",
+          "citibike",
+          "cloudphysics",
+          "metacdn",
+          "metakv",
+          "twemcache",
+          "wiki2018"
+        ],
+        "mean_miss_ratio": 0.7161535714285714,
+        "mean_runtime_seconds": 303.67567619047617,
+        "rows": 21
+      },
+      "objective_next_arrival": {
+        "aggregate_misses": 573059,
+        "capacities": [
+          32,
+          64,
+          128
+        ],
+        "families": [
+          "brightkite",
+          "citibike",
+          "cloudphysics",
+          "metacdn",
+          "metakv",
+          "twemcache",
+          "wiki2018"
+        ],
+        "mean_miss_ratio": 0.6822130952380953,
+        "mean_runtime_seconds": 266.2274857142857,
+        "rows": 21
+      },
+      "objective_pairwise": {
+        "aggregate_misses": 565127,
+        "capacities": [
+          32,
+          64,
+          128
+        ],
+        "families": [
+          "brightkite",
+          "citibike",
+          "cloudphysics",
+          "metacdn",
+          "metakv",
+          "twemcache",
+          "wiki2018"
+        ],
+        "mean_miss_ratio": 0.6727702380952382,
+        "mean_runtime_seconds": 258.15826666666663,
+        "rows": 21
+      },
+      "objective_reuse_distance": {
+        "aggregate_misses": 571456,
+        "capacities": [
+          32,
+          64,
+          128
+        ],
+        "families": [
+          "brightkite",
+          "citibike",
+          "cloudphysics",
+          "metacdn",
+          "metakv",
+          "twemcache",
+          "wiki2018"
+        ],
+        "mean_miss_ratio": 0.680304761904762,
+        "mean_runtime_seconds": 255.00319047619047,
+        "rows": 21
+      }
+    },
+    "per_cell_best_worst_counts": {
+      "objective_eviction_loss": {
+        "best": 0,
+        "tied_best": 5,
+        "tied_worst": 4,
+        "worst": 13
+      },
+      "objective_next_arrival": {
+        "best": 3,
+        "tied_best": 5,
+        "tied_worst": 4,
+        "worst": 2
+      },
+      "objective_pairwise": {
+        "best": 9,
+        "tied_best": 4,
+        "tied_worst": 4,
+        "worst": 1
+      },
+      "objective_reuse_distance": {
+        "best": 3,
+        "tied_best": 5,
+        "tied_worst": 4,
+        "worst": 0
+      }
+    },
+    "rows_ok": 84
+  },
+  "learning_curve_1_to_50": {
+    "apples_to_apples_change_summary": [
+      {
+        "from_fraction": "0.25",
+        "pairwise_downstream_miss_ratio_change": "0.00041041666666663534",
+        "pairwise_minus_scalar_gap_change": "0.001449999999999979",
+        "scalar_downstream_miss_ratio_change": "-0.001039583333333316",
+        "scalar_validation_mae_change": "7.40000000000185e-05",
+        "to_fraction": "0.5"
+      },
+      {
+        "from_fraction": "0.01",
+        "pairwise_downstream_miss_ratio_change": "4.999999999999449e-05",
+        "pairwise_minus_scalar_gap_change": "0.013043749999999965",
+        "scalar_downstream_miss_ratio_change": "-0.012993750000000026",
+        "scalar_validation_mae_change": "-0.003998249999999981",
+        "to_fraction": "0.5"
+      }
+    ],
+    "apples_to_apples_fraction_summary": {
+      "0.01": {
+        "families": "brightkite,citibike,cloudphysics,metacdn",
+        "fraction": "0.01",
+        "paired_family_capacity_cells": "12",
+        "pairwise_better_cells": "0",
+        "pairwise_downstream_miss_ratio_mean": "0.8299291666666666",
+        "pairwise_minus_scalar_miss_ratio_mean": "0.20432291666666666",
+        "scalar_better_cells": "12",
+        "scalar_downstream_miss_ratio_mean": "0.62560625",
+        "scalar_validation_mae_mean": "0.9866655",
+        "ties": "0"
+      },
+      "0.02": {
+        "families": "brightkite,citibike,cloudphysics,metacdn",
+        "fraction": "0.02",
+        "paired_family_capacity_cells": "12",
+        "pairwise_better_cells": "0",
+        "pairwise_downstream_miss_ratio_mean": "0.8295770833333332",
+        "pairwise_minus_scalar_miss_ratio_mean": "0.21124583333333333",
+        "scalar_better_cells": "12",
+        "scalar_downstream_miss_ratio_mean": "0.61833125",
+        "scalar_validation_mae_mean": "0.9839315000000001",
+        "ties": "0"
+      },
+      "0.05": {
+        "families": "brightkite,citibike,cloudphysics,metacdn",
+        "fraction": "0.05",
+        "paired_family_capacity_cells": "12",
+        "pairwise_better_cells": "0",
+        "pairwise_downstream_miss_ratio_mean": "0.8296208333333333",
+        "pairwise_minus_scalar_miss_ratio_mean": "0.2131625",
+        "scalar_better_cells": "12",
+        "scalar_downstream_miss_ratio_mean": "0.6164583333333333",
+        "scalar_validation_mae_mean": "0.9838035",
+        "ties": "0"
+      },
+      "0.1": {
+        "families": "brightkite,citibike,cloudphysics,metacdn",
+        "fraction": "0.1",
+        "paired_family_capacity_cells": "12",
+        "pairwise_better_cells": "0",
+        "pairwise_downstream_miss_ratio_mean": "0.8296583333333333",
+        "pairwise_minus_scalar_miss_ratio_mean": "0.2186375",
+        "scalar_better_cells": "12",
+        "scalar_downstream_miss_ratio_mean": "0.6110208333333333",
+        "scalar_validation_mae_mean": "0.9825035",
+        "ties": "0"
+      },
+      "0.25": {
+        "families": "brightkite,citibike,cloudphysics,metacdn",
+        "fraction": "0.25",
+        "paired_family_capacity_cells": "12",
+        "pairwise_better_cells": "0",
+        "pairwise_downstream_miss_ratio_mean": "0.82956875",
+        "pairwise_minus_scalar_miss_ratio_mean": "0.21591666666666665",
+        "scalar_better_cells": "12",
+        "scalar_downstream_miss_ratio_mean": "0.6136520833333333",
+        "scalar_validation_mae_mean": "0.98259325",
+        "ties": "0"
+      },
+      "0.5": {
+        "families": "brightkite,citibike,cloudphysics,metacdn",
+        "fraction": "0.5",
+        "paired_family_capacity_cells": "12",
+        "pairwise_better_cells": "0",
+        "pairwise_downstream_miss_ratio_mean": "0.8299791666666666",
+        "pairwise_minus_scalar_miss_ratio_mean": "0.21736666666666662",
+        "scalar_better_cells": "12",
+        "scalar_downstream_miss_ratio_mean": "0.6126125",
+        "scalar_validation_mae_mean": "0.98266725",
+        "ties": "0"
+      }
+    },
+    "artifact": "analysis/supervision_objective_learning_curve_v1/policy_comparison.csv",
+    "duplicate_key_count": 0,
+    "final_synthesis_path": "analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/",
+    "fraction_0_5_capacities": [
+      32,
+      64,
+      128
+    ],
+    "fraction_0_5_conditions": [
+      "eviction_loss_pairwise",
+      "eviction_loss_scalar"
+    ],
+    "fraction_0_5_expected_rows": 42,
+    "fraction_0_5_families": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "fraction_0_5_rows_ok": 42,
+    "full_50pct_comparison": {
+      "by_family": [
+        {
+          "cells": 3,
+          "family": "brightkite",
+          "pairwise_better_cells": 0,
+          "pairwise_minus_scalar_mean": 0.22840000000000002,
+          "pairwise_miss_ratio_mean": 0.6320666666666667,
+          "scalar_better_cells": 3,
+          "scalar_miss_ratio_mean": 0.4036666666666667,
+          "ties": 0
+        },
+        {
+          "cells": 3,
+          "family": "citibike",
+          "pairwise_better_cells": 0,
+          "pairwise_minus_scalar_mean": 0.4184833333333333,
+          "pairwise_miss_ratio_mean": 0.828825,
+          "scalar_better_cells": 3,
+          "scalar_miss_ratio_mean": 0.41034166666666666,
+          "ties": 0
+        },
+        {
+          "cells": 3,
+          "family": "cloudphysics",
+          "pairwise_better_cells": 0,
+          "pairwise_minus_scalar_mean": 0.012525000000000008,
+          "pairwise_miss_ratio_mean": 0.9997083333333334,
+          "scalar_better_cells": 3,
+          "scalar_miss_ratio_mean": 0.9871833333333333,
+          "ties": 0
+        },
+        {
+          "cells": 3,
+          "family": "metacdn",
+          "pairwise_better_cells": 0,
+          "pairwise_minus_scalar_mean": 0.21005833333333326,
+          "pairwise_miss_ratio_mean": 0.8593166666666666,
+          "scalar_better_cells": 3,
+          "scalar_miss_ratio_mean": 0.6492583333333334,
+          "ties": 0
+        },
+        {
+          "cells": 3,
+          "family": "metakv",
+          "pairwise_better_cells": 0,
+          "pairwise_minus_scalar_mean": 0.05149999999999999,
+          "pairwise_miss_ratio_mean": 0.8201999999999999,
+          "scalar_better_cells": 3,
+          "scalar_miss_ratio_mean": 0.7686999999999999,
+          "ties": 0
+        },
+        {
+          "cells": 3,
+          "family": "twemcache",
+          "pairwise_better_cells": 0,
+          "pairwise_minus_scalar_mean": 0.2064166666666667,
+          "pairwise_miss_ratio_mean": 0.947075,
+          "scalar_better_cells": 3,
+          "scalar_miss_ratio_mean": 0.7406583333333333,
+          "ties": 0
+        },
+        {
+          "cells": 3,
+          "family": "wiki2018",
+          "pairwise_better_cells": 0,
+          "pairwise_minus_scalar_mean": 0.0,
+          "pairwise_miss_ratio_mean": 1.0,
+          "scalar_better_cells": 0,
+          "scalar_miss_ratio_mean": 1.0,
+          "ties": 3
+        }
+      ],
+      "overall": {
+        "paired_family_capacity_cells": 21,
+        "pairwise_better_cells": 0,
+        "pairwise_minus_scalar_miss_ratio_mean": 0.1610547619047619,
+        "pairwise_minus_scalar_miss_ratio_median": 0.17335,
+        "scalar_better_cells": 18,
+        "ties": 3
+      }
+    },
+    "integrity_summary": {
+      "campaign_state_fraction_0.5_complete": true,
+      "campaign_state_fraction_0.5_missing_families": [],
+      "duplicate_key_count": 0,
+      "fraction_0.5_audit_count": 7,
+      "fraction_0.5_audit_problem_count": 0,
+      "fraction_0.5_audit_problems": [],
+      "fraction_0.5_capacities": [
+        32,
+        64,
+        128
+      ],
+      "fraction_0.5_conditions": [
+        "eviction_loss_pairwise",
+        "eviction_loss_scalar"
+      ],
+      "fraction_0.5_families": [
+        "brightkite",
+        "citibike",
+        "cloudphysics",
+        "metacdn",
+        "metakv",
+        "twemcache",
+        "wiki2018"
+      ],
+      "fraction_0.5_missing_expected_cells": [],
+      "fraction_0.5_model_missing_count": 0,
+      "fraction_0.5_model_sha_mismatch_count": 0,
+      "fraction_0.5_rows": 42,
+      "fraction_0.5_status_counts": {
+        "ok": 42
+      },
+      "generated_at_utc": "2026-08-11T16:31:23.793944+00:00",
+      "hundred_percent_status": "INTENTIONALLY_NOT_RUN_DUE_STOPPING_RULE",
+      "nan_inf_count": 0,
+      "nonfinite_examples": [],
+      "source_campaign_state": "analysis/supervision_objective_learning_curve_v1/campaign_state.json",
+      "source_hashes": {
+        "campaign_state_sha256": "2eee0974be069aba342bbd40a3dc6114ea61a92129b811b492ecc37dd7572917",
+        "policy_comparison_sha256": "5323eea6e3f6fb9a44b2fab2f6632f61917442ba239eababc1b2cda1fca8612a",
+        "protocol_snapshot_sha256": "5e6c0a9da3f74a10b4a00e446013d489f23a6368e00f900e236612c1cea75acf",
+        "provenance_sha256": "d607b476e76e460fa11de5fa014c0f2b482b56487dc2523b5cb6601e29bfe3a9"
+      },
+      "source_models_root": "models/supervision_objective_learning_curve_v1",
+      "source_policy_comparison": "analysis/supervision_objective_learning_curve_v1/policy_comparison.csv",
+      "stopping_decision": "STOP_SAMPLE_SIZE_HYPOTHESIS",
+      "total_audit_file_count": 30
+    },
+    "nan_inf_token_count": 0,
+    "rows_ok": 180,
+    "rows_total": 180,
+    "stopping_decision": "STOP_SAMPLE_SIZE_HYPOTHESIS"
+  },
+  "root": "/home/soroush/Augmented-caching-kbs-second-revision",
+  "scope_note": "Lightweight synthesis from existing local artifacts and repository status docs only; no experiment launched."
+}

@@ -2,6 +2,34 @@
 
 Use this page to find the right document without duplicating long runbooks.
 
+## Authoritative status hierarchy
+
+Several documents in this repository track project status; when two appear
+to disagree, resolve the conflict in this order (highest authority first).
+Lower-ranked docs should point to these rather than re-stating the same
+facts:
+
+1. [`NEW_AGENT_HANDOFF.md`](NEW_AGENT_HANDOFF.md) -- cold-start orientation
+   and hard safety list; the first thing a new agent reads.
+2. [`DEVELOPMENT_STATUS.md`](DEVELOPMENT_STATUS.md) -- current authoritative
+   project status: purpose, scientific question, evidence summary,
+   interpretation.
+3. [`reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md`](reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md)
+   -- experiment-level truth: one canonical row per experiment.
+4. [`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)
+   -- local/Wulver/GitHub artifact-location truth.
+5. [`NEXT_STEPS.md`](NEXT_STEPS.md) -- current prioritized actions (P0-P4).
+
+All other status-flavored docs (`reviewer_revision_roadmap.md`,
+`reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`,
+`reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`,
+`WULVER_TO_GITHUB_PROMOTION_QUEUE.md`, etc.) hold detail that is genuinely
+theirs (per-reviewer coverage, per-hypothesis evidence, sync priority) and
+are not superseded outright -- but for a fact that could be stated in more
+than one place, the five documents above win. This hierarchy does not
+apply to historical/superseded material (e.g. `heavy_r1` docs), which is
+kept for provenance only and was never meant to reflect current status.
+
 ## New to this repository, or a new agent with no conversation history?
 
 | Document | Use when you need… |

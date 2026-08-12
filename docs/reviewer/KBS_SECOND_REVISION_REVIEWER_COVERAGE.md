@@ -148,17 +148,21 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
     worsened in **9**, misses tied in 3. This reinforces, and does not
     resolve, the existing negative finding -- do not claim distribution-
     shift correction solves the online-performance gap.
-  - **The continuation-policy C0/C1/C2 runner is production-ready at smoke
-    scale**: the local production runner now includes C0 LRU, C1 frozen
+  - **The continuation-policy C0/C1/C2 full production campaign is now
+    RUNNING locally**: launched 2026-08-11 in tmux session
+    `kbs_continuation_c0_c1_c2_production_20260811` (source SHA
+    `a813617f36822f793b0e48b0ee3e6009d56ee324`), covering C0 LRU, C1 frozen
     `pi1`, and C2 trained from frozen-`pi1` continuation labels, with atomic
     unit completion, resume, same-example/leakage/model gates, and integrity
-    outputs. No full scientific result exists yet.
+    outputs. No full scientific result exists yet -- do not cite an outcome
+    until the 21-unit integrity manifest passes.
 - Local sample-size evidence: the completed same-target learning curve
   narrows the causal space by disfavoring H1 within the tested `1%-50%`
   range, but it does **not** replace or solve Reviewer #3's missing
   C0/C1/C2 continuation experiment.
-- Remaining experiment: explicitly launch and complete the full 7-family
-  C0/C1/C2 production campaign, then audit integrity before interpretation.
+- Remaining experiment: monitor the running full 7-family C0/C1/C2
+  production campaign to completion, then audit integrity before
+  interpretation. Do not stop, signal, or relaunch it.
 - Text-only fix: none required beyond what is already stated; the local docs
   already avoid claiming continuation mismatch is proven or that DAgger fixes
   the gap.
@@ -166,9 +170,10 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
   the true causal C0/C1/C2 continuation test -- this, not the LRB/3L-Cache/
   CACHEUS gap in Major 1, is the central unresolved issue for Reviewer #3's
   causal-explanation concern specifically. Distribution-shift evidence
-  remains `PARTIAL` (24/42); full-scale causal C0/C1/C2 result remains
-  `MISSING`, now blocked by a concrete interface defect rather than only by
-  compute scale.
+  remains `PARTIAL` (24/42); the full-scale causal C0/C1/C2 result remains
+  `MISSING` (not blocked -- the prior interface defect was repaired and the
+  production campaign is now actively running locally; it is a compute-scale
+  wait, not a defect, that remains).
 
 ## Reviewer #2 Major 4: practical significance (computational cost)
 
@@ -262,7 +267,7 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
 |---|---|---|
 | R2 Major 1 (learned-baseline comparison) | `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING` | Corrected `evict_value_v1` result is complete on Wulver and needs sync+review; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally validated, with Wulver copies pending as replication/config audit |
 | R2 Major 2 (supervision-objective ablation) | `COMPLETE_VALIDATED` / `FINAL_VALIDATED` (scope as originally defined) | None -- manuscript integration only |
-| R2 Major 3 (offline/online failure explanation) | `PARTIAL` | True causal C0/C1/C2 continuation test (production runner ready; full result still missing) |
+| R2 Major 3 (offline/online failure explanation) | `PARTIAL` | True causal C0/C1/C2 continuation test (production campaign RUNNING locally; full result still missing) |
 | R2 Major 4 (practical significance / timing) | `COMPLETE_WITH_CAVEATS` | None for the 4 timed policies (sync only); modern-baseline timing may be separate if needed |
 | Reviewer #3 (causal explanation) | `PARTIAL` | Same as R2 Major 3 -- the C0/C1/C2 causal test is the central unresolved issue, **not** the LRB/3L-Cache/CACHEUS gap |
 

@@ -3,13 +3,50 @@
 Short capstone to [`DEVELOPMENT_STATUS.md`](DEVELOPMENT_STATUS.md) (read that
 first -- it has the full project purpose, scientific question, evidence
 table, and hypothesis interpretation). This file exists only to give a crisp
-"what do I do right now" answer and a hard safety list, in one place.
+"what do I do right now" answer and a hard safety list, in one place. See
+[`README.md`](README.md) for the full authoritative-status-doc hierarchy if
+two documents appear to disagree.
+
+**Repository / branch:** `/home/soroush/Augmented-caching-kbs-second-revision`
+on branch `kbs/second-revision-science`, tracking
+`origin/kbs/second-revision-science`. This is the canonical worktree for
+current reviewer-science work; other local worktrees
+(`Augmented-caching-main`, `-3l-cache`, `-cacheus`, `-fairness`, `-halp`,
+`-kbs-parallel`, `-objective-ablation`) are feature-development or
+historical, not entry points -- see `git worktree list`.
 
 **Last consolidated:** 2026-08-11 (local finalization/handoff pass, plus a
 same-day reconciliation against fresh Wulver-side facts relayed by the
-user -- see [`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)).
+user -- see [`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)),
+plus a same-day repository-polish/hygiene pass (`.gitignore` fixes for the
+active continuation campaign's output dirs, a stale-status fix in the
+hypothesis map and reviewer coverage doc, and tracking a new lightweight
+`analysis/kbs_reviewer_synthesis_prep_20260811/` evidence-synthesis dir --
+see section below and `git log` for the exact commit).
 Re-verify git and tmux state yourself before acting -- see the checklist in
 `DEVELOPMENT_STATUS.md` section 10.
+
+## Active local compute -- do not touch
+
+A reviewer-critical C0/C1/C2 causal-continuation production campaign is
+running in tmux session `kbs_continuation_c0_c1_c2_production_20260811`
+(runner: `scripts/experiments/run_continuation_policy_causal_ablation.py`;
+output: `analysis/continuation_policy_causal_ablation_production_v1/`;
+models: `models/continuation_policy_causal_ablation_production_v1/`; log:
+`logs/kbs_continuation_c0_c1_c2_production_20260811.log`). **Do not stop,
+signal, restart, attach interactively, or modify its config/outputs, and do
+not launch another heavy local experiment while it runs.** Read-only
+inspection (`tmux ls`, `pgrep -af run_continuation_policy_causal_ablation.py`,
+reading its log/output files) is safe. A second, unrelated tmux session,
+`kbs_learning_curve_50pct_wiki2018_resume_20260811`, is also still present
+from the already-completed 50% learning-curve campaign (see "Do Not Do"
+below) -- it is finished, but leave it alone rather than killing it
+speculatively.
+
+Both `analysis/continuation_policy_causal_ablation_production_v1/` and
+`models/continuation_policy_causal_ablation_production_v1/` are gitignored
+so the running campaign's partial output cannot be accidentally committed;
+do not remove those `.gitignore` entries while the campaign is active.
 
 ## Immediate Next Actions
 
@@ -54,6 +91,22 @@ Re-verify git and tmux state yourself before acting -- see the checklist in
 For the full ranked P0-P4 roadmap beyond these five, see
 [`NEXT_STEPS.md`](NEXT_STEPS.md); for Wulver-side sync priority, see
 [`WULVER_TO_GITHUB_PROMOTION_QUEUE.md`](WULVER_TO_GITHUB_PROMOTION_QUEUE.md).
+
+## Other local-only generated artifacts (not reviewer-blocking)
+
+- `analysis/huggingface_dataset_preview_v0_2/` -- a ~134 MB staged preview
+  package for a possible future Hugging Face dataset update
+  (`SoroushVahidi/lafc-evict-sample`, `NOT_UPLOADED`). Gitignored
+  deliberately (large real derived-data files); do not commit it or
+  duplicate dataset-release tooling from the separate
+  `/home/soroush/lafc-evict-dataset` repo into this one. Public dataset
+  reference: <https://huggingface.co/datasets/SoroushVahidi/lafc-evict>;
+  Zenodo v0.2: <https://doi.org/10.5281/zenodo.21895844>.
+- `analysis/kbs_reviewer_synthesis_prep_20260811/` -- lightweight (~60 KB)
+  reviewer-evidence synthesis notes (evidence table, manuscript-safe
+  numerical summaries, a stale-reference scan that found no active stale
+  references as of 2026-08-11). Tracked in git, same convention as
+  `analysis/kbs_r2_major1_evidence_prep_20260811/`.
 
 ## Do Not Do
 

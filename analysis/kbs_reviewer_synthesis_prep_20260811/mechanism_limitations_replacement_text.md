@@ -1,0 +1,15 @@
+# Draft Mechanism / Limitations Replacement Text
+
+Preparatory text only; not inserted into the manuscript.
+
+## Outcome A: Strong Outside-Horizon Reuse
+
+The completed diagnostics indicate that simply increasing the amount of training data is not the primary explanation for the poor closed-loop performance of the finite-horizon eviction-loss model: the same-target learning curve from 1% to 50% does not show a material monotonic downstream improvement, and the 50% slice remains unfavorable to the pairwise representation. Instead, the mechanism appears more closely tied to what the finite supervision target can observe. In particular, the reuse-tail diagnostic shows that a substantial fraction of cache-resident candidates at eviction decision points are next requested only after the H-step supervision horizon. These events are potential future consequences that the current H=4 target cannot distinguish at label-construction time.
+
+This evidence should be interpreted carefully. A reuse after H is not by itself a causal excess miss: whether evicting that object produces an avoidable miss depends on the subsequent policy trajectory and on what alternative object would have been evicted. The result therefore supports a horizon-observability limitation of the current target, not a proof that every outside-horizon reuse is recoverable by a better policy. Together with the exact-target oracle diagnostic, it suggests that accurately following the current finite-horizon target can still be insufficient for long-run cache performance when relevant reuse often lies beyond the target horizon.
+
+## Outcome B: Weak Or No Outside-Horizon Reuse
+
+The completed diagnostics indicate that simply increasing the amount of training data is not the primary explanation for the poor closed-loop performance of the finite-horizon eviction-loss model: the same-target learning curve from 1% to 50% does not show a material monotonic downstream improvement, and the 50% slice remains unfavorable to the pairwise representation. The reuse-tail diagnostic does not support the alternative explanation that many cache-resident candidates have future reuse just beyond the H=4 supervision horizon. Within the tested decision population and horizons, outside-horizon reuse therefore should not be presented as the leading mechanism for the observed miss gap.
+
+The remaining interpretation is that the failure is more likely tied to the target construction and deployment setting than to sample size or a simple unseen-tail effect. The exact-target oracle diagnostic shows that exact optimization of the current H=4 finite-horizon target can perform worse than LRU in the tested cell, while the learned scalar model agrees with that target on most decisions. This points toward limitations in the target's decision resolution and continuation assumptions, not merely model-fitting error. However, the causal continuation-policy question remains unresolved until the C0/C1/C2 experiment is completed; the reuse-tail diagnostic narrows the mechanism space but does not replace that experiment.

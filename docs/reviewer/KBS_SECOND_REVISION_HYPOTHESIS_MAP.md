@@ -88,8 +88,10 @@ cleanly and the 50% integrity audit passed.
   entropy than this cell.
 - Reviewer relevance: MC1, R3-Issue4.
 - Owner of next work: LOCAL.
-- Experiment state: NOT_STARTED (multi-cell sweep); blocked from launching
-  while `50%` worker is active.
+- Experiment state: NOT_STARTED (multi-cell sweep). The prior `50%`
+  learning-curve worker that used to block this has since completed
+  (2026-08-11); not launched here only because the local C0/C1/C2 production
+  campaign (H5) currently has priority on this workstation's compute.
 
 ## H4 -- horizon truncation / temporal credit assignment
 
@@ -133,20 +135,26 @@ cleanly and the 50% integrity audit passed.
   at all three capacities despite a reduced measured state-shift index. The
   frozen C0/C1/C2 continuation-policy causal ablation (`src/lafc/continuation_policy_ablation.py`,
   `scripts/experiments/run_continuation_policy_causal_ablation.py`,
-  `configs/continuation_policy_causal_ablation_production_v1.json`) is
-  `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED`, but only tiny runner smoke has
-  executed -- no full result.
-- Status: `INCONCLUSIVE` (single family, smoke-only for the frozen protocol).
+  `configs/continuation_policy_causal_ablation_production_v1.json`) has moved
+  from `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED` to
+  `PRODUCTION_RUNNING_LOCAL_TMUX`: the full 21-unit C0/C1/C2 campaign is
+  actively executing locally (tmux session
+  `kbs_continuation_c0_c1_c2_production_20260811`, source SHA
+  `a813617f36822f793b0e48b0ee3e6009d56ee324`) as of 2026-08-11. No scientific
+  result yet -- do not cite an outcome until the 21-unit integrity manifest
+  passes.
+- Status: `RUNNING_TEST` (single family evidence so far is `INCONCLUSIVE`;
+  the decisive full-scale test is in progress, not yet started or blocked).
 - Decisive next experiment: full 7-family C0/C1/C2 causal ablation comparing
   LRU-continuation vs frozen-`pi1`-continuation labels on the same
-  decision/candidate examples.
+  decision/candidate examples -- currently running, see above.
 - Stopping rule: stop prioritizing continuation mismatch as primary if
   full-scale C2 fails to improve over C1 on downstream misses.
 - Reviewer relevance: MC3, R2-Major3, R3-Issue4.
-- Owner of next work: LOCAL launch decision; full campaign launch only after
-  explicit authorization.
-- Experiment state: smoke NOT_RUN_AT_SCALE; full campaign NOT_STARTED
-  (requires Wulver, not contacted in this pass).
+- Owner of next work: LOCAL; campaign already launched, monitor only -- do
+  not relaunch or signal the running tmux session.
+- Experiment state: smoke `COMPLETE`; full campaign `RUNNING_LOCAL` (this
+  workstation, not Wulver).
 
 ## H6 -- state-distribution shift
 

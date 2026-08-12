@@ -19,6 +19,56 @@ launched from scratch.
 
 ---
 
+## Quick-glance operational summary
+
+**NOW (this workstation, right now):**
+- Leave the C0/C1/C2 production campaign running in tmux session
+  `kbs_continuation_c0_c1_c2_production_20260811` (P2.5 below). Do not stop,
+  signal, restart, or attach interactively.
+- Do not launch a second heavy local experiment while it runs.
+- No-compute work only (see below) is safe to do in parallel.
+
+**WHEN LOCAL C0/C1/C2 FINISHES:**
+- Run the integrity audit against the 21-unit manifest (63 policy rows, 21
+  label-agreement rows, 21 pi2-training rows) before citing any outcome.
+- Synthesize the C0-vs-C1-vs-C2 mechanism finding (P2.5's stopping rule).
+- Feed the result into the Reviewer #3 / R2 Major 3 closure decision in
+  `reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`.
+
+**WHEN WULVER MAINTENANCE ENDS (not this workstation's task to trigger):**
+- Let already-queued jobs (`1171965`-`1171967` LRB/3L-Cache/CACHEUS
+  replication, horizon sweep `1169299`) auto-dispatch; do not resubmit them
+  from here.
+- Sync and audit the corrected held-out `evict_value_v1` 42/42 result (P1.1)
+  and the completed controlled timing 420/420 result (P1.2).
+- Audit the remaining horizon-sweep cells (18/35 pending) once complete.
+
+**NO-COMPUTE (safe anytime, any machine state):**
+- Dataset release/inventory prep (`analysis/huggingface_dataset_preview_v0_2/`
+  review, without uploading).
+- Reviewer evidence-table and manuscript-safe-summary preparation (see
+  `analysis/kbs_reviewer_synthesis_prep_20260811/`).
+- Documentation reconciliation, hygiene, and link-checking passes like this
+  one.
+
+**DO NOT RUN (already complete or intentionally not run under a stopping
+rule -- relaunching would waste compute and contradict a recorded decision):**
+- `100%` learning-curve fraction (P3.1) -- `STOP_SAMPLE_SIZE_HYPOTHESIS`.
+- A duplicate objective-comparison ablation -- already `FINAL_VALIDATED`,
+  84/84 rows.
+- A duplicate controlled-timing campaign -- already `WULVER_ONLY_VALIDATED`,
+  420/420 rows, `PROMOTE_NOW`.
+- A duplicate reuse-tail diagnostic -- already `LOCAL_COMPLETE`, 21/21 cells.
+- A duplicate target-degeneracy sweep beyond the one local cell without
+  first checking whether the Wulver 21-cell result (job `1169513`) already
+  covers it.
+- A second local modern-baseline (LRB/3L-Cache/CACHEUS) campaign -- local
+  controlled-window CSVs are already `LOCAL_EXACT_PROTOCOL_VALIDATED`
+  (with caveats noted per policy); Wulver jobs are pending replication only.
+- A local horizon-sensitivity sweep duplicate -- the base sweep is
+  Wulver-side (`RUNNING`, job `1169299`); do not start a second copy
+  locally.
+
 ## P0 -- completed closeout / do not relaunch
 
 ### P0.1 -- Local 50% learning-curve closeout
