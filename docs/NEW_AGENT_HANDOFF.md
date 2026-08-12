@@ -33,7 +33,7 @@ running in tmux session `kbs_continuation_c0_c1_c2_production_resume_20260812`
 (runner: `scripts/experiments/run_continuation_policy_causal_ablation.py`;
 output: `analysis/continuation_policy_causal_ablation_production_v1/`;
 models: `models/continuation_policy_causal_ablation_production_v1/`; log:
-`logs/kbs_continuation_c0_c1_c2_production_20260811.log`). **Do not stop,
+`logs/kbs_continuation_c0_c1_c2_production_resume_20260812.log`). **Do not stop,
 signal, restart, attach interactively, or modify its config/outputs, and do
 not launch another heavy local experiment while it runs.** Read-only
 inspection (`tmux ls`, `pgrep -af run_continuation_policy_causal_ablation.py`,
