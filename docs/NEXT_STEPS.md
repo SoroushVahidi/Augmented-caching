@@ -1,6 +1,28 @@
 # Next-Work Roadmap
 
-## 2026-08-12 handoff decision
+## 2026-08-13 update: both remaining local campaigns closed
+
+**NO_NEW_EXPERIMENT_REQUIRED -- reaffirmed, and stronger than the 2026-08-12
+snapshot below.** C0/C1/C2 continuation-policy causal ablation and
+distribution-shift completion both finished naturally and passed a formal,
+read-only post-completion integrity audit on 2026-08-13: `FINAL_VALIDATED`,
+21/21 units / 7/7 folds, all integrity gates PASS. There is now **no
+remaining local scientific compute blocker** for this branch. Compact
+evidence: `reports/kbs_final_evidence_20260813/`. H5 (continuation-policy
+mismatch) closed `PARTIALLY_SUPPORTED`; H6 (generic state-shift) closed
+`DISFAVORED` as a shift-reduction-improves-performance story. See
+`reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md` and
+`reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md` for full detail.
+
+The next stage is: (1) Wulver synchronization only (corrected held-out
+`evict_value_v1` 42/42, controlled timing 420/420), (2) compact evidence
+consolidation (done for the two closed campaigns), (3) manuscript/rebuttal
+synthesis, (4) final submission audit. Do not launch any new local
+experiment unless an integrity failure is discovered, required Wulver
+evidence cannot be reconciled, or the reviewer/editor explicitly requests
+new work.
+
+## 2026-08-12 handoff decision (superseded above)
 
 **NO_NEW_EXPERIMENT_REQUIRED.** As of this 2026-08-12 repository-polish
 snapshot, exact-target replication, strict-preference/horizon, and learned/exact
@@ -35,19 +57,26 @@ launched from scratch.
 
 ## Quick-glance operational summary
 
-**NOW (this workstation, snapshot 2026-08-12):**
-- Leave the C0/C1/C2 production campaign running in tmux session
-  `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812` (P2.5 below). Do not stop,
-  signal, restart, or attach interactively.
-- Do not launch a second heavy local experiment while it runs.
-- No-compute work only (see below) is safe to do in parallel.
+**NOW (this workstation, snapshot 2026-08-13): both local campaigns are DONE.**
+- C0/C1/C2 (tmux session `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`)
+  and distribution-shift (tmux session
+  `kbs_distribution_shift_completion_resume2_20260812`) have both exited
+  naturally; neither tmux session nor worker process remains. Both passed
+  formal integrity audit on 2026-08-13: `FINAL_VALIDATED`.
+- No local heavy experiment is running or required. Do not launch one.
+- Full no-compute work (docs, evidence packaging, reviewer synthesis) is
+  unblocked.
 
-**WHEN LOCAL C0/C1/C2 FINISHES:**
-- Run the integrity audit against the 21-unit manifest (63 policy rows, 21
-  label-agreement rows, 21 pi2-training rows) before citing any outcome.
-- Synthesize the C0-vs-C1-vs-C2 mechanism finding (P2.5's stopping rule).
-- Feed the result into the Reviewer #3 / R2 Major 3 closure decision in
-  `reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`.
+**LOCAL C0/C1/C2 -- DONE (2026-08-13):**
+- Integrity audit passed against the 21-unit manifest (63/63 policy rows, 21/21
+  label-agreement rows, 21/21 pi2-training rows). See
+  `reports/kbs_final_evidence_20260813/c0_integrity_summary.md`.
+- C0-vs-C1-vs-C2 mechanism finding synthesized (P2.5's stopping rule fired in
+  the "continue" direction: C2 improves over C1 in 13/21 cells): H5
+  `PARTIALLY_SUPPORTED`.
+- Fed into the Reviewer #3 / R2 Major 3 closure decision in
+  `reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`
+  (`SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING`).
 
 **WHEN WULVER MAINTENANCE ENDS (not this workstation's task to trigger):**
 - Let already-queued jobs (`1171965`-`1171967` LRB/3L-Cache/CACHEUS
@@ -266,32 +295,30 @@ rule -- relaunching would waste compute and contradict a recorded decision):**
 
 ### P2.5 -- Full-scale continuation-policy causal ablation (C1/C2)
 
-- **Why:** H5's decisive test; currently only smoke-scale
+- **Why:** H5's decisive test; previously only smoke-scale
   (`decision_count=3`).
-- **Status (snapshot 2026-08-12):** `PRODUCTION_RUNNING_LOCAL_TMUX`.
-  Local production runner is active in tmux session
-  `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812` from source SHA
-  `a813617f36822f793b0e48b0ee3e6009d56ee324` and config SHA-256
-  `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`.
-  It emits C0 LRU, C1 frozen `pi1`, and C2 trained from frozen-`pi1`
-  continuation labels; writes atomic `(held_out_family, capacity)` units;
-  rebuilds aggregate CSVs from completed units; and runs with `--resume`,
-  serial thread caps, and an 8-hour wall-time guard. No full-scale scientific
-  result exists until final integrity passes.
-- **Dependency:** monitor/resume only; do not relaunch a duplicate session. The old
-  `build_rollout_candidate_rows_v2(..., reference_model=...)` path remains
-  irrelevant to the frozen protocol and should not be used.
-- **Machine:** local production runner is executing conservatively in tmux.
+- **Status (updated 2026-08-13): `FINAL_VALIDATED`, DONE.** The full 7-family
+  production campaign (tmux session
+  `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`) completed
+  naturally and passed formal post-completion integrity audit: 21/21 units,
+  63/63 policy rows, 21/21 label-agreement rows, 21/21 training-summary
+  rows, all integrity gates PASS. Result: C2 improves over C1 in 13/21
+  cells (macro mean delta ≈ −0.0102), ties in 3/21 (degenerate Wiki2018),
+  worsens in 5/21 (largest counter-example `brightkite` cap32, +0.2433).
+  See `reports/kbs_final_evidence_20260813/c0_integrity_summary.md` and
+  `c0_continuation_summary.csv`.
+- **Dependency:** none remaining; do not relaunch.
+- **Machine:** local, completed.
 - **Entry point:** `scripts/experiments/run_continuation_policy_causal_ablation.py`
   with `configs/continuation_policy_causal_ablation_production_v1.json`.
-- **Expected cost:** high for the full 7-family scale run.
-- **Stopping rule:** all 7 families produce a comparison between
+- **Expected cost:** n/a, already spent.
+- **Stopping rule:** fired -- all 7 families produced the comparison between
   LRU-continuation and frozen-`pi1`-continuation labels on matched
   decision/candidate examples.
-- **What would change our interpretation:** if the more internally-
-  consistent continuation assumption improves downstream misses over the
-  current fixed-LRU-continuation labels, H5 gains real support; if it does
-  not, H5 should be deprioritized per its own stopping rule.
+- **Interpretation:** the more internally-consistent continuation assumption
+  (C2) improves downstream misses over fixed-LRU-continuation labels (C1) in
+  a majority of cells but not uniformly -- H5 gains real, partial,
+  regime-dependent support (`PARTIALLY_SUPPORTED`), not universal support.
 
 ## P3 -- completeness enhancements
 

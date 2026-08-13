@@ -21,7 +21,9 @@ Statuses used: `ANSWERED`, `ANSWERED_WITH_CAVEATS`,
 `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING`, `PARTIAL`, `RUNNING`,
 `LOCAL_COMPLETE`, `WULVER_PENDING`, `MISSING`, `TEXT_ONLY`.
 
-Last updated: 2026-08-11. This update incorporates fresh Wulver-side facts
+Last updated: 2026-08-13 (C0/C1/C2 and distribution-shift closure -- see the
+Reviewer #2 Major 3 / Reviewer #3 section below). Prior update 2026-08-11
+incorporated fresh Wulver-side facts
 relayed by the user from a separately audited Wulver session -- these are
 labeled `WULVER_ONLY_VALIDATED` per row below and are **not** independently
 verified by this workstation (Wulver was not contacted directly). See
@@ -76,13 +78,13 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
 - Text-only fix: label `offline_belady` explicitly as oracle context, not a
   deployable baseline, everywhere it appears (already flagged as required in
   the fairness audit; verify consistently applied).
-- **Status (updated 2026-08-11): `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING`,
-  awaiting sync/review of the corrected `evict_value_v1` result.** The exact
-  controlled-window LRB/3L-Cache/CACHEUS rows are locally validated; their
-  Wulver jobs remain pending only as replication/config-audit follow-up.
-  Per-baseline fidelity caveats unchanged: HALP `LOW_TO_MEDIUM`,
-  LRB/3L-Cache `MEDIUM`, CACHEUS `HIGH` with the current live-source
-  provenance caveat.
+- **Status (updated 2026-08-13): `SYNC_PENDING`.** Scientific baseline work is
+  complete locally; blocked only on syncing and reviewing the corrected
+  Wulver `evict_value_v1` 42/42 result. The exact controlled-window
+  LRB/3L-Cache/CACHEUS rows are locally validated; their Wulver jobs remain
+  pending only as replication/config-audit follow-up. Per-baseline fidelity
+  caveats unchanged: HALP `LOW_TO_MEDIUM`, LRB/3L-Cache `MEDIUM`, CACHEUS
+  `HIGH` with the current live-source provenance caveat.
 
 ## Reviewer #2 Major 2: supervision-objective ablation
 
@@ -120,19 +122,66 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
   condition as `eviction_loss_pairwise` (same target, pairwise
   representation only); conflating them is an identified `claim we must not
   make` in the negative-results notebook.
-- **Status (reconfirmed 2026-08-11, do not downgrade to `PARTIAL` on
+- **Status (reconfirmed 2026-08-13, do not downgrade to `PARTIAL` on
   account of horizon-sensitivity work being unfinished -- that is a
-  different concern): `COMPLETE_VALIDATED` / `FINAL_VALIDATED`** for the
-  intended objective-comparison scope, `ANSWERED_WITH_CAVEATS` at the
-  reviewer-coverage level (pairwise-model-selection-semantics caveat noted
-  in the fairness audit, score `86`).
+  different concern): `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING`** (`COMPLETE_VALIDATED`
+  / `FINAL_VALIDATED` for the intended objective-comparison scope itself;
+  remaining work is manuscript integration only), `ANSWERED_WITH_CAVEATS` at
+  the reviewer-coverage level (pairwise-model-selection-semantics caveat
+  noted in the fairness audit, score `86`).
 
 ## Reviewer #2 Major 3 and Reviewer #3: distribution-shift / continuation-mismatch diagnosis
 
-**Snapshot 2026-08-12:** exact-target replication, strict-preference/horizon,
-and learned/exact agreement are now `FINAL_VALIDATED`. The two remaining local
-campaigns are C0/C1/C2 continuation causality and distribution-shift
-completion; their live manifests, not this document, own progress counts.
+**Snapshot 2026-08-13 (supersedes the 2026-08-12 snapshot below): both
+remaining local campaigns are now closed.** C0/C1/C2 continuation-policy
+causal ablation and distribution-shift completion each passed a formal,
+read-only post-completion integrity audit on 2026-08-13 and are
+`FINAL_VALIDATED` (21/21 units / 7/7 folds, all integrity gates PASS; the
+distribution-shift log-ordering anomaly noted in the prior snapshot was
+diagnosed as `BENIGN_STDOUT_BUFFERING`, not a defect). All planned local
+mechanistic science for this concern is now complete. Compact evidence:
+`reports/kbs_final_evidence_20260813/` (`c0_integrity_summary.md`,
+`distribution_integrity_summary.md`, `mechanistic_hypothesis_summary.md`,
+`reviewer_mapping.md`); canonical raw sources remain
+`analysis/continuation_policy_causal_ablation_production_v1/` and
+`analysis/distribution_shift_ablation_v1/`.
+
+**Final result:**
+- C0/C1/C2 (H5, continuation-policy mismatch): `PARTIALLY_SUPPORTED`. C2
+  (frozen-`pi1` continuation) improves over C1 (LRU continuation) in 13/21
+  cells, ties in 3/21 (Wiki2018, degenerate 100%-miss cells), worsens in
+  5/21; macro mean C2−C1 miss-ratio delta ≈ −0.0102; aggregate misses
+  C0=565126, C1=601569, C2=592970. Strongest improvement: `metacdn`.
+  Strongest counter-example: `brightkite` cap32 (+0.2433, the single
+  largest effect in the table, opposite direction) -- this blocks a
+  uniform/universal claim; the result is regime-dependent, not
+  universally causal.
+- Distribution-shift (H6, generic state-shift): `DISFAVORED` as a
+  shift-reduction-improves-performance story. DAgger improves misses in
+  only 2/21 cells, ties in 3/21 (Wiki2018), worsens in 16/21; macro mean
+  DAgger−OFF delta ≈ +0.0094 (net worse); aggregate misses OFF=591604,
+  DAGGER=599537. The state-shift index itself *does* improve (decreases)
+  in 16/21 cells -- the shift-reduction mechanism works as designed, but
+  in 13/18 informative cells shift improves while misses simultaneously
+  worsen. Do not claim distribution shift does not exist; claim only that
+  reducing this measured generic shift metric did not improve performance
+  under the tested intervention.
+- Combined: the offline/online gap is better explained by the
+  already-validated target-degeneracy finding (H3) than by either
+  continuation-policy mismatch or generic state-distribution shift alone;
+  H5/H6 are real but partial, secondary, regime-dependent contributors.
+
+**Status (updated 2026-08-13): `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING`.**
+Remaining work for this concern is manuscript/rebuttal synthesis only -- no
+new local experiment is required or planned.
+
+---
+
+**Prior snapshot, retained for history (2026-08-12):** exact-target
+replication, strict-preference/horizon, and learned/exact agreement are now
+`FINAL_VALIDATED`. The two remaining local campaigns are C0/C1/C2
+continuation causality and distribution-shift completion; their live
+manifests, not this document, own progress counts.
 
 - Concern paraphrase: does the mismatch between LRU-continuation label
   construction and learned-policy deployment (sequential distribution shift)
@@ -171,14 +220,13 @@ completion; their live manifests, not this document, own progress counts.
 - Text-only fix: none required beyond what is already stated; the local docs
   already avoid claiming continuation mismatch is proven or that DAgger fixes
   the gap.
-- **Status (updated 2026-08-11): `PARTIAL`.** Primary missing experiment:
-  the true causal C0/C1/C2 continuation test -- this, not the LRB/3L-Cache/
-  CACHEUS gap in Major 1, is the central unresolved issue for Reviewer #3's
-  causal-explanation concern specifically. Distribution-shift evidence
-  remains `PARTIAL` (24/42); the full-scale causal C0/C1/C2 result remains
-  `MISSING` (not blocked -- the prior interface defect was repaired and the
-  production campaign is now actively running locally; it is a compute-scale
-  wait, not a defect, that remains).
+- **Status (2026-08-11 snapshot, superseded 2026-08-13 -- see top of this
+  section): `PARTIAL`.** Primary missing experiment at the time: the true
+  causal C0/C1/C2 continuation test -- this, not the LRB/3L-Cache/
+  CACHEUS gap in Major 1, was the central unresolved issue for Reviewer #3's
+  causal-explanation concern specifically. Both campaigns have since
+  completed and passed formal integrity audit; see the 2026-08-13 snapshot
+  above for the current, final status.
 
 ## Reviewer #2 Major 4: practical significance (computational cost)
 
@@ -204,10 +252,13 @@ completion; their live manifests, not this document, own progress counts.
   **wall-clock implementation evidence, not an algorithmic complexity
   theorem**, and the smoke-scale equivalence check remains a separate,
   still-valid supporting result (not superseded by the timing campaign).
-- **Status (updated 2026-08-11): `COMPLETE_WITH_CAVEATS`.** Controlled
-  timing is now complete for the four timed policies; caveats: wall-clock
-  implementation evidence only, and modern learned-baseline timing
-  (LRB/3L/CACHEUS) may still be a separate item if needed.
+- **Status (updated 2026-08-13): `SYNC_PENDING`.** The controlled timing
+  campaign is scientifically complete on Wulver (420/420 rows, job
+  `1171758`), but the local payload is absent locally and still needs
+  synchronization and audit before it can be cited as locally validated.
+  Caveats unchanged once synced: wall-clock implementation evidence only,
+  and modern learned-baseline timing (LRB/3L/CACHEUS) may still be a
+  separate item if needed.
 
 ## R3-Issue2 / R3-Issue3 (subset of Major 1): HALP and SIEVE/FIFO differentiation
 
@@ -266,27 +317,26 @@ completion; their live manifests, not this document, own progress counts.
 
 ## Summary
 
-**Authoritative reviewer-completion table (reconciled 2026-08-11):**
+**Authoritative reviewer-completion table (reconciled 2026-08-13):**
 
 | Concern | Status | Primary remaining gap |
 |---|---|---|
-| R2 Major 1 (learned-baseline comparison) | `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING` | Corrected `evict_value_v1` result is complete on Wulver and needs sync+review; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally validated, with Wulver copies pending as replication/config audit |
-| R2 Major 2 (supervision-objective ablation) | `COMPLETE_VALIDATED` / `FINAL_VALIDATED` (scope as originally defined) | None -- manuscript integration only |
-| R2 Major 3 (offline/online failure explanation) | `PARTIAL` | True causal C0/C1/C2 continuation test and distribution-shift completion remain running locally; exact-target, horizon, and learned/exact diagnostics are final-validated |
-| R2 Major 4 (practical significance / timing) | `COMPLETE_WITH_CAVEATS` | None for the 4 timed policies (sync only); modern-baseline timing may be separate if needed |
-| Reviewer #3 (causal explanation) | `PARTIAL` | Same as R2 Major 3 -- the C0/C1/C2 causal test is the central unresolved issue, **not** the LRB/3L-Cache/CACHEUS gap |
+| R2 Major 1 (learned-baseline comparison) | `SYNC_PENDING` | Corrected `evict_value_v1` result is complete on Wulver and needs sync+review; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally validated, with Wulver copies pending as replication/config audit |
+| R2 Major 2 (supervision-objective ablation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None -- manuscript integration only |
+| R2 Major 3 (offline/online failure explanation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None locally -- C0/C1/C2 and distribution-shift are both `FINAL_VALIDATED`; remaining work is manuscript/rebuttal synthesis only |
+| R2 Major 4 (practical significance / timing) | `SYNC_PENDING` | Controlled timing (420/420) is complete on Wulver; local sync+audit still needed |
+| Reviewer #3 (causal explanation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None locally -- final answer `PARTIALLY_SUPPORTED` / `REGIME_DEPENDENT`, see the 2026-08-13 snapshot above |
 
-- Most complete concern: **Reviewer #2 Major 2 (supervision-objective
-  ablation)** -- `COMPLETE_VALIDATED`, frozen 28-model registry, consistent
-  7-family result. Do not mark this `PARTIAL` on account of unfinished
-  horizon-sensitivity work -- that answers a different question (MC1, not
-  Major 2).
+- Most complete concerns: **Reviewer #2 Major 2** (supervision-objective
+  ablation, `COMPLETE_VALIDATED`/`FINAL_VALIDATED` scientific scope) and, as
+  of 2026-08-13, **Reviewer #2 Major 3 / Reviewer #3** (offline/online
+  failure explanation and causal continuation-mismatch test) -- all planned
+  local mechanistic science for these concerns is now complete and
+  integrity-audited; remaining work everywhere in this row is manuscript
+  integration, not further experimentation.
 - Most under-addressed concern: **R3-Issue6 (fallback mechanism)** -- no
   local evidence exists at all, not even a smoke-scale implementation.
-- Second most under-addressed, and now the **central unresolved issue for
-  Reviewer #3 specifically**: **Reviewer #2 Major 3 / R3 continuation
-  mismatch** -- production runner is ready and smoke-validated, but the full
-  result does not exist yet; the one directional distribution-shift test
-  available (DAgger) worsened
-  misses in 9 of 12 paired cells and improved none, muddying rather than
-  confirming a simple story.
+- `NO_NEW_EXPERIMENT_REQUIRED` locally for R2 Major 1-4 and Reviewer #3 as
+  currently scoped. The two remaining blockers for R2 Major 1 and Major 4
+  are Wulver-side synchronization and audit only (corrected `evict_value_v1`
+  42/42, controlled timing 420/420) -- not new compute.

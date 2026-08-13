@@ -2,10 +2,12 @@
 
 Status decision: **NO_NEW_EXPERIMENT_REQUIRED**.
 
-Snapshot date: 2026-08-12. This document distinguishes durable campaign
-status from live progress. Counts for active campaigns are snapshots only;
-their manifests and logs are authoritative for later progress checks. Partial
-outputs are not citable scientific evidence.
+Snapshot date: 2026-08-13 (updated from 2026-08-12: both previously-active
+campaigns below have completed and passed formal post-completion integrity
+audit; moved to "Final-validated campaigns"). This document distinguishes
+durable campaign status from live progress. Counts for active campaigns are
+snapshots only; their manifests and logs are authoritative for later
+progress checks. Partial outputs are not citable scientific evidence.
 
 No sixth heavy experiment should be launched unless a completed campaign fails
 integrity validation or the reviewer/editor explicitly requests additional
@@ -18,19 +20,24 @@ evidence.
 | Exact-target oracle replication | `analysis/exact_target_oracle_replication_v1/` | 21/21 units, 42/42 rows | Oracle beats LRU 0/21, ties 3/21, loses 18/21 |
 | Strict-preference/horizon diagnostic | `analysis/strict_preference_horizon_diagnostic_v1/` | 21/21 units, 63/63 comparisons | H4 unique-winner fraction 0; multiple-optimum fraction 1 |
 | Learned/exact agreement and regret | `analysis/learned_exact_target_agreement_v1/` | 21/21 units, 21/21 summaries | Set-aware agreement ≈0.975301; positive regret ≈0.024699; learned misses 601,569 vs LRU 565,126 |
+| C0/C1/C2 continuation-policy causal ablation | `analysis/continuation_policy_causal_ablation_production_v1/` | 21/21 units, 63/63 policy rows, 21/21 label-agreement rows, 21/21 training-summary rows | C2 improves over C1 in 13/21 cells (macro delta ≈−0.0102), worsens 5/21 (largest: `brightkite` cap32, +0.2433), ties 3/21 (degenerate Wiki2018); H5 `PARTIALLY_SUPPORTED` |
+| Distribution-shift completion | `analysis/distribution_shift_ablation_v1/` | 7/7 folds, 42/42 primary rows, 42/42 state-shift rows, 21/21 trajectory rows | DAgger worsens misses in 16/21 cells (macro delta ≈+0.0094) despite improving the state-shift index in 16/21; H6 `DISFAVORED` as a shift-reduction-improves-performance story |
 
 These campaigns must not be rerun. Their generated outputs remain local and
 ignored; the runners, configs, tests, and this handoff are durable source.
+Compact tracked evidence for the last two: `reports/kbs_final_evidence_20260813/`.
+Both completed naturally (tmux sessions
+`kbs_continuation_c0_c1_c2_production_resume2_retry_20260812` and
+`kbs_distribution_shift_completion_resume2_20260812` have exited; see
+`logs/kbs_continuation_c0_c1_c2_production_resume2_retry_20260812.log` and
+`logs/kbs_distribution_shift_completion_resume2_20260812.log`) and each
+passed a formal, read-only post-completion integrity audit on 2026-08-13
+(all ten completion gates below PASS for both).
 
 ## Active campaigns
 
-| Campaign | Reviewer coverage | Question | Session | Log | Output | Expected final |
-|---|---|---|---|---|---|---|
-| C0/C1/C2 continuation-policy causal ablation | R2 Major 3, R3 | Does continuation-policy mismatch causally contribute to the offline-to-online gap? | `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812` | `logs/kbs_continuation_c0_c1_c2_production_resume2_retry_20260812.log` | `analysis/continuation_policy_causal_ablation_production_v1/` | 21 units; 63 policy rows plus diagnostics |
-| Distribution-shift completion | R2 Major 3 | Does generic DAgger-style state-shift reduction improve online cache performance? | `kbs_distribution_shift_completion_resume2_20260812` | `logs/kbs_distribution_shift_completion_resume2_20260812.log` | `analysis/distribution_shift_ablation_v1/` | 42 primary rows; 21 paired cells |
-
-Do not relaunch a session or rerun completed units merely to make the snapshot
-symmetric.
+None. As of 2026-08-13 there is no local heavy compute running for this
+revision.
 
 ## Recorded launch commands
 
@@ -67,12 +74,15 @@ Only after every gate passes may the campaign be classified
 
 ## Reviewer mapping
 
-Completion of C0/C1/C2 supplies the controlled causal test for the
-continuation-policy explanation. Completion of the exact-target, strict-
-preference, and learned/exact diagnostics supplies family/capacity evidence
-about target resolution, horizon stability, and model fitting. Distribution-
-shift completion tests whether generic state-shift reduction translates into
-online improvement. None of these partial outputs may be used as final claims.
+Completion of C0/C1/C2 supplied the controlled causal test for the
+continuation-policy explanation (H5 `PARTIALLY_SUPPORTED`). Completion of
+the exact-target, strict-preference, and learned/exact diagnostics supplied
+family/capacity evidence about target resolution, horizon stability, and
+model fitting. Distribution-shift completion tested whether generic
+state-shift reduction translates into online improvement (H6 `DISFAVORED`).
+All six campaigns above are now `FINAL_VALIDATED`; see
+`reports/kbs_final_evidence_20260813/reviewer_mapping.md` for the full
+Reviewer #2 Major 1-4 / Reviewer #3 status table.
 
 ## No-new-experiment decision
 
@@ -93,15 +103,20 @@ campaign fails integrity or the reviewer/editor changes the request.
 
 ## Post-campaign non-compute work
 
-After the five campaigns are audited:
+All six local campaigns above are now audited (`FINAL_VALIDATED`). Remaining
+work:
 
 1. synchronize and verify the corrected held-out `evict_value_v1` 42/42 payload;
 2. synchronize and verify the 420/420 controlled timing payload;
 3. optionally synchronize broader Wulver degeneracy, horizon, and historical-tail evidence if it is cited;
-4. consolidate canonical evidence bundles;
-5. update the hypothesis map and reviewer coverage;
-6. update the manuscript and response to reviewers;
-7. run the final scientific-consistency audit;
+4. consolidate canonical evidence bundles -- **done for C0/C1/C2 and
+   distribution-shift**: `reports/kbs_final_evidence_20260813/`;
+5. update the hypothesis map and reviewer coverage -- **done**:
+   `docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`,
+   `docs/reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`;
+6. update the manuscript and response to reviewers -- not yet done; waiting
+   on items 1-2 above so the manuscript is not rewritten twice;
+7. run the final scientific-consistency audit (after items 1-2 land);
 8. prepare the submission package.
 
 Wulver synchronization is outside this handoff and must not be initiated here.

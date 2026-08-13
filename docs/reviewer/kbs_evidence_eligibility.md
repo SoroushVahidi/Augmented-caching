@@ -34,8 +34,14 @@ Usable with explicit caveats:
   `analysis/supervision_objective_learning_curve_v1/`
 - objective-ablation registry and final audits preserved in the sibling
   objective-ablation worktree
-- local distribution-shift diagnostic files in
-  `analysis/distribution_shift_ablation_v1/`
+- distribution-shift diagnostic files in
+  `analysis/distribution_shift_ablation_v1/` -- **complete and
+  `FINAL_VALIDATED` as of 2026-08-13** (7/7 folds, 42/42 primary rows); no
+  longer a partial checkpoint, see guardrail C below
+- continuation-policy causal-ablation files in
+  `analysis/continuation_policy_causal_ablation_production_v1/` --
+  **complete and `FINAL_VALIDATED` as of 2026-08-13** (21/21 units, 63/63
+  policy rows)
 - practical-significance smoke outputs in
   `analysis/practical_significance_ablation_v1/`
 
@@ -44,19 +50,31 @@ Supporting-analysis use still requires the status labels in
 
 ## Diagnostic-only analysis
 
-Use only as diagnostics, not as final evidence:
+Use only as diagnostics, not as final evidence for the primary reviewer
+comparison table:
 
 - `analysis/supervision_objective_learning_curve_v1/`
-- local distribution-shift partial checkpoint
-  `analysis/distribution_shift_ablation_v1/`
-- trajectory-divergence and state-shift diagnostics from the same directory
+- distribution-shift ablation, `analysis/distribution_shift_ablation_v1/`
+  (now the **complete, `FINAL_VALIDATED` full seven-family/21-cell**
+  diagnostic as of 2026-08-13 -- no longer a partial checkpoint, see
+  guardrail C below)
+- continuation-policy causal ablation,
+  `analysis/continuation_policy_causal_ablation_production_v1/` (now the
+  **complete, `FINAL_VALIDATED` full 21-unit** diagnostic as of 2026-08-13)
+- trajectory-divergence and state-shift diagnostics from the distribution-shift directory
 - practical-significance smoke timing and break-even outputs
 
 Diagnostic-only means:
 
-- useful for explaining what was observed,
-- not usable for a final all-families claim,
-- not usable as proof that a mechanism is the sole cause of the miss gap.
+- useful for explaining what was observed, including now-complete
+  full-scope mechanistic diagnostics (distribution-shift, continuation
+  ablation) -- "diagnostic" here is about evidence *class* (mechanistic
+  explanation, not primary baseline comparison), not about completeness,
+- not usable for the primary reviewer baseline-comparison table,
+- not usable as proof that a mechanism is the sole cause of the miss gap --
+  even the completed distribution-shift and continuation campaigns support
+  only `DISFAVORED` (H6) and `PARTIALLY_SUPPORTED` (H5) dispositions
+  respectively, not a single-cause claim.
 
 For `analysis/supervision_objective_learning_curve_v1/`, use the explicit
 classification `DIAGNOSTIC_PARTIAL` unless and until a clean stopped campaign
@@ -90,8 +108,11 @@ Explicitly not usable for the primary reviewer table:
 
 - `analysis/reviewer_fairness/policy_comparison_evict_value_v1.csv`
 - any `deployment_full_stream` row from the fairness-protocol CSVs
-- any partial distribution-shift aggregate interpreted as the full seven-family
-  campaign
+- any *pre-2026-08-13* partial distribution-shift aggregate (18/42, 24/42
+  checkpoints) cited as if it were the current result -- the full seven-family,
+  42/42-row campaign is now complete and `FINAL_VALIDATED`; cite
+  `reports/kbs_final_evidence_20260813/distribution_shift_summary.csv` or the
+  canonical raw CSVs instead
 - any practical-significance timing result described without the `SMOKE_ONLY`
   qualifier
 - any header-only or failed held-out evaluation output
@@ -125,8 +146,17 @@ The overlap is documented in:
 
 ### C. Local `analysis/distribution_shift_ablation_v1/`
 
-This is a valid local checkpoint, but it is still a partial campaign and must
-not be used as if it were the final seven-family result.
+**Updated 2026-08-13:** this is now the complete, `FINAL_VALIDATED`
+seven-family, 42/42-row campaign (formal post-completion integrity audit
+passed; independent re-run of
+`scripts/experiments/audit_distribution_shift_completion.py` ->
+`COMPLETE_VALID`). It may be cited as the full result: DAgger worsens misses
+in 16/21 cells despite improving the state-shift index in 16/21 (H6
+`DISFAVORED` as a shift-reduction-improves-performance story). It remains
+diagnostic-class evidence (not primary reviewer-table evidence) and must not
+be read as proof that distribution-shift correction is the sole cause of, or
+sole fix for, the offline/online miss gap. Do not cite the earlier 18/42 or
+24/42 checkpoints as current.
 
 ### D. `analysis/practical_significance_ablation_v1/`
 

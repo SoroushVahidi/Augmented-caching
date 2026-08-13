@@ -15,9 +15,12 @@ The local `50%` learning-curve campaign is complete and audited. Do not
 launch `100%`: the predefined stopping rule has fired for H1, and `100%` is
 now intentionally not run rather than missing required work.
 
-Last updated: 2026-08-12, after the exact-target, strict-preference, and
-learned/exact campaigns passed their 21-cell integrity gates. C0/C1/C2 and
-distribution shift remain active; their live counts belong in their manifests.
+Last updated: 2026-08-13, after C0/C1/C2 and distribution-shift both passed
+formal post-completion integrity audit and closed H5/H6 below (`FINAL_VALIDATED`,
+21/21 units / 7/7 folds each). Compact evidence:
+`reports/kbs_final_evidence_20260813/`. Prior update 2026-08-12 recorded the
+exact-target, strict-preference, and learned/exact campaigns passing their
+21-cell integrity gates.
 
 ---
 
@@ -129,32 +132,37 @@ distribution shift remain active; their live counts belong in their manifests.
   and that mismatch degrades performance.
 - Motivation: standard imitation-learning / DAgger concern (Ross, Gordon,
   Bagnell 2011) -- label-time and deployment-time trajectories diverge.
-- Current evidence: `distribution_shift_ablation_v1` (metacdn only):
-  trajectory divergence `97.15%`/`99.52%`/`99.84%` at capacities `32/64/128`
-  under `DAGGER_ITER1` vs off-policy LRU, but misses *worsened* under DAgger
-  at all three capacities despite a reduced measured state-shift index. The
-  frozen C0/C1/C2 continuation-policy causal ablation (`src/lafc/continuation_policy_ablation.py`,
-  `scripts/experiments/run_continuation_policy_causal_ablation.py`,
-  `configs/continuation_policy_causal_ablation_production_v1.json`) has moved
-  from `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED` to
-  `PRODUCTION_RUNNING_LOCAL_TMUX`: the full 21-unit C0/C1/C2 campaign is
-  actively executing locally (tmux session
-  `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`, source SHA
-  `a813617f36822f793b0e48b0ee3e6009d56ee324`) as of 2026-08-11. No scientific
-  result yet -- do not cite an outcome until the 21-unit integrity manifest
-  passes.
-- Status: `RUNNING_TEST` (single family evidence so far is `INCONCLUSIVE`;
-  the decisive full-scale test is in progress, not yet started or blocked).
-- Decisive next experiment: full 7-family C0/C1/C2 causal ablation comparing
-  LRU-continuation vs frozen-`pi1`-continuation labels on the same
-  decision/candidate examples -- currently running, see above.
-- Stopping rule: stop prioritizing continuation mismatch as primary if
-  full-scale C2 fails to improve over C1 on downstream misses.
+- Current evidence: the full 7-family/21-cell C0/C1/C2 production campaign
+  (`analysis/continuation_policy_causal_ablation_production_v1/`) completed
+  and passed formal integrity audit on 2026-08-13 (21/21 units, 63/63 policy
+  rows, 21/21 label-agreement rows, 21/21 training-summary rows, all
+  integrity gates PASS). C2 (frozen-`pi1` continuation) improves over C1
+  (LRU continuation) in 13/21 cells, ties in 3/21 (Wiki2018, degenerate
+  100%-miss cells), worsens in 5/21. Macro mean C2−C1 miss-ratio delta
+  ≈ −0.0102. Aggregate misses: C0=565126, C1=601569, C2=592970. Strongest
+  improvement: `metacdn` (cap32 −0.108, cap64 −0.206). Strongest
+  counter-example: `brightkite` cap32 (+0.2433, the single largest effect in
+  the table, opposite direction). Full per-cell table:
+  `reports/kbs_final_evidence_20260813/c0_continuation_summary.csv`.
+- Status: `PARTIALLY_SUPPORTED` (upgraded from single-family `INCONCLUSIVE`
+  now that the decisive full-scale test has completed and been audited). The
+  stated stopping rule below did not fire (C2 improves over C1 in a majority
+  of cells), so continuation mismatch is not ruled out as a contributor --
+  but the effect is neither uniform in sign nor stable in magnitude, so no
+  claim stronger than partial, family/capacity-dependent (regime-dependent)
+  support is warranted.
+- Decisive next experiment: none required -- the full 7-family C0/C1/C2
+  causal ablation is complete and validated; do not rerun.
+- Stopping rule: fired in the "continue" direction -- full-scale C2 improves
+  over C1 in the majority of cells (13/21), so continuation mismatch remains
+  a live partial contributor rather than being deprioritized. Re-examine only
+  if a future protocol change or additional families materially shift this
+  majority.
 - Reviewer relevance: MC3, R2-Major3, R3-Issue4.
-- Owner of next work: LOCAL; campaign already launched, monitor only -- do
-  not relaunch or signal the running tmux session.
-- Experiment state: smoke `COMPLETE`; full campaign `RUNNING_LOCAL` (this
-  workstation, not Wulver).
+- Owner of next work: none required locally; remaining work is manuscript
+  synthesis only.
+- Experiment state: smoke `COMPLETE`; full campaign `FINAL_VALIDATED`
+  (this workstation, not Wulver) as of 2026-08-13.
 
 ## H6 -- state-distribution shift
 
@@ -163,22 +171,43 @@ distribution shift remain active; their live counts belong in their manifests.
   the continuation-policy label semantics per se.
 - Motivation: distinguishes "trajectory looks different" from "trajectory
   divergence causes worse outcomes."
-- Current evidence: same `distribution_shift_ablation_v1` metacdn cells --
-  measured state-shift index *decreased* under DAgger (e.g.
-  `0.000664->0.000462`) even as misses got worse, i.e. reduced generic
-  state-shift did not translate into better misses in this one family.
-- Status: `RUNNING_TEST` (single-family evidence is inconclusive; the
-  seven-family completion campaign is active).
-- Decisive next experiment: broader family sweep plus a state-shift metric
-  more directly tied to miss-relevant cache-content divergence rather than a
-  generic state-shift index.
-- Stopping rule: stop treating generic state-shift-index reduction as
-  informative if further cells confirm it does not correlate with reduced
-  misses; pivot metric rather than abandoning the framing outright.
+- Current evidence: the full 7-family/21-cell distribution-shift completion
+  campaign (`analysis/distribution_shift_ablation_v1/`) completed and passed
+  formal integrity audit on 2026-08-13 (7/7 folds, 21/21 paired cells, 42/42
+  primary rows, 42/42 state-shift rows, 21/21 trajectory rows, all integrity
+  gates PASS, including an independent re-run of
+  `scripts/experiments/audit_distribution_shift_completion.py` ->
+  `COMPLETE_VALID`). The measured state-shift index decreases (improves)
+  under DAgger in 16/21 cells, but misses simultaneously worsen in 16/21
+  cells (DAgger improves misses in only 2/21, ties in 3/21 degenerate
+  Wiki2018 cells). In 13 of 18 informative cells, shift improves while
+  misses worsen at the same time -- the dominant pattern by a wide margin.
+  Macro mean DAgger−OFF miss-ratio delta ≈ +0.0094 (net worse). Aggregate
+  misses: OFF=591604, DAGGER=599537. Full per-cell table:
+  `reports/kbs_final_evidence_20260813/distribution_shift_summary.csv`.
+- Status: `DISFAVORED` as a "generic shift-index reduction improves misses"
+  causal story (upgraded from single-family `INCONCLUSIVE` now that the
+  full-scale test confirms the decoupling at 21-cell scale). This does not
+  mean state-distribution shift does not exist, or that the shift-reduction
+  mechanism itself is broken -- it reliably reduces the measured index. Only
+  the assumed link from that reduction to improved downstream performance is
+  disfavored under the tested one-step DAgger intervention.
+- Decisive next experiment: none required under the current stopping rule
+  (fired, see below); a state-shift metric more directly tied to
+  miss-relevant cache-content divergence remains a candidate for future work
+  if this framing is revisited, but is not needed to close this hypothesis
+  as currently scoped.
+- Stopping rule: fired -- the seven-family, 21-cell completion confirms
+  generic state-shift-index reduction does not correlate with reduced
+  misses (13/18 informative cells show the opposite-direction pattern); per
+  the pre-registered rule, pivot away from treating generic shift-index
+  reduction as informative for performance rather than continuing to invest
+  in this framing.
 - Reviewer relevance: MC3, R3-Issue4.
-- Owner of next work: LOCAL (metric redesign); WULVER (broader sweep).
-- Experiment state: distribution-shift completion running locally; partial
-  output is not citable.
+- Owner of next work: none required locally; a redesigned metric is future
+  work only, not a current blocker.
+- Experiment state: distribution-shift completion `FINAL_VALIDATED` as of
+  2026-08-13 (this workstation, not Wulver).
 
 ## H7 -- hard-argmin / uncertainty instability
 
@@ -375,15 +404,30 @@ pages** between two accesses to the same page. Below, `T` denotes
 - No hypothesis above should be treated beyond its measured scope. H2 and
   the original exact-target/tie-break H3/H4 diagnostics rest on one cell
   (`brightkite`, capacity `64`, `H=4`), while the reuse-tail component of
-  H4/H10/H11 now spans 21 family-capacity cells. H5 and H6 rest on one
-  family (`metacdn`). Replication or causal attribution remains the shared
-  precondition for upgrading any of these beyond their current evidentiary
-  scope.
+  H4/H10/H11 now spans 21 family-capacity cells. H5 and H6 now also each
+  rest on the full 7-family/21-cell completion campaigns
+  (`continuation_policy_causal_ablation_production_v1`,
+  `distribution_shift_ablation_v1`), both `FINAL_VALIDATED` as of
+  2026-08-13 -- no longer single-family (`metacdn`)-only evidence.
+  Replication or causal attribution remains the shared precondition for
+  upgrading any hypothesis beyond its current evidentiary scope.
 - Ranked coherent explanation (see
   `analysis/kbs_local_current_evidence_synthesis_20260810/CURRENT_LOCAL_EVIDENCE_SYNTHESIS.md`
-  section 7 for full reasoning): primarily a **target problem** (H3, and by
-  extension H4/H9/H10/H11), secondarily a **combination** weighted toward
-  target/deployment interaction (H5/H6), with pure **model-fitting failure**
-  (H2) and **argmin instability** (H7) currently the least supported.
+  section 7 for full reasoning, and
+  `reports/kbs_final_evidence_20260813/mechanistic_hypothesis_summary.md`
+  for the 2026-08-13 update): primarily a **target problem** (H3, and by
+  extension H4/H9/H10/H11) -- neither full-scale H5 nor H6 campaign
+  contradicts this, and both independently rediscover the identical
+  Wiki2018 100%-miss degeneracy already central to H3. Secondarily a
+  **combination** weighted toward target/deployment interaction, now more
+  precisely characterized: H5 (continuation-policy mismatch) is
+  `PARTIALLY_SUPPORTED` (real but inconsistent, regime-dependent), H6
+  (generic state-shift reduction improving performance) is `DISFAVORED`
+  (the shift-reduction mechanism works, its link to performance does not
+  hold). Pure **model-fitting failure** (H2) and **argmin instability** (H7)
+  remain the least supported.
 - Do not launch `100%` for H1 unless a future, separately justified
   protocol change explicitly reopens the sample-size question.
+- `NO_NEW_EXPERIMENT_REQUIRED` for H1-H6 and H9 under current stopping
+  rules as of 2026-08-13; only H7, H8, H10, H11 (and any reopening triggered
+  by their own stopping rules above) remain candidates for future work.

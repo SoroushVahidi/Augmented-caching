@@ -4,6 +4,16 @@
 the project-specific records linked below. Re-check live process and Git state
 before acting.
 
+**2026-08-13 update (KBS scope only):** the C0/C1/C2 continuation-policy and
+distribution-shift campaigns referenced as "RUNNING" below have both since
+completed and passed formal post-completion integrity audit
+(`FINAL_VALIDATED`). See `docs/DEVELOPMENT_STATUS.md`,
+`docs/NEXT_STEPS.md`, and `reports/kbs_final_evidence_20260813/` for the
+current state; the "Active Local Compute" and "KBS Reviewer State" sections
+below are stale for the KBS stream as of this update. Everything about the
+SIGMOD/dataset-repo streams below is out of scope for this update and not
+re-verified here.
+
 ## Project Boundary
 
 There are four distinct streams:
@@ -37,15 +47,15 @@ shown above. Do not reset, clean, or commit them as part of this handoff.
 
 ## Active Local Compute
 
-The C0/C1/C2 continuation-policy campaign is **RUNNING** in tmux session
-`kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`, executing
-`scripts/experiments/run_continuation_policy_causal_ablation.py` with
-`--resume --max-wall-hours 8`. The original cold-start snapshot observed
-**8/21 units complete** and **24 policy rows**. It is not scientifically
-complete. Read the live manifest for current progress. Do not
-stop, signal, attach interactively, restart, change its configuration, or
-modify its outputs. The separate learning-curve tmux session is finished; do
-not relaunch or kill it. Other active local workers are also out of scope.
+**Superseded 2026-08-13:** the C0/C1/C2 continuation-policy campaign (tmux
+session `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`) and
+the distribution-shift campaign (tmux session
+`kbs_distribution_shift_completion_resume2_20260812`) have both completed
+naturally and passed formal integrity audit -- `FINAL_VALIDATED`, 21/21
+units / 7/7 folds. Neither tmux session nor worker process remains. Do not
+relaunch either. See `reports/kbs_final_evidence_20260813/`. The separate
+learning-curve tmux session is also finished; do not relaunch or kill it.
+No local heavy compute is currently active.
 
 ## Last-Known Wulver State
 
@@ -61,9 +71,20 @@ SSH, use Slurm, submit, requeue, or cancel anything in this pass.
 
 - **R2 Major 1, modern baselines:** local/classical evidence exists and the corrected held-out `evict_value_v1` 42/42 result is Wulver-only and still needs local sync/integrity review before final synthesis. Exact LRB/3L-Cache/CACHEUS local rows are validated with their documented caveats; Wulver jobs are replication/provenance strengthening.
 - **R2 Major 2, supervision objective:** `COMPLETE_VALIDATED`; 84/84 objective-ablation cells and the 50% learning-curve stopping decision are validated. Do not run the 100% curve.
-- **R2 Major 3, offline/online mechanism:** C0/C1/C2 is running locally; read its manifest for live counts. Supporting exact-target, horizon, and learned/exact diagnostics are final-validated, but do not replace the causal test.
-- **R2 Major 4, practical significance:** `COMPLETE_WITH_CAVEAT` from Wulver-relayed 420/420 controlled timing rows; this is implementation timing, not a theoretical complexity proof, and the payload still needs local promotion/audit.
-- **Reviewer #3:** mechanistic evidence is substantial, but the continuation campaign remains unresolved. Horizon sensitivity is last-known partial/queued; fallback remains a limitation/future-work position unless explicitly required.
+- **R2 Major 3, offline/online mechanism (updated 2026-08-13):** C0/C1/C2 and
+  distribution-shift are both `FINAL_VALIDATED` locally (21/21 units / 7/7
+  folds, integrity audited). H5 (continuation mismatch) `PARTIALLY_SUPPORTED`;
+  H6 (generic state-shift) `DISFAVORED`. Status: `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING`
+  -- no local experiment remains; see `reports/kbs_final_evidence_20260813/`.
+- **R2 Major 4, practical significance:** `SYNC_PENDING` from Wulver-relayed
+  420/420 controlled timing rows; this is implementation timing, not a
+  theoretical complexity proof, and the payload still needs local
+  promotion/audit.
+- **Reviewer #3 (updated 2026-08-13):** the causal continuation campaign is
+  now complete and validated; final answer `PARTIALLY_SUPPORTED` /
+  `REGIME_DEPENDENT`. Horizon sensitivity is last-known partial/queued
+  (Wulver-side); fallback remains a limitation/future-work position unless
+  explicitly required.
 
 Detailed evidence remains in `DEVELOPMENT_STATUS.md`, `NEXT_STEPS.md`,
 `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`, and the reviewer registry/coverage
@@ -124,7 +145,10 @@ repository is the source/data owner, not the publication owner.
 
 ## Exact Next Actions
 
-1. **Local compute:** passively monitor the current C0/C1/C2 campaign; when it naturally completes or stops, run integrity checks and synthesize it before making reviewer claims.
+1. **Local compute: done.** C0/C1/C2 and distribution-shift both completed
+   and passed formal integrity audit on 2026-08-13; see
+   `reports/kbs_final_evidence_20260813/`. No further local monitoring or
+   experimentation is needed for these two campaigns.
 2. **Local evidence:** audit/sync the corrected held-out `evict_value_v1` result and other Wulver-complete artifacts only in an authorized Wulver-access session; do not rerun local duplicates.
 3. **Wulver-dependent:** after maintenance is independently known to be over, audit the queued jobs and their provenance before any new submission or interpretation.
 4. **Publication authorization:** separately decide whether the validated v0.3 candidate is publication-ready; no HF/Zenodo action is automatic.
@@ -157,9 +181,10 @@ promoted to current facts without a fresh authorized audit.
 
 The KBS paper is the learning-augmented caching method revision; SIGMOD is
 the separate LAFC-Evict benchmark manuscript; LAFC-Evict v0.2 is public; v0.3
-is local-only; C0/C1/C2 is the local experiment currently running; Wulver
-status is last-known partial/queued behind maintenance; Major 2 is complete,
-Major 4 is complete with an implementation caveat, while Major 1 and Major 3
-remain open; only Wiki2018 is cleared; and the next action is passive local
-campaign monitoring followed by integrity audit, not a new experiment or
-publication.
+is local-only; C0/C1/C2 and distribution-shift are both `FINAL_VALIDATED`
+local experiments as of 2026-08-13 (no local KBS heavy compute remains
+running); Wulver status is last-known partial/queued behind maintenance;
+Major 2 and Major 3 are scientifically complete (synthesis pending), Major 4
+is sync-pending with an implementation caveat, Major 1 remains sync-pending;
+only Wiki2018 is cleared; and the next action is Wulver synchronization plus
+manuscript/rebuttal synthesis, not a new local experiment or publication.

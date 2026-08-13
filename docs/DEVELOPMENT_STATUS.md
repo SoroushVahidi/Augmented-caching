@@ -5,9 +5,12 @@ not reviewers and not a manuscript response document. If you are a new
 agent with no conversation history, start here, then follow the checklist
 in section 10.
 
-**Last consolidated:** 2026-08-11 (local finalization/handoff pass, plus a
-same-day reconciliation pass against fresh Wulver-side facts relayed by the
-user -- see [`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)
+**Last consolidated:** 2026-08-13 (C0/C1/C2 and distribution-shift both
+completed and passed formal post-completion integrity audit; see
+`reports/kbs_final_evidence_20260813/`). Prior consolidation 2026-08-11
+(local finalization/handoff pass, plus a same-day reconciliation pass
+against fresh Wulver-side facts relayed by the user -- see
+[`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)
 for the full detail behind every Wulver-sourced claim in this file). Live
 run numbers in this file are timestamped snapshots -- see the convention
 explained in [`kbs_second_revision_repository_state.md`](kbs_second_revision_repository_state.md)
@@ -138,13 +141,13 @@ Status vocabulary used below (canonical on this branch, see the registry):
 | Historical-tail diagnostic | -- | `BLOCKED` locally (`NOT_LOCAL`) | Not implemented locally; ownership per older local docs is Wulver-side, **not independently reverified this pass** | n/a | n/a -- see `LAST_KNOWN_REMOTE_STATUS` caveat below |
 | Strict-preference/horizon diagnostic | 21 cells, H4/H8/H16/H32 | `FINAL_VALIDATED` | H4 unique-winner fraction 0; multiple-optimum fraction 1 | `analysis/strict_preference_horizon_diagnostic_v1/` | Do not rerun; generated output is local/ignored |
 | Learned/exact agreement diagnostic | 21 cells, frozen seven-model registry | `FINAL_VALIDATED` | Set-aware agreement ≈0.975301; positive regret ≈0.024699; learned misses 601,569 vs LRU 565,126 | `analysis/learned_exact_target_agreement_v1/` | Do not rerun; generated output is local/ignored |
-| Distribution-shift ablation | 7 folds, 42 rows | `RUNNING_LOCAL_TMUX` | Current progress belongs in the manifest; partial output is not citable | `analysis/distribution_shift_ablation_v1/` | Do not interpret until final audit |
-| Continuation-policy causal ablation (C0/C1/C2, frozen protocol) | 21 planned units | `PRODUCTION_RUNNING_LOCAL_TMUX` | Read the live manifest and log for progress. The active session is `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`; no scientific result is citable until integrity passes. | `analysis/continuation_policy_causal_ablation_production_v1/`, `models/continuation_policy_causal_ablation_production_v1/` | Running; no outcome yet |
+| Distribution-shift ablation | 7 folds, 42 rows | `FINAL_VALIDATED` (2026-08-13) | 7/7 folds, 42/42 primary rows, 21/21 trajectory rows, all integrity gates PASS. DAgger worsens misses in 16/21 cells (macro delta ≈+0.0094) despite improving the state-shift index in 16/21; H6 `DISFAVORED` as a shift-reduction-improves-performance story | `analysis/distribution_shift_ablation_v1/`, `reports/kbs_final_evidence_20260813/distribution_integrity_summary.md` | Do not rerun; generated output is local/ignored |
+| Continuation-policy causal ablation (C0/C1/C2, frozen protocol) | 21 planned units | `FINAL_VALIDATED` (2026-08-13) | 21/21 units, 63/63 policy rows, all integrity gates PASS. C2 improves over C1 in 13/21 cells (macro delta ≈−0.0102), worsens 5/21 (largest: `brightkite` cap32, +0.2433); H5 `PARTIALLY_SUPPORTED` | `analysis/continuation_policy_causal_ablation_production_v1/`, `models/continuation_policy_causal_ablation_production_v1/`, `reports/kbs_final_evidence_20260813/c0_integrity_summary.md` | Do not rerun; generated output is local/ignored |
 | Continuation-policy light ablation (earlier, historical) | 4 traces | `SUPERSEDED` by C1/C2 above | Kept for provenance only; do not conflate with the frozen C1/C2 protocol | -- | n/a -- superseded |
 | Learning convergence (scalar vs pairwise, same target) | Fraction sweep `1%, 2%, 5%, 10%, 25%, 50%` | `FINAL_50PCT_VALIDATED` | `50%`: 7/7 families, 42/42 rows, all `status=ok`, duplicate-key count 0, NaN/Inf count 0, 30 audit files total, 7/7 fraction-0.5 audit units, 0 model SHA mismatches. Apples-to-apples `1%->50%` shows no material monotonic downstream improvement; pairwise remains flat/worse. Stopping decision: `STOP_SAMPLE_SIZE_HYPOTHESIS`; `100%` intentionally not run. | `analysis/supervision_objective_learning_curve_v1/`, `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`, `configs/supervision_objective_learning_curve_v1.json` | High for intended stopping-rule scope |
 | Practical significance / controlled timing | -- | `WULVER_ONLY_VALIDATED` with implementation caveat | Relayed Wulver result is complete at 420/420 rows (7 families x 3 capacities x 4 policies x 5 repetitions); this is implementation timing evidence, not a theoretical complexity proof, and remains to be synced locally | `analysis/practical_significance_ablation_v1/` plus Wulver promotion queue #2 | High for the stated timing scope; local payload not present |
 | Cross-cutting comparison-fairness audit | -- | `FINAL_VALIDATED` (as an audit) | Overall fairness score 76/100, `GENERALLY_FAIR_WITH_LIMITATIONS`; the historical `evict_value_v1` loss to LRU/SIEVE/FIFO is unlikely explained by protocol unfairness (the one confirmed unfairness, train/test overlap, would have *favored* `evict_value_v1`, yet it still lost) | `docs/reviewer/kbs_comparison_fairness_audit.md` | High as an audit of methodology, not a performance claim |
-| Distribution-shift (Wulver-merged 24/42) | -- | `WULVER_ONLY_VALIDATED` | 24/42 rows (up from the local 18/42 checkpoint). Across 12 paired cells: measured state shift decreased in 9, misses improved in **0**, misses worsened in **9**, misses tied in 3 -- reinforces, does not resolve, the existing negative-result narrative | Not locally present | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
+| Distribution-shift (Wulver-merged 24/42, historical checkpoint) | -- | `SUPERSEDED` by the local 42/42 `FINAL_VALIDATED` result above | 24/42-row Wulver-relayed checkpoint from 2026-08-11; the local campaign has since completed at full 7/7-fold, 42/42-row scale and passed integrity audit (2026-08-13) -- use the row above, not this historical checkpoint, for citation | Not locally present | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`; superseded by `reports/kbs_final_evidence_20260813/` |
 | Broad target-degeneracy (21 cells, 7 families x 3 capacities) | -- | `WULVER_ONLY_VALIDATED` | Wulver job `1169513`. Unique-winner fraction = 0 and multi-winner fraction = 1 across **all 21 cells** -- generalizes the local single-cell H3 finding well beyond one cell. Capacity trend (zero-margin fraction and optimal-set fraction both rise with capacity) is **empirical evidence, not a mathematical H/C law** | Not locally present | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
 | Horizon sensitivity sweep | -- | `RUNNING` (Wulver-side) | Wulver job `1169299`, **17/35 complete**, 18 pending. H=1 and H=2 complete for all families; H=4 complete for brightkite/citibike/cloudphysics only; remaining H=4 cells and all H=8/H=16 pending | Not locally present | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
 | Historical-tail diagnostic (H8) | -- | `WULVER_ONLY_VALIDATED` | Wulver job `1169665`, complete. H=8 resolves ~24.6% of H=4-tied decisions; H=16 resolves ~38.7%; history-linear tie-breaking produces only tiny gains; leakage audit passed. Weak support for horizon/tail concerns, **not a downstream policy win** | Not locally present, not previously implemented locally at all | See `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md` |
@@ -152,7 +155,7 @@ Status vocabulary used below (canonical on this branch, see the registry):
 | Corrected held-out `evict_value_v1` (cross-family, 42/42) | -- | `WULVER_ONLY_VALIDATED`; local classification `FINAL_COMPARISON_PENDING` | Complete on Wulver per relayed audit: 42/42 rows, 7 families x 3 capacities x 2 variants, all `ok`, SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`. Comprehensive local path/name/SHA search on 2026-08-11 found no local copy; old contaminated local `policy_comparison_evict_value_v1.csv` remains excluded | `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv` (Wulver path; not yet synced locally); status manifest in `analysis/kbs_r2_major1_evidence_prep_20260811/treatment_status.json` | Sync and verify this one CSV/provenance, then run `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...` |
 | Exact controlled-window LRB / 3L-Cache / CACHEUS | -- | `LOCAL_EXACT_PROTOCOL_VALIDATED` / `LOCAL_EXACT_PROTOCOL_VALIDATED_WITH_CAVEAT` / `LOCAL_EXACT_PROTOCOL_VALIDATED_WITH_PROVENANCE_CAVEAT` plus `WULVER_PENDING` replication | Fresh 2026-08-11 local audit: each CSV has 42 rows, 21 primary `[10000,50000)` rows, all seven families, capacities `32/64/128`, all `ok`, no duplicate keys, no NaN/Inf, and matching SHA-256. Trace manifest gap repaired by hashing the seven local 50k trace files. Wulver jobs `1171965` (3L-Cache), `1171966` (LRB), `1171967` (CACHEUS) remain pending because of maintenance, but are replication/provenance strengthening rather than required experiments unless their missing config later proves materially different | `analysis/reviewer_fairness/`; compact evidence package `analysis/kbs_r2_major1_evidence_prep_20260811/`; script `scripts/analysis/prepare_r2_major1_evidence.py` | No local rerun needed; Wulver copy is optional replication unless config differs |
 | Controlled timing campaign | -- | `WULVER_ONLY_VALIDATED` | Wulver job `1171758`, complete. 420/420 rows (7 families x 3 capacities x 4 policies x 5 repetitions). Mean per-request runtime: LRU 4.68us, FIFO-Reinsertion 5.17us, SIEVE 9.52us, HALP-causal 870.66us (~186x LRU) | Not locally present | `PROMOTE_NOW`, see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #2 |
-| Continuation-policy causal ablation (C0/C1/C2) | 21 planned units | `PRODUCTION_RUNNING_LOCAL_TMUX` | Production runner launched locally in tmux session `kbs_continuation_c0_c1_c2_production_20260811` after fresh preflight PASS. Serial execution with thread caps, `--resume`, and 8-hour wall-time guard. **Not complete; no results should be cited until final integrity passes.** | `analysis/continuation_policy_causal_ablation_production_v1/` | `RUNNING_LOCAL`, see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #9 |
+| Continuation-policy causal ablation (C0/C1/C2) -- superseded duplicate row, see row above | -- | `SUPERSEDED` | Historical launch-time row (tmux session `kbs_continuation_c0_c1_c2_production_20260811`, an earlier attempt before the `resume2_retry` session referenced above); the campaign is now `FINAL_VALIDATED` -- see the row above and `reports/kbs_final_evidence_20260813/` | `analysis/continuation_policy_causal_ablation_production_v1/` | Kept for provenance only |
 
 For remote-only/Wulver-adjacent evidence: **this workstation still does not
 contact Wulver, SSH to Wulver, or query Slurm directly.** Every row above
@@ -226,7 +229,10 @@ completed them):
 
 1. Sync and review the corrected held-out cross-family `evict_value_v1` replay (42/42, Wulver-complete) -- now the only R2 Major 1 synthesis blocker, not a re-run.
 2. Use the locally validated exact controlled-window LRB/3L-Cache/CACHEUS CSVs as the baseline side of that table; rerun `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...` after the verified treatment CSV is synchronized. Sync Wulver jobs `1171965`-`1171967` later only for replication or if their missing config records a material difference.
-3. Monitor the launched continuation-policy C0/C1/C2 production runner locally -- tmux session `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`; read the live manifest and log for progress and do not mark complete until the 21-unit integrity manifest passes.
+3. **DONE (2026-08-13).** The continuation-policy C0/C1/C2 production runner
+   completed and passed its 21-unit integrity manifest audit; see
+   `reports/kbs_final_evidence_20260813/c0_integrity_summary.md`. No further
+   local action needed for this item.
 4. Complete the target-degeneracy and exact-target-oracle diagnostics across all 7 families / 3 capacities locally (currently 1 cell each on this workstation; Wulver has already generalized target-degeneracy to 21 cells -- see item 3 in `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` for syncing that instead of re-running it locally).
 5. No-op closeout for the `P(T > H | resident)` reuse-time-tail diagnostic: it is now locally complete and synthesized; only causal excess-miss attribution remains unimplemented.
 6. Sync the controlled timing campaign (420/420, Wulver-complete, `PROMOTE_NOW`) -- no local work needed, just sync.
@@ -254,18 +260,23 @@ completed them):
   fit its target) is contradicted by 96.5% exact-target agreement with low
   mean regret in the one audited cell -- the model's small departures from
   its own target are net beneficial, not harmful.
-- **Continuation-policy mismatch (H5/H6) is unresolved, not disfavored --
-  and the Wulver-merged distribution-shift state reinforces caution rather
-  than resolving anything.** The Wulver-merged 24/42 distribution-shift
-  state (up from the local 18/42 checkpoint) analyzed 12 paired cells:
-  measured state shift decreased in 9 of them, but misses improved in
-  **zero** of those 9 and worsened in 9 of the 12 overall. This is
-  consistent with, but does not prove, a continuation-mismatch mechanism --
-  do not read it as evidence that fixing distribution shift would fix the
-  gap. The properly causal C0/C1/C2 test remains the decisive experiment for
-  H5. The local production runner is now
-  `PRODUCTION_RUNNING_LOCAL_TMUX`; the full 21-unit campaign is active but
-  the current run is active; read its live manifest and log for progress.
+- **Continuation-policy mismatch (H5) is now `PARTIALLY_SUPPORTED`, and
+  generic state-shift reduction (H6) is now `DISFAVORED` -- both closed at
+  full 7-family/21-cell scale on 2026-08-13, superseding the earlier
+  Wulver-merged 24/42 partial checkpoint.** The completed local
+  C0/C1/C2 causal ablation shows C2 (frozen-`pi1` continuation) improving
+  over C1 (LRU continuation) in 13/21 cells (macro mean delta ≈ −0.0102),
+  with one large counter-example (`brightkite` cap32, +0.2433) blocking a
+  uniform claim -- H5 gains real but regime-dependent support. The
+  completed local distribution-shift campaign shows DAgger-style state
+  correction *reducing* the measured state-shift index in 16/21 cells while
+  *worsening* misses in 16/21 cells (13/18 informative cells show both
+  simultaneously) -- do not read distribution-shift correction as a fix for
+  the online-performance gap; H6 is disfavored as a shift-reduction-improves-
+  performance story specifically (the shift-reduction mechanism itself still
+  works). Both campaigns are `FINAL_VALIDATED`; see
+  `reports/kbs_final_evidence_20260813/mechanistic_hypothesis_summary.md`
+  for the full table.
 - **Horizon/truncation mechanism (H4, H8-H11) is now supported as an
   observability limitation, but not as a causal excess-miss mechanism.** The
   local reuse-tail diagnostic shows that the H=4 window sees very little of

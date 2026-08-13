@@ -35,6 +35,13 @@ rewritten there (see Pass #3 report); this registry uses the vocabulary
 above going forward and gives the mapping inline per row where the two
 differ.
 
+**2026-08-13 note:** experiments #2 (distribution-shift) and #10/#11
+(continuation-policy C0/C1/C2 -- numbered #11 in the Registry section below)
+are now `FINAL_VALIDATED`, each rewritten in place with its final result;
+this supersedes the "running" framing in the 2026-08-11 note immediately
+below for those two rows specifically. Compact evidence:
+`reports/kbs_final_evidence_20260813/`.
+
 **2026-08-11 note:** experiments #2 (distribution-shift), #3 (corrected
 held-out replay), #5 (learned-baseline comparison), #7 (target-degeneracy),
 #8 (historical-tail), #9 (learning convergence), #10 (continuation C1/C2),
@@ -88,17 +95,25 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Scientific question: does trajectory divergence between LRU-labeled and
   learned-deployed cache states (DAgger-style) explain part of the miss gap?
 - Reviewer concern: Reviewer #2 Major 3 / Reviewer #3 continuation-mismatch
-- Machine: LOCAL; completion is active in the resumable local runner
-- Protocol: `docs/distribution_shift_ablation_protocol.md`, frozen
-- Scope: seven folds, 42 primary rows; read the live manifest for progress
+- Machine: LOCAL; **complete as of 2026-08-13**
+- Protocol: `docs/distribution_shift_ablation_protocol.md`, frozen (verified
+  unchanged since launch: live `configs/distribution_shift_ablation_v1.json`
+  byte-for-byte equals `protocol_snapshot.json`)
+- Scope: seven folds, 42 primary rows -- all present
 - Source entry point: `scripts/experiments/run_distribution_shift_ablation.py`, resumable via `scripts/experiments/resume_distribution_shift.py`
 - Config: protocol doc-embedded, frozen condition matrix
 - Output path: `analysis/distribution_shift_ablation_v1/`
-- Status: `RUNNING_LOCAL_TMUX`; use `analysis/distribution_shift_ablation_v1/campaign_state.json` and the live log for progress. Partial rows are not citable.
+- Status: `FINAL_VALIDATED` (2026-08-13 formal post-completion integrity
+  audit; independent re-run of
+  `scripts/experiments/audit_distribution_shift_completion.py` ->
+  `COMPLETE_VALID`, all 11 checks PASS). Result: DAgger worsens misses in
+  16/21 cells (macro delta ≈+0.0094) despite improving the state-shift
+  index in 16/21 -- H6 `DISFAVORED` as a shift-reduction-improves-
+  performance story.
 - Evidence strength: `MECHANISTIC_DIAGNOSTIC`
 - Primary/diagnostic/supporting: diagnostic
-- Next action: allow the local campaign to finish, then run the formal integrity audit
-- Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.6
+- Next action: none -- do not rerun. See `reports/kbs_final_evidence_20260813/distribution_integrity_summary.md`
+- Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.6, `reports/kbs_final_evidence_20260813/`
 
 ### 3. Corrected held-out `evict_value_v1` replay
 - Scientific question: does the primary method actually beat baselines under
@@ -246,18 +261,30 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
   the already-learned frozen `pi1` continuation improve the next learned
   policy `pi2`?
 - Reviewer concern: Reviewer #2 Major 3 / Reviewer #3 continuation-mismatch
-- Machine: LOCAL tmux session `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`
+- Machine: LOCAL; **complete as of 2026-08-13** (tmux session
+  `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812` exited
+  naturally)
 - Protocol: `configs/continuation_policy_causal_ablation_v1.json`, `PROTOCOL_FROZEN_NO_RESULTS`
-- Scope: 21 planned `(held_out_family, capacity)` production units; expected 63 policy rows, 21 label-agreement rows, 21 pi2-training rows
+- Scope: 21/21 `(held_out_family, capacity)` production units complete; 63/63 policy rows, 21/21 label-agreement rows, 21/21 pi2-training rows -- all present
 - Source entry point: `src/lafc/continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation.py`
 - Config: `configs/continuation_policy_causal_ablation_production_v1.json`
 - Output path: `analysis/continuation_policy_causal_ablation_production_v1/`; models in `models/continuation_policy_causal_ablation_production_v1/`
-- Status: `PRODUCTION_RUNNING_LOCAL_TMUX`
-- Evidence strength: `RUNNING_NO_RESULTS_YET`
-- Primary/diagnostic/supporting: diagnostic (planned)
-- Next action: monitor/resume; do not relaunch duplicate campaign; do not cite outcomes until final integrity passes
-- Launch provenance: launched 2026-08-11 from source SHA `a813617f36822f793b0e48b0ee3e6009d56ee324`, config SHA-256 `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`, serial thread caps, `--resume --max-wall-hours 8`
-- Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.7 (includes this pass's cross-reference to the older, distinct `evict_value_v2_rollout.py` continuation exploration); `docs/reviewer/local_to_wulver_continuation_sync_manifest.md`
+- Status: `FINAL_VALIDATED` (2026-08-13 formal post-completion integrity
+  audit: unit/aggregate completeness, protocol integrity, model integrity,
+  provenance reconciliation, and metadata-path integrity all PASS). Result:
+  C2 improves over C1 in 13/21 cells (macro delta ≈−0.0102), worsens 5/21
+  (largest: `brightkite` cap32, +0.2433) -- H5 `PARTIALLY_SUPPORTED`.
+- Evidence strength: `MECHANISTIC_DIAGNOSTIC` (primary controlled causal test for H5)
+- Primary/diagnostic/supporting: diagnostic
+- Next action: none -- do not rerun. See `reports/kbs_final_evidence_20260813/c0_integrity_summary.md`
+- Launch provenance: launched 2026-08-11 from source SHA `a813617f36822f793b0e48b0ee3e6009d56ee324`
+  (13/21 units) and `12798d8482fa6cd46eb4cfc6298cd0820acb42d6` (8/21 units,
+  including all 5 resumed units, via the resume-provenance fix in commit
+  `8421167`); both SHAs verified provenance-only/scientifically-equivalent
+  (`git diff --stat` between them touches only docs/`.gitignore`). Config
+  SHA-256 `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`,
+  serial thread caps, `--resume --max-wall-hours 8`.
+- Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.7 (includes this pass's cross-reference to the older, distinct `evict_value_v2_rollout.py` continuation exploration); `docs/reviewer/local_to_wulver_continuation_sync_manifest.md`; `reports/kbs_final_evidence_20260813/c0_integrity_summary.md`
 
 ### 12. Practical-significance / controlled timing
 - Scientific question: is fine-grained candidate-level learned eviction

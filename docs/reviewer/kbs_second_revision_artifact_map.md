@@ -252,13 +252,17 @@ Target-formulation branch to keep separate:
 
 ## Reviewer #2 Major 3 and Reviewer #3: distribution-shift diagnosis
 
+**Updated 2026-08-13: both campaigns below are complete and formally
+integrity-audited.** Compact evidence:
+`reports/kbs_final_evidence_20260813/`.
+
 | Item | Code / protocol | Current local output | Status | Eligibility | Caveats |
 |---|---|---|---|---|---|
-| Local resumed distribution-shift campaign | `docs/distribution_shift_ablation_protocol.md`, `scripts/experiments/run_distribution_shift_ablation.py` | `analysis/distribution_shift_ablation_v1/` | `RUNNING_LOCAL` | Diagnostic-only; not a final seven-family result | Read `campaign_state.json` and live log for the current snapshot; do not cite partial rows |
-| Trajectory-divergence diagnostics | same protocol | `analysis/distribution_shift_ablation_v1/trajectory_divergence.csv` | `PARTIAL` | Diagnostic-only | Divergence alone is not causal evidence |
-| State-shift diagnostics | same protocol | `analysis/distribution_shift_ablation_v1/state_shift_metrics.csv` | `PARTIAL` | Diagnostic-only | Reduced measured shift did not automatically improve misses in the local `metacdn` result |
+| Local distribution-shift campaign | `docs/distribution_shift_ablation_protocol.md`, `scripts/experiments/run_distribution_shift_ablation.py` | `analysis/distribution_shift_ablation_v1/` | `FINAL_VALIDATED` | Full seven-family result: DAgger worsens misses in 16/21 cells (macro delta ≈+0.0094) despite improving the state-shift index in 16/21 | `campaign_state.json` shows 7/7 folds; independent re-run of `scripts/experiments/audit_distribution_shift_completion.py` -> `COMPLETE_VALID` |
+| Trajectory-divergence diagnostics | same protocol | `analysis/distribution_shift_ablation_v1/trajectory_divergence.csv` | `FINAL_VALIDATED` | Full 21/21 rows | Divergence alone is not causal evidence; trajectory divergence is near-total (>0.95) in most cells |
+| State-shift diagnostics | same protocol | `analysis/distribution_shift_ablation_v1/state_shift_metrics.csv` | `FINAL_VALIDATED` | Full 42/42 rows, 7 families | Reduced measured shift did not translate into improved misses at full scale either -- H6 `DISFAVORED` as a shift-reduction-improves-performance story (the shift-reduction mechanism itself still works) |
 | Isolated-family Wulver continuation | Wulver-only runner and Slurm scripts not yet synced back | not present locally | `BLOCKED_PENDING_SYNC` | Not citable from this branch until the source/orchestration is synced and inspected | Missing local files: `run_distribution_shift_family.py` and the related `slurm/kbs_distribution_shift_wulver*.sbatch` drivers |
-| Continuation-policy causal ablation | `src/lafc/continuation_policy_ablation.py`, `tests/test_continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation.py`, `configs/continuation_policy_causal_ablation_production_v1.json` | partial output in `analysis/continuation_policy_causal_ablation_production_v1/` | `RUNNING_LOCAL` | Full result remains blocked until the 21-unit integrity manifest passes | C1 vs C2 changes only label continuation (`LRU -> frozen pi1`) on the same decision/candidate examples; do not cite as result evidence yet |
+| Continuation-policy causal ablation | `src/lafc/continuation_policy_ablation.py`, `tests/test_continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation.py`, `configs/continuation_policy_causal_ablation_production_v1.json` | full output in `analysis/continuation_policy_causal_ablation_production_v1/` | `FINAL_VALIDATED` | 21/21-unit integrity manifest passed; C2 improves over C1 in 13/21 cells (macro delta ≈−0.0102), worsens 5/21 | C1 vs C2 changes only label continuation (`LRU -> frozen pi1`) on the same decision/candidate examples; H5 `PARTIALLY_SUPPORTED`, regime-dependent, not universal |
 
 Continuation-policy causal-ablation intent:
 
@@ -267,8 +271,9 @@ Continuation-policy causal-ablation intent:
   `pi2`);
 - require frozen eligible `pi1` provenance from
   `analysis/supervision_objective_ablation_v1/model_registry.json`;
-- report label-agreement and downstream miss metrics only after Wulver
-  execution and audit.
+- label-agreement and downstream miss metrics are now reported: executed and
+  audited **locally** (not Wulver) as of 2026-08-13; see
+  `reports/kbs_final_evidence_20260813/c0_continuation_summary.csv`.
 
 Decision-rule branch to keep separate:
 
