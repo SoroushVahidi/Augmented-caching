@@ -35,6 +35,19 @@ rewritten there (see Pass #3 report); this registry uses the vocabulary
 above going forward and gives the mapping inline per row where the two
 differ.
 
+**2026-08-13 note (sync):** experiment #3 (corrected held-out `evict_value_v1`
+replay) and #12 (controlled timing) have now been synced from Wulver to this
+workstation and independently re-audited locally (16/16 and 13/13 transfer
+hashes PASS respectively, all structural/leakage/statistical re-audit gates
+PASS). Both rows below are rewritten in place. Status for both moves from
+`SYNC_PENDING`/`WULVER_ONLY_VALIDATED` to `EVIDENCE_SYNCED_SYNTHESIS_PENDING`
+(R2 Major 1) and `FINAL_VALIDATED_SYNCED` (controlled timing artifact itself).
+No same-protocol baseline comparison exists for `evict_value_v1` even after
+sync -- see entry #3's caveat. Compact evidence:
+`reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`,
+`heldout_treatment_provenance.md`, `controlled_timing_integrity.md`,
+`controlled_timing_interpretation.md`.
+
 **2026-08-13 note:** experiments #2 (distribution-shift) and #10/#11
 (continuation-policy C0/C1/C2 -- numbered #11 in the Registry section below)
 are now `FINAL_VALIDATED`, each rewritten in place with its final result;
@@ -119,17 +132,17 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Scientific question: does the primary method actually beat baselines under
   a corrected, non-contaminated, cross-family held-out protocol?
 - Reviewer concern: Reviewer #2 Major 1 / R3-Issue1 (end-to-end evidence)
-- Machine: LOCAL (partial) / BOTH for full completion
+- Machine: BOTH (produced on Wulver, synced and independently re-audited locally 2026-08-13)
 - Protocol: `docs/reviewer_fairness_cross_family_v1.md`
-- Scope: treatment artifact complete on Wulver, absent locally; baseline side locally exact-protocol validated
+- Scope: treatment artifact 42/42, synced from Wulver and present locally; baseline side locally exact-protocol validated
 - Source entry point: `scripts/experiments/run_evict_cross_family_pipeline.py`, `scripts/experiments/run_cross_family_heldout_eval.py`
 - Config: `configs/fair_cross_family_v1/folds/*.json`
-- Output path: `analysis/reviewer_fairness_cross_family_v1/`
-- Status: `WULVER_ONLY_VALIDATED` for treatment artifact; R2 Major 1 overall `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING`
-- Evidence strength: `PRIMARY_REVIEWER_EVIDENCE` after sync/review; locally supporting-only until the verified treatment CSV is present
-- Primary/diagnostic/supporting: intended as primary; final numeric table pending local synchronization/synthesis
-- Next action: sync the corrected 42/42 Wulver CSV and provenance, verify SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`, then run `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...`
-- Canonical documentation: `docs/reviewer/kbs_second_revision_artifact_map.md` Reviewer #2 Major 1; `analysis/kbs_comparison_fairness_audit.json`
+- Output path: `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/` (synced, hash-verified)
+- Status: `FINAL_VALIDATED_SYNCED` for treatment artifact (42/42 rows, 16/16 transfer hashes PASS, independent local re-audit: structural/leakage/model-provenance gates all PASS); R2 Major 1 overall `EVIDENCE_SYNCED_SYNTHESIS_PENDING`
+- Evidence strength: `PRIMARY_REVIEWER_EVIDENCE` for `evict_value_v1` itself (this protocol's own artifact); no same-protocol comparison exists against LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS -- see `baseline_eligibility.csv` and `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`
+- Primary/diagnostic/supporting: primary for `evict_value_v1`'s own 42/42 result; the LRU/SIEVE/FIFO comparison remains caveated/different-run/supplementary, not a same-protocol primary comparison
+- Next action: none required for evidence collection; manuscript/rebuttal synthesis only. (SHA-256 of `policy_comparison.csv` verified as `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`.)
+- Canonical documentation: `docs/reviewer/kbs_second_revision_artifact_map.md` Reviewer #2 Major 1; `analysis/kbs_comparison_fairness_audit.json`; `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`, `heldout_treatment_provenance.md`
 
 ### 4. Simple exact-protocol baselines (LRU / SIEVE / FIFO)
 - Scientific question: how does the method compare to simple, exactly-specified,
@@ -292,15 +305,15 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Reviewer concern: MC2, R3-Issue5
 - Machine: LOCAL
 - Protocol: `docs/practical_significance_ablation_protocol.md`
-- Scope: local smoke-scale equivalence check complete; controlled 420/420 timing is Wulver-only and sync-pending
-- Source entry point: `scripts/experiments/run_practical_significance_ablation.py` (smoke), `scripts/experiments/run_practical_significance_controlled.py` (controlled, not yet run)
+- Scope: local smoke-scale equivalence check complete; controlled 420/420 timing synced from Wulver and independently re-audited locally 2026-08-13
+- Source entry point: `scripts/experiments/run_practical_significance_ablation.py` (smoke), `analysis/kbs_controlled_timing_20260810/raw_timing_runs.csv` (controlled, synced)
 - Config: protocol doc-embedded
-- Output path: `analysis/practical_significance_ablation_v1/`
-- Status: `SMOKE_ONLY` locally; controlled timing `WULVER_ONLY_VALIDATED` / `SYNC_PENDING`
-- Evidence strength: `IMPLEMENTATION_ONLY` for timing numbers; the exact-decision-preserving equivalence check itself (`all_variants_exact_across_all_trace_capacity_pairs=true`) is `SUPPORTING_EVIDENCE`
-- Primary/diagnostic/supporting: supporting (equivalence check) / not yet usable (timing)
-- Next action: synchronize and audit the Wulver timing payload; do not substitute local smoke timings
-- Canonical documentation: `docs/reviewer/kbs_second_revision_artifact_map.md` Reviewer #2 Major 4
+- Output path: `analysis/practical_significance_ablation_v1/` (smoke); `analysis/kbs_controlled_timing_20260810/`, `analysis/kbs_controlled_timing_final_analysis_20260811/` (controlled, synced)
+- Status: `SMOKE_ONLY` locally (superseded for timing purposes); controlled timing `FINAL_VALIDATED_SYNCED` (420/420 rows, 13/13 transfer hashes PASS, all local re-audit gates PASS)
+- Evidence strength: `PRIMARY_EVIDENCE` for the four controlled policies (LRU/FIFO-Reinsertion/SIEVE/HALP-causal, 5 repetitions each); `evict_value_v1`'s runtime remains a separate single-run measurement, not part of this controlled table
+- Primary/diagnostic/supporting: primary (controlled timing, 4 policies) / supporting (equivalence check)
+- Next action: none required for evidence collection; manuscript/rebuttal synthesis only
+- Canonical documentation: `docs/reviewer/kbs_second_revision_artifact_map.md` Reviewer #2 Major 4; `reports/kbs_final_evidence_20260813/controlled_timing_integrity.md`, `controlled_timing_interpretation.md`
 
 ### 13. Cross-cutting fairness audit
 - Scientific question: how fair is the overall baseline/method comparison

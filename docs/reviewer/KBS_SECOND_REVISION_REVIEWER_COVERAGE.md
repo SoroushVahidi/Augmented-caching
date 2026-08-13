@@ -70,21 +70,31 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
     (no training/split dependency for the first three; HALP's existing
     result is already counted as valid comparison evidence) -- their
     existing local `FINAL_VALIDATED` rows stand.
-- Remaining task: sync and review the corrected 42/42 `evict_value_v1`
-  result (see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #1), then run
-  `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...` to
-  compare it against the locally complete modern-baseline controlled-window
-  CSVs. Sync jobs `1171965`-`1171967` later for replication/config audit.
+- Remaining task (updated 2026-08-13): none for evidence collection. The
+  corrected 42/42 `evict_value_v1` result has been synced from Wulver and
+  independently re-audited locally (see
+  `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`).
+  Remaining task is manuscript/rebuttal synthesis against the locally
+  complete modern-baseline controlled-window CSVs, preserving the caveat that
+  no same-protocol comparison exists. Sync jobs `1171965`-`1171967` later
+  only for replication/config audit if their config later proves materially
+  different.
 - Text-only fix: label `offline_belady` explicitly as oracle context, not a
   deployable baseline, everywhere it appears (already flagged as required in
   the fairness audit; verify consistently applied).
-- **Status (updated 2026-08-13): `SYNC_PENDING`.** Scientific baseline work is
-  complete locally; blocked only on syncing and reviewing the corrected
-  Wulver `evict_value_v1` 42/42 result. The exact controlled-window
-  LRB/3L-Cache/CACHEUS rows are locally validated; their Wulver jobs remain
-  pending only as replication/config-audit follow-up. Per-baseline fidelity
-  caveats unchanged: HALP `LOW_TO_MEDIUM`, LRB/3L-Cache `MEDIUM`, CACHEUS
-  `HIGH` with the current live-source provenance caveat.
+- **Status (updated 2026-08-13): `EVIDENCE_SYNCED_SYNTHESIS_PENDING`.**
+  Scientific baseline work is complete locally; the corrected Wulver
+  `evict_value_v1` 42/42 result has been synced (16/16 transfer hashes PASS)
+  and independently re-audited locally (all structural/leakage/model-hash
+  gates PASS). **This does not create a same-protocol comparison** against
+  LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS: only `evict_value_v1` has true
+  42/42 same-protocol coverage; LRU/SIEVE/FIFO have a caveated
+  different-run, window-matched supplementary comparison only; LRB/3L-Cache/
+  HALP/CACHEUS have zero executed results under any protocol. The exact
+  controlled-window LRB/3L-Cache/CACHEUS rows are locally validated; their
+  Wulver jobs remain pending only as replication/config-audit follow-up.
+  Per-baseline fidelity caveats unchanged: HALP `LOW_TO_MEDIUM`, LRB/3L-Cache
+  `MEDIUM`, CACHEUS `HIGH` with the current live-source provenance caveat.
 
 ## Reviewer #2 Major 2: supervision-objective ablation
 
@@ -243,22 +253,29 @@ manifests, not this document, own progress counts.
   capacities x 4 policies x 5 repetitions. Audited mean per-request
   runtime: LRU `4.68us`, FIFO-Reinsertion `5.17us`, SIEVE `9.52us`,
   HALP-causal `870.66us` (~186x LRU in this implementation/protocol).
-- Remaining experiment: none for the timed-policy set above; sync the
-  result (see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #2, `PROMOTE_NOW`).
-  Modern LRB/3L/CACHEUS timing is not included in this 4-policy campaign
-  and may still need a separate pass if required for a complete
-  practical-significance table.
+- Remaining experiment (updated 2026-08-13): none. The 420/420-row campaign
+  has been synced from Wulver and independently re-audited locally (see
+  `reports/kbs_final_evidence_20260813/controlled_timing_integrity.md`);
+  policy means were independently recomputed from the raw file and match
+  the pre-computed summary to 6 decimal places. Modern LRB/3L/CACHEUS timing
+  is still not included in this 4-policy campaign and may still need a
+  separate pass if required for a complete practical-significance table.
 - Text-only fix: carry forward two caveats on promotion -- this is
   **wall-clock implementation evidence, not an algorithmic complexity
   theorem**, and the smoke-scale equivalence check remains a separate,
   still-valid supporting result (not superseded by the timing campaign).
-- **Status (updated 2026-08-13): `SYNC_PENDING`.** The controlled timing
-  campaign is scientifically complete on Wulver (420/420 rows, job
-  `1171758`), but the local payload is absent locally and still needs
-  synchronization and audit before it can be cited as locally validated.
-  Caveats unchanged once synced: wall-clock implementation evidence only,
-  and modern learned-baseline timing (LRB/3L/CACHEUS) may still be a
-  separate item if needed.
+- **Status (updated 2026-08-13): `EVIDENCE_SYNCED_SYNTHESIS_PENDING`.** The
+  controlled timing campaign (420/420 rows, job `1171758`) has been synced
+  from Wulver (13/13 transfer hashes PASS) and independently re-audited
+  locally (structural gates PASS, policy means recomputed and matched).
+  Controlled timing covers exactly LRU/FIFO-Reinsertion/SIEVE/HALP-causal, 5
+  repetitions each; `evict_value_v1`'s runtime is a separate, single-run
+  measurement recorded during its own held-out treatment run and must never
+  be placed in this 4-policy table (see
+  `reports/kbs_final_evidence_20260813/controlled_timing_interpretation.md`).
+  Caveats unchanged: wall-clock implementation evidence only, and modern
+  learned-baseline timing (LRB/3L/CACHEUS) may still be a separate item if
+  needed.
 
 ## R3-Issue2 / R3-Issue3 (subset of Major 1): HALP and SIEVE/FIFO differentiation
 
@@ -317,14 +334,14 @@ manifests, not this document, own progress counts.
 
 ## Summary
 
-**Authoritative reviewer-completion table (reconciled 2026-08-13):**
+**Authoritative reviewer-completion table (reconciled 2026-08-13, post Wulver sync):**
 
 | Concern | Status | Primary remaining gap |
 |---|---|---|
-| R2 Major 1 (learned-baseline comparison) | `SYNC_PENDING` | Corrected `evict_value_v1` result is complete on Wulver and needs sync+review; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally validated, with Wulver copies pending as replication/config audit |
+| R2 Major 1 (learned-baseline comparison) | `EVIDENCE_SYNCED_SYNTHESIS_PENDING` | Corrected `evict_value_v1` result (42/42) synced from Wulver and independently re-audited locally; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally validated, with Wulver copies pending only as replication/config audit. No same-protocol comparison against LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS exists -- manuscript synthesis must preserve this caveat |
 | R2 Major 2 (supervision-objective ablation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None -- manuscript integration only |
 | R2 Major 3 (offline/online failure explanation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None locally -- C0/C1/C2 and distribution-shift are both `FINAL_VALIDATED`; remaining work is manuscript/rebuttal synthesis only |
-| R2 Major 4 (practical significance / timing) | `SYNC_PENDING` | Controlled timing (420/420) is complete on Wulver; local sync+audit still needed |
+| R2 Major 4 (practical significance / timing) | `EVIDENCE_SYNCED_SYNTHESIS_PENDING` | Controlled timing (420/420) synced from Wulver and independently re-audited locally; policy means recomputed and matched. `evict_value_v1` timing remains a separate single-run measurement, not part of the 4-policy controlled table -- manuscript synthesis must preserve this caveat |
 | Reviewer #3 (causal explanation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None locally -- final answer `PARTIALLY_SUPPORTED` / `REGIME_DEPENDENT`, see the 2026-08-13 snapshot above |
 
 - Most complete concerns: **Reviewer #2 Major 2** (supervision-objective
@@ -337,6 +354,9 @@ manifests, not this document, own progress counts.
 - Most under-addressed concern: **R3-Issue6 (fallback mechanism)** -- no
   local evidence exists at all, not even a smoke-scale implementation.
 - `NO_NEW_EXPERIMENT_REQUIRED` locally for R2 Major 1-4 and Reviewer #3 as
-  currently scoped. The two remaining blockers for R2 Major 1 and Major 4
-  are Wulver-side synchronization and audit only (corrected `evict_value_v1`
-  42/42, controlled timing 420/420) -- not new compute.
+  currently scoped. As of 2026-08-13, the two former Wulver-side
+  synchronization blockers for R2 Major 1 and Major 4 (corrected
+  `evict_value_v1` 42/42, controlled timing 420/420) have been synced and
+  independently re-audited locally -- no synchronization or compute
+  blockers remain anywhere in this table. Remaining work across all five
+  rows is manuscript/rebuttal synthesis (`READY_FOR_MANUSCRIPT_AND_REBUTTAL_SYNTHESIS`).

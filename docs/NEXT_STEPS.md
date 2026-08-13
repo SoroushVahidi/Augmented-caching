@@ -1,5 +1,29 @@
 # Next-Work Roadmap
 
+## 2026-08-13 update (later): both remaining Wulver sync blockers closed
+
+**READY_FOR_MANUSCRIPT_AND_REBUTTAL_SYNTHESIS.** Under an explicit task
+authorization, the two FINAL_VALIDATED Wulver payloads named in the
+"2026-08-13 update" section immediately below -- the corrected held-out
+`evict_value_v1` treatment (42/42) and the controlled timing campaign
+(420/420) -- were `rsync`'d from the authoritative Wulver checkout
+(`login02:/mmfs1/project/ikoutis/sv96/Augmented-caching`), verified against
+their required SHA-256 manifest (16/16 and 13/13 matches, 0 mismatches), and
+independently re-audited locally from the raw CSV/JSON (structural, leakage,
+model-provenance, and statistical gates all PASS; recomputed timing means
+matched the expected values exactly). Compact synchronized evidence:
+`reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`,
+`heldout_treatment_provenance.md`, `controlled_timing_integrity.md`,
+`controlled_timing_interpretation.md`. **No synchronization or scientific
+compute blocker remains for this branch.** The corrected treatment result
+does **not** create a same-protocol comparison against LRU/SIEVE/FIFO/
+LRB/3L-Cache/HALP/CACHEUS -- only `evict_value_v1` has true 42/42
+same-protocol coverage; preserve this caveat in any synthesis. Likewise,
+`evict_value_v1`'s timing remains a separate single-run measurement, not
+part of the 4-policy (LRU/FIFO-Reinsertion/SIEVE/HALP-causal) controlled
+timing table. Next stage is manuscript/rebuttal synthesis and final
+submission audit only.
+
 ## 2026-08-13 update: both remaining local campaigns closed
 
 **NO_NEW_EXPERIMENT_REQUIRED -- reaffirmed, and stronger than the 2026-08-12
@@ -82,8 +106,10 @@ launched from scratch.
 - Let already-queued jobs (`1171965`-`1171967` LRB/3L-Cache/CACHEUS
   replication, horizon sweep `1169299`) auto-dispatch; do not resubmit them
   from here.
-- Sync and audit the corrected held-out `evict_value_v1` 42/42 result (P1.1)
-  and the completed controlled timing 420/420 result (P1.2).
+- ~~Sync and audit the corrected held-out `evict_value_v1` 42/42 result (P1.1)
+  and the completed controlled timing 420/420 result (P1.2).~~ **Done
+  2026-08-13** under explicit task authorization -- see the update section at
+  the top of this file and `reports/kbs_final_evidence_20260813/`.
 - Audit the remaining horizon-sweep cells (18/35 pending) once complete.
 
 **NO-COMPUTE (safe anytime, any machine state):**
@@ -148,30 +174,31 @@ rule -- relaunching would waste compute and contradict a recorded decision):**
 - **Why:** named the single highest-priority open item by the comparison-
   fairness audit; without it, no citable head-to-head comparison exists
   between `evict_value_v1` and modern learned baselines (LRB/3L/CACHEUS/HALP).
-- **Status (updated 2026-08-11):** per user-relayed Wulver facts, this is
-  now `WULVER_ONLY_VALIDATED` -- **COMPLETE, 42/42 rows**, SHA-256
-  `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`. This
-  item is **no longer "run it," it is "sync and review it"**. A 2026-08-11
-  local evidence-prep pass validated the baseline side and created
+- **Status (updated 2026-08-13): `FINAL_VALIDATED_SYNCED`.** Synced from
+  Wulver and independently re-audited locally -- **COMPLETE, 42/42 rows**,
+  SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`
+  (verified). This item is **done**, not "sync and review it" -- both the
+  transfer-hash verification (16/16 PASS) and the local structural/leakage/
+  model-provenance re-audit passed every gate. A 2026-08-11 local
+  evidence-prep pass validated the baseline side and created
   `analysis/kbs_r2_major1_evidence_prep_20260811/` plus the reusable
   comparison procedure `scripts/analysis/prepare_r2_major1_evidence.py`.
   Wulver jobs `1171965`-`1171967` remain pending because of maintenance, but
   the local controlled-window LRB/3L/CACHEUS rows already cover those
   baseline cells unless the missing Wulver config later proves materially
-  different.
-- **Dependency:** none blocking the sync/review itself; Wulver jobs
-  `1171965`-`1171967` are replication/config-audit follow-up, not a local
-  compute prerequisite.
-- **Machine:** Wulver (already done); this workstation only needs to sync
-  the result once access is available.
+  different. **No same-protocol comparison exists** against LRU/SIEVE/FIFO/
+  LRB/3L-Cache/HALP/CACHEUS -- see `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`.
+- **Dependency:** none remaining; Wulver jobs `1171965`-`1171967` are
+  replication/config-audit follow-up only.
+- **Machine:** synced to this workstation 2026-08-13; local from here on.
 - **Entry point:** `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv`
-  (Wulver path, not yet locally present).
-- **Expected cost:** low, now that the compute itself is done -- just a
-  sync + review pass.
+  (present locally, hash-verified).
+- **Expected cost:** none remaining for sync/review; only manuscript
+  synthesis is left.
 - **Stopping rule:** integrity checks pass locally after sync (unique keys,
-  no NaN/Inf, all `status=ok`, hash matches the value above), then
-  `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...`
-  writes the final matched comparison table.
+  no NaN/Inf, all `status=ok`, hash matches the value above) -- **met**.
+  Next: run `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...`
+  to materialize the final matched comparison table.
 - **What would change our interpretation:** if `evict_value_v1` beats the
   modern learned baselines once reviewed, the "target problem" narrative
   would need to be reconciled with a competitive result; if it still loses
@@ -183,21 +210,23 @@ rule -- relaunching would waste compute and contradict a recorded decision):**
 - **Why:** current local timing numbers are `SMOKE_ONLY` and explicitly
   marked not-final by their own artifact; any practical-deployment claim
   needs a real controlled measurement.
-- **Status (updated 2026-08-11):** per user-relayed Wulver facts, this is
-  now `WULVER_ONLY_VALIDATED` -- **COMPLETE**, Wulver job `1171758`,
-  420/420 rows (7 families x 3 capacities x 4 policies x 5 repetitions).
-  Mean per-request runtime: LRU 4.68us, FIFO-Reinsertion 5.17us, SIEVE
-  9.52us, HALP-causal 870.66us (~186x LRU). This item is now `PROMOTE_NOW`
-  per `WULVER_TO_GITHUB_PROMOTION_QUEUE.md` #2 -- **no local run needed**,
-  just sync.
-- **Dependency:** none; already complete on Wulver.
-- **Machine:** Wulver (already done); sync to this workstation when access
-  is available.
-- **Entry point:** Wulver job `1171758` output (path not yet given
-  locally).
-- **Expected cost:** low -- sync only.
+- **Status (updated 2026-08-13): `FINAL_VALIDATED_SYNCED`.** Synced from
+  Wulver and independently re-audited locally -- **COMPLETE**, Wulver job
+  `1171758`, 420/420 rows (7 families x 3 capacities x 4 policies x 5
+  repetitions), 13/13 transfer hashes PASS. Mean per-request runtime
+  independently recomputed from the raw 420-row file and matched exactly:
+  LRU 4.680543us, FIFO-Reinsertion 5.168286us, SIEVE 9.523362us, HALP-causal
+  870.660257us (~186x LRU). `evict_value_v1`'s runtime remains a separate
+  single-run measurement, not part of this 4-policy table -- see
+  `reports/kbs_final_evidence_20260813/controlled_timing_interpretation.md`.
+- **Dependency:** none; complete on Wulver and now synced locally.
+- **Machine:** synced to this workstation 2026-08-13.
+- **Entry point:** `analysis/kbs_controlled_timing_20260810/raw_timing_runs.csv`
+  (present locally, hash-verified).
+- **Expected cost:** none remaining.
 - **Stopping rule:** synced result passes the same integrity bar as any
-  other promoted artifact (row count, no duplicate keys, provenance intact).
+  other promoted artifact (row count, no duplicate keys, provenance intact)
+  -- **met**.
 - **What would change our interpretation:** the result is already in --
   HALP-causal's ~186x overhead vs. LRU is a real, citable finding for any
   deployability discussion; it does not bear on H1-H11 (the target-

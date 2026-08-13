@@ -69,17 +69,19 @@ SSH, use Slurm, submit, requeue, or cancel anything in this pass.
 
 ## KBS Reviewer State
 
-- **R2 Major 1, modern baselines:** local/classical evidence exists and the corrected held-out `evict_value_v1` 42/42 result is Wulver-only and still needs local sync/integrity review before final synthesis. Exact LRB/3L-Cache/CACHEUS local rows are validated with their documented caveats; Wulver jobs are replication/provenance strengthening.
+- **R2 Major 1, modern baselines (updated 2026-08-13):** corrected held-out `evict_value_v1` 42/42 result synced from Wulver and independently re-audited locally; status `EVIDENCE_SYNCED_SYNTHESIS_PENDING` -- see `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`. No same-protocol comparison against LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS exists; only `evict_value_v1` has true 42/42 same-protocol coverage. Exact LRB/3L-Cache/CACHEUS local rows remain validated with their documented caveats.
 - **R2 Major 2, supervision objective:** `COMPLETE_VALIDATED`; 84/84 objective-ablation cells and the 50% learning-curve stopping decision are validated. Do not run the 100% curve.
 - **R2 Major 3, offline/online mechanism (updated 2026-08-13):** C0/C1/C2 and
   distribution-shift are both `FINAL_VALIDATED` locally (21/21 units / 7/7
   folds, integrity audited). H5 (continuation mismatch) `PARTIALLY_SUPPORTED`;
   H6 (generic state-shift) `DISFAVORED`. Status: `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING`
   -- no local experiment remains; see `reports/kbs_final_evidence_20260813/`.
-- **R2 Major 4, practical significance:** `SYNC_PENDING` from Wulver-relayed
-  420/420 controlled timing rows; this is implementation timing, not a
-  theoretical complexity proof, and the payload still needs local
-  promotion/audit.
+- **R2 Major 4, practical significance (updated 2026-08-13):** `EVIDENCE_SYNCED_SYNTHESIS_PENDING`
+  -- 420/420 controlled timing rows synced from Wulver and independently
+  re-audited locally; see `reports/kbs_final_evidence_20260813/controlled_timing_integrity.md`.
+  Controlled timing covers exactly LRU/FIFO-Reinsertion/SIEVE/HALP-causal
+  (5 repetitions each); `evict_value_v1`'s runtime is a separate single-run
+  measurement, not part of the controlled table.
 - **Reviewer #3 (updated 2026-08-13):** the causal continuation campaign is
   now complete and validated; final answer `PARTIALLY_SUPPORTED` /
   `REGIME_DEPENDENT`. Horizon sensitivity is last-known partial/queued

@@ -53,16 +53,23 @@ durable record of their results is `reports/kbs_final_evidence_20260813/`).
 
 ## Immediate Next Actions
 
-1. **Priority P1.** Machine: none (Wulver already did this). Sync and
-   review the corrected held-out cross-family `evict_value_v1` replay
-   (42/42, SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`)
-   -- then rerun
+1. **Done (2026-08-13).** Priority P1 sync completed under explicit task
+   authorization: the corrected held-out cross-family `evict_value_v1` replay
+   (42/42, SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`,
+   verified) and the 420/420 controlled timing campaign were both `rsync`'d
+   from `login02:/mmfs1/project/ikoutis/sv96/Augmented-caching` to
+   `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/`
+   and `analysis/kbs_controlled_timing_20260810/` +
+   `analysis/kbs_controlled_timing_final_analysis_20260811/` respectively.
+   All required hashes matched (16/16 treatment, 13/13 timing) and an
+   independent local re-audit passed every gate. See
+   `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md` and
+   `controlled_timing_integrity.md`. Remaining next action: run
    `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...` to
-   materialize the final matched table. The baseline side is already locally
-   validated in `analysis/kbs_r2_major1_evidence_prep_20260811/`.
-   Prerequisite: Wulver access to pull the artifact. Stopping condition:
-   local integrity checks pass (hash match, unique keys, no NaN/Inf, all
-   `status=ok`) and the script writes the final comparison.
+   materialize the final matched table (baseline side already locally
+   validated in `analysis/kbs_r2_major1_evidence_prep_20260811/`), preserving
+   the caveat that no same-protocol comparison exists against
+   LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS.
 
 2. **Done (2026-08-13).** The continuation-policy C0/C1/C2 production
    campaign (`NEXT_STEPS.md` P2.5) completed and passed its 21-unit
@@ -119,11 +126,17 @@ For the full ranked P0-P4 roadmap beyond these five, see
   `models/`, or `logs/` -- these are gitignored but are evidence, not
   scratch space.
 - **Do not treat the Wulver-sourced facts in `CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`
-  as independently verified by this workstation.** They were relayed by
-  the user from a separately audited Wulver session on 2026-08-11, not
-  confirmed via direct Wulver contact from here. Re-verify job IDs/hashes
-  directly when a task explicitly authorizes contacting Wulver, especially
-  before citing them in anything manuscript-facing.
+  as independently verified by this workstation**, with two exceptions:
+  the corrected held-out `evict_value_v1` treatment and the controlled
+  timing campaign were directly `rsync`'d from Wulver and independently
+  hash- and structure-verified locally on 2026-08-13 under an explicit task
+  authorization -- see `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`
+  and `controlled_timing_integrity.md`. All other Wulver-sourced facts in
+  that matrix were relayed by the user from a separately audited Wulver
+  session on 2026-08-11, not confirmed via direct Wulver contact from here.
+  Re-verify their job IDs/hashes directly when a task explicitly authorizes
+  contacting Wulver, especially before citing them in anything
+  manuscript-facing.
 - **Continuation-policy C0/C1/C2 and distribution-shift are both complete
   and integrity-audited as of 2026-08-13.** Do not relaunch either. Cite
   outcomes only via `reports/kbs_final_evidence_20260813/` or the canonical

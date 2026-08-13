@@ -106,17 +106,29 @@ campaign fails integrity or the reviewer/editor changes the request.
 All six local campaigns above are now audited (`FINAL_VALIDATED`). Remaining
 work:
 
-1. synchronize and verify the corrected held-out `evict_value_v1` 42/42 payload;
-2. synchronize and verify the 420/420 controlled timing payload;
+1. ~~synchronize and verify the corrected held-out `evict_value_v1` 42/42 payload~~
+   -- **done 2026-08-13**, under explicit task authorization: synced from
+   `login02:/mmfs1/project/ikoutis/sv96/Augmented-caching`, 16/16 transfer
+   hashes PASS, independent local re-audit PASS. See
+   `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`;
+2. ~~synchronize and verify the 420/420 controlled timing payload~~ -- **done
+   2026-08-13**, same authorization: 13/13 transfer hashes PASS, independent
+   local re-audit PASS, policy means recomputed and matched. See
+   `reports/kbs_final_evidence_20260813/controlled_timing_integrity.md`;
 3. optionally synchronize broader Wulver degeneracy, horizon, and historical-tail evidence if it is cited;
-4. consolidate canonical evidence bundles -- **done for C0/C1/C2 and
-   distribution-shift**: `reports/kbs_final_evidence_20260813/`;
+4. consolidate canonical evidence bundles -- **done for C0/C1/C2,
+   distribution-shift, corrected held-out treatment, and controlled timing**:
+   `reports/kbs_final_evidence_20260813/`;
 5. update the hypothesis map and reviewer coverage -- **done**:
    `docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`,
    `docs/reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`;
-6. update the manuscript and response to reviewers -- not yet done; waiting
-   on items 1-2 above so the manuscript is not rewritten twice;
-7. run the final scientific-consistency audit (after items 1-2 land);
+6. update the manuscript and response to reviewers -- not yet done; items 1-2
+   have now landed, so this can proceed;
+7. run the final scientific-consistency audit -- items 1-2 have landed;
 8. prepare the submission package.
 
-Wulver synchronization is outside this handoff and must not be initiated here.
+Items 1-2 were completed in a task explicitly authorized to sync these two
+specific FINAL_VALIDATED payloads, verify by SHA-256, and update evidence
+documentation; no new experiments, retraining, or Wulver-side modification
+occurred. Further ad hoc Wulver synchronization beyond these two payloads
+remains outside this handoff unless separately authorized.
