@@ -1,13 +1,17 @@
-# Response to Reviewers
+# Response to Reviewers — Second Revision
 
 Manuscript: KNOSYS-D-26-07461
-Decision: Revise
-Date: 2026-08-13
+Title: "Decision-aligned eviction-value prediction for learning-augmented caching"
+Author: Soroush Vahidi
 
 This letter responds point-by-point to Reviewer #2's four major comments and
 Reviewer #3's primary unresolved issue on the previous revision. All section,
-table, and page references below are to the enclosed revised manuscript PDF
-(44 pages).
+table, and page references below are to the revised manuscript as compiled
+(`submission_kbs_revision_final/01_Revised_Manuscript.pdf`, 44 pages). No raw
+verbatim reviewer letter is stored in this repository; the comment text below
+reproduces the paraphrase supplied for this revision task, which matches the
+concern structure already tracked throughout this branch's documentation
+(`docs/reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`).
 
 We thank both reviewers for pushing this manuscript toward a substantially
 more rigorous and honest empirical study. In preparing this revision we also
@@ -17,34 +21,6 @@ evaluation (Table 5, Section 3.4); the corrected, leakage-free evaluation
 built to address Reviewer #2's Major Comment 1 also resolves this issue and
 is now the paper's primary evidence for `evict_value_v1`'s comparative
 performance.
-
----
-
-## Response to the Associate Editor
-
-> We thank the Associate Editor and both reviewers for their detailed and
-> constructive feedback on the previous revision. In this new revision we
-> have: (1) added a corrected, leakage-free comparison of `evict_value_v1`
-> against four learned cache-replacement systems (LRB, 3L-Cache, CACHEUS,
-> HALP) and three classical baselines, requested specifically for LRB and
-> 3L-Cache, under a matched evaluation protocol — the result is negative for
-> our method; (2) directly tested, rather than merely argued for, the premise
-> that our eviction-loss supervision target is better suited to the eviction
-> decision than reuse-distance, next-arrival, or pairwise-preference
-> alternatives — the evidence rejects this premise; (3) replaced a previously
-> speculative causal account of the offline/online performance gap with a
-> mechanistic diagnosis (an exact-target oracle, a target-degeneracy audit,
-> and a learned/exact agreement analysis) and a controlled causal ablation
-> directly testing the continuation-label mismatch hypothesis Reviewer #3
-> identified as untested; (4) replaced our earlier single-run local timing
-> benchmark with a controlled, repeated-measurement wall-clock campaign and
-> added an explicit statement of intended use and current practical
-> limitations; and (5) disclosed and addressed a train/test-overlap issue we
-> found in the model underlying our original end-to-end table while
-> preparing this revision. We report all of this evidence candidly: the
-> revised manuscript's central finding is that the proposed target does not
-> outperform any tested baseline or alternative objective, and we now
-> explain why in detail rather than leaving the gap unexplained.
 
 ---
 
@@ -168,8 +144,8 @@ rather than defending the original premise.
 **Additional clarification**
 
 We connect this negative comparison to a mechanistic explanation rather than
-leaving it as an isolated ablation result — see the response to Major
-Comment 3 below and Section 3.8 of the manuscript.
+leaving it as an isolated ablation result — see the response to Reviewer #2
+Major Comment 3 and Reviewer #3 below, and Section 3.8 of the manuscript.
 
 ---
 
@@ -437,6 +413,4 @@ alternative objectives tested, that continuation-label mismatch fully
 explains the offline/online gap, that the DAgger intervention improves online
 performance, or that `evict_value_v1` was part of the controlled
 5-repetition timing campaign. The manuscript reports a negative but
-mechanistically explained result throughout, and we believe this directly
-and completely addresses each concern raised by the Associate Editor and
-both reviewers.
+mechanistically explained result throughout.
