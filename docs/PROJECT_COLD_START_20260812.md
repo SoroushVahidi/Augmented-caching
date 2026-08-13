@@ -69,7 +69,7 @@ SSH, use Slurm, submit, requeue, or cancel anything in this pass.
 
 ## KBS Reviewer State
 
-- **R2 Major 1, modern baselines (updated 2026-08-13):** corrected held-out `evict_value_v1` 42/42 result synced from Wulver and independently re-audited locally; status `EVIDENCE_SYNCED_SYNTHESIS_PENDING` -- see `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`. No same-protocol comparison against LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS exists; only `evict_value_v1` has true 42/42 same-protocol coverage. Exact LRB/3L-Cache/CACHEUS local rows remain validated with their documented caveats.
+- **R2 Major 1, modern baselines (updated 2026-08-13, later pass):** corrected held-out `evict_value_v1` 42/42 result synced from Wulver, independently re-audited locally, and now compared under an exact evaluation protocol against all seven baselines (LRB, 3L-Cache, CACHEUS, HALP, LRU, SIEVE, FIFO-Reinsertion) -- status `SCIENTIFICALLY_COMPLETE_SYNTHESIS_READY`; see `reports/kbs_final_evidence_20260813/major1_reviewer_summary.md`. `evict_value_v1` loses on a clear majority of matched cells against every baseline (a negative but scientifically complete result). An earlier version of this line claimed no same-protocol comparison exists; that was incorrect (it restated a Wulver-filesystem-scoped claim from `baseline_eligibility.csv` as universal without checking this workstation's own `analysis/reviewer_fairness/` results).
 - **R2 Major 2, supervision objective:** `COMPLETE_VALIDATED`; 84/84 objective-ablation cells and the 50% learning-curve stopping decision are validated. Do not run the 100% curve.
 - **R2 Major 3, offline/online mechanism (updated 2026-08-13):** C0/C1/C2 and
   distribution-shift are both `FINAL_VALIDATED` locally (21/21 units / 7/7

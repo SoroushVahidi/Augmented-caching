@@ -42,11 +42,14 @@ hashes PASS respectively, all structural/leakage/statistical re-audit gates
 PASS). Both rows below are rewritten in place. Status for both moves from
 `SYNC_PENDING`/`WULVER_ONLY_VALIDATED` to `EVIDENCE_SYNCED_SYNTHESIS_PENDING`
 (R2 Major 1) and `FINAL_VALIDATED_SYNCED` (controlled timing artifact itself).
-No same-protocol baseline comparison exists for `evict_value_v1` even after
-sync -- see entry #3's caveat. Compact evidence:
+**Correction (2026-08-13, later pass):** this note originally claimed no
+same-protocol baseline comparison exists for `evict_value_v1` even after
+sync. That was incorrect -- see entry #3 below, now updated: all seven
+baselines have a validated exact-protocol comparison. Compact evidence:
 `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`,
 `heldout_treatment_provenance.md`, `controlled_timing_integrity.md`,
-`controlled_timing_interpretation.md`.
+`controlled_timing_interpretation.md`, `major1_reviewer_summary.md`,
+`major1_protocol_comparability.md`.
 
 **2026-08-13 note:** experiments #2 (distribution-shift) and #10/#11
 (continuation-policy C0/C1/C2 -- numbered #11 in the Registry section below)
@@ -138,11 +141,11 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Source entry point: `scripts/experiments/run_evict_cross_family_pipeline.py`, `scripts/experiments/run_cross_family_heldout_eval.py`
 - Config: `configs/fair_cross_family_v1/folds/*.json`
 - Output path: `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/` (synced, hash-verified)
-- Status: `FINAL_VALIDATED_SYNCED` for treatment artifact (42/42 rows, 16/16 transfer hashes PASS, independent local re-audit: structural/leakage/model-provenance gates all PASS); R2 Major 1 overall `EVIDENCE_SYNCED_SYNTHESIS_PENDING`
-- Evidence strength: `PRIMARY_REVIEWER_EVIDENCE` for `evict_value_v1` itself (this protocol's own artifact); no same-protocol comparison exists against LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS -- see `baseline_eligibility.csv` and `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`
-- Primary/diagnostic/supporting: primary for `evict_value_v1`'s own 42/42 result; the LRU/SIEVE/FIFO comparison remains caveated/different-run/supplementary, not a same-protocol primary comparison
+- Status: `FINAL_VALIDATED_SYNCED` for treatment artifact (42/42 rows, 16/16 transfer hashes PASS, independent local re-audit: structural/leakage/model-provenance gates all PASS); R2 Major 1 overall `SCIENTIFICALLY_COMPLETE_SYNTHESIS_READY` (2026-08-13, later pass)
+- Evidence strength: `PRIMARY_REVIEWER_EVIDENCE` for `evict_value_v1` itself (this protocol's own artifact) **and** for the exact-protocol comparison against all seven baselines (LRB, 3L-Cache, CACHEUS, HALP, LRU, SIEVE, FIFO-Reinsertion), validated 2026-08-13 -- `evict_value_v1` loses on a clear majority of matched cells against every one. `baseline_eligibility.csv`'s "zero results anywhere" wording is scoped to Wulver's own filesystem only; this workstation's `analysis/reviewer_fairness/` directory already held the exact-protocol results -- see `reports/kbs_final_evidence_20260813/major1_reviewer_summary.md` and `major1_protocol_comparability.md`
+- Primary/diagnostic/supporting: primary for both `evict_value_v1`'s own 42/42 result and the full seven-baseline comparison
 - Next action: none required for evidence collection; manuscript/rebuttal synthesis only. (SHA-256 of `policy_comparison.csv` verified as `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`.)
-- Canonical documentation: `docs/reviewer/kbs_second_revision_artifact_map.md` Reviewer #2 Major 1; `analysis/kbs_comparison_fairness_audit.json`; `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`, `heldout_treatment_provenance.md`
+- Canonical documentation: `docs/reviewer/kbs_second_revision_artifact_map.md` Reviewer #2 Major 1; `analysis/kbs_comparison_fairness_audit.json`; `reports/kbs_final_evidence_20260813/major1_reviewer_summary.md`, `major1_protocol_comparability.md`, `heldout_treatment_integrity.md`, `heldout_treatment_provenance.md`
 
 ### 4. Simple exact-protocol baselines (LRU / SIEVE / FIFO)
 - Scientific question: how does the method compare to simple, exactly-specified,

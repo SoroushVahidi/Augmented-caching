@@ -70,31 +70,40 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
     (no training/split dependency for the first three; HALP's existing
     result is already counted as valid comparison evidence) -- their
     existing local `FINAL_VALIDATED` rows stand.
-- Remaining task (updated 2026-08-13): none for evidence collection. The
-  corrected 42/42 `evict_value_v1` result has been synced from Wulver and
-  independently re-audited locally (see
-  `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`).
-  Remaining task is manuscript/rebuttal synthesis against the locally
-  complete modern-baseline controlled-window CSVs, preserving the caveat that
-  no same-protocol comparison exists. Sync jobs `1171965`-`1171967` later
-  only for replication/config audit if their config later proves materially
-  different.
+- Remaining task (updated 2026-08-13, later pass): none for evidence
+  collection. The corrected 42/42 `evict_value_v1` result has been synced
+  from Wulver, independently re-audited locally, and compared under an
+  exact evaluation protocol against all seven baselines (see
+  `reports/kbs_final_evidence_20260813/major1_reviewer_summary.md`).
+  Remaining task is manuscript/rebuttal wording integration only. Sync jobs
+  `1171965`-`1171967` later only for replication/config audit if their
+  config later proves materially different.
 - Text-only fix: label `offline_belady` explicitly as oracle context, not a
   deployable baseline, everywhere it appears (already flagged as required in
   the fairness audit; verify consistently applied).
-- **Status (updated 2026-08-13): `EVIDENCE_SYNCED_SYNTHESIS_PENDING`.**
+- **Status (updated 2026-08-13, later pass): `SCIENTIFICALLY_COMPLETE_SYNTHESIS_READY`.**
   Scientific baseline work is complete locally; the corrected Wulver
   `evict_value_v1` 42/42 result has been synced (16/16 transfer hashes PASS)
   and independently re-audited locally (all structural/leakage/model-hash
-  gates PASS). **This does not create a same-protocol comparison** against
-  LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS: only `evict_value_v1` has true
-  42/42 same-protocol coverage; LRU/SIEVE/FIFO have a caveated
-  different-run, window-matched supplementary comparison only; LRB/3L-Cache/
-  HALP/CACHEUS have zero executed results under any protocol. The exact
-  controlled-window LRB/3L-Cache/CACHEUS rows are locally validated; their
-  Wulver jobs remain pending only as replication/config-audit follow-up.
-  Per-baseline fidelity caveats unchanged: HALP `LOW_TO_MEDIUM`, LRB/3L-Cache
-  `MEDIUM`, CACHEUS `HIGH` with the current live-source provenance caveat.
+  gates PASS). **A same-protocol comparison now exists and is validated**
+  against all seven baselines (LRB, 3L-Cache, CACHEUS, HALP, LRU, SIEVE,
+  FIFO-Reinsertion): each has 21/21 `primary_controlled_window` cells
+  matching the treatment exactly by trace SHA-256, capacity, window, and
+  metric, with `future_information=none` on every row. Under this
+  comparison, `evict_value_v1` loses on a clear majority of matched cells
+  (13-17 of 21) against every baseline -- see
+  `reports/kbs_final_evidence_20260813/major1_reviewer_summary.md` and
+  `major1_protocol_comparability.md`. An earlier version of this status line
+  claimed no same-protocol comparison exists and that LRB/3L-Cache/HALP/
+  CACHEUS have zero results under any protocol; that was **incorrect** --
+  those claims came from `baseline_eligibility.csv`, a Wulver-produced
+  artifact whose "zero results... under any protocol" wording is accurate
+  only about Wulver's own filesystem, not this workstation's separately
+  produced `analysis/reviewer_fairness/` results. The exact controlled-window
+  LRB/3L-Cache/CACHEUS rows are locally validated; their Wulver jobs remain
+  pending only as replication/config-audit follow-up. Per-baseline fidelity
+  caveats unchanged: HALP `LOW_TO_MEDIUM`, LRB/3L-Cache `MEDIUM`, CACHEUS
+  `HIGH` with the current live-source provenance caveat.
 
 ## Reviewer #2 Major 2: supervision-objective ablation
 
@@ -338,7 +347,7 @@ manifests, not this document, own progress counts.
 
 | Concern | Status | Primary remaining gap |
 |---|---|---|
-| R2 Major 1 (learned-baseline comparison) | `EVIDENCE_SYNCED_SYNTHESIS_PENDING` | Corrected `evict_value_v1` result (42/42) synced from Wulver and independently re-audited locally; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally validated, with Wulver copies pending only as replication/config audit. No same-protocol comparison against LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS exists -- manuscript synthesis must preserve this caveat |
+| R2 Major 1 (learned-baseline comparison) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_READY` | Corrected `evict_value_v1` result (42/42) synced from Wulver, independently re-audited locally, and compared under a validated exact evaluation protocol against all seven baselines (LRB/3L-Cache/CACHEUS/HALP/LRU/SIEVE/FIFO-Reinsertion). `evict_value_v1` loses on a clear majority of matched cells against every one -- manuscript synthesis must report this candid negative result, not a same-protocol-comparison caveat |
 | R2 Major 2 (supervision-objective ablation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None -- manuscript integration only |
 | R2 Major 3 (offline/online failure explanation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None locally -- C0/C1/C2 and distribution-shift are both `FINAL_VALIDATED`; remaining work is manuscript/rebuttal synthesis only |
 | R2 Major 4 (practical significance / timing) | `EVIDENCE_SYNCED_SYNTHESIS_PENDING` | Controlled timing (420/420) synced from Wulver and independently re-audited locally; policy means recomputed and matched. `evict_value_v1` timing remains a separate single-run measurement, not part of the 4-policy controlled table -- manuscript synthesis must preserve this caveat |

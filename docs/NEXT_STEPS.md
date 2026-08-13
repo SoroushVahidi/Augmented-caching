@@ -1,5 +1,28 @@
 # Next-Work Roadmap
 
+## 2026-08-13 update (correction pass): Major 1 same-protocol comparison completed
+
+A read-only audit found that the "2026-08-13 update (later)" section
+immediately below **incorrectly claimed no same-protocol comparison exists**
+against LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS. That claim restated a
+Wulver-filesystem-scoped line from `baseline_eligibility.csv` as if it were
+universal, without checking this workstation's own
+`analysis/reviewer_fairness/` directory, which already held exact-protocol
+results for all seven baselines since 2026-08-06/07. This pass ran
+`scripts/analysis/prepare_r2_major1_evidence.py` (LRB/3L-Cache/CACHEUS),
+independently re-validated its output against the raw CSVs (zero
+discrepancies), independently computed the same comparison for LRU/SIEVE/
+FIFO-Reinsertion/HALP, and confirmed all seven baselines have 21/21
+`primary_controlled_window` cells matching the treatment exactly by trace
+SHA-256, capacity, window, and metric. Result: `evict_value_v1` loses on a
+clear majority of matched cells (13-17 of 21) against every baseline tested
+-- a candid negative result. See
+`reports/kbs_final_evidence_20260813/major1_reviewer_summary.md` and
+`major1_protocol_comparability.md`. R2 Major 1 status moves from
+`EVIDENCE_SYNCED_SYNTHESIS_PENDING` to `SCIENTIFICALLY_COMPLETE_SYNTHESIS_READY`.
+No new experiment was run to produce this; it is a synthesis of
+already-computed local evidence.
+
 ## 2026-08-13 update (later): both remaining Wulver sync blockers closed
 
 **READY_FOR_MANUSCRIPT_AND_REBUTTAL_SYNTHESIS.** Under an explicit task
@@ -174,36 +197,37 @@ rule -- relaunching would waste compute and contradict a recorded decision):**
 - **Why:** named the single highest-priority open item by the comparison-
   fairness audit; without it, no citable head-to-head comparison exists
   between `evict_value_v1` and modern learned baselines (LRB/3L/CACHEUS/HALP).
-- **Status (updated 2026-08-13): `FINAL_VALIDATED_SYNCED`.** Synced from
-  Wulver and independently re-audited locally -- **COMPLETE, 42/42 rows**,
-  SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`
-  (verified). This item is **done**, not "sync and review it" -- both the
-  transfer-hash verification (16/16 PASS) and the local structural/leakage/
-  model-provenance re-audit passed every gate. A 2026-08-11 local
-  evidence-prep pass validated the baseline side and created
-  `analysis/kbs_r2_major1_evidence_prep_20260811/` plus the reusable
-  comparison procedure `scripts/analysis/prepare_r2_major1_evidence.py`.
-  Wulver jobs `1171965`-`1171967` remain pending because of maintenance, but
-  the local controlled-window LRB/3L/CACHEUS rows already cover those
-  baseline cells unless the missing Wulver config later proves materially
-  different. **No same-protocol comparison exists** against LRU/SIEVE/FIFO/
-  LRB/3L-Cache/HALP/CACHEUS -- see `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`.
-- **Dependency:** none remaining; Wulver jobs `1171965`-`1171967` are
-  replication/config-audit follow-up only.
+- **Status (updated 2026-08-13, later pass): `SCIENTIFICALLY_COMPLETE_SYNTHESIS_READY`.**
+  Synced from Wulver and independently re-audited locally -- **COMPLETE,
+  42/42 rows**, SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`
+  (verified). A 2026-08-11 local evidence-prep pass validated the baseline
+  side and created `analysis/kbs_r2_major1_evidence_prep_20260811/` plus the
+  reusable comparison procedure `scripts/analysis/prepare_r2_major1_evidence.py`.
+  **That script was run 2026-08-13 (later pass)** and its output
+  independently re-validated cell-by-cell against the raw CSVs (zero
+  discrepancies); combined with an independently computed LRU/SIEVE/FIFO/
+  HALP comparison (not covered by the script), all seven baselines
+  (LRB, 3L-Cache, CACHEUS, HALP, LRU, SIEVE, FIFO-Reinsertion) now have a
+  validated exact-protocol comparison against `evict_value_v1`. Result:
+  `evict_value_v1` loses on a clear majority of matched cells (13-17 of 21)
+  against every baseline -- see `reports/kbs_final_evidence_20260813/major1_reviewer_summary.md`.
+  A prior version of this entry claimed "no same-protocol comparison
+  exists"; that was incorrect (it restated a Wulver-filesystem-scoped claim
+  as universal). Wulver jobs `1171965`-`1171967` remain pending because of
+  maintenance, but are replication/config-audit follow-up only.
+- **Dependency:** none remaining.
 - **Machine:** synced to this workstation 2026-08-13; local from here on.
 - **Entry point:** `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv`
   (present locally, hash-verified).
-- **Expected cost:** none remaining for sync/review; only manuscript
-  synthesis is left.
+- **Expected cost:** none remaining; only manuscript wording integration is left.
 - **Stopping rule:** integrity checks pass locally after sync (unique keys,
   no NaN/Inf, all `status=ok`, hash matches the value above) -- **met**.
-  Next: run `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...`
-  to materialize the final matched comparison table.
-- **What would change our interpretation:** if `evict_value_v1` beats the
-  modern learned baselines once reviewed, the "target problem" narrative
-  would need to be reconciled with a competitive result; if it still loses
-  under this clean comparison, it strengthens the current negative-result
-  narrative without the lingering unfairness caveat.
+  Comparison against all seven baselines validated -- **met**.
+- **What this changed our interpretation to:** `evict_value_v1` loses to
+  every baseline tested under the clean, exact-protocol comparison. This
+  strengthens the current negative-result narrative without the lingering
+  unfairness caveat, and is mechanistically explained elsewhere on this
+  branch by the target-degeneracy finding (H3).
 
 ### P1.2 -- Controlled timing / practical-significance campaign
 

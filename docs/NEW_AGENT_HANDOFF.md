@@ -64,12 +64,17 @@ durable record of their results is `reports/kbs_final_evidence_20260813/`).
    All required hashes matched (16/16 treatment, 13/13 timing) and an
    independent local re-audit passed every gate. See
    `reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md` and
-   `controlled_timing_integrity.md`. Remaining next action: run
-   `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...` to
-   materialize the final matched table (baseline side already locally
-   validated in `analysis/kbs_r2_major1_evidence_prep_20260811/`), preserving
-   the caveat that no same-protocol comparison exists against
-   LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS.
+   `controlled_timing_integrity.md`. **Follow-up done (2026-08-13, later
+   pass):** `scripts/analysis/prepare_r2_major1_evidence.py --treatment-csv ...`
+   was run and its output independently re-validated against the raw CSVs
+   (zero discrepancies); combined with an independent LRU/SIEVE/FIFO/HALP
+   comparison (not covered by that script), all seven baselines now have a
+   validated exact-protocol comparison against `evict_value_v1`. See
+   `reports/kbs_final_evidence_20260813/major1_reviewer_summary.md`.
+   `evict_value_v1` loses on a clear majority of matched cells against every
+   baseline. The prior note here claiming no same-protocol comparison exists
+   was incorrect -- it restated a Wulver-filesystem-scoped claim as
+   universal.
 
 2. **Done (2026-08-13).** The continuation-policy C0/C1/C2 production
    campaign (`NEXT_STEPS.md` P2.5) completed and passed its 21-unit
