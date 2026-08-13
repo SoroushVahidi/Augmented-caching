@@ -61,6 +61,14 @@ output/
 /analysis/kbs_comparison_fairness_audit.json
 /analysis/kbs_local_current_evidence_synthesis_*/
 
+# Wulver-synced raw payloads (2026-08-13): corrected held-out evict_value_v1
+# treatment provenance/synthesis note and the controlled timing campaign.
+# Canonical raw data; compact tracked summaries live in
+# reports/kbs_final_evidence_20260813/ instead.
+/analysis/kbs_evict_value_heldout_synthesis_20260811/
+/analysis/kbs_controlled_timing_20260810/
+/analysis/kbs_controlled_timing_final_analysis_20260811/
+
 # Active/running production campaign output -- do not commit mid-run
 # evidence. See docs/DEVELOPMENT_STATUS.md and the active-compute warning
 # in docs/NEW_AGENT_HANDOFF.md.
