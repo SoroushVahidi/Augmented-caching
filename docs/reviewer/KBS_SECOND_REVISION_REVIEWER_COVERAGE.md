@@ -343,15 +343,25 @@ manifests, not this document, own progress counts.
 
 ## Summary
 
-**Authoritative reviewer-completion table (reconciled 2026-08-13, post Wulver sync):**
+**Authoritative reviewer-completion table (reconciled 2026-08-13, post manuscript/rebuttal synthesis):**
 
 | Concern | Status | Primary remaining gap |
 |---|---|---|
-| R2 Major 1 (learned-baseline comparison) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_READY` | Corrected `evict_value_v1` result (42/42) synced from Wulver, independently re-audited locally, and compared under a validated exact evaluation protocol against all seven baselines (LRB/3L-Cache/CACHEUS/HALP/LRU/SIEVE/FIFO-Reinsertion). `evict_value_v1` loses on a clear majority of matched cells against every one -- manuscript synthesis must report this candid negative result, not a same-protocol-comparison caveat |
-| R2 Major 2 (supervision-objective ablation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None -- manuscript integration only |
-| R2 Major 3 (offline/online failure explanation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None locally -- C0/C1/C2 and distribution-shift are both `FINAL_VALIDATED`; remaining work is manuscript/rebuttal synthesis only |
-| R2 Major 4 (practical significance / timing) | `EVIDENCE_SYNCED_SYNTHESIS_PENDING` | Controlled timing (420/420) synced from Wulver and independently re-audited locally; policy means recomputed and matched. `evict_value_v1` timing remains a separate single-run measurement, not part of the 4-policy controlled table -- manuscript synthesis must preserve this caveat |
-| Reviewer #3 (causal explanation) | `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING` | None locally -- final answer `PARTIALLY_SUPPORTED` / `REGIME_DEPENDENT`, see the 2026-08-13 snapshot above |
+| R2 Major 1 (learned-baseline comparison) | `MANUSCRIPT_SYNTHESIS_COMPLETE` | Integrated as manuscript §3.6 (Table 7) and response-to-reviewers "Major Comment 1"; `evict_value_v1` loses on a clear majority of matched cells against every one of seven baselines including LRB/3L-Cache -- none |
+| R2 Major 2 (supervision-objective ablation) | `MANUSCRIPT_SYNTHESIS_COMPLETE` | Integrated as manuscript §3.7 (Table 8); eviction-loss is worst/tied-worst of four objectives in every family -- none |
+| R2 Major 3 (offline/online failure explanation) | `MANUSCRIPT_SYNTHESIS_COMPLETE` | Integrated as manuscript §3.8 (mechanistic diagnosis) and §3.9 (C0/C1/C2 + DAgger) -- none |
+| R2 Major 4 (practical significance / timing) | `MANUSCRIPT_SYNTHESIS_COMPLETE` | Integrated as manuscript §3.10 (Table 9, controlled timing) and new §3.11 (Practical Significance) -- none |
+| Reviewer #3 (causal explanation) | `MANUSCRIPT_SYNTHESIS_COMPLETE` | Integrated as manuscript §3.9; final answer `PARTIALLY_SUPPORTED` / `REGIME_DEPENDENT` -- none |
+
+**RESPONSE_TO_REVIEWERS_COMPLETE**: `reports/kbs_response_to_reviewers_final.md` /
+`submission_kbs_revision_final/02_Response_to_Reviewers.md` (+ regenerated
+`.docx`) provide a full point-by-point response to all five concerns above,
+with exact section/table/page references into the recompiled 44-page
+manuscript PDF. Crosswalk: `reports/kbs_final_evidence_20260813/manuscript_reviewer_crosswalk.md`.
+`NO_MAJOR_EXPERIMENT_REMAINS`. Next stage:
+`FINAL_SUBMISSION_CONSISTENCY_AND_PACKAGE_AUDIT` (not yet performed -- do
+not treat the submission package as upload-ready until that audit passes;
+see `submission_kbs_revision_final/README_UPLOAD_CHECKLIST.md`).
 
 - Most complete concerns: **Reviewer #2 Major 2** (supervision-objective
   ablation, `COMPLETE_VALIDATED`/`FINAL_VALIDATED` scientific scope) and, as

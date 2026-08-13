@@ -3,7 +3,7 @@
 Manuscript: **KNOSYS-D-26-07461**  
 Author: **Soroush Vahidi** (sole author)  
 Package folder: `submission_kbs_revision_final/`  
-Prepared: 2026-06-21
+Prepared: 2026-06-21; second-revision update: 2026-08-13
 
 This package contains the files needed for the KBS revision upload to Editorial Manager. Download this folder (or `submission_kbs_revision_final.zip`) from GitHub and upload each item as requested by the revision email.
 
@@ -41,16 +41,20 @@ This package contains the files needed for the KBS revision upload to Editorial 
 
 ---
 
-## What this revision honestly reports
+## What this revision honestly reports (updated 2026-08-13, second-revision round)
 
-- End-to-end online replay at **capacities 32, 64, and 128 only** (no cap256).
-- **Negative end-to-end result:** `evict_value_v1` does not beat LRU, SIEVE, or FIFO-Reinsertion at any evaluated capacity.
-- **HALP:** analytical differentiation only; no empirical HALP comparison.
-- **Fallback/guard:** demoted as unvalidated; no fallback ablation.
-- **Overhead:** includes a local/tmux wall-clock benchmark (not Wulver/Slurm).
+- End-to-end online replay at **capacities 32, 64, and 128 only** (no cap256), under two protocols: the original single-split evaluation (now disclosed as relying on a model with train/test overlap) and a corrected, leakage-free leave-one-family-out evaluation (§3.6).
+- **Negative end-to-end result, now against seven baselines including LRB and 3L-Cache:** `evict_value_v1` does not beat LRU, SIEVE, FIFO-Reinsertion, LRB, 3L-Cache, CACHEUS, or HALP under a matched evaluation protocol (§3.6, Table 7).
+- **Objective ablation (new):** eviction-loss is the worst or tied-worst of four tested finite-horizon supervision objectives (§3.7, Table 8).
+- **Mechanistic diagnosis (new):** target degeneracy and horizon truncation, not model-fitting failure or insufficient data, are the dominant explanation (§3.8).
+- **HALP:** now an empirical comparison (independent reimplementation, disclosed fidelity caveat), not analytical-only.
+- **Continuation-mismatch causal ablation (new, addresses Reviewer #3):** partially supported, regime-dependent (§3.9); a companion DAgger-style distribution-shift correction is a negative result.
+- **Fallback/guard:** remains demoted as unvalidated; no fallback ablation.
+- **Overhead:** replaced the local/tmux single-run benchmark with a controlled, repeated-measurement (5-rep) Wulver campaign for LRU/FIFO-Reinsertion/SIEVE/HALP; `evict_value_v1`'s own runtime remains a separate single-run measurement (§3.10).
+- **Practical significance (new section, §3.11):** explicitly states no current deployment scenario is justified; reframes contribution as diagnostic/methodological.
 - **Solo-author validation** limitation disclosed.
 
-No new experiments were run to prepare this upload package.
+No new experiments were run to prepare this upload package; all second-revision evidence was gathered and validated in prior work on this branch and integrated here.
 
 ---
 

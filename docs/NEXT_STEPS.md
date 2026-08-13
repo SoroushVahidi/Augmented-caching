@@ -1,5 +1,25 @@
 # Next-Work Roadmap
 
+## 2026-08-13 update (manuscript synthesis pass): manuscript and rebuttal complete
+
+**MANUSCRIPT_SYNTHESIS_COMPLETE, RESPONSE_TO_REVIEWERS_COMPLETE,
+NO_MAJOR_EXPERIMENT_REMAINS.** All validated second-revision evidence (Major
+1 baseline comparison, Major 2 objective ablation, mechanistic diagnosis,
+C0/C1/C2 causal ablation, DAgger negative result, controlled timing) has been
+integrated into `submission_kbs_revision_final/07_LaTeX_Source/main.tex`
+(recompiled to a 44-page PDF, zero LaTeX errors/undefined references) and
+into a full point-by-point response to Reviewer #2's four major comments and
+Reviewer #3's primary issue
+(`reports/kbs_response_to_reviewers_final.md` /
+`submission_kbs_revision_final/02_Response_to_Reviewers.md`). A crosswalk
+mapping every concern to its evidence, manuscript section/table/page, and
+response section is at
+`reports/kbs_final_evidence_20260813/manuscript_reviewer_crosswalk.md`. All
+inserted numbers were independently re-verified against canonical raw
+evidence with zero discrepancies. A stale-claim sweep found no overclaiming
+language and no placeholders. Next stage:
+`FINAL_SUBMISSION_CONSISTENCY_AND_PACKAGE_AUDIT` (not yet performed).
+
 ## 2026-08-13 update (correction pass): Major 1 same-protocol comparison completed
 
 A read-only audit found that the "2026-08-13 update (later)" section
