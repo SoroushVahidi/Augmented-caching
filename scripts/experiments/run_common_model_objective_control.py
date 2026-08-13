@@ -94,7 +94,7 @@ def metrics(rows, model, label, direction):
     return float(np.mean(regrets) if regrets else 0), len(vals)
 
 def train_one(train, val, obj, spec, cfg):
-    label,direction=spec['label'],spec['direction']; m=CommonScorer(**cfg['architecture'],seed=cfg['seed'])
+    label,direction=spec['label'],spec['direction']; a=cfg['architecture']; m=CommonScorer(hidden=a['hidden_units'],lr=a['lr'],epochs=a['epochs'],l2=a['l2'],seed=cfg['seed'])
     if obj=='objective_pairwise':
         pairs=build_pairwise_rows(train,source='next_arrival',max_pairs_per_decision=cfg['pair_max_pairs_per_decision'],sample_seed=cfg['seed'])
         A=np.asarray([[float(p[f'i_{c}']) for c in FEATURES] for p in pairs]); B=np.asarray([[float(p[f'j_{c}']) for c in FEATURES] for p in pairs]); m.fit(A,pairs=(A,B),mode='pairwise')
