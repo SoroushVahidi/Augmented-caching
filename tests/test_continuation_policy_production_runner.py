@@ -230,6 +230,27 @@ def test_incompatible_existing_output_fails_closed(tmp_path: Path):
     assert runner.main(_args(bad_config, data, out, models, "--resume")) == 2
 
 
+def test_resume_reuses_frozen_source_identity_without_changing_protocol(tmp_path: Path):
+    config = runner._load_json(Path("configs/continuation_policy_causal_ablation_production_v1.json"))
+    repo_root = runner._repo_root()
+    source_sha = runner._git_sha(repo_root)
+    paths = runner.Paths(
+        repo_root=repo_root,
+        config_path=repo_root / "configs/continuation_policy_causal_ablation_production_v1.json",
+        output_root=tmp_path / "output",
+        model_root=tmp_path / "models",
+        data_read_root=tmp_path / "data",
+        fold_dir=tmp_path / "folds",
+        registry_path=tmp_path / "registry.json",
+    )
+    paths.output_root.mkdir()
+    snapshot = dict(config)
+    snapshot["source_sha_at_runner_start"] = source_sha
+    runner._atomic_write_json(paths.output_root / "config_snapshot.json", snapshot)
+
+    assert runner._source_sha_for_run(paths, config, resume=True) == source_sha
+
+
 def test_same_example_alignment_gate_rejects_duplicate_candidate_key():
     reqs, _pages = build_requests_from_lists(page_ids=["a", "b", "c", "a", "d", "b"])
     rows = build_decision_aligned_continuation_rows(

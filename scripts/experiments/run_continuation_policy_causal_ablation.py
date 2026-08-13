@@ -1070,8 +1070,33 @@ def _initialize_output(paths: Paths, config: Mapping[str, object], source_sha: s
     _atomic_write_json(paths.output_root / "config_snapshot.json", snapshot)
 
 
+def _source_sha_for_run(paths: Paths, config: Mapping[str, object], *, resume: bool) -> str:
+    current_sha = _git_sha(paths.repo_root)
+    if not resume:
+        return current_sha
+    snapshot_path = paths.output_root / "config_snapshot.json"
+    if not snapshot_path.exists():
+        return current_sha
+    snapshot = _load_json(snapshot_path)
+    recorded_sha = str(snapshot.get("source_sha_at_runner_start", ""))
+    if not recorded_sha or _scientific_snapshot(snapshot) != _scientific_snapshot(config):
+        return current_sha
+    try:
+        subprocess.check_output(
+            ["git", "cat-file", "-e", f"{recorded_sha}:scripts/experiments/run_continuation_policy_causal_ablation.py"],
+            cwd=paths.repo_root,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return current_sha
+    # Resume-only provenance handling: this runner's scientific code remains
+    # frozen, while the current working tree may contain metadata fixes.
+    if recorded_sha:
+        return recorded_sha
+    return current_sha
+
+
 def run(config: Mapping[str, object], paths: Paths, units: Sequence[Unit], limits: RuntimeLimits, args) -> Dict[str, object]:
-    source_sha = _git_sha(paths.repo_root)
+    source_sha = _source_sha_for_run(paths, config, resume=args.resume)
     _check_existing_output(paths, config, resume=args.resume, preflight_only=False)
     _initialize_output(paths, config, source_sha)
     completed = _completed_units(paths, config, units) if args.resume else {}
