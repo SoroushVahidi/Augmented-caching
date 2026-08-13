@@ -33,6 +33,9 @@ def tie_stats(decisions):
  if not decisions:return {'fraction_tied_decisions':0,'fraction_all_tied':0,'mean_optimal_set_fraction':0}
  all_t=sum(len(d.optimal_candidates)==len(d.candidate_values) for d in decisions)
  return {'fraction_tied_decisions':sum(len(d.optimal_candidates)>1 for d in decisions)/len(decisions),'fraction_all_tied':all_t/len(decisions),'mean_optimal_set_fraction':sum(len(d.optimal_candidates)/len(d.candidate_values) for d in decisions)/len(decisions)}
+def bool_score(hit_sequence):
+ window=hit_sequence[SCORE_START:SCORE_END]; misses=sum(1 for h in window if not h)
+ return misses, misses/len(window)
 def main(args):
  cfg=json.loads(args.config.read_text()); out=args.out; out.mkdir(parents=True,exist_ok=True); atomic(out/'config_snapshot.json',cfg)
  old={}
@@ -55,9 +58,9 @@ def main(args):
    for pol,seed in conditions:
     rng=random.Random(seed) if seed is not None else None
     rep=_run_replay(requests=req,capacity=cap,trace_name=str(fd['test_trace_name']),trace_family=fam,cfg=ocfg,objective='eviction_loss',policy_name=pol,choose_candidate=choose(pol,rng))
-    sc=score_window(rep.hit_sequence,SCORE_START,SCORE_END); st=tie_stats([d for d in rep.decisions if SCORE_START<=d.request_t<SCORE_END]); key=(fam,cap)
-    if pol=='CURRENT_DETERMINISTIC' and key in old and sc.misses!=old[key]: raise RuntimeError(f'TIE_ORACLE_REGRESSION_FAILED {fam} cap{cap}: {sc.misses}!={old[key]}')
-    row={'family':fam,'capacity':cap,'tie_policy':pol,'seed':seed if seed is not None else '','misses':sc.misses,'miss_ratio':sc.miss_ratio,'delta_vs_LRU':sc.misses-ls.misses,'delta_vs_current_exact':None,'trace_sha256':sha(path),**st};unit_rows.append(row)
+    misses,ratio=bool_score(rep.hit_sequence); st=tie_stats([d for d in rep.decisions if SCORE_START<=d.request_t<SCORE_END]); key=(fam,cap)
+    if pol=='CURRENT_DETERMINISTIC' and key in old and misses!=old[key]: raise RuntimeError(f'TIE_ORACLE_REGRESSION_FAILED {fam} cap{cap}: {misses}!={old[key]}')
+    row={'family':fam,'capacity':cap,'tie_policy':pol,'seed':seed if seed is not None else '','misses':misses,'miss_ratio':ratio,'delta_vs_LRU':misses-ls.misses,'delta_vs_current_exact':None,'trace_sha256':sha(path),**st};unit_rows.append(row)
    current=next(r for r in unit_rows if r['tie_policy']=='CURRENT_DETERMINISTIC');
    for r in unit_rows:r['delta_vs_current_exact']=r['misses']-current['misses']
    atomic(unit/'summary.json',{'status':'COMPLETE','rows':unit_rows});rows+=unit_rows;manifest['units'][f'{fam}_cap{cap}']={'status':'COMPLETE'};manifest['completed_units']=len(manifest['units']);atomic(out/'completion_manifest.json',manifest);print(json.dumps({'unit':f'{fam}_cap{cap}','completed_units':manifest['completed_units']}),flush=True)

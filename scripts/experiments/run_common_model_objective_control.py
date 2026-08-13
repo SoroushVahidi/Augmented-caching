@@ -93,6 +93,10 @@ def metrics(rows, model, label, direction):
         regrets.append((true[idx]-best) if direction=='min' else (best-true[idx]))
     return float(np.mean(regrets) if regrets else 0), len(vals)
 
+def bool_score(hit_sequence):
+    window=hit_sequence[SCORE_START:SCORE_END]; misses=sum(1 for h in window if not h)
+    return misses, misses/len(window)
+
 def train_one(train, val, obj, spec, cfg):
     label,direction=spec['label'],spec['direction']; a=cfg['architecture']; m=CommonScorer(hidden=a['hidden_units'],lr=a['lr'],epochs=a['epochs'],l2=a['l2'],seed=cfg['seed'])
     if obj=='objective_pairwise':
@@ -124,8 +128,8 @@ def run(args):
             model,stat=train_one(tr,va,obj,spec,cfg); mp=unit/f'{obj}.npz'; model.save(mp)
             tfname=str(fd['test_trace_name']); scorer=lambda rs,mm=model: {str(r['candidate_page_id']):float(mm.score(np.asarray([[float(r[c]) for c in FEATURES] for r in rs]))[i]) for i,r in enumerate(rs)}
             replay=_run_replay(requests=test_reqs,capacity=cap,trace_name=tfname,trace_family=held,cfg=ocfg,objective='eviction_loss',policy_name=obj,choose_candidate=lambda rs,sc=scorer,d=spec['direction']: (min if d=='min' else max)([str(r['candidate_page_id']) for r in rs],key=lambda p:(sc(rs)[p],[str(r['candidate_page_id']) for r in rs].index(p))))
-            score=score_window(replay.hit_sequence,SCORE_START,SCORE_END)
-            row={'objective':obj,'held_out_family':held,'capacity':cap,'misses':score.misses,'miss_ratio':score.miss_ratio,'delta_vs_lru':None,'validation_mean_regret':stat['validation_mean_regret'],'model_sha256':sha(mp),'trace_sha256':sha(test_path),'seed':cfg['seed']}
+            misses,ratio=bool_score(replay.hit_sequence)
+            row={'objective':obj,'held_out_family':held,'capacity':cap,'misses':misses,'miss_ratio':ratio,'delta_vs_lru':None,'validation_mean_regret':stat['validation_mean_regret'],'model_sha256':sha(mp),'trace_sha256':sha(test_path),'seed':cfg['seed']}
             unit_rows.append(row)
         atomic_json(unit/'summary.json',{'status':'COMPLETE','rows':unit_rows}); rows.extend(unit_rows); manifest['units'][f'{held}_{cap}']={'status':'COMPLETE'}
         manifest['completed_units']=len(manifest['units']); atomic_json(out/'completion_manifest.json',manifest); print(json.dumps({'unit':f'{held}_cap{cap}','completed_units':manifest['completed_units']}),flush=True)
