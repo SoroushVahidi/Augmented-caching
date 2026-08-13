@@ -1,0 +1,24 @@
+{
+  "name": "strict_preference_horizon_diagnostic_v1",
+  "purpose": "Measure H4 target informativeness and H4 versus longer-horizon preference stability.",
+  "families": ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"],
+  "capacities": [32, 64, 128],
+  "horizons": [4, 8, 16, 32],
+  "history": [0, 10000],
+  "score": [10000, 50000],
+  "trajectory": "exact H=4 eviction-loss oracle trajectory with lexicographic H4 tie break",
+  "target_semantics": "Shared build_candidate_rows_for_full_cache_state eviction_loss_label with LRU continuation.",
+  "optimal_set_semantics": "All candidates attaining the minimum target value; no total order is imposed on ties.",
+  "pairwise_reversal": "not computed; optimal-set and unique-winner comparisons avoid arbitrary tie ordering",
+  "atomic_unit_completion": true,
+  "aggregate_only_when_all_units_complete": true,
+  "historical_regression": {
+    "family": "brightkite",
+    "capacity": 64,
+    "horizon": 4,
+    "event_count": 19079,
+    "tie_event_fraction": 1.0,
+    "mean_optimal_set_fraction": 0.9932132514806856,
+    "ordinary_margin_zero_fraction": 1.0
+  }
+}

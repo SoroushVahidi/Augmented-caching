@@ -1,0 +1,26 @@
+{
+  "name": "learned_exact_target_agreement_v1",
+  "purpose": "Measure frozen held-out evict_value_v1 agreement with exact H4 eviction-loss targets across the canonical 21 cells.",
+  "families": ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"],
+  "capacities": [32, 64, 128],
+  "horizon": 4,
+  "history": [0, 10000],
+  "score": [10000, 50000],
+  "registry": "analysis/supervision_objective_ablation_v1/model_registry.json",
+  "registry_objective": "objective_eviction_loss",
+  "required_model_count": 7,
+  "target_semantics": "Finite-horizon H4 eviction-loss target with LRU continuation.",
+  "set_aware_agreement": "learned-selected victim belongs to exact target-optimal set",
+  "lexicographic_agreement": "learned-selected victim equals deterministic lexicographically first exact target-optimal victim",
+  "regret": "learned selected target value minus minimum exact target value",
+  "atomic_unit_completion": true,
+  "aggregate_only_when_all_units_complete": true,
+  "historical_regression": {
+    "family": "brightkite",
+    "capacity": 64,
+    "horizon": 4,
+    "set_aware_agreement": 0.9646579066606252,
+    "lexicographic_agreement": 0.017023755582885623,
+    "mean_target_regret": 0.035342093339374714
+  }
+}
