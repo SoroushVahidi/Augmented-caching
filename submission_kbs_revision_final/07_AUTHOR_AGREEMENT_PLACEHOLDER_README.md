@@ -6,7 +6,7 @@ No **official Elsevier / Editorial Manager author-agreement form** was found in 
 
 **Before final upload to Editorial Manager, the author should:**
 
-1. Log in to Editorial Manager for manuscript KNOSYS-D-26-07461.
+1. Log in to Editorial Manager for manuscript KNOSYS-D-26-07461R1.
 2. Download or complete the official Elsevier/KBS author agreement form provided by the system (or follow the journal's current instructions).
 3. Upload the completed official form as a separate submission item if required.
 

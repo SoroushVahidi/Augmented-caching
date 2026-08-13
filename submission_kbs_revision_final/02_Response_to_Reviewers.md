@@ -1,7 +1,7 @@
 # Response to Reviewers
 
-Manuscript: KNOSYS-D-26-07461
-Decision: Revise
+Manuscript: KNOSYS-D-26-07461R1
+Decision: Second revision
 Date: 2026-08-13
 
 This letter responds point-by-point to Reviewer #2's four major comments and
@@ -282,8 +282,8 @@ change.
 
 **Changes in the revised manuscript**
 
-- Section 3.10, "Overhead and Scalability" (pp. 31–33), replaces the local/
-  tmux single-run benchmark with the controlled 420-run campaign (Table 9,
+- Section 3.10, "Overhead and Scalability" (pp. 31–33), replaces the earlier
+  single-run local benchmark with the controlled 420-run campaign (Table 9,
   p. 32) and the separately reported `evict_value_v1` single-run figure.
 - New Section 3.11, "Practical Significance" (p. 33), directly states the
   absence of a currently justified deployment scenario and the narrower
@@ -427,7 +427,7 @@ p. 32) for the controlled 420-run, 5-repetition timing campaign.
 | R2 Major 1 (LRB/3L-Cache comparison) | Not present | Complete; negative result (§3.6) |
 | R2 Major 2 (objective justification) | Asserted, not tested | Tested; eviction-loss is worst of four (§3.7) |
 | R2 Major 3 (offline/online gap) | Speculative hypothesis | Mechanistically diagnosed (§3.8) and causally tested (§3.9) |
-| R2 Major 4 (practical significance) | Single local/tmux run | Controlled 420-run campaign (§3.10) + explicit scope statement (§3.11) |
+| R2 Major 4 (practical significance) | Earlier single local run | Controlled 420-run campaign (§3.10) + explicit scope statement (§3.11) |
 | R3 primary issue (continuation causal claim) | Untested | Tested; partially supported, regime-dependent (§3.9) |
 | R3 Issue 2 (HALP differentiation) | Analytical only | Empirical comparison added (§3.6, Table 7) |
 

@@ -1,6 +1,6 @@
 # Declaration of Competing Interest
 
-Manuscript: KNOSYS-D-26-07461  
+Manuscript: KNOSYS-D-26-07461R1
 Title: Decision-aligned eviction-value prediction for learning-augmented caching  
 Author: Soroush Vahidi
 

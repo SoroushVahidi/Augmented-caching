@@ -1,6 +1,6 @@
 # KBS Revision Upload Checklist
 
-Manuscript: **KNOSYS-D-26-07461**  
+Manuscript: **KNOSYS-D-26-07461R1**
 Author: **Soroush Vahidi** (sole author)  
 Package folder: `submission_kbs_revision_final/`  
 Prepared: 2026-06-21; second-revision update: 2026-08-13
@@ -33,7 +33,7 @@ This package contains the files needed for the KBS revision upload to Editorial 
 ## Manual checks before upload
 
 - [ ] **Visually inspect** `01_Revised_Manuscript.pdf` (page count, figures, tables, references, title, author block).
-- [ ] **Confirm manuscript number** KNOSYS-D-26-07461 on cover letter and response letter.
+- [ ] **Confirm manuscript number** KNOSYS-D-26-07461R1 on cover letter, response letter, and author files.
 - [ ] **Download and complete the official Elsevier/KBS author agreement** from Editorial Manager — see `07_AUTHOR_AGREEMENT_PLACEHOLDER_README.md`. No official completed form is included in this package.
 - [ ] **Verify figure quality** in the PDF and in `08_Figures/` (PNG sources are high resolution: ~3150–3400 px wide; suitable for print at typical column widths).
 - [ ] **Confirm Editorial Manager upload slots** — some journals request DOCX and LaTeX source separately; upload `.docx` items where DOCX is requested and `07_LaTeX_Source/` where LaTeX source is requested.
