@@ -1,0 +1,166 @@
+[
+  {
+    "absolute_mean_difference_evict_minus_baseline": 0.012728571428571443,
+    "baseline": "lrb",
+    "baseline_mean_miss_ratio": 0.6877345238095238,
+    "baseline_median_miss_ratio": 0.70355,
+    "baseline_total_misses": 577697,
+    "baseline_wins": 13,
+    "capacity_summary": {
+      "128": {
+        "baseline_wins": 6,
+        "tie": 1
+      },
+      "32": {
+        "baseline_wins": 4,
+        "evict_value_v1_wins": 2,
+        "tie": 1
+      },
+      "64": {
+        "baseline_wins": 3,
+        "evict_value_v1_wins": 3,
+        "tie": 1
+      }
+    },
+    "cells": 21,
+    "evict_value_v1_mean_miss_ratio": 0.7004630952380952,
+    "evict_value_v1_wins": 5,
+    "family_summary": {
+      "brightkite_50k": {
+        "baseline_wins": 3
+      },
+      "citibike_202401_50k": {
+        "baseline_wins": 1,
+        "evict_value_v1_wins": 2
+      },
+      "cloudphysics_alibaba_block_head_50k": {
+        "baseline_wins": 3
+      },
+      "metacdn_cdn_202303_head_50k": {
+        "baseline_wins": 2,
+        "evict_value_v1_wins": 1
+      },
+      "metakv_kvcache_202206_head_50k": {
+        "baseline_wins": 1,
+        "evict_value_v1_wins": 2
+      },
+      "twemcache_cluster26_sample100_50k": {
+        "baseline_wins": 3
+      },
+      "wiki2018_pageviews_en_50k": {
+        "tie": 3
+      }
+    },
+    "relative_mean_difference_evict_minus_baseline": 0.018507972172263337,
+    "ties": 3
+  },
+  {
+    "absolute_mean_difference_evict_minus_baseline": 0.007836904761904774,
+    "baseline": "three_l_cache",
+    "baseline_mean_miss_ratio": 0.6926261904761905,
+    "baseline_median_miss_ratio": 0.74515,
+    "baseline_total_misses": 581806,
+    "baseline_wins": 13,
+    "capacity_summary": {
+      "128": {
+        "baseline_wins": 6,
+        "tie": 1
+      },
+      "32": {
+        "baseline_wins": 4,
+        "evict_value_v1_wins": 2,
+        "tie": 1
+      },
+      "64": {
+        "baseline_wins": 3,
+        "evict_value_v1_wins": 3,
+        "tie": 1
+      }
+    },
+    "cells": 21,
+    "evict_value_v1_mean_miss_ratio": 0.7004630952380952,
+    "evict_value_v1_wins": 5,
+    "family_summary": {
+      "brightkite_50k": {
+        "baseline_wins": 1,
+        "evict_value_v1_wins": 2
+      },
+      "citibike_202401_50k": {
+        "baseline_wins": 3
+      },
+      "cloudphysics_alibaba_block_head_50k": {
+        "baseline_wins": 2,
+        "evict_value_v1_wins": 1
+      },
+      "metacdn_cdn_202303_head_50k": {
+        "baseline_wins": 3
+      },
+      "metakv_kvcache_202206_head_50k": {
+        "baseline_wins": 3
+      },
+      "twemcache_cluster26_sample100_50k": {
+        "baseline_wins": 1,
+        "evict_value_v1_wins": 2
+      },
+      "wiki2018_pageviews_en_50k": {
+        "tie": 3
+      }
+    },
+    "relative_mean_difference_evict_minus_baseline": 0.01131476815295822,
+    "ties": 3
+  },
+  {
+    "absolute_mean_difference_evict_minus_baseline": 0.02486309523809525,
+    "baseline": "cacheus",
+    "baseline_mean_miss_ratio": 0.6756,
+    "baseline_median_miss_ratio": 0.7132,
+    "baseline_total_misses": 567504,
+    "baseline_wins": 15,
+    "capacity_summary": {
+      "128": {
+        "baseline_wins": 5,
+        "evict_value_v1_wins": 1,
+        "tie": 1
+      },
+      "32": {
+        "baseline_wins": 6,
+        "tie": 1
+      },
+      "64": {
+        "baseline_wins": 4,
+        "evict_value_v1_wins": 2,
+        "tie": 1
+      }
+    },
+    "cells": 21,
+    "evict_value_v1_mean_miss_ratio": 0.7004630952380952,
+    "evict_value_v1_wins": 3,
+    "family_summary": {
+      "brightkite_50k": {
+        "baseline_wins": 3
+      },
+      "citibike_202401_50k": {
+        "baseline_wins": 2,
+        "evict_value_v1_wins": 1
+      },
+      "cloudphysics_alibaba_block_head_50k": {
+        "baseline_wins": 3
+      },
+      "metacdn_cdn_202303_head_50k": {
+        "baseline_wins": 3
+      },
+      "metakv_kvcache_202206_head_50k": {
+        "baseline_wins": 1,
+        "evict_value_v1_wins": 2
+      },
+      "twemcache_cluster26_sample100_50k": {
+        "baseline_wins": 3
+      },
+      "wiki2018_pageviews_en_50k": {
+        "tie": 3
+      }
+    },
+    "relative_mean_difference_evict_minus_baseline": 0.03680150272068569,
+    "ties": 3
+  }
+]

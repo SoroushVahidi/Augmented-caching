@@ -1,0 +1,4 @@
+baseline,cells,baseline_mean_miss_ratio,baseline_median_miss_ratio,baseline_total_misses,evict_value_v1_mean_miss_ratio,absolute_mean_difference_evict_minus_baseline,relative_mean_difference_evict_minus_baseline,baseline_wins,evict_value_v1_wins,ties
+lrb,21,0.687734523810,0.703550000000,577697,0.700463095238,0.012728571429,0.018507972172,13,5,3
+three_l_cache,21,0.692626190476,0.745150000000,581806,0.700463095238,0.007836904762,0.011314768153,13,5,3
+cacheus,21,0.675600000000,0.713200000000,567504,0.700463095238,0.024863095238,0.036801502721,15,3,3

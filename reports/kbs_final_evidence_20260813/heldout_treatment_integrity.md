@@ -40,26 +40,58 @@ hash PASS**.
 
 **Local classification: `FINAL_VALIDATED_SYNCED`.**
 
-## Protocol caveat — preserved from the Wulver-side audit, verified still accurate
+## Protocol caveat — CORRECTED 2026-08-13 (later pass); see below
 
-No baseline of any kind (`LRU`, `SIEVE`, `FIFO-Reinsertion`, `LRB`, `3L-Cache`, `HALP`,
-`CACHEUS`) has been computed under this identical corrected leave-one-family-out
-protocol. `baseline_eligibility.csv` (transferred, hash-verified) records:
+**Correction notice:** the paragraph originally here restated
+`baseline_eligibility.csv`'s claim that "zero executed result artifacts
+exist anywhere... under any protocol" for LRB/3L-Cache/HALP/CACHEUS, and
+that LRU/SIEVE/FIFO "only exist" in a mismatched-window comparison. That
+claim is **only true of Wulver's own filesystem** (which is all
+`baseline_eligibility.csv`, itself a Wulver-produced artifact, ever
+searched). It is **not true of this workstation**: `analysis/reviewer_fairness/`
+(produced separately by `scripts/experiments/run_reviewer_fairness.py`, a
+pipeline that has never run on Wulver) already contains exact-evaluation-
+protocol results for all seven baselines — LRB, 3L-Cache, CACHEUS, HALP,
+LRU, SIEVE, and FIFO-Reinsertion — each with 21/21 `primary_controlled_window`
+cells whose `(trace_sha256, capacity)` key set is identical to this
+treatment's 21 cells, same windows, same capacity/object-size semantics,
+same `hits+misses=scored_requests` accounting, and `future_information=none`
+on every row. See `major1_protocol_comparability.md` and
+`major1_reviewer_summary.md` in this directory for the full audit and the
+validated head-to-head comparison.
+
+What remains true: **no baseline shares `evict_value_v1`'s offline
+leave-one-family-out training procedure** — LRB/3L-Cache/CACHEUS adapt
+online from their own in-trace stream, HALP trains offline only on each
+trace's own history prefix, and LRU/SIEVE/FIFO-Reinsertion are
+parameter-free. This is an intentional, disclosed difference in training
+mechanics, not an evaluation-protocol mismatch, and it does not make the
+comparison unfair (no baseline sees future information or another
+family's data — verified per-row).
+
+`baseline_eligibility.csv` (transferred, hash-verified) records, **scoped
+to Wulver's own filesystem**:
 
 - `evict_value_v1_cross_family_v1`: `PRIMARY_ELIGIBLE` — this protocol's own artifact.
-- `lru`, `sieve`, `fifo_reinsertion`: `NOT_ELIGIBLE` for the primary table;
-  `ELIGIBLE_WITH_CAVEAT` only for a window-matched (`deployment_full_stream`,
-  50,000-request) but **different-protocol-run** supplementary comparison
-  (`supplementary_full_stream_comparison.csv`).
-- `lrb`, `three_l_cache`, `halp`, `cacheus`: `NOT_AVAILABLE` — implemented in source,
-  zero executed result artifacts exist anywhere on Wulver under any protocol.
+- `lru`, `sieve`, `fifo_reinsertion`: not found on Wulver under this exact
+  window; Wulver's `deployment_full_stream`-only comparison
+  (`supplementary_full_stream_comparison.csv`) remains a valid, separately
+  caveated, different-run supplementary comparison in its own right, but is
+  **not** the only same-protocol evidence available — see the correction
+  above.
+- `lrb`, `three_l_cache`, `halp`, `cacheus`: not found on Wulver; exact-protocol
+  results exist locally on this workstation instead (never synced to
+  Wulver).
 
-**Do not claim** "LRB/3L-Cache/HALP/CACHEUS were all compared against
-`evict_value_v1` under an identical executed protocol" — that comparison does not
-exist. Only `evict_value_v1` itself has true 42/42 same-protocol coverage in this
-package; the supplementary LRU/SIEVE/FIFO numbers are a caveated, different-run,
-window-matched comparison, and the four modern learned baselines have no results at
-all.
+**Now allowed to claim** (see `major1_reviewer_summary.md` for the full,
+validated version): "LRB, 3L-Cache, CACHEUS, HALP, LRU, SIEVE, and
+FIFO-Reinsertion were all evaluated against `evict_value_v1` under an
+exact-matched evaluation protocol (same traces, capacities, windows, budget,
+and metrics); `evict_value_v1` loses on a clear majority of cells against
+every one of them."
+
+**Still prohibited:** "All methods were trained under an identical
+procedure" — training mechanics remain algorithm-specific by design.
 
 ## Headline result (unchanged from Wulver-side audit, now independently confirmed)
 

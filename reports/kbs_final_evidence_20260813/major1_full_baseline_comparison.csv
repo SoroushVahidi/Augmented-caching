@@ -1,0 +1,8 @@
+baseline,cells,baseline_mean_miss_ratio,baseline_median_miss_ratio,baseline_total_misses,evict_value_v1_mean_miss_ratio,absolute_mean_difference_evict_minus_baseline,relative_mean_difference_evict_minus_baseline,baseline_wins,evict_value_v1_wins,ties,source
+lrb,21,0.687734523810,0.703550000000,577697,0.700463095238,0.012728571429,0.018507972172,13,5,3,scripts/analysis/prepare_r2_major1_evidence.py
+three_l_cache,21,0.692626190476,0.745150000000,581806,0.700463095238,0.007836904762,0.011314768153,13,5,3,scripts/analysis/prepare_r2_major1_evidence.py
+cacheus,21,0.675600000000,0.713200000000,567504,0.700463095238,0.024863095238,0.036801502721,15,3,3,scripts/analysis/prepare_r2_major1_evidence.py
+halp,21,0.676161904762,0.701175000000,567976,0.700463095238,0.024301190476,0.035939898869,17,1,3,independent recomputation (audit pass, this report)
+lru,21,0.672769047619,0.691250000000,565126,0.700463095238,0.027694047619,0.041164271331,16,1,4,independent recomputation (audit pass, this report)
+sieve,21,0.687469047619,0.764000000000,577474,0.700463095238,0.012994047619,0.018901283867,14,4,3,independent recomputation (audit pass, this report)
+fifo_reinsertion,21,0.673257142857,0.697050000000,565536,0.700463095238,0.027205952381,0.040409452272,16,2,3,independent recomputation (audit pass, this report)

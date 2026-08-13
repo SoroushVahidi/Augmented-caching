@@ -3,9 +3,11 @@
 Compact, tracked summary of the local campaigns that closed out the second-revision
 mechanistic investigation and evidence gathering: **C0/C1/C2 continuation-policy causal
 ablation**, **distribution-shift ablation**, the **corrected held-out `evict_value_v1`
-treatment**, and the **controlled timing campaign** (the latter two synced from Wulver
-on 2026-08-13). All four are classified **`FINAL_VALIDATED`** (local campaigns) or
-**`FINAL_VALIDATED_SYNCED`** (Wulver-synced payloads).
+treatment**, the **controlled timing campaign** (the latter two synced from Wulver
+on 2026-08-13), and the **Major Comment 1 exact-protocol baseline comparison**
+(materialized 2026-08-13 from already-computed local evidence). All are classified
+**`FINAL_VALIDATED`** (local campaigns), **`FINAL_VALIDATED_SYNCED`** (Wulver-synced
+payloads), or **`SCIENTIFICALLY_COMPLETE_SYNTHESIS_READY`** (Major 1 comparison).
 
 ## Purpose
 
@@ -50,11 +52,16 @@ CSV is authoritative and this package is stale and should be regenerated.
 - Only fields read directly from the canonical raw CSVs/JSON listed above are reported
   here. No scientific value in this package was computed by re-deriving or re-running
   anything — all summary CSVs are straight reshapes/joins of already-validated rows.
-- The corrected held-out treatment does **not** establish a same-protocol comparison
-  against modern learned baselines (LRB/3L-Cache/HALP/CACHEUS have zero executed
-  results under any protocol) or even against LRU/SIEVE/FIFO under the *same* protocol
-  run (only a caveated, window-matched, different-run supplementary comparison
-  exists). See `heldout_treatment_integrity.md` for the full caveat.
+- **Corrected 2026-08-13 (later pass):** the corrected held-out treatment DOES have an
+  exact-protocol comparison against all seven baselines (LRB, 3L-Cache, CACHEUS, HALP,
+  LRU, SIEVE, FIFO-Reinsertion) — see `major1_protocol_comparability.md` and
+  `major1_reviewer_summary.md`. `evict_value_v1` loses on a clear majority of matched
+  cells against every one of them. An earlier version of this bullet incorrectly said
+  no such comparison exists; that restated a Wulver-filesystem-scoped claim as if
+  universal, without checking this workstation's separately-produced
+  `analysis/reviewer_fairness/` results. No baseline shares `evict_value_v1`'s
+  leave-one-family-out *training* procedure — an intentional, disclosed difference in
+  training mechanics, not an evaluation-protocol gap.
 - The controlled timing campaign covers exactly LRU/FIFO-Reinsertion/SIEVE/HALP-causal
   under a 5-repetition protocol; `evict_value_v1`'s runtime is a separate, single-run
   measurement and must never be placed in that 4-policy table. See
@@ -80,7 +87,10 @@ CSV is authoritative and this package is stale and should be regenerated.
 | `controlled_timing_summary.csv` | 4-policy compact table: mean/median/stddev/95% CI µs-per-request, slowdown vs. LRU |
 | `controlled_timing_integrity.md` | Transfer hash result, independent local re-audit gate table, recomputed policy means, `timing_summary.csv` preliminary-snapshot caveat |
 | `controlled_timing_interpretation.md` | Why `evict_value_v1` is excluded from the 4-policy controlled table; claim-safety rules |
-| `reviewer_mapping.md` | Reviewer #2 Major 1–4 and Reviewer #3 status table, with exact answers for Major 3 and Reviewer #3 |
+| `major1_protocol_comparability.md` | Full 7-baseline (LRB/3L-Cache/CACHEUS/HALP/LRU/SIEVE/FIFO-Reinsertion) exact-protocol comparability audit vs. the corrected treatment, with Level 1/2 classification and fidelity caveats |
+| `major1_full_baseline_comparison.csv` | 7-row validated win/loss/tie, mean miss ratio, and relative regret table, one row per baseline |
+| `major1_reviewer_summary.md` | Reviewer-facing Major Comment 1 result summary: request, protocol proof, validated results, fidelity caveats, allowed/prohibited claims |
+| `reviewer_mapping.md` | Reviewer #2 Major 1–4 and Reviewer #3 status table, with exact answers for Major 1, Major 3, and Reviewer #3 |
 
 ## Wulver evidence — synchronization status
 
