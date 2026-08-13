@@ -8,6 +8,11 @@ historical outputs.
 
 Use only:
 
+- corrected held-out `evict_value_v1` treatment summaries and comparisons in
+  `reports/kbs_final_evidence_20260813/`, especially
+  `major1_full_baseline_comparison.csv`,
+  `major1_protocol_comparability.md`, and
+  `heldout_treatment_integrity.md`
 - `analysis/reviewer_fairness/policy_comparison_lrb.csv`
 - `analysis/reviewer_fairness/policy_comparison_three_l_cache.csv`
 - `analysis/reviewer_fairness/policy_comparison_halp.csv`
@@ -21,9 +26,7 @@ Rule:
 Do not mix in:
 
 - `deployment_full_stream` rows,
-- contaminated `evict_value_v1` fair-window rows,
-- partial cross-family `evict_value_v1` results before the held-out evaluation
-  campaign is complete.
+- contaminated `evict_value_v1` fair-window rows.
 
 ## Supporting analysis
 
@@ -44,6 +47,8 @@ Usable with explicit caveats:
   policy rows)
 - practical-significance smoke outputs in
   `analysis/practical_significance_ablation_v1/`
+- controlled timing summaries in
+  `reports/kbs_final_evidence_20260813/controlled_timing_summary.csv`
 
 Supporting-analysis use still requires the status labels in
 [`kbs_second_revision_artifact_map.md`](kbs_second_revision_artifact_map.md).
@@ -138,7 +143,9 @@ controlled window.
 
 ### B. Old `policy_comparison_evict_value_v1.csv`
 
-This file is contaminated and ineligible for the primary reviewer comparison.
+This file is contaminated/historical and ineligible for the primary reviewer
+comparison. It must not be used as primary evidence while it remains in place.
+Use the corrected current evidence under `reports/kbs_final_evidence_20260813/`.
 The overlap is documented in:
 
 - `analysis/reviewer_fairness/evict_value_v1_overlap_audit.json`
@@ -158,11 +165,15 @@ be read as proof that distribution-shift correction is the sole cause of, or
 sole fix for, the offline/online miss gap. Do not cite the earlier 18/42 or
 24/42 checkpoints as current.
 
-### D. `analysis/practical_significance_ablation_v1/`
+### D. Practical-significance outputs
 
-This directory currently contains smoke-scale evidence only. Until controlled
-timing exists, it should be used only for implementation and methodological
-discussion.
+`analysis/practical_significance_ablation_v1/` contains smoke-scale evidence
+only and should be used only for implementation/methodological discussion.
+The controlled timing evidence now lives in
+`reports/kbs_final_evidence_20260813/controlled_timing_summary.csv` and is
+validated by `controlled_timing_integrity.md`. `evict_value_v1` runtime remains
+a separate single-run measurement and must not be inserted into the controlled
+four-policy timing table.
 
 ### E. `analysis/supervision_objective_learning_curve_v1/`
 

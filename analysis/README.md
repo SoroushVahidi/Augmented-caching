@@ -27,6 +27,14 @@ Historical `heavy_r1` builder-oriented material still starts at
 
 ## Important caution
 
+**Do not use `analysis/reviewer_fairness/policy_comparison_evict_value_v1.csv`
+as primary evidence.** It is a contaminated/historical comparison with
+documented train/test overlap. It is retained temporarily for provenance only.
+Use the corrected current evidence in
+`reports/kbs_final_evidence_20260813/` instead, especially
+`major1_full_baseline_comparison.csv`, `major1_protocol_comparability.md`,
+and `heldout_treatment_integrity.md`.
+
 This repository intentionally keeps:
 
 - partial checkpoints,

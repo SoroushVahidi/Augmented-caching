@@ -198,6 +198,20 @@ This is a conservative adapter; it is documented explicitly in policy comments.
 
 ---
 
+## Baseline fidelity categories used in reviewer-facing docs
+
+| Category | Meaning |
+|---|---|
+| `OFFICIAL_UPSTREAM_WRAPPED` | Author/upstream source is executed through a repository adapter or wrapper. |
+| `INDEPENDENT_REIMPLEMENTATION` | Repository-native code reimplements the documented algorithm from paper/source inspection; it is not the official runtime. |
+| `ADAPTATION` | A required change to match this repository's unit-size paging simulator, request budget, or interface. |
+| `RECONSTRUCTION` | A lower-fidelity implementation reconstructed from public descriptions when no official code exists. |
+| `NATIVE_IMPLEMENTATION` | Repository-native implementation of a classical/lightweight policy. |
+
+These categories are about implementation provenance, not whether the matched
+evaluation inputs are comparable. The primary comparison still uses matched
+trace hashes, capacities, windows, budgets, and hit/miss accounting.
+
 ## Baseline 6: LRB — Learning Relaxed Belady (Song et al., NSDI 2020)
 
 ### Paper citation
@@ -249,18 +263,16 @@ implementation; only request-miss/miss-ratio results are meaningful here
 (and are numerically identical to a byte-miss ratio under unit size, so
 nothing is lost).
 
-### Faithfulness assessment
+### Implementation provenance category
 
-Native, algorithmic-level-faithful port of the official simulator core
-(not the ATS system-level prototype). Every design decision is classified
-in `docs/lrb_method_spec.md` as exact-from-paper, exact-from-code, a
-required adaptation, or an optional deviation. The two `memory_window`/
-`batch_size` numeric defaults are the only genuinely adaptation-required
-values (the official defaults are CDN-scale constants that never fire at
-this repository's request-count scale); both are validation-tunable via CLI
-flags and are tuned on a held-out validation prefix (never the test region)
-in `scripts/experiments/run_lrb_external_baseline.py`, mirroring the
-paper's own per-trace tuning protocol.
+`INDEPENDENT_REIMPLEMENTATION` with required `ADAPTATION`.
+
+This is a repository-native Python reimplementation grounded in the LRB paper
+and pinned official source commit, evaluated under the matched unit-size
+paging protocol. It is not the official C++/ATS runtime and should not be
+described as an exact official implementation. The unit-size setting,
+evict-before-add simulator contract, and short-trace `memory_window` /
+`batch_size` scaling are disclosed in `docs/lrb_method_spec.md`.
 
 ### Diagnostics exposed
 
@@ -333,9 +345,15 @@ Zhou, W., Niu, Z., Xiong, Y., Fang, J., & Wang, Q. (2025). **3L-Cache: Low Overh
 
 This repository's manuscript evaluation is standard **unweighted paging** (unit miss cost, capacity measured in object slots: 32/64/128). The official 3L-Cache targets variable-sized, byte-capacity file/storage and CDN caches. Every object's size is held at a constant 1.0 here; the size feature and the `objective="byte_miss_ratio"` score interaction are kept structurally but are numerically specialized under this setting. This is **"3L-Cache under unit-size specialization,"** not a reproduction of the paper's byte-cache CDN/block-storage experiments — only request-miss/miss-ratio results are evaluated.
 
-### Faithfulness assessment
+### Implementation provenance category
 
-Native, algorithmic-level-faithful port of the official simulator core. Every design decision is classified in `docs/three_l_cache_method_spec.md` as exact-from-paper, exact-from-code, a required adaptation, or an optional deviation. The `batch_size` numeric default is the only adaptation-required value (the official default is CDN-scale 64K which never fires at this repository's request-count scale); it is validation-tunable via CLI flags and is tuned on a held-out validation prefix (never the test region) in `scripts/experiments/run_three_l_cache_comparison.py`, mirroring the paper's own per-workload tuning protocol.
+`INDEPENDENT_REIMPLEMENTATION` with required `ADAPTATION`.
+
+This is a repository-native Python reimplementation/adaptation grounded in
+the 3L-Cache paper and pinned official artifact. It is not the official
+3L-Cache runtime. The unit-size paging specialization, objective-mode choice,
+reference-code ambiguities, and batch-size caveat are documented in
+`docs/three_l_cache_method_spec.md` and `docs/three_l_cache_provenance.md`.
 
 ### Diagnostics exposed
 
@@ -431,21 +449,16 @@ not a reproduction of the paper's production byte-cache deployment —
 only request-miss/miss-ratio results are evaluated, and no byte-miss-ratio
 or CPU-overhead claim from the paper is reproduced or compared against.
 
-### Faithfulness assessment
+### Implementation provenance category
 
-Independent reimplementation of the algorithmic core (heuristic-generated
-shortlist → pairwise preference model → lowest-score eviction), verified
-for **decision-semantic parity** (candidate/label/victim-selection
-direction, leakage isolation) against the paper and official blog — not
-model-architecture parity, loss-formulation parity, or production-score
-parity, none of which is checkable without access to the closed production
-system. Every design decision is classified in `docs/halp_method_spec.md`
-as exact-from-paper, exact-from-official-blog, a required adaptation, a
-material evaluation adaptation, or an unresolved ambiguity. See
-`docs/halp_provenance.md` §3 for a corrected claim: an earlier draft of
-this baseline used a linear (logistic-regression) reward model and
-described it as faithful; this was inaccurate against the primary source
-(the production reward model is a two-layer MLP) and has been fixed.
+`RECONSTRUCTION` with required `ADAPTATION`.
+
+HALP has no public official implementation. This repository's version is a
+supporting reconstruction/adaptation from the paper and official Google
+Research blog, specialized to the unit-size offline replay protocol. It
+documents decision-semantic parity checks, leakage isolation, and material
+differences from the production online system, but it must not be described
+as official code or as production-score parity.
 
 ### Diagnostics exposed
 
@@ -521,19 +534,17 @@ object-slot paging algorithm (per its own README: "designed for paging
 domain"). This repository's capacity semantics (32/64/128 object slots)
 match the official algorithm's native domain exactly, with no adaptation.
 
-### Faithfulness assessment
+### Implementation provenance category
 
-This is the authors' own, unmodified source code, not a reimplementation
-— the strongest fidelity position of this repository's four external
-learned baselines. The only disclosed deviations are non-algorithmic: a
-portability-only patch (two empty `__init__.py` files added to the
-*external, non-vendored* clone so it can be imported as a library) and an
-explicit `ValueError` guard for capacity < 2 (an upstream crash in the
-official source at that boundary, confirmed empirically and documented in
-`docs/cacheus_method_spec.md`, "Known upstream limitation: capacity 1" —
-not patched, and irrelevant to this repository's 32/64/128 capacities).
-The official RNG seed (123) is hardcoded in the upstream source and is not
-repository-controlled, unlike every other baseline here.
+`OFFICIAL_UPSTREAM_WRAPPED`.
+
+This is the authors' own, unmodified source code executed from an external
+clone through a repository adapter. The only disclosed deviations are
+non-algorithmic integration details: two empty `__init__.py` files added to
+the external, non-vendored clone for importability, and an explicit capacity
+guard around an upstream capacity-1 crash that is irrelevant to the
+32/64/128 manuscript capacities. This remains the strongest provenance
+position among the external learned baselines.
 
 ### Diagnostics exposed
 

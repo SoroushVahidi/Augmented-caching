@@ -1,149 +1,189 @@
-# Learning-Augmented Caching (`lafc`)
+# Decision-aligned eviction-value prediction for learning-augmented caching
 
-`lafc` is a research codebase for learning-augmented caching: cache
-simulation, literature-faithful baselines, learned eviction policies, dataset
-pipelines, and reproducible experiment drivers.
+This repository supports the Knowledge-Based Systems manuscript
+**"Decision-aligned eviction-value prediction for learning-augmented caching"**
+by Soroush Vahidi.
 
-## Current repository orientation
+The paper studies a narrow question: whether a candidate-level eviction target
+that directly estimates finite-horizon downstream miss cost is enough to make a
+useful online cache replacement policy. It is a controlled study of a
+decision-aligned eviction target, not a claim that `evict_value_v1` is a
+universally superior cache policy.
 
-As of August 9, 2026, the main local reviewer-science branch is
-`kbs/second-revision-science`. It preserves:
+Current headline conclusion: under the corrected matched second-revision
+evaluation, `evict_value_v1` does **not** outperform LRU, FIFO-Reinsertion,
+SIEVE, LRB, 3L-Cache, CACHEUS, or HALP. The repository preserves the negative
+result, the generating scripts, provenance records, validation checks, and
+known caveats so the evidence can be inspected independently.
 
-- the current KBS second-revision code and audit tooling,
-- earlier historical `heavy_r1` Wulver manuscript material,
-- multiple generations of exploratory learned-caching experiments.
+## Start Here
 
-The current branch documents a mostly negative or methodological result:
-`evict_value_v1` is scientifically interesting, but the second-revision work is
-about understanding why a seemingly reasonable offline target performs poorly
-in closed-loop deployment, not about claiming a new performance SOTA.
+- Reviewer guide: [docs/reviewer/START_HERE.md](docs/reviewer/START_HERE.md)
+- Curated evidence package: [reports/kbs_final_evidence_20260813/](reports/kbs_final_evidence_20260813/)
+- Manuscript source: [submission_kbs_revision_final/07_LaTeX_Source/main.tex](submission_kbs_revision_final/07_LaTeX_Source/main.tex)
+- Experiment registry: [docs/reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md](docs/reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md)
+- Reproduction matrix: [docs/reviewer/REPRODUCTION_MATRIX.md](docs/reviewer/REPRODUCTION_MATRIX.md)
+- Result verification: [docs/reviewer/RESULT_VERIFICATION.md](docs/reviewer/RESULT_VERIFICATION.md)
 
-## What is here
+## Primary Results
 
-- `src/lafc/`: simulator, policies, runners, dataset helpers, offline solvers.
-- `scripts/`: reproducible entry points for experiments and validation.
-- `tests/`: unit and integration tests.
-- `docs/`: protocols, artifact maps, workflow notes, and manuscript-support docs.
-- `analysis/`: generated outputs and small tracked audits.
-- `slurm/`: batch templates for heavier runs.
+The reviewer-facing evidence package is
+[reports/kbs_final_evidence_20260813/](reports/kbs_final_evidence_20260813/).
+It summarizes validated results while leaving the raw campaign directories as
+the canonical scientific record.
 
-More detail: [docs/repo_map.md](docs/repo_map.md).
+Headline findings, matching the manuscript:
 
-## Current reviewer-science entry points
+- The corrected matched comparison uses the same seven traces, capacities
+  32/64/128, history prefix `[0,10000)`, scored suffix `[10000,50000)`, and
+  hit/miss accounting for all compared policies.
+- `evict_value_v1` loses on a clear majority of matched cells against every
+  baseline in the primary comparison.
+- A direct objective ablation finds the finite-horizon eviction-loss target is
+  the worst or tied-worst objective among eviction loss, next arrival, reuse
+  distance, and pairwise preference under the tested protocol.
+- Mechanistic diagnostics point primarily to target degeneracy and horizon
+  truncation; continuation mismatch is partial and regime-dependent, while the
+  tested generic DAgger-style state-shift reduction does not improve misses.
+- Controlled timing shows HALP-causal is much slower than lightweight
+  baselines; `evict_value_v1` has a separate single-run timing measurement and
+  is not part of that controlled four-policy timing table.
 
-- Repository state, tracked-vs-generated boundaries, and the live status of
-  any active revision-science job:
-  [docs/kbs_second_revision_repository_state.md](docs/kbs_second_revision_repository_state.md)
-  -- durable status disclaimer: active KBS second-revision experiment
-  progress (fold counts, running phases) is tracked only in that file and in
-  the experiment registry below, never in this README.
-- Current KBS second-revision workflow:
-  [docs/kbs_manuscript_workflow.md](docs/kbs_manuscript_workflow.md)
-- **Experiment registry** (canonical index of every reviewer-relevant
-  experiment -- start here to find a specific diagnostic):
-  [docs/reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md](docs/reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md)
-- **Reviewer-concern coverage map** (what answers each reviewer concern, and
-  how completely):
-  [docs/reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md](docs/reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md)
-- **Mechanistic-hypothesis map** (H1-H11, status, decisive next experiment):
-  [docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md](docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md)
-- **Reproducibility guide** for the second-revision diagnostics specifically
-  (distinct from the older `heavy_r1` guide below):
-  [docs/reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md](docs/reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md)
-- Reviewer artifact map (code/config/output paths per reviewer concern):
-  [docs/reviewer/kbs_second_revision_artifact_map.md](docs/reviewer/kbs_second_revision_artifact_map.md)
-- Revision roadmap (status summary for the four reviewer concerns):
-  [docs/reviewer_revision_roadmap.md](docs/reviewer_revision_roadmap.md)
-- Evidence eligibility rules:
-  [docs/reviewer/kbs_evidence_eligibility.md](docs/reviewer/kbs_evidence_eligibility.md)
-- Internal note on the negative results:
-  [docs/reviewer/kbs_negative_results_interpretation.md](docs/reviewer/kbs_negative_results_interpretation.md)
-- Read-only campaign status tools:
-  `python3 scripts/validation/revision_status.py`
-  and
-  `python3 scripts/validation/revision_readiness.py`
+## Reproducibility And Verification
 
-Reviewer experiment drivers and audits live mainly under `scripts/experiments/`.
+The repository includes machine-readable manifests, integrity checks,
+deterministic regression checks, baseline provenance records, curated result
+summaries, and tests so the reported results can be independently inspected.
 
-## Generated evidence vs tracked source
+Key audit locations:
 
-Tracked in Git:
+- Experiment manifests and fold configs:
+  [configs/fair_cross_family_v1/folds/](configs/fair_cross_family_v1/folds/),
+  [configs/reviewer_fairness_protocol.json](configs/reviewer_fairness_protocol.json),
+  [configs/supervision_objective_ablation_v1.json](configs/supervision_objective_ablation_v1.json),
+  [configs/distribution_shift_ablation_v1.json](configs/distribution_shift_ablation_v1.json),
+  [configs/continuation_policy_causal_ablation_production_v1.json](configs/continuation_policy_causal_ablation_production_v1.json).
+- Row-count, duplicate-key, schema, hash, and leakage checks:
+  [reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md](reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md),
+  [reports/kbs_final_evidence_20260813/c0_integrity_summary.md](reports/kbs_final_evidence_20260813/c0_integrity_summary.md),
+  [reports/kbs_final_evidence_20260813/distribution_integrity_summary.md](reports/kbs_final_evidence_20260813/distribution_integrity_summary.md),
+  [reports/kbs_final_evidence_20260813/controlled_timing_integrity.md](reports/kbs_final_evidence_20260813/controlled_timing_integrity.md).
+- Held-out-family and model-selection separation:
+  [docs/reviewer_fairness_cross_family_v1.md](docs/reviewer_fairness_cross_family_v1.md),
+  [reports/kbs_final_evidence_20260813/heldout_treatment_provenance.md](reports/kbs_final_evidence_20260813/heldout_treatment_provenance.md).
+- Deterministic regression and baseline tests:
+  [tests/test_lrb.py](tests/test_lrb.py),
+  [tests/test_three_l_cache.py](tests/test_three_l_cache.py),
+  [tests/test_cacheus.py](tests/test_cacheus.py),
+  [tests/test_halp.py](tests/test_halp.py),
+  [tests/test_sieve.py](tests/test_sieve.py),
+  [tests/test_exact_target_oracle_replication.py](tests/test_exact_target_oracle_replication.py),
+  [tests/test_continuation_policy_ablation.py](tests/test_continuation_policy_ablation.py).
+- Detailed verification guide:
+  [docs/reviewer/RESULT_VERIFICATION.md](docs/reviewer/RESULT_VERIFICATION.md).
 
-- code under `src/lafc/`,
-- experiment and validation entry points under `scripts/`,
-- tests under `tests/`,
-- protocols, artifact maps, and notes under `docs/`,
-- small canonical audits and fixtures.
+## Baselines
 
-Preserved locally but intentionally not curated as tracked release material:
+The primary matched comparison names seven baselines:
 
-- most reviewer result CSV/JSON/MD outputs under `analysis/`,
-- model artifacts under `models/`,
-- large derived datasets under `data/derived/`.
+- **LRU**, **FIFO-Reinsertion**, and **SIEVE**: native classical/lightweight
+  implementations.
+- **LRB**: documented independent reimplementation under matched evaluation
+  inputs, with unit-size and simulator-contract adaptations disclosed.
+- **3L-Cache**: documented independent reimplementation/adaptation, with
+  disclosed batch-size and unit-size differences.
+- **CACHEUS**: official upstream source executed through a wrapper/adaptor as
+  documented.
+- **HALP**: supporting reconstruction/adaptation from the paper and official
+  blog; no public official HALP implementation is available.
 
-The artifact map and eligibility note above are the source of truth for which
-generated outputs are complete, partial, smoke-only, contaminated, historical,
-or currently usable for reviewer-facing tables.
+See [docs/baselines.md](docs/baselines.md),
+[docs/lrb_method_spec.md](docs/lrb_method_spec.md),
+[docs/three_l_cache_method_spec.md](docs/three_l_cache_method_spec.md),
+[docs/cacheus_method_spec.md](docs/cacheus_method_spec.md),
+[docs/cacheus_provenance.md](docs/cacheus_provenance.md),
+[docs/halp_method_spec.md](docs/halp_method_spec.md), and
+[docs/halp_provenance.md](docs/halp_provenance.md).
 
-## Basic setup
+## Datasets And Workloads
+
+The seven evaluated workload families are heterogeneous and should not be
+described as a single class of production cache traces.
+
+| Family | Repository interpretation |
+|---|---|
+| BrightKite | Location check-in event stream transformed into a request sequence. |
+| Citi Bike | Bike-share trip event stream transformed into a request sequence. |
+| CloudPhysics | Storage/block-I/O-derived cache workload. |
+| MetaCDN | Cache-derived Meta CDN workload. |
+| MetaKV | Cache-derived Meta key-value workload. |
+| Twemcache | Twitter production cache trace. |
+| Wikimedia | Pageview-derived request proxy, not a native CDN trace. |
+
+Raw data are not necessarily redistributed in this repository. Some datasets
+must be obtained from upstream sources by the user, and licensing or access
+constraints remain those of the original providers. See
+[docs/datasets.md](docs/datasets.md),
+[docs/datasets_wulver_trace_acquisition.md](docs/datasets_wulver_trace_acquisition.md),
+and [reports/kbs_verified_literature_20260813.md](reports/kbs_verified_literature_20260813.md).
+
+## Primary, Supporting, Historical, Running
+
+- **PRIMARY**: corrected matched evaluation and curated second-revision
+  evidence in [reports/kbs_final_evidence_20260813/](reports/kbs_final_evidence_20260813/).
+- **SUPPORTING**: mechanistic diagnostics and timing/contextual analyses used
+  to explain, qualify, or bound the primary result.
+- **HISTORICAL**: older single-split or contaminated exploratory evaluation
+  retained for provenance. In particular,
+  `analysis/reviewer_fairness/policy_comparison_evict_value_v1.csv` is
+  contaminated/historical and must not be used as primary evidence.
+- **RUNNING**: two acceptance-risk controls are currently in progress and are
+  not part of the primary evidence or manuscript conclusions:
+  `kbs_common_model_objective_control_20260813_final` and
+  `kbs_tie_aware_exact_oracle_20260813_final`.
+
+## Setup And Checks
 
 ```bash
 pip install -e ".[dev]"
-```
-
-## Basic tests
-
-```bash
 PYTHONPATH=src pytest tests/ -v
+git diff --check
 ```
 
-Optional dependencies:
+The full scientific campaigns are more expensive than unit tests. Many main
+results can be inspected from committed summaries without rerunning HPC-scale
+jobs; see [docs/reviewer/REPRODUCTION_MATRIX.md](docs/reviewer/REPRODUCTION_MATRIX.md)
+for approximate cost and availability.
 
-- `lightgbm` is required for some learned-baseline tests and policies such as
-  `lrb` and `three_l_cache`.
+## Repository Layout
 
-## Basic simulator usage
+- `src/lafc/`: simulator, policies, feature builders, and experiment support.
+- `scripts/`: experiment, analysis, dataset, and validation entry points.
+- `tests/`: deterministic unit and regression tests.
+- `configs/`: frozen experiment configs and fold manifests.
+- `docs/`: protocols, provenance, reviewer maps, and internal notes.
+- `reports/`: curated evidence packages and submission-support audits.
+- `analysis/`: generated outputs and small tracked audits.
 
-```bash
-python3 -m lafc.runner.run_policy \
-  --policy lru \
-  --trace data/example_unweighted.json \
-  --capacity 3
+More detail: [docs/repo_map.md](docs/repo_map.md).
+
+## Citation
+
+Citation metadata will be finalized with the revised manuscript. Current
+manuscript metadata:
+
+```bibtex
+@unpublished{vahidi2026decisionaligned,
+  title  = {Decision-aligned eviction-value prediction for learning-augmented caching},
+  author = {Soroush Vahidi},
+  note   = {Manuscript submitted to Knowledge-Based Systems},
+  year   = {2026}
+}
 ```
 
-## Reviewer experiment families
+No DOI is assigned in this repository.
 
-- Learned-baseline fairness comparisons and held-out retraining:
-  `scripts/experiments/run_reviewer_fairness.py`,
-  `scripts/experiments/run_cross_family_heldout_eval.py`
-- Supervision-objective ablation:
-  `scripts/experiments/run_supervision_objective_ablation.py`
-  plus the audit and gate scripts in the same directory
-- Same-target scalar-vs-pairwise learning curve:
-  `scripts/experiments/run_supervision_objective_learning_curve.py`
-  for the local explanatory diagnostic that compares
-  `eviction_loss_scalar` with `eviction_loss_pairwise` on matched decision
-  subsets derived from the same eviction-loss labels
-- Distribution-shift diagnosis:
-  `scripts/experiments/run_distribution_shift_ablation.py`
-- Practical-significance analysis:
-  `scripts/experiments/run_practical_significance_ablation.py`
+## Contact
 
-These write generated outputs under `analysis/<experiment>/` or related
-reviewer-specific paths documented in
-[docs/reviewer/kbs_second_revision_artifact_map.md](docs/reviewer/kbs_second_revision_artifact_map.md).
-
-## Historical heavy-run material
-
-The earlier Wulver `heavy_r1` manuscript path is still preserved, but it is no
-longer the best top-level orientation for this cleanup pass. It remains useful
-as historical provenance and for older manuscript-support builders.
-
-- Historical heavy-run workflow:
-  [docs/wulver_heavy_evict_value_experiment.md](docs/wulver_heavy_evict_value_experiment.md)
-- Historical heavy-run artifact set:
-  [docs/evict_value_v1_kbs_canonical_artifacts.md](docs/evict_value_v1_kbs_canonical_artifacts.md)
-
-## Documentation index
-
-[docs/README.md](docs/README.md)
+Soroush Vahidi, Ying Wu College of Computing, New Jersey Institute of
+Technology. Contact email: `sv96@njit.edu`.

@@ -1,110 +1,76 @@
-# Documentation index (`docs/`)
+# Documentation index
 
-Use this page to find the right document without duplicating long runbooks.
+This page is an index, not a narrative source of truth. For current public
+orientation, start with [../README.md](../README.md). For technical reviewer
+navigation, start with [reviewer/START_HERE.md](reviewer/START_HERE.md).
 
-## Authoritative status hierarchy
-
-Several documents in this repository track project status; when two appear
-to disagree, resolve the conflict in this order (highest authority first).
-Lower-ranked docs should point to these rather than re-stating the same
-facts:
-
-1. [`NEW_AGENT_HANDOFF.md`](NEW_AGENT_HANDOFF.md) -- cold-start orientation
-   and hard safety list; the first thing a new agent reads.
-2. [`DEVELOPMENT_STATUS.md`](DEVELOPMENT_STATUS.md) -- current authoritative
-   project status: purpose, scientific question, evidence summary,
-   interpretation.
-3. [`reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md`](reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md)
-   -- experiment-level truth: one canonical row per experiment.
-4. [`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)
-   -- local/Wulver/GitHub artifact-location truth.
-5. [`NEXT_STEPS.md`](NEXT_STEPS.md) -- current prioritized actions (P0-P4).
-
-All other status-flavored docs (`reviewer_revision_roadmap.md`,
-`reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`,
-`reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`,
-`WULVER_TO_GITHUB_PROMOTION_QUEUE.md`, etc.) hold detail that is genuinely
-theirs (per-reviewer coverage, per-hypothesis evidence, sync priority) and
-are not superseded outright -- but for a fact that could be stated in more
-than one place, the five documents above win. This hierarchy does not
-apply to historical/superseded material (e.g. `heavy_r1` docs), which is
-kept for provenance only and was never meant to reflect current status.
-
-## New to this repository, or a new agent with no conversation history?
-
-| Document | Use when you need… |
-|----------|---------------------|
-| [`DEVELOPMENT_STATUS.md`](DEVELOPMENT_STATUS.md) | **Start here.** Authoritative developer/research handoff: project purpose, current scientific question, branch roles, evidence summary, invalid artifacts, active local work, and a startup checklist |
-| [`NEW_AGENT_HANDOFF.md`](NEW_AGENT_HANDOFF.md) | Crisp "what do I do right now" -- immediate next actions (with machine/entry point/stopping condition) and a hard safety "Do Not Do" list |
-| [`NEXT_STEPS.md`](NEXT_STEPS.md) | Full P0-P4 roadmap, each item with why/status/dependency/machine/entry point/cost/stopping rule |
-
-## Current KBS second-revision reviewer science
-
-| Document | Use when you need… |
-|----------|---------------------|
-| [`reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md`](reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md) | Canonical index of every reviewer-relevant experiment: question, protocol, scope, status, evidence strength, next action |
-| [`reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`](reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md) | What answers each reviewer concern, and how completely (`ANSWERED`/`PARTIAL`/`MISSING`/...) |
-| [`reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md`](reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md) | The mechanistic-hypothesis matrix (H1-H11): evidence, status, decisive next experiment, stopping rule |
-| [`reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md`](reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md) | How to actually rerun/resume a second-revision diagnostic, canonical windows/seeds, checkpoint semantics |
-| [`kbs_manuscript_workflow.md`](kbs_manuscript_workflow.md) | Current workflow hub and distinction from historical `heavy_r1` material |
-| [`kbs_second_revision_repository_state.md`](kbs_second_revision_repository_state.md) | Canonical-branch intent, tracked-vs-generated boundaries, and the live status of any active revision-science job |
-| [`reviewer/kbs_second_revision_artifact_map.md`](reviewer/kbs_second_revision_artifact_map.md) | Concern-by-concern code, outputs, status, caveats, and the completed 50% same-target learning-curve diagnostic |
-| [`reviewer/kbs_evidence_eligibility.md`](reviewer/kbs_evidence_eligibility.md) | What can be used in primary tables, supporting analysis, or diagnostics only |
-| [`reviewer/kbs_negative_results_interpretation.md`](reviewer/kbs_negative_results_interpretation.md) | Internal note on the negative results, including the same-target scalar-vs-pairwise diagnostic distinction |
-| [`reviewer/kbs_comparison_fairness_audit.md`](reviewer/kbs_comparison_fairness_audit.md) | Cross-cutting fairness audit of the baseline/method comparison pool |
-| [`reviewer_revision_roadmap.md`](reviewer_revision_roadmap.md) | Current status summary for the four reviewer concerns plus supplementary local diagnostics |
-
-## Local-Wulver consolidation
-
-| Document | Use when you need… |
-|----------|---------------------|
-| [`reviewer/KBS_LOCAL_WULVER_CONFLICT_MATRIX.md`](reviewer/KBS_LOCAL_WULVER_CONFLICT_MATRIX.md) | Per-file conflict-risk classification before any future push/merge with Wulver |
-| [`reviewer/KBS_LOCAL_TO_WULVER_MASTER_MANIFEST.md`](reviewer/KBS_LOCAL_TO_WULVER_MASTER_MANIFEST.md) | Whole-branch transfer plan: git payload, living docs, generated results, do-not-transfer |
-| [`reviewer/KBS_LOCAL_TO_WULVER_SYNC_STATUS.md`](reviewer/KBS_LOCAL_TO_WULVER_SYNC_STATUS.md) | What's believed already on both sides vs. local-only, at a whole-branch level |
-| [`reviewer/local_to_wulver_continuation_sync_manifest.md`](reviewer/local_to_wulver_continuation_sync_manifest.md) | Protocol-specific sync manifest for the C1/C2 continuation work, with pinned source/test/config hashes |
-
-## Historical KBS / Wulver `heavy_r1`
-
-| Document | Use when you need… |
-|----------|---------------------|
-| [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md) | Historical heavy-run checklist hub |
-| [`kbs_manuscript_workflow.md`](kbs_manuscript_workflow.md) | Current workflow plus historical `heavy_r1` pointers |
-| [`evict_value_v1_kbs_canonical_artifacts.md`](evict_value_v1_kbs_canonical_artifacts.md) | Exact `*_heavy_r1` filenames for the older builder path |
-| [`kbs_manuscript_submission_index.md`](kbs_manuscript_submission_index.md) | Reviewer-facing index for the older heavy-run line |
-| [`wulver_heavy_evict_value_experiment.md`](wulver_heavy_evict_value_experiment.md) | Historical Slurm runbook, defaults, success checks |
-
-## Reproducibility, baselines, and framework
-
-| Document | Use when you need… |
-|----------|---------------------|
-| [`reproducibility_and_artifacts.md`](reproducibility_and_artifacts.md) | CLI entry points, output locations, manuscript vs exploratory |
-| [`repo_map.md`](repo_map.md) | Top-level directory orientation |
-| [`baselines.md`](baselines.md) | Baseline policy definitions and literature pointers |
-| [`framework.md`](framework.md) | Experimental policy families and architecture notes |
-| [`datasets.md`](datasets.md) | Dataset formats and preparation |
-| [`datasets_wulver_trace_acquisition.md`](datasets_wulver_trace_acquisition.md) | Wulver trace acquisition notes |
-
-## Evidence strength, open questions, and audits
-
-| Document | Use when you need… |
-|----------|---------------------|
-| [`manuscript_open_questions.md`](manuscript_open_questions.md) | Priority-ordered research and positioning risks. **Likely superseded/orphaned**: last touched 2026-04, predates the H1-H11 hypothesis map and the second-revision experiment registry, and describes an earlier TIST pairwise-vs-pointwise framing not otherwise referenced by current second-revision docs -- flagged here rather than deleted |
-| [`manuscript_evidence_map.md`](manuscript_evidence_map.md) | Claim-by-claim table for older manuscript-support work. Same staleness caveat as above; points to `kbs_manuscript_workflow.md` for the current canonical pipeline |
-| [`manuscript_tist_positioning.md`](manuscript_tist_positioning.md) | TIST-oriented positioning notes |
-
-## Exploratory and internal material
-
-| Document | Notes |
-|----------|--------|
-| [`lightweight_exploratory_ablations.md`](lightweight_exploratory_ablations.md) | Index for `analysis/*_light/` |
-| `pairwise_*.md` | Theorem development and audits; not finalized proofs |
-| [`offline_general_caching_approx.md`](offline_general_caching_approx.md) | Separate experiment family |
-| `internal_*` docs | Author-facing working notes; not canonical evidence |
-
-## Repository hygiene and cleanup
+## Reviewer-facing
 
 | Document | Role |
-|----------|------|
-| [`repository_cleanup_report.md`](repository_cleanup_report.md) | Navigation and cleanup notes |
-| [`kbs_repository_hygiene_report.md`](kbs_repository_hygiene_report.md) | Earlier KBS hygiene notes |
-| [`repo_hygiene_cleanup_report_2026-04-11.md`](repo_hygiene_cleanup_report_2026-04-11.md) | Dated snapshot |
+|---|---|
+| [reviewer/START_HERE.md](reviewer/START_HERE.md) | Main technical navigation page organized by scientific question. |
+| [reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md](reviewer/KBS_SECOND_REVISION_EXPERIMENT_REGISTRY.md) | Experiment-level registry: protocol, scope, status, output paths. |
+| [reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md](reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md) | Mechanistic hypotheses H1-H11 and their evidence status. |
+| [reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md](reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md) | Reviewer-concern coverage map. |
+| [reviewer/kbs_second_revision_artifact_map.md](reviewer/kbs_second_revision_artifact_map.md) | Code/config/output map by reviewer concern. |
+| [reviewer/kbs_evidence_eligibility.md](reviewer/kbs_evidence_eligibility.md) | Primary/supporting/historical eligibility rules. |
+| [baselines.md](baselines.md) | Baseline definitions and provenance categories. |
+| [datasets.md](datasets.md) | Dataset ingestion and preprocessing. |
+| [datasets_wulver_trace_acquisition.md](datasets_wulver_trace_acquisition.md) | Trace acquisition notes for Wulver-scale processed traces. |
+| [../reports/kbs_verified_literature_20260813.md](../reports/kbs_verified_literature_20260813.md) | Verified literature and workload provenance ledger. |
+
+## Reproducibility
+
+| Document | Role |
+|---|---|
+| [reviewer/RESULT_VERIFICATION.md](reviewer/RESULT_VERIFICATION.md) | Auditable result-correctness checklist. |
+| [reviewer/REPRODUCTION_MATRIX.md](reviewer/REPRODUCTION_MATRIX.md) | Result-by-result scripts, inputs, outputs, cost, validation, availability. |
+| [reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md](reviewer/KBS_SECOND_REVISION_REPRODUCIBILITY.md) | Existing second-revision rerun/resume details. |
+| [reviewer_fairness_protocol.md](reviewer_fairness_protocol.md) | Matched fairness protocol. |
+| [reviewer_fairness_cross_family_v1.md](reviewer_fairness_cross_family_v1.md) | Corrected held-out family protocol. |
+| [supervision_objective_ablation_protocol.md](supervision_objective_ablation_protocol.md) | Objective-ablation protocol. |
+| [distribution_shift_ablation_protocol.md](distribution_shift_ablation_protocol.md) | Distribution-shift protocol. |
+| [practical_significance_ablation_protocol.md](practical_significance_ablation_protocol.md) | Timing/practical-significance protocol. |
+| [lrb_method_spec.md](lrb_method_spec.md) | LRB implementation method spec. |
+| [three_l_cache_method_spec.md](three_l_cache_method_spec.md) | 3L-Cache implementation method spec. |
+| [cacheus_method_spec.md](cacheus_method_spec.md) | CACHEUS wrapper method spec. |
+| [halp_method_spec.md](halp_method_spec.md) | HALP reconstruction/adaptation method spec. |
+| [cacheus_provenance.md](cacheus_provenance.md) | CACHEUS upstream provenance and runtime integrity. |
+| [three_l_cache_provenance.md](three_l_cache_provenance.md) | 3L-Cache provenance. |
+| [halp_provenance.md](halp_provenance.md) | HALP provenance and absence of official code. |
+
+## Historical
+
+| Document | Role |
+|---|---|
+| [../CANONICAL_KBS_SUBMISSION.md](../CANONICAL_KBS_SUBMISSION.md) | Historical `heavy_r1` checklist stub; not current gateway. |
+| [kbs_manuscript_workflow.md](kbs_manuscript_workflow.md) | Redirect retained for old links. |
+| [wulver_heavy_evict_value_experiment.md](wulver_heavy_evict_value_experiment.md) | Historical Wulver runbook. |
+| [evict_value_v1_kbs_canonical_artifacts.md](evict_value_v1_kbs_canonical_artifacts.md) | Historical `*_heavy_r1` filename map. |
+| [kbs_manuscript_submission_index.md](kbs_manuscript_submission_index.md) | Older submission index. |
+| [manuscript_evidence_map.md](manuscript_evidence_map.md) | Older manuscript-support map; use current reviewer docs first. |
+| [manuscript_open_questions.md](manuscript_open_questions.md) | Older open-question notes; likely superseded by hypothesis map. |
+
+## Internal / project-management
+
+| Document | Role |
+|---|---|
+| [NEXT_STEPS.md](NEXT_STEPS.md) | Project-management roadmap; current top note distinguishes completed prior campaign from running acceptance-risk controls. |
+| [reviewer/KBS_POST_COMPLETION_HANDOFF.md](reviewer/KBS_POST_COMPLETION_HANDOFF.md) | Handoff/status note; not the reviewer entry point. |
+| [reviewer_revision_roadmap.md](reviewer_revision_roadmap.md) | Historical high-level roadmap retained for project context. |
+| [DEVELOPMENT_STATUS.md](DEVELOPMENT_STATUS.md) | Developer/research handoff, not reviewer-facing evidence. |
+| [NEW_AGENT_HANDOFF.md](NEW_AGENT_HANDOFF.md) | Agent handoff and safety notes. |
+| [CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md) | Local/Wulver/GitHub artifact-location matrix. |
+| [WULVER_TO_GITHUB_PROMOTION_QUEUE.md](WULVER_TO_GITHUB_PROMOTION_QUEUE.md) | Sync-priority notes. |
+| [reviewer/KBS_LOCAL_TO_WULVER_MASTER_MANIFEST.md](reviewer/KBS_LOCAL_TO_WULVER_MASTER_MANIFEST.md) | Local/Wulver transfer planning. |
+| [reviewer/KBS_LOCAL_TO_WULVER_SYNC_STATUS.md](reviewer/KBS_LOCAL_TO_WULVER_SYNC_STATUS.md) | Sync status notes. |
+| [reviewer/KBS_LOCAL_WULVER_CONFLICT_MATRIX.md](reviewer/KBS_LOCAL_WULVER_CONFLICT_MATRIX.md) | Conflict-risk notes. |
+
+## Exploratory / research-active
+
+| Document | Role |
+|---|---|
+| [reviewer/kbs_negative_results_interpretation.md](reviewer/kbs_negative_results_interpretation.md) | Internal interpretation notebook; use curated evidence docs for reviewer navigation. |
+| [reuse_tail_horizon_diagnostic_v1_synthesis.md](reuse_tail_horizon_diagnostic_v1_synthesis.md) | Supporting horizon-observability diagnostic. |
+| `pairwise_*.md` | Research-active proof sketches and audits. |
+| `internal_*.md` | Internal working notes, not primary evidence. |

@@ -1,6 +1,8 @@
 # KBS Second-Revision Post-Completion Handoff
 
-Status decision: **NO_NEW_EXPERIMENT_REQUIRED**.
+Status decision: the previous second-revision campaign is complete; two
+additional acceptance-risk controls are currently running and are not yet
+primary evidence.
 
 Snapshot date: 2026-08-13 (updated from 2026-08-12: both previously-active
 campaigns below have completed and passed formal post-completion integrity
@@ -9,9 +11,9 @@ durable campaign status from live progress. Counts for active campaigns are
 snapshots only; their manifests and logs are authoritative for later
 progress checks. Partial outputs are not citable scientific evidence.
 
-No sixth heavy experiment should be launched unless a completed campaign fails
-integrity validation or the reviewer/editor explicitly requests additional
-evidence.
+No prior second-revision campaign should be relaunched unless a completed
+campaign fails integrity validation or the reviewer/editor explicitly requests
+additional evidence.
 
 ## Final-validated campaigns
 
@@ -36,8 +38,14 @@ passed a formal, read-only post-completion integrity audit on 2026-08-13
 
 ## Active campaigns
 
-None. As of 2026-08-13 there is no local heavy compute running for this
-revision.
+Two additional acceptance-risk controls are active as of 2026-08-13:
+
+- `kbs_common_model_objective_control_20260813_final`
+- `kbs_tie_aware_exact_oracle_20260813_final`
+
+They are not part of the primary evidence, are not integrated into the
+manuscript, and should not be summarized until they complete and pass integrity
+review.
 
 ## Recorded launch commands
 
@@ -45,11 +53,12 @@ These are the commands observed in the active workers. They are recorded for
 identification and audit only; do not execute them again.
 
 ```text
-scripts/experiments/run_continuation_policy_causal_ablation.py --config configs/continuation_policy_causal_ablation_production_v1.json --data-read-root /home/soroush/Augmented-caching --resume --max-wall-hours 8
-scripts/experiments/run_exact_target_oracle_replication.py --config configs/exact_target_oracle_replication_v1.json --out-dir analysis/exact_target_oracle_replication_v1 --data-read-root /home/soroush/Augmented-caching --determinism-check
-scripts/experiments/run_strict_preference_horizon_diagnostic.py --config configs/strict_preference_horizon_diagnostic_v1.json --out-dir analysis/strict_preference_horizon_diagnostic_v1 --data-read-root /home/soroush/Augmented-caching
-scripts/experiments/run_learned_exact_target_agreement.py --config configs/learned_exact_target_agreement_v1.json --out-dir analysis/learned_exact_target_agreement_v1 --data-read-root /home/soroush/Augmented-caching
-scripts/experiments/run_distribution_shift_ablation.py --config configs/distribution_shift_ablation_v1.json --max-wall-hours 9.0 --models-dir models/distribution_shift_ablation_v1 --out-dir analysis/distribution_shift_ablation_v1 --resume --data-read-root /home/soroush/Augmented-caching
+REPO_ROOT=/path/to/Augmented-caching
+scripts/experiments/run_continuation_policy_causal_ablation.py --config configs/continuation_policy_causal_ablation_production_v1.json --data-read-root "$REPO_ROOT" --resume --max-wall-hours 8
+scripts/experiments/run_exact_target_oracle_replication.py --config configs/exact_target_oracle_replication_v1.json --out-dir analysis/exact_target_oracle_replication_v1 --data-read-root "$REPO_ROOT" --determinism-check
+scripts/experiments/run_strict_preference_horizon_diagnostic.py --config configs/strict_preference_horizon_diagnostic_v1.json --out-dir analysis/strict_preference_horizon_diagnostic_v1 --data-read-root "$REPO_ROOT"
+scripts/experiments/run_learned_exact_target_agreement.py --config configs/learned_exact_target_agreement_v1.json --out-dir analysis/learned_exact_target_agreement_v1 --data-read-root "$REPO_ROOT"
+scripts/experiments/run_distribution_shift_ablation.py --config configs/distribution_shift_ablation_v1.json --max-wall-hours 9.0 --models-dir models/distribution_shift_ablation_v1 --out-dir analysis/distribution_shift_ablation_v1 --resume --data-read-root "$REPO_ROOT"
 ```
 
 ## Completion gate

@@ -1,494 +1,59 @@
-# Next-Work Roadmap
+# Next-work roadmap
 
-## 2026-08-13 update (manuscript synthesis pass): manuscript and rebuttal complete
+This is a project-management note. It is not the reviewer entry point; use
+[../README.md](../README.md) and
+[reviewer/START_HERE.md](reviewer/START_HERE.md) for reviewer-facing
+navigation.
 
-**MANUSCRIPT_SYNTHESIS_COMPLETE, RESPONSE_TO_REVIEWERS_COMPLETE,
-NO_MAJOR_EXPERIMENT_REMAINS.** All validated second-revision evidence (Major
-1 baseline comparison, Major 2 objective ablation, mechanistic diagnosis,
-C0/C1/C2 causal ablation, DAgger negative result, controlled timing) has been
-integrated into `submission_kbs_revision_final/07_LaTeX_Source/main.tex`
-(recompiled to a 44-page PDF, zero LaTeX errors/undefined references) and
-into a full point-by-point response to Reviewer #2's four major comments and
-Reviewer #3's primary issue
-(`reports/kbs_response_to_reviewers_final.md` /
-`submission_kbs_revision_final/02_Response_to_Reviewers.md`). A crosswalk
-mapping every concern to its evidence, manuscript section/table/page, and
-response section is at
-`reports/kbs_final_evidence_20260813/manuscript_reviewer_crosswalk.md`. All
-inserted numbers were independently re-verified against canonical raw
-evidence with zero discrepancies. A stale-claim sweep found no overclaiming
-language and no placeholders. Next stage:
-`FINAL_SUBMISSION_CONSISTENCY_AND_PACKAGE_AUDIT` (not yet performed).
+## Current evidence state
 
-## 2026-08-13 update (correction pass): Major 1 same-protocol comparison completed
+The previous KBS second-revision evidence campaign is complete and validated.
+The current primary evidence remains the curated package in
+[../reports/kbs_final_evidence_20260813/](../reports/kbs_final_evidence_20260813/).
 
-A read-only audit found that the "2026-08-13 update (later)" section
-immediately below **incorrectly claimed no same-protocol comparison exists**
-against LRU/SIEVE/FIFO/LRB/3L-Cache/HALP/CACHEUS. That claim restated a
-Wulver-filesystem-scoped line from `baseline_eligibility.csv` as if it were
-universal, without checking this workstation's own
-`analysis/reviewer_fairness/` directory, which already held exact-protocol
-results for all seven baselines since 2026-08-06/07. This pass ran
-`scripts/analysis/prepare_r2_major1_evidence.py` (LRB/3L-Cache/CACHEUS),
-independently re-validated its output against the raw CSVs (zero
-discrepancies), independently computed the same comparison for LRU/SIEVE/
-FIFO-Reinsertion/HALP, and confirmed all seven baselines have 21/21
-`primary_controlled_window` cells matching the treatment exactly by trace
-SHA-256, capacity, window, and metric. Result: `evict_value_v1` loses on a
-clear majority of matched cells (13-17 of 21) against every baseline tested
--- a candid negative result. See
-`reports/kbs_final_evidence_20260813/major1_reviewer_summary.md` and
-`major1_protocol_comparability.md`. R2 Major 1 status moves from
-`EVIDENCE_SYNCED_SYNTHESIS_PENDING` to `SCIENTIFICALLY_COMPLETE_SYNTHESIS_READY`.
-No new experiment was run to produce this; it is a synthesis of
-already-computed local evidence.
+That package covers:
 
-## 2026-08-13 update (later): both remaining Wulver sync blockers closed
+- matched baseline comparison against LRU, FIFO-Reinsertion, SIEVE, LRB,
+  3L-Cache, CACHEUS, and HALP;
+- corrected held-out `evict_value_v1` treatment integrity;
+- supervision-objective ablation;
+- exact-target, target-degeneracy, learned/exact, continuation, and
+  distribution-shift diagnostics;
+- controlled four-policy timing.
 
-**READY_FOR_MANUSCRIPT_AND_REBUTTAL_SYNTHESIS.** Under an explicit task
-authorization, the two FINAL_VALIDATED Wulver payloads named in the
-"2026-08-13 update" section immediately below -- the corrected held-out
-`evict_value_v1` treatment (42/42) and the controlled timing campaign
-(420/420) -- were `rsync`'d from the authoritative Wulver checkout
-(`login02:/mmfs1/project/ikoutis/sv96/Augmented-caching`), verified against
-their required SHA-256 manifest (16/16 and 13/13 matches, 0 mismatches), and
-independently re-audited locally from the raw CSV/JSON (structural, leakage,
-model-provenance, and statistical gates all PASS; recomputed timing means
-matched the expected values exactly). Compact synchronized evidence:
-`reports/kbs_final_evidence_20260813/heldout_treatment_integrity.md`,
-`heldout_treatment_provenance.md`, `controlled_timing_integrity.md`,
-`controlled_timing_interpretation.md`. **No synchronization or scientific
-compute blocker remains for this branch.** The corrected treatment result
-does **not** create a same-protocol comparison against LRU/SIEVE/FIFO/
-LRB/3L-Cache/HALP/CACHEUS -- only `evict_value_v1` has true 42/42
-same-protocol coverage; preserve this caveat in any synthesis. Likewise,
-`evict_value_v1`'s timing remains a separate single-run measurement, not
-part of the 4-policy (LRU/FIFO-Reinsertion/SIEVE/HALP-causal) controlled
-timing table. Next stage is manuscript/rebuttal synthesis and final
-submission audit only.
+## Running controls
 
-## 2026-08-13 update: both remaining local campaigns closed
+Two additional acceptance-risk controls are currently running:
 
-**NO_NEW_EXPERIMENT_REQUIRED -- reaffirmed, and stronger than the 2026-08-12
-snapshot below.** C0/C1/C2 continuation-policy causal ablation and
-distribution-shift completion both finished naturally and passed a formal,
-read-only post-completion integrity audit on 2026-08-13: `FINAL_VALIDATED`,
-21/21 units / 7/7 folds, all integrity gates PASS. There is now **no
-remaining local scientific compute blocker** for this branch. Compact
-evidence: `reports/kbs_final_evidence_20260813/`. H5 (continuation-policy
-mismatch) closed `PARTIALLY_SUPPORTED`; H6 (generic state-shift) closed
-`DISFAVORED` as a shift-reduction-improves-performance story. See
-`reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md` and
-`reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md` for full detail.
+- `kbs_common_model_objective_control_20260813_final`
+- `kbs_tie_aware_exact_oracle_20260813_final`
 
-The next stage is: (1) Wulver synchronization only (corrected held-out
-`evict_value_v1` 42/42, controlled timing 420/420), (2) compact evidence
-consolidation (done for the two closed campaigns), (3) manuscript/rebuttal
-synthesis, (4) final submission audit. Do not launch any new local
-experiment unless an integrity failure is discovered, required Wulver
-evidence cannot be reconciled, or the reviewer/editor explicitly requests
-new work.
+These controls are not integrated into the manuscript, are not part of the
+current primary evidence, and should not be summarized until they finish and
+pass integrity review. Do not inspect or modify their output directories while
+they are active.
 
-## 2026-08-12 handoff decision (superseded above)
+## Safe current work
 
-**NO_NEW_EXPERIMENT_REQUIRED.** As of this 2026-08-12 repository-polish
-snapshot, exact-target replication, strict-preference/horizon, and learned/exact
-agreement are `FINAL_VALIDATED`. Only C0/C1/C2 continuation causality and
-distribution-shift completion remain running. No sixth heavy experiment should
-be launched unless a completed campaign fails integrity validation or the
-reviewer/editor explicitly requests additional evidence.
+- Reviewer-facing documentation, link checks, and evidence navigation.
+- Final package consistency audits that read committed summaries and
+  non-running artifacts only.
+- Dataset inventory or release-prep notes that do not upload data and do not
+  alter generated scientific outputs.
 
-The required next work is completion monitoring without intervention, final
-integrity audits, evidence synchronization, and reviewer-response synthesis.
-See [`reviewer/KBS_POST_COMPLETION_HANDOFF.md`](reviewer/KBS_POST_COMPLETION_HANDOFF.md)
-for the campaign map, launch metadata, and completion gates.
+## Do not do now
 
-Actionable, ordered roadmap for this branch. Companion to
-[`DEVELOPMENT_STATUS.md`](DEVELOPMENT_STATUS.md) (read that first for full
-context). Each item states why it matters, its current status, what it
-depends on, which machine it belongs on, its entry point, an expected cost,
-a stopping rule, and what result would actually change the project's
-scientific interpretation -- not just "do more experiments."
+- Do not stop, restart, signal, or relaunch the two running controls.
+- Do not inspect active outputs under `analysis/common_model_objective_control_v1/`
+  or `analysis/tie_aware_exact_target_oracle_v1/`.
+- Do not launch duplicate full campaigns for already validated evidence.
+- Do not run the intentionally stopped 100% learning-curve fraction unless a
+  future protocol explicitly reopens that question.
+- Do not use `analysis/reviewer_fairness/policy_comparison_evict_value_v1.csv`
+  as primary evidence; it is contaminated/historical.
 
-**2026-08-11 update:** several items below were reconciled against fresh
-Wulver-side facts relayed by the user (not independently verified by this
-workstation -- see
-[`CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md)).
-Some items that used to read "run this experiment" now read "sync and
-review this already-completed Wulver result" instead -- check
-[`WULVER_TO_GITHUB_PROMOTION_QUEUE.md`](WULVER_TO_GITHUB_PROMOTION_QUEUE.md)
-for the sync-priority order before assuming an item still needs to be
-launched from scratch.
+## Deferred
 
----
-
-## Quick-glance operational summary
-
-**NOW (this workstation, snapshot 2026-08-13): both local campaigns are DONE.**
-- C0/C1/C2 (tmux session `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`)
-  and distribution-shift (tmux session
-  `kbs_distribution_shift_completion_resume2_20260812`) have both exited
-  naturally; neither tmux session nor worker process remains. Both passed
-  formal integrity audit on 2026-08-13: `FINAL_VALIDATED`.
-- No local heavy experiment is running or required. Do not launch one.
-- Full no-compute work (docs, evidence packaging, reviewer synthesis) is
-  unblocked.
-
-**LOCAL C0/C1/C2 -- DONE (2026-08-13):**
-- Integrity audit passed against the 21-unit manifest (63/63 policy rows, 21/21
-  label-agreement rows, 21/21 pi2-training rows). See
-  `reports/kbs_final_evidence_20260813/c0_integrity_summary.md`.
-- C0-vs-C1-vs-C2 mechanism finding synthesized (P2.5's stopping rule fired in
-  the "continue" direction: C2 improves over C1 in 13/21 cells): H5
-  `PARTIALLY_SUPPORTED`.
-- Fed into the Reviewer #3 / R2 Major 3 closure decision in
-  `reviewer/KBS_SECOND_REVISION_REVIEWER_COVERAGE.md`
-  (`SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING`).
-
-**WHEN WULVER MAINTENANCE ENDS (not this workstation's task to trigger):**
-- Let already-queued jobs (`1171965`-`1171967` LRB/3L-Cache/CACHEUS
-  replication, horizon sweep `1169299`) auto-dispatch; do not resubmit them
-  from here.
-- ~~Sync and audit the corrected held-out `evict_value_v1` 42/42 result (P1.1)
-  and the completed controlled timing 420/420 result (P1.2).~~ **Done
-  2026-08-13** under explicit task authorization -- see the update section at
-  the top of this file and `reports/kbs_final_evidence_20260813/`.
-- Audit the remaining horizon-sweep cells (18/35 pending) once complete.
-
-**NO-COMPUTE (safe anytime, any machine state):**
-- Dataset release/inventory prep (`analysis/huggingface_dataset_preview_v0_2/`
-  review, without uploading).
-- Reviewer evidence-table and manuscript-safe-summary preparation (see
-  `analysis/kbs_reviewer_synthesis_prep_20260811/`).
-- Documentation reconciliation, hygiene, and link-checking passes like this
-  one.
-
-**DO NOT RUN (already complete or intentionally not run under a stopping
-rule -- relaunching would waste compute and contradict a recorded decision):**
-- `100%` learning-curve fraction (P3.1) -- `STOP_SAMPLE_SIZE_HYPOTHESIS`.
-- A duplicate objective-comparison ablation -- already `FINAL_VALIDATED`,
-  84/84 rows.
-- A duplicate controlled-timing campaign -- already `WULVER_ONLY_VALIDATED`,
-  420/420 rows, `PROMOTE_NOW`.
-- A duplicate reuse-tail diagnostic -- already `LOCAL_COMPLETE`, 21/21 cells.
-- A duplicate target-degeneracy sweep beyond the one local cell without
-  first checking whether the Wulver 21-cell result (job `1169513`) already
-  covers it.
-- A second local modern-baseline (LRB/3L-Cache/CACHEUS) campaign -- local
-  controlled-window CSVs are already `LOCAL_EXACT_PROTOCOL_VALIDATED`
-  (with caveats noted per policy); Wulver jobs are pending replication only.
-- A local horizon-sensitivity sweep duplicate -- the base sweep is
-  Wulver-side (`RUNNING`, job `1169299`); do not start a second copy
-  locally.
-
-## P0 -- completed closeout / do not relaunch
-
-### P0.1 -- Local 50% learning-curve closeout
-
-- **Status:** `COMPLETE`. The final `wiki2018|0.5` resume completed
-  cleanly, and fraction `0.5` is audited at 7/7 families, 42/42 rows, all
-  `status=ok`, duplicate-key count 0, NaN/Inf count 0, 7/7 fraction-0.5
-  audit units, and 0 model SHA mismatches.
-- **Synthesis:** `analysis/supervision_objective_learning_curve_v1/final_50pct_synthesis_20260811/`.
-- **Scientific decision:** `STOP_SAMPLE_SIZE_HYPOTHESIS`. Within the tested
-  `1%-50%` range, the sample-size explanation is not supported as the
-  primary cause; this does not claim that more data can never help.
-- **Action:** none. Do not launch `100%` as follow-up work for H1 under the
-  current stopping rule.
-
-### P0.2 -- Local reuse-tail horizon diagnostic closeout
-
-- **Status:** `LOCAL_COMPLETE`. The local
-  `reuse_tail_horizon_diagnostic_v1` run completed 21/21 family-capacity
-  cells, with all seven families, capacities `32/64/128`, and horizons
-  `1/2/4/8/16`.
-- **Synthesis:** `docs/reuse_tail_horizon_diagnostic_v1_synthesis.md`.
-- **Scientific decision:** H4/H11 are supported as a horizon-observability
-  limitation: at H=4, `P(T>4 | resident)=0.9938544459677984` and
-  `P(T>4 | resident, eventually reused)=0.9793302186526528`. This is not a
-  causal excess-miss claim.
-- **Action:** none. Do not relaunch this diagnostic unless the protocol is
-  deliberately changed.
-
-## P1 -- reviewer/publication blockers
-
-### P1.1 -- Corrected held-out cross-family `evict_value_v1` replay
-
-- **Why:** named the single highest-priority open item by the comparison-
-  fairness audit; without it, no citable head-to-head comparison exists
-  between `evict_value_v1` and modern learned baselines (LRB/3L/CACHEUS/HALP).
-- **Status (updated 2026-08-13, later pass): `SCIENTIFICALLY_COMPLETE_SYNTHESIS_READY`.**
-  Synced from Wulver and independently re-audited locally -- **COMPLETE,
-  42/42 rows**, SHA-256 `982bfdffdbd816b56c2eef86ecb730a1eb136b3f85e36ad533739e586fa0a296`
-  (verified). A 2026-08-11 local evidence-prep pass validated the baseline
-  side and created `analysis/kbs_r2_major1_evidence_prep_20260811/` plus the
-  reusable comparison procedure `scripts/analysis/prepare_r2_major1_evidence.py`.
-  **That script was run 2026-08-13 (later pass)** and its output
-  independently re-validated cell-by-cell against the raw CSVs (zero
-  discrepancies); combined with an independently computed LRU/SIEVE/FIFO/
-  HALP comparison (not covered by the script), all seven baselines
-  (LRB, 3L-Cache, CACHEUS, HALP, LRU, SIEVE, FIFO-Reinsertion) now have a
-  validated exact-protocol comparison against `evict_value_v1`. Result:
-  `evict_value_v1` loses on a clear majority of matched cells (13-17 of 21)
-  against every baseline -- see `reports/kbs_final_evidence_20260813/major1_reviewer_summary.md`.
-  A prior version of this entry claimed "no same-protocol comparison
-  exists"; that was incorrect (it restated a Wulver-filesystem-scoped claim
-  as universal). Wulver jobs `1171965`-`1171967` remain pending because of
-  maintenance, but are replication/config-audit follow-up only.
-- **Dependency:** none remaining.
-- **Machine:** synced to this workstation 2026-08-13; local from here on.
-- **Entry point:** `analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv`
-  (present locally, hash-verified).
-- **Expected cost:** none remaining; only manuscript wording integration is left.
-- **Stopping rule:** integrity checks pass locally after sync (unique keys,
-  no NaN/Inf, all `status=ok`, hash matches the value above) -- **met**.
-  Comparison against all seven baselines validated -- **met**.
-- **What this changed our interpretation to:** `evict_value_v1` loses to
-  every baseline tested under the clean, exact-protocol comparison. This
-  strengthens the current negative-result narrative without the lingering
-  unfairness caveat, and is mechanistically explained elsewhere on this
-  branch by the target-degeneracy finding (H3).
-
-### P1.2 -- Controlled timing / practical-significance campaign
-
-- **Why:** current local timing numbers are `SMOKE_ONLY` and explicitly
-  marked not-final by their own artifact; any practical-deployment claim
-  needs a real controlled measurement.
-- **Status (updated 2026-08-13): `FINAL_VALIDATED_SYNCED`.** Synced from
-  Wulver and independently re-audited locally -- **COMPLETE**, Wulver job
-  `1171758`, 420/420 rows (7 families x 3 capacities x 4 policies x 5
-  repetitions), 13/13 transfer hashes PASS. Mean per-request runtime
-  independently recomputed from the raw 420-row file and matched exactly:
-  LRU 4.680543us, FIFO-Reinsertion 5.168286us, SIEVE 9.523362us, HALP-causal
-  870.660257us (~186x LRU). `evict_value_v1`'s runtime remains a separate
-  single-run measurement, not part of this 4-policy table -- see
-  `reports/kbs_final_evidence_20260813/controlled_timing_interpretation.md`.
-- **Dependency:** none; complete on Wulver and now synced locally.
-- **Machine:** synced to this workstation 2026-08-13.
-- **Entry point:** `analysis/kbs_controlled_timing_20260810/raw_timing_runs.csv`
-  (present locally, hash-verified).
-- **Expected cost:** none remaining.
-- **Stopping rule:** synced result passes the same integrity bar as any
-  other promoted artifact (row count, no duplicate keys, provenance intact)
-  -- **met**.
-- **What would change our interpretation:** the result is already in --
-  HALP-causal's ~186x overhead vs. LRU is a real, citable finding for any
-  deployability discussion; it does not bear on H1-H11 (the target-
-  formulation question is separate from computational cost). Modern
-  LRB/3L/CACHEUS timing is not included in this 4-policy campaign and may
-  need a separate pass if required.
-
-## P2 -- highest-information mechanistic experiments
-
-### P2.1 -- Multi-cell replication of target-degeneracy + exact-target-oracle
-
-- **Why:** H2 and H3 currently rest on exactly one cell (brightkite, cap
-  64, H=4) locally -- the single most important generalization gap in the
-  local evidence base.
-- **Status (snapshot 2026-08-12):** the local exact-target-oracle replication
-  and strict-preference/horizon diagnostic are `FINAL_VALIDATED` at 21/21
-  cells. The broad Wulver degeneracy result remains sync-only and is not a
-  reason to rerun the validated local diagnostics.
-- **Dependency:** none; no rerun.
-- **Machine:** local artifacts complete.
-- **Canonical outputs:** `analysis/exact_target_oracle_replication_v1/` and
-  `analysis/strict_preference_horizon_diagnostic_v1/`.
-- **Expected cost:** medium (one cell already took non-trivial wall time;
-  18 more cells at similar cost).
-- **Stopping rule:** a majority of cells reported, with consistent
-  direction (or a clearly characterized split by family/capacity).
-- **What would change our interpretation:** the degeneracy side already
-  points toward H3 generalizing (see the Wulver result above); if the
-  oracle-diagnostic replication instead shows the learned model *not*
-  beating the exact target oracle in most other cells, that would qualify
-  (not overturn) the current H2/H3 reading -- the "model departure from
-  target is net-beneficial" finding would need to be shown cell-specific
-  rather than general.
-
-### P2.2 -- `P(T > H | resident)` reuse-time-tail diagnostic
-
-- **Why:** the literature-motivated, dimensionally direct quantity for
-  horizon adequacy (see the hypothesis map's "Refined horizon-adequacy
-  framing" section) -- more principled than the `H/C` ratio, and computable
-  from data that already exists.
-- **Status:** `LOCAL_COMPLETE`. The run in
-  `analysis/reuse_tail_horizon_diagnostic_v1/` completed 21/21
-  family-capacity cells and passed integrity. Synthesis:
-  `docs/reuse_tail_horizon_diagnostic_v1_synthesis.md`.
-- **Dependency:** none remaining for the resident-candidate diagnostic.
-- **Machine:** local.
-- **Entry point:** `scripts/experiments/run_reuse_tail_horizon_diagnostic.py`
-  and `src/lafc/reuse_tail_horizon.py`.
-- **Expected cost:** complete; no further local cost.
-- **Stopping rule:** satisfied for the non-causal resident-candidate pass.
-- **What changed our interpretation:** the high H=4 tail strengthens H4/H11
-  as an observability limitation. It does not establish that reuse after H
-  causes an avoidable miss; causal excess-miss attribution remains a
-  separate, unimplemented question.
-
-### P2.3 -- `H/C` and capacity-scaling diagnostic sweep
-
-- **Why:** tests H10 directly; currently only run at one fixed capacity.
-- **Status:** `EMPIRICALLY_STRENGTHENED_BUT_NOT_PROVEN_AS_LAW`. The
-  Wulver-relayed broad degeneracy result and the local reuse-tail diagnostic
-  both worsen with capacity at H=4, but this is still descriptive evidence,
-  not a derived `H/C` scaling law.
-- **Dependency:** P2.1's degeneracy script, re-run at fixed `H=4` across
-  `C in {32,64,128}` (cheapest first pass; the learning-curve/objective-
-  ablation CSVs already sweep capacity but don't carry the needed
-  resolution metrics).
-- **Machine:** local.
-- **Entry point:** existing degeneracy script with `--capacity` swept.
-- **Expected cost:** low (reuses existing tooling).
-- **Stopping rule:** at least two capacities compared using
-  `mean_optimal_set_fraction` / `target_entropy_bits`.
-- **What would change our interpretation:** would either support or
-  disfavor treating `H/C` as a useful covariate -- explicitly not assumed
-  to be a law either way (see hypothesis map guardrail).
-
-### P2.4 -- Strict-preference reversal diagnostic (H9)
-
-- **Why:** the one audited cell is too degenerate to have strict (non-tied)
-  preferences to test reversal on; need a cell where strict preferences are
-  common.
-- **Status (snapshot 2026-08-12):** `RESOLVED_DIAGNOSTIC`; the validated
-  21-cell diagnostic found no unique H4 winner. Tie-set resolution must not be
-  interpreted as causal miss improvement.
-- **Dependency:** P2.1/P2.3's replication sweep, to first find a
-  less-degenerate cell.
-- **Machine:** local.
-- **Entry point:** existing degeneracy script + a new reversal-rate
-  measurement at H=8/H=16 conditioned on strict H=4 preference.
-- **Expected cost:** low once a suitable cell is identified.
-- **Stopping rule:** reversal rate measured on at least one cell with a
-  non-trivial strict-preference fraction.
-- **What would change our interpretation:** a high reversal rate would
-  support H9 (short-horizon strict preferences are often wrong later); a
-  low reversal rate (<10%) disfavors it per its own stopping rule.
-
-### P2.5 -- Full-scale continuation-policy causal ablation (C1/C2)
-
-- **Why:** H5's decisive test; previously only smoke-scale
-  (`decision_count=3`).
-- **Status (updated 2026-08-13): `FINAL_VALIDATED`, DONE.** The full 7-family
-  production campaign (tmux session
-  `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`) completed
-  naturally and passed formal post-completion integrity audit: 21/21 units,
-  63/63 policy rows, 21/21 label-agreement rows, 21/21 training-summary
-  rows, all integrity gates PASS. Result: C2 improves over C1 in 13/21
-  cells (macro mean delta ≈ −0.0102), ties in 3/21 (degenerate Wiki2018),
-  worsens in 5/21 (largest counter-example `brightkite` cap32, +0.2433).
-  See `reports/kbs_final_evidence_20260813/c0_integrity_summary.md` and
-  `c0_continuation_summary.csv`.
-- **Dependency:** none remaining; do not relaunch.
-- **Machine:** local, completed.
-- **Entry point:** `scripts/experiments/run_continuation_policy_causal_ablation.py`
-  with `configs/continuation_policy_causal_ablation_production_v1.json`.
-- **Expected cost:** n/a, already spent.
-- **Stopping rule:** fired -- all 7 families produced the comparison between
-  LRU-continuation and frozen-`pi1`-continuation labels on matched
-  decision/candidate examples.
-- **Interpretation:** the more internally-consistent continuation assumption
-  (C2) improves downstream misses over fixed-LRU-continuation labels (C1) in
-  a majority of cells but not uniformly -- H5 gains real, partial,
-  regime-dependent support (`PARTIALLY_SUPPORTED`), not universal support.
-
-## P3 -- completeness enhancements
-
-### P3.1 -- `100%` fraction of the learning-curve campaign
-
-- **Status:** `INTENTIONALLY_NOT_RUN_DUE_STOPPING_RULE`.
-- **Reason:** the 50% campaign completed its intended H1 stopping-rule
-  scope. The audited `1%-50%` curve shows no material monotonic downstream
-  improvement, and pairwise remains flat/worse; H1 is now `DISFAVORED`
-  within the tested range.
-- **Action:** remove from active required work. Do not launch `100%` unless
-  a future protocol change explicitly reopens the sample-size question.
-
-### P3.2 -- Historical-tail diagnostic
-
-- **Why:** H8's decisive test; a finite-horizon target implicitly assumes
-  zero terminal value beyond `H`.
-- **Status (updated 2026-08-11):** **already complete on Wulver** (job
-  `1169665`): H=8 resolves ~24.6% of H=4-tied decisions, H=16 resolves
-  ~38.7%, history-linear tie-breaking produces only tiny gains, leakage
-  audit passed. This is `WULVER_ONLY_VALIDATED`, not implemented anywhere
-  locally (confirmed absent by a fresh grep) -- item is now "locate and
-  sync the source + result," not "design and implement from scratch."
-- **Dependency:** none for reviewing the result; locating the source
-  requires Wulver access.
-- **Machine:** Wulver (already done); sync when access is available.
-- **Entry point:** Wulver job `1169665` output/source (path not yet given
-  locally).
-- **Expected cost:** low once synced -- the compute is already done.
-- **Stopping rule:** synced result passes the same integrity bar as any
-  other promoted diagnostic.
-- **What would change our interpretation:** the result is already in and
-  is **weak support** for the horizon/tail concern (tie resolution, not a
-  downstream miss-ratio improvement) -- do not read it as a policy win.
-
-## P4 -- optional / deferred research
-
-### P4.1 -- LRB / 3L-Cache / CACHEUS exact-protocol replication under the corrected held-out split
-
-- **Why:** ensures the already-`FINAL_VALIDATED` (original-protocol)
-  baseline comparison also holds under the corrected cross-family split
-  used for P1.1, not just the original protocol.
-- **Status (updated 2026-08-11):** `LOCAL_COMPLETE` for the local
-  controlled-window CSVs, plus `WULVER_PENDING` for the independently
-  submitted Wulver copies. Fresh local audit found
-  `analysis/reviewer_fairness/policy_comparison_{three_l_cache,lrb,cacheus}.csv`
-  complete at 42 rows per policy, 21 primary controlled-window rows per
-  policy, all seven families, capacities `32/64/128`, all `ok`, no
-  duplicates, and no NaN/Inf. Wulver jobs `1171965`-`1171967` remain
-  pending because of maintenance, not failure.
-- **Dependency:** none for local use of the audited CSVs. Sync the Wulver
-  copies later for independent replication, or if the missing
-  `configs/reviewer_fairness_exact_protocol_modern_20260811.json` proves to
-  contain an additional constraint not recorded in local docs/source.
-- **Machine:** local artifact is complete; Wulver remains queued.
-- **Entry point:** local CSVs in `analysis/reviewer_fairness/`; Wulver jobs
-  `1171965`-`1171967` later for replication.
-- **Expected cost:** no local rerun needed.
-- **Stopping rule:** results synced and integrity-checked, ideally reviewed
-  alongside P1.1 as one coherent primary comparison table.
-- **What would change our interpretation:** a material change in relative
-  baseline ranking under the corrected split would be an important caveat
-  on the existing `FINAL_VALIDATED` (original-protocol) comparison.
-
-### P4.2 -- Reconcile the two independently-evolved revision-status tools
-
-- **Why:** `main`'s `scripts/revision_status.py` / `revision_readiness.py`
-  and this branch's `scripts/validation/revision_status.py` /
-  `revision_readiness.py` are parallel, independently-evolved
-  implementations of the same read-only status tool (different paths,
-  colliding test filenames, same underlying constants) -- not a simple
-  copy-forward case. See `DEVELOPMENT_STATUS.md` section 12 and the
-  promotion-audit findings for detail.
-- **Status:** `DEFERRED` -- requires a deliberate human merge decision, not
-  an automated copy.
-- **Dependency:** none blocking other work; purely a tooling-hygiene item.
-- **Machine:** local.
-- **Entry point:** manual review of both implementations side by side.
-- **Expected cost:** low-medium.
-- **Stopping rule:** one canonical implementation exists, or an explicit
-  decision to keep both with non-colliding names/paths.
-- **What would change our interpretation:** none -- pure tooling hygiene,
-  no scientific content.
-
-### P4.3 -- Fallback/uncertainty-aware selection experiment (H7)
-
-- **Why:** H7 is currently `UNTESTED`; only indirect evidence exists.
-- **Status:** `UNTESTED`, listed only as a future diagnostic candidate.
-- **Dependency:** none blocking, but lower priority than P2.1-P2.5 since
-  adjacent evidence (the exact deterministic oracle also loses to LRU)
-  already mildly weakens this as the *dominant* explanation.
-- **Machine:** local.
-- **Entry point:** a margin-gated or uncertainty-aware selection variant of
-  the existing deployed policy, or a direct measurement of predicted-value
-  margins vs. decision correctness.
-- **Expected cost:** medium.
-- **Stopping rule:** would be disfavored if predicted-value margins are
-  typically large yet misses remain high.
-- **What would change our interpretation:** would only become a primary
-  explanation if margins are shown to be small/unstable at most decisions.
+- Query 3: citation metadata and script/config portability edits.
+- Query 4: physical relocation or quarantine of contaminated historical result
+  files after documentation warnings are in place.
