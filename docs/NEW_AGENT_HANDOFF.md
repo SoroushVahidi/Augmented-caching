@@ -29,11 +29,11 @@ Re-verify git and tmux state yourself before acting -- see the checklist in
 ## Active local compute -- do not touch
 
 A reviewer-critical C0/C1/C2 causal-continuation production campaign is
-running in tmux session `kbs_continuation_c0_c1_c2_production_resume_20260812`
+running in tmux session `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`
 (runner: `scripts/experiments/run_continuation_policy_causal_ablation.py`;
 output: `analysis/continuation_policy_causal_ablation_production_v1/`;
 models: `models/continuation_policy_causal_ablation_production_v1/`; log:
-`logs/kbs_continuation_c0_c1_c2_production_resume_20260812.log`). **Do not stop,
+`logs/kbs_continuation_c0_c1_c2_production_resume2_retry_20260812.log`). **Do not stop,
 signal, restart, attach interactively, or modify its config/outputs, and do
 not launch another heavy local experiment while it runs.** Read-only
 inspection (`tmux ls`, `pgrep -af run_continuation_policy_causal_ablation.py`,
@@ -64,7 +64,7 @@ do not remove those `.gitignore` entries while the campaign is active.
 2. **Priority P1.** Machine: local. Monitor the launched continuation-policy
    C0/C1/C2 production runner (`NEXT_STEPS.md` P2.5). Status is
    `PRODUCTION_RUNNING_LOCAL_TMUX`: tmux session
-   `kbs_continuation_c0_c1_c2_production_resume_20260812`, source SHA
+   `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`, source SHA
    `a813617f36822f793b0e48b0ee3e6009d56ee324`, config SHA-256
    `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`,
    expected 21 units / 63 policy rows / 21 label-agreement rows / 21
@@ -73,14 +73,12 @@ do not remove those `.gitignore` entries while the campaign is active.
    and passes integrity checks, or a unit fails closed with an actionable
    error.
 
-3. **Priority P2.** Machine: local. Replicate the exact-target-oracle
-   diagnostic across the remaining 6 families x 3 capacities
-   (`NEXT_STEPS.md` P2.1) -- entry point:
-   `scripts/experiments/run_exact_target_oracle_diagnostic.py`. (Target-
-   degeneracy replication is already done on Wulver, 21/21 cells -- that
-   half of this item is now a sync task, see `WULVER_TO_GITHUB_PROMOTION_QUEUE.md`
-   #3, not a local re-run.) Prerequisite: none blocking. Stopping
-   condition: a majority of cells reported with a consistent direction.
+3. **Completed locally.** Exact-target-oracle replication, strict-preference/
+   horizon, and learned/exact agreement are `FINAL_VALIDATED`; audit their
+   existing artifacts but do not rerun them. Their generated outputs are in
+   `analysis/exact_target_oracle_replication_v1/`,
+   `analysis/strict_preference_horizon_diagnostic_v1/`, and
+   `analysis/learned_exact_target_agreement_v1/`.
 
 4. **Priority P0.** Machine: local. Do not rerun the `P(T > H | resident)`
    reuse-tail diagnostic. It is `LOCAL_COMPLETE` at

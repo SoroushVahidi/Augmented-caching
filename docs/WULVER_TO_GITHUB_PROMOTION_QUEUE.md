@@ -145,8 +145,8 @@ Classification vocabulary:
   runner.
 - **Classification:** **`RUNNING_LOCAL_NOT_RESULT_COMPLETE`** -- local
   production runner is active in tmux session
-  `kbs_continuation_c0_c1_c2_production_resume_20260812`; the last read-only
-  audit found 8/21 completed units. No full scientific result exists yet;
+  `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`; live
+  manifests/logs are authoritative for progress. No full scientific result exists yet;
   promote only the runner/source, not any production result.
 
 ---

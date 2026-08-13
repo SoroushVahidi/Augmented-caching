@@ -38,10 +38,11 @@ shown above. Do not reset, clean, or commit them as part of this handoff.
 ## Active Local Compute
 
 The C0/C1/C2 continuation-policy campaign is **RUNNING** in tmux session
-`kbs_continuation_c0_c1_c2_production_resume_20260812`, executing
+`kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`, executing
 `scripts/experiments/run_continuation_policy_causal_ablation.py` with
-`--resume --max-wall-hours 8`. Read-only inspection observed **8/21 units
-complete** and **24 policy rows**. It is not scientifically complete. Do not
+`--resume --max-wall-hours 8`. The original cold-start snapshot observed
+**8/21 units complete** and **24 policy rows**. It is not scientifically
+complete. Read the live manifest for current progress. Do not
 stop, signal, attach interactively, restart, change its configuration, or
 modify its outputs. The separate learning-curve tmux session is finished; do
 not relaunch or kill it. Other active local workers are also out of scope.
@@ -60,7 +61,7 @@ SSH, use Slurm, submit, requeue, or cancel anything in this pass.
 
 - **R2 Major 1, modern baselines:** local/classical evidence exists and the corrected held-out `evict_value_v1` 42/42 result is Wulver-only and still needs local sync/integrity review before final synthesis. Exact LRB/3L-Cache/CACHEUS local rows are validated with their documented caveats; Wulver jobs are replication/provenance strengthening.
 - **R2 Major 2, supervision objective:** `COMPLETE_VALIDATED`; 84/84 objective-ablation cells and the 50% learning-curve stopping decision are validated. Do not run the 100% curve.
-- **R2 Major 3, offline/online mechanism:** C0/C1/C2 is running locally, 8/21 complete, with no final causal conclusion. Supporting diagnostics do not close this question.
+- **R2 Major 3, offline/online mechanism:** C0/C1/C2 is running locally; read its manifest for live counts. Supporting exact-target, horizon, and learned/exact diagnostics are final-validated, but do not replace the causal test.
 - **R2 Major 4, practical significance:** `COMPLETE_WITH_CAVEAT` from Wulver-relayed 420/420 controlled timing rows; this is implementation timing, not a theoretical complexity proof, and the payload still needs local promotion/audit.
 - **Reviewer #3:** mechanistic evidence is substantial, but the continuation campaign remains unresolved. Horizon sensitivity is last-known partial/queued; fallback remains a limitation/future-work position unless explicitly required.
 
@@ -108,7 +109,7 @@ disk cleanup. No large-tree deletion is authorized.
 - The completed 420-row controlled timing campaign.
 - The completed reuse-tail diagnostic.
 - Broad target-degeneracy analysis, existing HALP causal analysis, and already-completed distribution-shift cells.
-- Exact-target oracle merely for duplication.
+- Exact-target oracle replication, strict-preference/horizon, and learned/exact agreement are final-validated and must not be rerun.
 - A local duplicate of Wulver's horizon sweep or queued exact 3L/LRB/CACHEUS replication.
 - Published v0.2 build, HF v0.2 publication, or Zenodo v0.2 deposition creation.
 - Full expensive supervision generation solely to produce v0.3.

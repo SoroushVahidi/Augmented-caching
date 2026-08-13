@@ -1,5 +1,19 @@
 # Next-Work Roadmap
 
+## 2026-08-12 handoff decision
+
+**NO_NEW_EXPERIMENT_REQUIRED.** As of this 2026-08-12 repository-polish
+snapshot, exact-target replication, strict-preference/horizon, and learned/exact
+agreement are `FINAL_VALIDATED`. Only C0/C1/C2 continuation causality and
+distribution-shift completion remain running. No sixth heavy experiment should
+be launched unless a completed campaign fails integrity validation or the
+reviewer/editor explicitly requests additional evidence.
+
+The required next work is completion monitoring without intervention, final
+integrity audits, evidence synchronization, and reviewer-response synthesis.
+See [`reviewer/KBS_POST_COMPLETION_HANDOFF.md`](reviewer/KBS_POST_COMPLETION_HANDOFF.md)
+for the campaign map, launch metadata, and completion gates.
+
 Actionable, ordered roadmap for this branch. Companion to
 [`DEVELOPMENT_STATUS.md`](DEVELOPMENT_STATUS.md) (read that first for full
 context). Each item states why it matters, its current status, what it
@@ -21,9 +35,9 @@ launched from scratch.
 
 ## Quick-glance operational summary
 
-**NOW (this workstation, right now):**
+**NOW (this workstation, snapshot 2026-08-12):**
 - Leave the C0/C1/C2 production campaign running in tmux session
-  `kbs_continuation_c0_c1_c2_production_resume_20260812` (P2.5 below). Do not stop,
+  `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812` (P2.5 below). Do not stop,
   signal, restart, or attach interactively.
 - Do not launch a second heavy local experiment while it runs.
 - No-compute work only (see below) is safe to do in parallel.
@@ -169,19 +183,14 @@ rule -- relaunching would waste compute and contradict a recorded decision):**
 - **Why:** H2 and H3 currently rest on exactly one cell (brightkite, cap
   64, H=4) locally -- the single most important generalization gap in the
   local evidence base.
-- **Status (updated 2026-08-11):** **target-degeneracy replication is
-  already done on Wulver** (job `1169513`, 21/21 cells, unique-winner
-  fraction = 0 across all of them) -- per `WULVER_TO_GITHUB_PROMOTION_QUEUE.md`
-  #3 this is `NEEDS_REVIEW` (sync + locate the driver source) rather than
-  something to re-run locally. **Exact-target-oracle replication remains
-  genuinely `NOT_STARTED`** anywhere (no Wulver fact was given for this
-  specific diagnostic beyond the original single cell) -- this is now the
-  narrower, still-open half of this item.
-- **Dependency:** none for the oracle-diagnostic replication; existing
-  tooling, no code changes needed.
-- **Machine:** local, for the still-open exact-target-oracle replication.
-- **Entry point:** `scripts/experiments/run_exact_target_oracle_diagnostic.py`,
-  re-run across the remaining 6 families x 3 capacities.
+- **Status (snapshot 2026-08-12):** the local exact-target-oracle replication
+  and strict-preference/horizon diagnostic are `FINAL_VALIDATED` at 21/21
+  cells. The broad Wulver degeneracy result remains sync-only and is not a
+  reason to rerun the validated local diagnostics.
+- **Dependency:** none; no rerun.
+- **Machine:** local artifacts complete.
+- **Canonical outputs:** `analysis/exact_target_oracle_replication_v1/` and
+  `analysis/strict_preference_horizon_diagnostic_v1/`.
 - **Expected cost:** medium (one cell already took non-trivial wall time;
   18 more cells at similar cost).
 - **Stopping rule:** a majority of cells reported, with consistent
@@ -240,7 +249,9 @@ rule -- relaunching would waste compute and contradict a recorded decision):**
 - **Why:** the one audited cell is too degenerate to have strict (non-tied)
   preferences to test reversal on; need a cell where strict preferences are
   common.
-- **Status:** `UNTESTED` as framed.
+- **Status (snapshot 2026-08-12):** `RESOLVED_DIAGNOSTIC`; the validated
+  21-cell diagnostic found no unique H4 winner. Tie-set resolution must not be
+  interpreted as causal miss improvement.
 - **Dependency:** P2.1/P2.3's replication sweep, to first find a
   less-degenerate cell.
 - **Machine:** local.
@@ -257,9 +268,9 @@ rule -- relaunching would waste compute and contradict a recorded decision):**
 
 - **Why:** H5's decisive test; currently only smoke-scale
   (`decision_count=3`).
-- **Status (updated 2026-08-11):** `PRODUCTION_RUNNING_LOCAL_TMUX`.
+- **Status (snapshot 2026-08-12):** `PRODUCTION_RUNNING_LOCAL_TMUX`.
   Local production runner is active in tmux session
-  `kbs_continuation_c0_c1_c2_production_resume_20260812` from source SHA
+  `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812` from source SHA
   `a813617f36822f793b0e48b0ee3e6009d56ee324` and config SHA-256
   `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`.
   It emits C0 LRU, C1 frozen `pi1`, and C2 trained from frozen-`pi1`

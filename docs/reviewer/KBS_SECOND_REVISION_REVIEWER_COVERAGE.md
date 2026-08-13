@@ -129,6 +129,11 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
 
 ## Reviewer #2 Major 3 and Reviewer #3: distribution-shift / continuation-mismatch diagnosis
 
+**Snapshot 2026-08-12:** exact-target replication, strict-preference/horizon,
+and learned/exact agreement are now `FINAL_VALIDATED`. The two remaining local
+campaigns are C0/C1/C2 continuation causality and distribution-shift
+completion; their live manifests, not this document, own progress counts.
+
 - Concern paraphrase: does the mismatch between LRU-continuation label
   construction and learned-policy deployment (sequential distribution shift)
   explain some or all of the performance gap?
@@ -150,7 +155,7 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
     shift correction solves the online-performance gap.
   - **The continuation-policy C0/C1/C2 full production campaign is now
     RUNNING locally**: launched 2026-08-11 in tmux session
-    `kbs_continuation_c0_c1_c2_production_resume_20260812` (source SHA
+    `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812` (source SHA
     `a813617f36822f793b0e48b0ee3e6009d56ee324`), covering C0 LRU, C1 frozen
     `pi1`, and C2 trained from frozen-`pi1` continuation labels, with atomic
     unit completion, resume, same-example/leakage/model gates, and integrity
@@ -267,7 +272,7 @@ validated: 7/7 families, 42/42 rows, all `status=ok`; stopping decision
 |---|---|---|
 | R2 Major 1 (learned-baseline comparison) | `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING` | Corrected `evict_value_v1` result is complete on Wulver and needs sync+review; exact controlled-window LRB/3L-Cache/CACHEUS rows are locally validated, with Wulver copies pending as replication/config audit |
 | R2 Major 2 (supervision-objective ablation) | `COMPLETE_VALIDATED` / `FINAL_VALIDATED` (scope as originally defined) | None -- manuscript integration only |
-| R2 Major 3 (offline/online failure explanation) | `PARTIAL` | True causal C0/C1/C2 continuation test (production campaign RUNNING locally; full result still missing) |
+| R2 Major 3 (offline/online failure explanation) | `PARTIAL` | True causal C0/C1/C2 continuation test and distribution-shift completion remain running locally; exact-target, horizon, and learned/exact diagnostics are final-validated |
 | R2 Major 4 (practical significance / timing) | `COMPLETE_WITH_CAVEATS` | None for the 4 timed policies (sync only); modern-baseline timing may be separate if needed |
 | Reviewer #3 (causal explanation) | `PARTIAL` | Same as R2 Major 3 -- the C0/C1/C2 causal test is the central unresolved issue, **not** the LRB/3L-Cache/CACHEUS gap |
 

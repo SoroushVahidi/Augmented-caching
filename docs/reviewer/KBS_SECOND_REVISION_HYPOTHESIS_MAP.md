@@ -15,8 +15,9 @@ The local `50%` learning-curve campaign is complete and audited. Do not
 launch `100%`: the predefined stopping rule has fired for H1, and `100%` is
 now intentionally not run rather than missing required work.
 
-Last updated: 2026-08-11, after the final `wiki2018|0.5` resume completed
-cleanly and the 50% integrity audit passed.
+Last updated: 2026-08-12, after the exact-target, strict-preference, and
+learned/exact campaigns passed their 21-cell integrity gates. C0/C1/C2 and
+distribution shift remain active; their live counts belong in their manifests.
 
 ---
 
@@ -53,21 +54,21 @@ cleanly and the 50% integrity audit passed.
   target well enough, and that approximation error explains the gap.
 - Motivation: standard second hypothesis -- rule out "the model just isn't
   learning its target" before blaming the target itself.
-- Current evidence: exact-target-oracle one-cell diagnostic
-  (`brightkite`/cap64/H4): learned model agrees with the exact H=4 target on
-  96.5% of decisions, mean target regret `0.035`. The model is not failing to
-  fit; its 3.5% of departures from the target are net beneficial (fewer
-  misses than exact target-following: 15449 vs 19079).
-- Status: `DISFAVORED` (single cell).
-- Decisive next experiment: repeat the exact-target-oracle diagnostic across
-  more families/capacities; if agreement stays high everywhere, further
-  disfavor.
+- Current evidence: the validated 21-cell learned/exact campaign reports
+  macro set-aware agreement `0.975301` and positive-regret fraction
+  `0.024699`; aggregate learned and LRU misses are `601569` and `565126`.
+  Set-aware agreement is interpreted together with target degeneracy and
+  regret-conditioned metrics.
+- Status: `DISFAVORED` as a gross or uniform model-fitting explanation.
+- Decisive next experiment: none required under the current stopping plan;
+  reopen only if later integrity review invalidates this campaign.
 - Stopping rule: already provisionally closed at 96.5% agreement; only reopen
   if a broader sweep shows agreement dropping substantially (e.g. below ~80%)
   somewhere.
 - Reviewer relevance: MC1, R3-Issue4.
 - Owner of next work: LOCAL.
-- Experiment state: NOT_STARTED (sweep beyond the one cell).
+- Experiment state: 21-cell learned/exact agreement diagnostic
+  `FINAL_VALIDATED`; do not rerun.
 
 ## H3 -- target degeneracy / low resolution at H=4
 
@@ -80,18 +81,18 @@ cleanly and the 50% integrity audit passed.
   `mean_optimal_set_fraction=0.9932` (99.3% of 64 candidates tie for
   optimal), median distinct-target-value count `1`, target entropy mean
   `0.048` bits.
-- Status: `STRONGLY_SUPPORTED` (single cell; not yet family-general).
-- Decisive next experiment: replicate the already-implemented degeneracy
-  script across all 7 families and multiple capacities.
+- Status: `STRONGLY_SUPPORTED` by the validated 21-cell exact-target and
+  strict-preference diagnostics.
+- Decisive next experiment: none required for this revision; broader target
+  formulations remain future work.
 - Stopping rule: would be disfavored as a general phenomenon if a majority of
   other family/capacity cells show materially lower tie fractions / higher
   entropy than this cell.
 - Reviewer relevance: MC1, R3-Issue4.
 - Owner of next work: LOCAL.
-- Experiment state: NOT_STARTED (multi-cell sweep). The prior `50%`
-  learning-curve worker that used to block this has since completed
-  (2026-08-11); not launched here only because the local C0/C1/C2 production
-  campaign (H5) currently has priority on this workstation's compute.
+- Experiment state: exact-target replication and strict-preference/horizon
+  diagnostic `FINAL_VALIDATED`; do not rerun. The prior `50%` learning-curve
+  campaign is also complete under its stopping rule.
 
 ## H4 -- horizon truncation / temporal credit assignment
 
@@ -99,28 +100,27 @@ cleanly and the 50% integrity audit passed.
   significant longer-term reuse consequences the target cannot see.
 - Motivation: complements H3 -- even a non-degenerate short horizon can still
   truncate relevant future information.
-- Current evidence: longer-horizon tie-break analysis on the original
-  brightkite/cap64 cell: H=8/16/32 break only
-  `14.2%`/`27.6%`/`39.6%` of H=4 ties -- most degeneracy persists even at
-  8x the horizon. The multi-cell reuse-tail diagnostic
+- Current evidence: the validated 21-cell strict-preference diagnostic finds
+  H4 unique-winner fraction `0` and multiple-optimum fraction `1`. The
+  multi-cell reuse-tail diagnostic
   (`analysis/reuse_tail_horizon_diagnostic_v1/`) now directly measures the
   resident-candidate next-reuse delay distribution across seven families
   and three capacities. At H=4,
   `P(T>4 | resident)=0.9938544459677984`; even after conditioning on
   eventual reuse, `P(T>4 | resident, eventually reused)=0.9793302186526528`.
   The never-reused fraction is `0.7026792916224847`.
-- Status: `SUPPORTED_AS_OBSERVABILITY_LIMITATION`. This is not yet a
-  causal excess-miss result.
-- Decisive next experiment: H11's eviction-to-reuse-delay diagnostic, plus a
-  broader-H degeneracy sweep across families, to separate pure truncation
-  from tie-break design.
+- Status: `SUPPORTED_AS_OBSERVABILITY_LIMITATION`. This is not a causal
+  excess-miss result.
+- Decisive next experiment: none required for this revision; H11 causal
+  attribution remains optional future work.
 - Stopping rule: stop treating horizon length alone as sufficient if
   extending H materially improves target resolution but downstream misses do
   not improve when those longer-horizon choices are actually deployed.
 - Reviewer relevance: MC1, R3-Issue4.
 - Owner of next work: LOCAL first (cheap, existing tooling); WULVER for
   full-scale confirmation.
-- Experiment state: NOT_STARTED (beyond the one cell).
+- Experiment state: strict-preference/horizon diagnostic `FINAL_VALIDATED`;
+  reuse-tail diagnostic `LOCAL_COMPLETE`.
 
 ## H5 -- continuation-policy mismatch
 
@@ -139,7 +139,7 @@ cleanly and the 50% integrity audit passed.
   from `PRODUCTION_RUNNER_READY_SMOKE_VALIDATED` to
   `PRODUCTION_RUNNING_LOCAL_TMUX`: the full 21-unit C0/C1/C2 campaign is
   actively executing locally (tmux session
-  `kbs_continuation_c0_c1_c2_production_resume_20260812`, source SHA
+  `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`, source SHA
   `a813617f36822f793b0e48b0ee3e6009d56ee324`) as of 2026-08-11. No scientific
   result yet -- do not cite an outcome until the 21-unit integrity manifest
   passes.
@@ -167,7 +167,8 @@ cleanly and the 50% integrity audit passed.
   measured state-shift index *decreased* under DAgger (e.g.
   `0.000664->0.000462`) even as misses got worse, i.e. reduced generic
   state-shift did not translate into better misses in this one family.
-- Status: `INCONCLUSIVE` (single family).
+- Status: `RUNNING_TEST` (single-family evidence is inconclusive; the
+  seven-family completion campaign is active).
 - Decisive next experiment: broader family sweep plus a state-shift metric
   more directly tied to miss-relevant cache-content divergence rather than a
   generic state-shift index.
@@ -176,7 +177,8 @@ cleanly and the 50% integrity audit passed.
   misses; pivot metric rather than abandoning the framing outright.
 - Reviewer relevance: MC3, R3-Issue4.
 - Owner of next work: LOCAL (metric redesign); WULVER (broader sweep).
-- Experiment state: NOT_STARTED (beyond the one family already run).
+- Experiment state: distribution-shift completion running locally; partial
+  output is not citable.
 
 ## H7 -- hard-argmin / uncertainty instability
 
@@ -235,7 +237,9 @@ cleanly and the 50% integrity audit passed.
   (deterministic tie-break's longer-horizon alignment declining from `93.75%`
   to `81.39%` as horizon grows) is directionally consistent but measures
   broken ties within tied sets, not genuinely strict preferences.
-- Status: `UNTESTED` (as literally framed).
+- Status: `RESOLVED_DIAGNOSTIC` — the validated 21-cell diagnostic found no
+  unique H4 winner across the tested cells, so the strict-preference question
+  is dominated by H4 degeneracy in this protocol.
 - Decisive next experiment: run the existing (no new code needed)
   target-degeneracy script on a family/capacity cell with a higher
   strict-margin fraction, then measure the reversal rate of strict
@@ -246,8 +250,8 @@ cleanly and the 50% integrity audit passed.
   are usually already correct.
 - Reviewer relevance: MC1.
 - Owner of next work: LOCAL.
-- Experiment state: NOT_STARTED; blocked from launching while `50%` worker is
-  active.
+- Experiment state: 21-cell strict-preference/horizon diagnostic
+  `FINAL_VALIDATED`; do not rerun.
 
 ## H10 -- horizon should scale with cache capacity / reuse timescale (user hypothesis B)
 

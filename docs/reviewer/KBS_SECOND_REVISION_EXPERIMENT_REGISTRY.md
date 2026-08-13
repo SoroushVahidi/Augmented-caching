@@ -88,16 +88,16 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Scientific question: does trajectory divergence between LRU-labeled and
   learned-deployed cache states (DAgger-style) explain part of the miss gap?
 - Reviewer concern: Reviewer #2 Major 3 / Reviewer #3 continuation-mismatch
-- Machine: LOCAL (4/7 families); seven-family continuation is Wulver-side per sync docs
+- Machine: LOCAL; completion is active in the resumable local runner
 - Protocol: `docs/distribution_shift_ablation_protocol.md`, frozen
-- Scope: `metacdn` only locally audited in depth; 24/42 primary rows, 4/7 families
+- Scope: seven folds, 42 primary rows; read the live manifest for progress
 - Source entry point: `scripts/experiments/run_distribution_shift_ablation.py`, resumable via `scripts/experiments/resume_distribution_shift.py`
 - Config: protocol doc-embedded, frozen condition matrix
 - Output path: `analysis/distribution_shift_ablation_v1/`
-- Status: `COMPLETE_PARTIAL_SCOPE` (`STOPPED_CLEANLY_PARTIAL` per `revision_status.py`)
+- Status: `RUNNING_LOCAL_TMUX`; use `analysis/distribution_shift_ablation_v1/campaign_state.json` and the live log for progress. Partial rows are not citable.
 - Evidence strength: `MECHANISTIC_DIAGNOSTIC`
 - Primary/diagnostic/supporting: diagnostic
-- Next action: seven-family continuation (Wulver-side, not locally launchable per sync docs)
+- Next action: allow the local campaign to finish, then run the formal integrity audit
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.6
 
 ### 3. Corrected held-out `evict_value_v1` replay
@@ -148,24 +148,24 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Next action: none for baseline compute; keep the fidelity/provenance caveats attached in any manuscript citation and use `analysis/kbs_r2_major1_evidence_prep_20260811/` for compact provenance
 - Canonical documentation: `docs/reviewer/kbs_second_revision_artifact_map.md` Reviewer #2 Major 1; `analysis/kbs_comparison_fairness_audit.json`
 
-### 6. Exact-target oracle diagnostic
+### 6. Exact-target oracle replication
 - Scientific question: does exact optimization of the frozen `eviction_loss`
   finite-horizon target beat LRU, and does the learned model reproduce or
   outperform that exact target?
 - Reviewer concern: MC1 (horizon justification), R3-Issue4
 - Machine: LOCAL
 - Protocol: shares label semantics with `supervision_objective_ablation.py`'s shared kernel; horizon `H=4`
-- Scope: one cell (`brightkite`, capacity `64`) -- `ONE_CELL_DIAGNOSTIC_COMPLETE / FULL_SWEEP_NOT_RUN`; parameterized (`--family`, `--capacity`, `--horizon`), not hardcoded to this cell
-- Source entry point: `scripts/experiments/run_exact_target_oracle_diagnostic.py`
-- Config: CLI args, defaults `--family brightkite --capacity 64 --horizon 4`
-- Output path: `analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/`
-- Status: `COMPLETE_DIAGNOSTIC`
-- Evidence strength: `MECHANISTIC_DIAGNOSTIC` (single cell)
+- Scope: 21 family-capacity cells, 42 required rows, H=4
+- Source entry point: `scripts/experiments/run_exact_target_oracle_replication.py`
+- Config: `configs/exact_target_oracle_replication_v1.json`
+- Output path: `analysis/exact_target_oracle_replication_v1/`
+- Status: `FINAL_VALIDATED`
+- Evidence strength: `MECHANISTIC_DIAGNOSTIC_HIGH` (21-cell family/capacity scope)
 - Primary/diagnostic/supporting: diagnostic
-- Next action: rerun on more (family, capacity) cells to test generality (H2/H3 in the hypothesis map)
+- Next action: none; do not rerun
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` "Exact target oracle vs learned online policy"; `KBS_SECOND_REVISION_HYPOTHESIS_MAP.md` H2/H3
 
-### 7. Target-degeneracy & longer-horizon tie-resolution diagnostic
+### 7. Strict-preference/horizon diagnostic
 - Scientific question: how degenerate (low-resolution) is the H=4
   `eviction_loss` target, and how much do longer horizons (H=8/16/32) resolve
   that degeneracy?
@@ -173,17 +173,31 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Machine: LOCAL
 - Protocol: standalone math module over candidate values produced by the
   shared kernel; base `H=4`, extension horizons `8,16,32`
-- Scope: one cell (`brightkite`, capacity `64`) -- same single-cell caveat as #6; parameterized, not hardcoded
-- Source entry point: `scripts/experiments/analyze_eviction_loss_target_degeneracy.py`
-- Config: CLI args, defaults `--family brightkite --capacity 64 --horizon 4 --long-horizons 8,16,32`
-- Output path: `analysis/eviction_loss_target_degeneracy_v1/brightkite_cap64_h4/`
-- Status: `COMPLETE_DIAGNOSTIC`
-- Evidence strength: `MECHANISTIC_DIAGNOSTIC` (single cell) -- currently the **strongest-supported** mechanistic finding on this branch (H3 `STRONGLY_SUPPORTED`)
+- Scope: 21 family-capacity cells; 63 H4→H8/H16/H32 comparison rows
+- Source entry point: `scripts/experiments/run_strict_preference_horizon_diagnostic.py`
+- Config: `configs/strict_preference_horizon_diagnostic_v1.json`
+- Output path: `analysis/strict_preference_horizon_diagnostic_v1/`
+- Status: `FINAL_VALIDATED`
+- Evidence strength: `MECHANISTIC_DIAGNOSTIC_HIGH` (21-cell scope; H3 `STRONGLY_SUPPORTED`)
 - Primary/diagnostic/supporting: diagnostic
-- Next action: (a) replicate across families/capacities to test generality; (b) a genuine *base-horizon* sensitivity sweep (varying `H` itself, e.g. `H in {1,2,4,8,16}`, distinct from the already-run longer-horizon tie-*resolution* extension) remains `PENDING` -- this is the literal "horizon sensitivity" item still open, separate from the completed margin/tie-degeneracy result
+- Next action: none for this revision; do not rerun. A separate base-horizon sweep remains optional future work.
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.5/9.5.1/9.5.2; `KBS_SECOND_REVISION_HYPOTHESIS_MAP.md` H3/H4/H9/H10
 
-### 8. Historical-tail diagnostic
+### 8. Learned/exact target agreement and regret
+- Scientific question: is model-fitting failure a family-general explanation for the online gap?
+- Reviewer concern: Reviewer #2 Major 3 / Reviewer #3
+- Machine: LOCAL
+- Protocol: `configs/learned_exact_target_agreement_v1.json`, frozen H=4 target and seven-model registry
+- Scope: 21 family-capacity cells, 21 summaries, seven held-out models
+- Source entry point: `scripts/experiments/run_learned_exact_target_agreement.py`
+- Output path: `analysis/learned_exact_target_agreement_v1/`
+- Status: `FINAL_VALIDATED`
+- Evidence strength: `MECHANISTIC_DIAGNOSTIC_HIGH`; set-aware agreement must be read with degeneracy and regret metrics
+- Primary/diagnostic/supporting: diagnostic
+- Result: macro set-aware agreement ≈0.975301, positive-regret fraction ≈0.024699, learned misses 601,569 versus LRU 565,126
+- Next action: none; do not rerun
+
+### 9. Historical-tail diagnostic
 - Scientific question: does a finite-horizon target with an implicit
   zero-terminal-value beyond `H` undervalue candidates whose benefit occurs
   later (motivating a `Q_H + V_tail_hat` formulation)?
@@ -200,7 +214,7 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Next action: a historical-tail diagnostic must precede any new loss definition; local audit cannot start this without contacting Wulver or independently designing and implementing it
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.5.1; `KBS_SECOND_REVISION_HYPOTHESIS_MAP.md` H8
 
-### 9. Learning-convergence (same-target scalar-vs-pairwise)
+### 10. Learning-convergence (same-target scalar-vs-pairwise)
 - Scientific question: does more training data close the offline-to-online
   gap, and does pairwise representation of the *same* eviction-loss target
   outperform scalar regression?
@@ -227,12 +241,12 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
   SHA-256 `5323eea6e3f6fb9a44b2fab2f6632f61917442ba239eababc1b2cda1fca8612a`
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.4; `KBS_SECOND_REVISION_HYPOTHESIS_MAP.md` H1
 
-### 10. Continuation-policy causal ablation (C0/C1/C2)
+### 11. Continuation-policy causal ablation (C0/C1/C2)
 - Scientific question: does replacing the fixed LRU label-continuation with
   the already-learned frozen `pi1` continuation improve the next learned
   policy `pi2`?
 - Reviewer concern: Reviewer #2 Major 3 / Reviewer #3 continuation-mismatch
-- Machine: LOCAL tmux session `kbs_continuation_c0_c1_c2_production_resume_20260812`
+- Machine: LOCAL tmux session `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812`
 - Protocol: `configs/continuation_policy_causal_ablation_v1.json`, `PROTOCOL_FROZEN_NO_RESULTS`
 - Scope: 21 planned `(held_out_family, capacity)` production units; expected 63 policy rows, 21 label-agreement rows, 21 pi2-training rows
 - Source entry point: `src/lafc/continuation_policy_ablation.py`, `scripts/experiments/run_continuation_policy_causal_ablation.py`
@@ -245,23 +259,23 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Launch provenance: launched 2026-08-11 from source SHA `a813617f36822f793b0e48b0ee3e6009d56ee324`, config SHA-256 `7556e120ead3b3e8a8c6d85ef7f800f2e8f1f1cb37800bde57b14d1a194d8670`, serial thread caps, `--resume --max-wall-hours 8`
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.7 (includes this pass's cross-reference to the older, distinct `evict_value_v2_rollout.py` continuation exploration); `docs/reviewer/local_to_wulver_continuation_sync_manifest.md`
 
-### 11. Practical-significance / controlled timing
+### 12. Practical-significance / controlled timing
 - Scientific question: is fine-grained candidate-level learned eviction
   computationally practical?
 - Reviewer concern: MC2, R3-Issue5
 - Machine: LOCAL
 - Protocol: `docs/practical_significance_ablation_protocol.md`
-- Scope: smoke-scale exact-optimization-equivalence check complete; controlled final timing not started
+- Scope: local smoke-scale equivalence check complete; controlled 420/420 timing is Wulver-only and sync-pending
 - Source entry point: `scripts/experiments/run_practical_significance_ablation.py` (smoke), `scripts/experiments/run_practical_significance_controlled.py` (controlled, not yet run)
 - Config: protocol doc-embedded
 - Output path: `analysis/practical_significance_ablation_v1/`
-- Status: `SMOKE_ONLY` (exact-optimization-equivalence result); controlled timing `PENDING`
+- Status: `SMOKE_ONLY` locally; controlled timing `WULVER_ONLY_VALIDATED` / `SYNC_PENDING`
 - Evidence strength: `IMPLEMENTATION_ONLY` for timing numbers; the exact-decision-preserving equivalence check itself (`all_variants_exact_across_all_trace_capacity_pairs=true`) is `SUPPORTING_EVIDENCE`
 - Primary/diagnostic/supporting: supporting (equivalence check) / not yet usable (timing)
-- Next action: controlled timing campaign, kept separate from smoke conclusions
+- Next action: synchronize and audit the Wulver timing payload; do not substitute local smoke timings
 - Canonical documentation: `docs/reviewer/kbs_second_revision_artifact_map.md` Reviewer #2 Major 4
 
-### 12. Cross-cutting fairness audit
+### 13. Cross-cutting fairness audit
 - Scientific question: how fair is the overall baseline/method comparison
   pool, and what needs fixing before primary claims can rely on it?
 - Reviewer concern: cross-cutting (Reviewer #2 Major 1, R3-Issue1)

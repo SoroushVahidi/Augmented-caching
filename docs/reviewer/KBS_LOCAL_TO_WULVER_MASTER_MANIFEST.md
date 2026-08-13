@@ -88,7 +88,7 @@ still-active outputs, per instructions.
 | `models/supervision_objective_learning_curve_v1/` | mirrors the completed 50% analysis dir's fold state | eligible for intentional transfer after audit; do not commit model binaries |
 | `analysis/exact_target_oracle_diagnostic_v1/brightkite_cap64_h4/` | one cell, `COMPLETE` | eligible for transfer now (static, not being written to) |
 | `analysis/eviction_loss_target_degeneracy_v1/brightkite_cap64_h4/` | one cell, `COMPLETE` | eligible for transfer now |
-| `analysis/distribution_shift_ablation_v1/` | `PARTIAL`, 24/42 rows, 4/7 families, `STOPPED_CLEANLY_PARTIAL` per `revision_status.py` | eligible for transfer now (not actively running); mark partial |
+| `analysis/distribution_shift_ablation_v1/` | `RUNNING_LOCAL_TMUX`; live manifest/log are authoritative and earlier 24/42 Wulver state is historical remote evidence | do not sync or classify as final while the local completion run is active |
 | `analysis/kbs_comparison_fairness_audit.json` | `COMPLETE` (as an audit) | eligible for transfer now |
 | `analysis/practical_significance_ablation_v1/` | `SMOKE_ONLY` | eligible for transfer now; keep smoke-only caveat attached |
 | `analysis/kbs_local_current_evidence_synthesis_20260810/` | `COMPLETE` (as a synthesis snapshot) | eligible for transfer now; timestamped snapshot, will not be updated in place |
