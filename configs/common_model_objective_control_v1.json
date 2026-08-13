@@ -1,0 +1,22 @@
+{
+  "protocol_id": "common_model_objective_control_v1",
+  "families": ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"],
+  "capacities": [32, 64, 128],
+  "horizon": 4,
+  "history": [0, 10000],
+  "score": [10000, 50000],
+  "objectives": {
+    "objective_eviction_loss": {"label": "eviction_loss_label", "direction": "min"},
+    "objective_next_arrival": {"label": "next_arrival_label_censored", "direction": "max"},
+    "objective_reuse_distance": {"label": "reuse_distance_label_censored", "direction": "max"},
+    "objective_pairwise": {"label": "next_arrival_label_censored", "direction": "max"}
+  },
+  "architecture": {"type": "shared_two_layer_relu_candidate_scorer", "hidden_units": 8, "output_bias": false, "lr": 0.02, "epochs": 40, "l2": 0.0001},
+  "seed": 0,
+  "train_decisions_per_family": 80,
+  "validation_decisions": 40,
+  "pair_max_pairs_per_decision": 256,
+  "expected_evaluation_rows": 84,
+  "atomic_units": true,
+  "held_out_leakage": "forbidden"
+}

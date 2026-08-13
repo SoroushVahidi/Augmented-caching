@@ -1,0 +1,15 @@
+{
+  "protocol_id": "tie_aware_exact_target_oracle_v1",
+  "families": ["brightkite", "citibike", "cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"],
+  "capacities": [32, 64, 128],
+  "horizon": 4,
+  "history": [0, 10000],
+  "score": [10000, 50000],
+  "deterministic_policies": ["CURRENT_DETERMINISTIC", "LRU_WITHIN_MINIMA", "MRU_WITHIN_MINIMA"],
+  "random_policy": "RANDOM_WITHIN_MINIMA",
+  "random_seeds": [0, 1, 2, 3, 4],
+  "omitted_policy": {"FIFO_WITHIN_MINIMA": "validated replay exposes recency, not insertion order after hits"},
+  "expected_rows": 189,
+  "future_information_forbidden": true,
+  "atomic_units": true
+}
