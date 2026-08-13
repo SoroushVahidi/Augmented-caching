@@ -37,6 +37,7 @@ output/
 /models/fair_v1_staging/
 /models/cross_family_v1_staging/
 /models/continuation_policy_causal_ablation_production_v1/
+/models/distribution_shift_ablation_v1/
 /analysis/family_winner_selection/models/*.pkl
 
 # Local reviewer-science generated evidence. Keep analysis/ broadly visible so
