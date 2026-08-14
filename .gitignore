@@ -61,7 +61,7 @@ output/
 /analysis/kbs_comparison_fairness_audit.json
 /analysis/kbs_local_current_evidence_synthesis_*/
 /analysis/common_model_objective_control_v1/
-/analysis/tie_aware_exact_target_oracle_v1/
+# Tie-aware oracle v1 is a curated Git campaign (JSON/CSV unit summaries only).
 
 # Wulver-synced raw payloads (2026-08-13): corrected held-out evict_value_v1
 # treatment provenance/synthesis note and the controlled timing campaign.

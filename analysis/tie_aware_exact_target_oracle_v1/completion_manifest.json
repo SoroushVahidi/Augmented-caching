@@ -1,0 +1,73 @@
+{
+  "completed_units": 21,
+  "expected_rows": 189,
+  "recovered_from_units": true,
+  "recovery_id": "tie_aware_exact_oracle_recovery_20260814",
+  "source_head": "2752857bd6a6a1a12e6e3fed44340b407f5c8e56",
+  "status": "COMPLETE",
+  "units": {
+    "brightkite_cap128": {
+      "status": "COMPLETE"
+    },
+    "brightkite_cap32": {
+      "status": "COMPLETE"
+    },
+    "brightkite_cap64": {
+      "status": "COMPLETE"
+    },
+    "citibike_cap128": {
+      "status": "COMPLETE"
+    },
+    "citibike_cap32": {
+      "status": "COMPLETE"
+    },
+    "citibike_cap64": {
+      "status": "COMPLETE"
+    },
+    "cloudphysics_cap128": {
+      "status": "COMPLETE"
+    },
+    "cloudphysics_cap32": {
+      "status": "COMPLETE"
+    },
+    "cloudphysics_cap64": {
+      "status": "COMPLETE"
+    },
+    "metacdn_cap128": {
+      "status": "COMPLETE"
+    },
+    "metacdn_cap32": {
+      "status": "COMPLETE"
+    },
+    "metacdn_cap64": {
+      "status": "COMPLETE"
+    },
+    "metakv_cap128": {
+      "status": "COMPLETE"
+    },
+    "metakv_cap32": {
+      "status": "COMPLETE"
+    },
+    "metakv_cap64": {
+      "status": "COMPLETE"
+    },
+    "twemcache_cap128": {
+      "status": "COMPLETE"
+    },
+    "twemcache_cap32": {
+      "status": "COMPLETE"
+    },
+    "twemcache_cap64": {
+      "status": "COMPLETE"
+    },
+    "wiki2018_cap128": {
+      "status": "COMPLETE"
+    },
+    "wiki2018_cap32": {
+      "status": "COMPLETE"
+    },
+    "wiki2018_cap64": {
+      "status": "COMPLETE"
+    }
+  }
+}

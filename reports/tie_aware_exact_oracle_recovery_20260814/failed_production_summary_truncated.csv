@@ -1,0 +1,2 @@
+family,capacity,tie_policy,seed,misses,miss_ratio,delta_vs_LRU,delta_vs_current_exact,trace_sha256
+brightkite,32,LRU_REFERENCE,,14426,0.36065,0,-4727,04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de

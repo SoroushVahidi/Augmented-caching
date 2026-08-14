@@ -1,0 +1,34 @@
+{"unit": "brightkite_cap32", "completed_units": 1}
+{"unit": "brightkite_cap64", "completed_units": 2}
+{"unit": "brightkite_cap128", "completed_units": 3}
+{"unit": "citibike_cap32", "completed_units": 4}
+{"unit": "citibike_cap64", "completed_units": 5}
+{"unit": "citibike_cap128", "completed_units": 6}
+{"unit": "cloudphysics_cap32", "completed_units": 7}
+{"unit": "cloudphysics_cap64", "completed_units": 8}
+{"unit": "cloudphysics_cap128", "completed_units": 9}
+{"unit": "metacdn_cap32", "completed_units": 10}
+{"unit": "metacdn_cap64", "completed_units": 11}
+{"unit": "metacdn_cap128", "completed_units": 12}
+{"unit": "metakv_cap32", "completed_units": 13}
+{"unit": "metakv_cap64", "completed_units": 14}
+{"unit": "metakv_cap128", "completed_units": 15}
+{"unit": "twemcache_cap32", "completed_units": 16}
+{"unit": "twemcache_cap64", "completed_units": 17}
+{"unit": "twemcache_cap128", "completed_units": 18}
+{"unit": "wiki2018_cap32", "completed_units": 19}
+{"unit": "wiki2018_cap64", "completed_units": 20}
+{"unit": "wiki2018_cap128", "completed_units": 21}
+Traceback (most recent call last):
+  File "/home/soroush/Augmented-caching-kbs-second-revision/scripts/experiments/run_tie_aware_exact_target_oracle.py", line 70, in <module>
+    ap=argparse.ArgumentParser();ap.add_argument('--config',type=Path,default=ROOT/'configs/tie_aware_exact_target_oracle_v1.json');ap.add_argument('--out',type=Path,default=ROOT/'analysis/tie_aware_exact_target_oracle_v1');main(ap.parse_args())
+                                                                                                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/soroush/Augmented-caching-kbs-second-revision/scripts/experiments/run_tie_aware_exact_target_oracle.py", line 67, in main
+    with (out/'summary.csv').open('w',newline='') as f:w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+                                                                                                                    ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/csv.py", line 167, in writerows
+    return self.writer.writerows(map(self._dict_to_list, rowdicts))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/csv.py", line 159, in _dict_to_list
+    raise ValueError("dict contains fields not in fieldnames: "
+ValueError: dict contains fields not in fieldnames: 'fraction_all_tied', 'fraction_tied_decisions', 'mean_optimal_set_fraction'

@@ -1,0 +1,113 @@
+{
+  "source": "analysis/tie_aware_exact_target_oracle_v1/summary.csv",
+  "observed_rows": 189,
+  "expected_rows": 189,
+  "lru_total_misses": 565126,
+  "vs_lru": {
+    "CURRENT_DETERMINISTIC": {
+      "wins": 0,
+      "ties": 3,
+      "losses": 18,
+      "total_misses": 646876,
+      "n": 21,
+      "miss_difference": 81750
+    },
+    "LRU_WITHIN_MINIMA": {
+      "wins": 16,
+      "ties": 5,
+      "losses": 0,
+      "total_misses": 564713,
+      "n": 21,
+      "miss_difference": -413
+    },
+    "MRU_WITHIN_MINIMA": {
+      "wins": 0,
+      "ties": 3,
+      "losses": 18,
+      "total_misses": 654261,
+      "n": 21,
+      "miss_difference": 89135
+    },
+    "RANDOM_WITHIN_MINIMA": {
+      "wins": 7,
+      "ties": 15,
+      "losses": 83,
+      "total_misses": 2872849,
+      "n": 105
+    }
+  },
+  "random_vs_current": {
+    "wins": 90,
+    "ties": 15,
+    "losses": 0,
+    "total_misses": 2872849,
+    "n": 105
+  },
+  "random_by_seed_vs_lru": {
+    "0": {
+      "wins": 2,
+      "ties": 3,
+      "losses": 16,
+      "total_misses": 574772,
+      "n": 21
+    },
+    "1": {
+      "wins": 2,
+      "ties": 3,
+      "losses": 16,
+      "total_misses": 574363,
+      "n": 21
+    },
+    "2": {
+      "wins": 1,
+      "ties": 3,
+      "losses": 17,
+      "total_misses": 574456,
+      "n": 21
+    },
+    "3": {
+      "wins": 1,
+      "ties": 3,
+      "losses": 17,
+      "total_misses": 574673,
+      "n": 21
+    },
+    "4": {
+      "wins": 1,
+      "ties": 3,
+      "losses": 17,
+      "total_misses": 574585,
+      "n": 21
+    }
+  },
+  "tie_diagnostics_non_lru": {
+    "n": 168,
+    "fraction_tied_decisions_all_1": true,
+    "fraction_all_tied_min_mean_max": [
+      0.18506537883274865,
+      0.6487923847306952,
+      1.0
+    ],
+    "mean_optimal_set_fraction_min_mean_max": [
+      0.9681188775730376,
+      0.9912996854310047,
+      1.0
+    ],
+    "cells_with_all_candidates_tied": [
+      {
+        "family": "wiki2018",
+        "capacity": 32
+      },
+      {
+        "family": "wiki2018",
+        "capacity": 64
+      },
+      {
+        "family": "wiki2018",
+        "capacity": 128
+      }
+    ],
+    "lru_within_differs_from_current": 18,
+    "mru_within_differs_from_current": 17
+  }
+}
