@@ -1,0 +1,38 @@
+{
+  "capacities": [
+    32,
+    64,
+    128
+  ],
+  "csv_fieldnames": [
+    "family",
+    "capacity",
+    "tie_policy",
+    "seed",
+    "misses",
+    "miss_ratio",
+    "delta_vs_LRU",
+    "delta_vs_current_exact",
+    "trace_sha256",
+    "fraction_tied_decisions",
+    "fraction_all_tied",
+    "mean_optimal_set_fraction"
+  ],
+  "current_deterministic_matches_prior_exact_oracle": true,
+  "current_deterministic_mismatches": [],
+  "expected_rows": 189,
+  "families": [
+    "brightkite",
+    "citibike",
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "recovery": true,
+  "recovery_id": "tie_aware_exact_oracle_recovery_20260814",
+  "rows": 189,
+  "status": "PASS",
+  "unique_keys": 189
+}

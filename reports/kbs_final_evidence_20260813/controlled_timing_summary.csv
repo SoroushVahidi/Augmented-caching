@@ -1,0 +1,5 @@
+policy,n,mean_us_per_request,median_us_per_request,stddev_us_per_request,ci95_low_us_per_request,ci95_high_us_per_request,slowdown_vs_lru_mean
+lru,105,4.680543,4.590000,1.193005,4.452349,4.908737,1.000000
+fifo_reinsertion,105,5.168286,5.136000,1.097727,4.958316,5.378255,1.104206
+sieve,105,9.523362,8.849000,3.200573,8.911168,10.135556,2.034670
+halp_causal,105,870.660257,920.141000,508.138666,773.465315,967.855199,186.016939

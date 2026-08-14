@@ -1,266 +1,527 @@
 # Response to Reviewers
 
-Manuscript: KNOSYS-D-26-07461  
-Decision: Revise  
-Date: 2026-06-21
+Manuscript: KNOSYS-D-26-07461R1
+Decision: Second revision
+Date: 2026-08-14
+
+This letter responds point-by-point to Reviewer #2's four major comments and
+Reviewer #3's primary unresolved issue on the previous revision. All section,
+table, and page references below are to the enclosed revised manuscript PDF
+(21 pages). The manuscript was also shortened substantially relative to the
+previous revision (historical appendix, unvalidated fallback formalism, and
+redundant figures/prose removed) while retaining all reviewer-critical
+evidence.
+
+Code, experiment artifacts, and reviewer-verification materials supporting
+the revised manuscript are available in the public repository:
+https://github.com/SoroushVahidi/Augmented-caching.
+A reviewer-oriented index is provided in
+[docs/reviewer/START_HERE.md](../docs/reviewer/START_HERE.md).
+
+We thank both reviewers for pushing this manuscript toward a substantially
+more rigorous and honest empirical study. In preparing this revision we also
+identified, and disclose directly here and in the manuscript, a train/test
+overlap in the model underlying an earlier single-split end-to-end
+evaluation; the corrected, leakage-free matched evaluation built to address
+Reviewer #2's Major Comment 1 is now the paper's primary evidence for
+`evict_value_v1`'s comparative performance, including the family-level LRU
+gaps in Table 4.
 
 ---
 
 ## Response to the Associate Editor
 
 > We thank the Associate Editor and both reviewers for their detailed and
-> constructive feedback. We address each concern below, organized by
-> reviewer. In this revision we have: added end-to-end online cache-replay
-> results across three cache capacities (32, 64, 128 slots) and all seven
-> trace families, honestly reporting that the proposed policy does not
-> outperform LRU, SIEVE, or FIFO-Reinsertion in this evaluation and that
-> its gap widens non-monotonically at the largest evaluated capacity;
-> added SIEVE and FIFO-Reinsertion as additional baselines across the same
-> three capacities; added a quantitative discussion of computational
-> overhead; clarified our differentiation from HALP; revised our treatment
-> of the guarded fallback mechanism to match its current evidentiary
-> status; reduced hedging/length where possible; and added a candid
-> discussion of single-author validation practices, including AI-tool use.
-> A fourth capacity (256 slots) was not evaluated in this revision and is
-> not claimed anywhere in this revision; our end-to-end claims are limited
-> to capacities 32, 64, and 128.
+> constructive feedback on the previous revision. In this new revision we
+> have: (1) added a corrected, leakage-free comparison of `evict_value_v1`
+> against four learned cache-replacement systems (LRB, 3L-Cache, CACHEUS,
+> HALP) and three classical baselines, requested specifically for LRB and
+> 3L-Cache, under a matched evaluation protocol — the result is negative for
+> our method; (2) directly tested, rather than merely argued for, the premise
+> that our eviction-loss supervision target is better suited to the eviction
+> decision than reuse-distance, next-arrival, or pairwise-preference
+> alternatives in the deployed pipeline — that pipeline comparison is
+> negative, but a matched common-model control that changes only the training
+> objective does **not** support blaming the eviction-loss label itself;
+> (3) replaced a previously speculative causal account of the offline/online
+> performance gap with a mechanistic diagnosis (an exact-target oracle, a
+> target-degeneracy audit, a learned/exact agreement analysis, and a
+> tie-aware follow-up) and a controlled causal ablation directly testing the
+> continuation-label mismatch hypothesis Reviewer #3 identified as untested;
+> (4) replaced our earlier single-run local timing benchmark with a
+> controlled, repeated-measurement wall-clock campaign and added an explicit
+> statement of intended use and current practical limitations; and
+> (5) disclosed and addressed a train/test-overlap issue we found in the
+> model underlying our original end-to-end table while preparing this
+> revision. We report all of this evidence candidly: the revised
+> manuscript's central finding is that the deployed method does not
+> outperform any tested baseline, that the eviction-loss training objective
+> is not established as the cause, and that the previously reported
+> deterministic exact-oracle deficit versus LRU is a tie-breaking confound
+> rather than proof that the exact target intrinsically loses to LRU.
 
 ---
 
 ## Response to Reviewer #2
 
-### Major Comment 1 (R2-MC1) — replay horizon H justification
+### Major Comment 1 — Insufficient comparison with existing learned cache-replacement methods
 
-> We thank the reviewer for this comment. The replay horizon H was
-> selected via an offline ablation across H∈{4,8,16}, where H=4 achieved
-> the lowest validation regret. We have added a new manuscript subsection
-> ("Replay Horizon Selection") reporting that this finding holds across 5
-> of 7 trace families (BrightKite, CloudPhysics, MetaCDN, Twemcache,
-> Wikimedia pageviews), and explicitly disclosing that Citi Bike/MetaKV
-> coverage and horizon × capacity interaction remain open questions for
-> future work.
+**Reviewer comment**
 
-### Major Comment 2 (R2-MC2) — computational overhead of label construction
+> Insufficient comparison with existing learned cache-replacement methods.
+> Direct comparisons are needed, particularly with LRB and 3L-Cache. Such
+> comparisons are necessary to determine whether the proposed candidate-level
+> eviction-loss objective offers advantages over existing learning-based
+> approaches. Fair comparison requires the same traces, capacities,
+> preprocessing, request budgets, and metrics.
 
-> We thank the reviewer for raising this. We have added a new manuscript
-> subsection ("Overhead and Scalability") reporting that dataset
-> construction for the full sweep took approximately 10.3 hours of
-> wall-clock time, producing 96GB across 662 shards, while training all
-> model configurations took approximately 7-8 minutes. We have also added a
-> controlled wall-clock latency benchmark on a BrightKite prefix of 5,000
-> requests at capacities 32/64/128, measured on the author's local
-> development machine under tmux rather than on Wulver/Slurm: the mean
-> per-decision cost of `evict_value_v1` increases from 75.0 ms at capacity
-> 32 to 316.0 ms at capacity 128, while LRU, SIEVE, FIFO-Reinsertion, and
-> REST remain several orders of magnitude faster (see Issue 5 below). We
-> present this as a bounded overhead probe, not a claim of representativeness
-> across all seven trace families.
+**Response**
 
-### Major Comment 3 (R2-MC3) — offline-vs-online metric gap; fallback under-demonstrated
+We agree, and have added the requested direct comparison. We retrained
+`evict_value_v1` under a leave-one-family-out protocol (no request from an
+evaluated family contributes to that family's training, validation,
+hyperparameter selection, or early stopping at any point) and evaluated it
+against LRB, 3L-Cache, CACHEUS, and HALP — plus LRU, SIEVE, and
+FIFO-Reinsertion — under a matched protocol: identical traces (verified by
+SHA-256 hash, not filename), identical capacities (32, 64, 128), an identical
+history prefix (`[0, 10,000)`), an identical scored suffix (`[10,000,
+50,000)`, 40,000 scored requests), identical object-slot/unit-object
+semantics, and identical hit/miss accounting.
 
-> We thank the reviewer for this important point. We have expanded our
-> evaluation to include end-to-end online-replay results across three
-> cache capacities (32, 64, 128 slots) and all seven trace families. The
-> result is honestly mixed: `evict_value_v1` does not outperform LRU,
-> SIEVE, or FIFO-Reinsertion at any of the three evaluated capacities, and
-> its gap relative to these baselines widens non-monotonically at capacity
-> 128 (Section "End-to-End Online Replay Evaluation Across Available
-> Capacities"). We analyze this pattern in the Discussion and Limitations
-> sections and link it to the single-step LRU-continuation rule used to
-> construct the offline supervision target. Regarding the guarded fallback
-> mechanism, we have revised its framing throughout the manuscript from a
-> validated contribution to an implementation safeguard/optional guard. A
-> dedicated fallback-triggered-vs-disabled ablation has not been run in this
-> revision, so the mechanism is not presented as an empirically validated
-> robustness contribution; see Issue 6 below.
+The answer to the reviewer's specific question is direct: **the comparison
+does not establish an advantage for `evict_value_v1`.** It loses on a clear
+majority of the 21 matched (family, capacity) cells against every one of the
+seven baselines, including LRB (13 losses, 5 wins, 3 ties; $+1.85\%$ relative
+miss ratio) and 3L-Cache (13 losses, 5 wins, 3 ties; $+1.13\%$). We report
+this candidly rather than qualify it away, and we use the same corrected,
+leakage-free evaluation to replace the train/test-overlap-affected model that
+had underpinned the manuscript's original end-to-end table.
+
+**Changes in the revised manuscript**
+
+- New Section 3.4, "Matched Comparison Against Learned Cache-Replacement
+  Baselines" (pp. 6–10), with subsections on the corrected training
+  protocol (§3.4.1), the matched evaluation protocol (§3.4.2), results
+  (§3.4.3, Table 5, p. 9), and implementation-fidelity caveats (§3.4.4).
+- Related Work (§1.3, p. 3) now introduces 3L-Cache and CACHEUS with proper
+  citations alongside the existing LRB and HALP citations, and states that
+  all four are directly compared in §3.4.
+- Table 2 (Main policy families, p. 7) now lists LRB, 3L-Cache, CACHEUS,
+  and HALP as learned baselines, with their evaluation location and
+  fidelity noted.
+- Section 3.3 (Offline Ablation, p. 5) includes a compact matched-protocol
+  family-level LRU-gap table (Table 4, p. 8) computed from the same
+  leave-one-family-out scored window as §3.4, replacing a superseded
+  leaky single-split breakdown.
+- Contributions list, item 2 (p. 4), and Abstract (p. 1) state the matched
+  comparison and its negative result explicitly.
+
+**Additional clarification**
+
+Implementation-fidelity caveats are recorded transparently and are separate
+from the evaluation-protocol dimensions above, which are exact for all seven
+baselines: LRB and 3L-Cache are independent repository reimplementations
+(3L-Cache additionally uses a fixed default batch size not re-tuned for this
+study); CACHEUS runs the official authors' own decision engine unmodified,
+with a provenance caveat that the external upstream clone is not currently
+live-verifiable in this development environment; HALP is an independent
+reimplementation because no official public HALP implementation exists (see
+also the response to Reviewer #3, Issue 2, below). None of these caveats
+affect the matched traces, capacities, windows, budgets, or metrics — only
+how faithfully each reimplementation reproduces its source algorithm's exact
+internal behavior. We also note, for full transparency, that "matched
+evaluation protocol" refers only to evaluation-side inputs: LRB, 3L-Cache,
+and CACHEUS are online/adaptive baselines with no cross-family training
+corpus at all, HALP trains offline only on each trace's own history prefix,
+and `evict_value_v1` trains offline with leave-one-family-out exclusion —
+these are intentional, disclosed differences in training mechanics, not an
+evaluation-protocol gap, and no baseline in the comparison has access to
+future information or another family's data at any point.
+
+Supporting artifact:
+[reports/kbs_final_evidence_20260813/major1_reviewer_summary.md](../reports/kbs_final_evidence_20260813/major1_reviewer_summary.md)
+(win/loss table
+[major1_full_baseline_comparison.csv](../reports/kbs_final_evidence_20260813/major1_full_baseline_comparison.csv);
+per-policy CSVs in
+[analysis/reviewer_fairness/](../analysis/reviewer_fairness/)).
+Workload-specific matched LRU gaps (manuscript Table 4) are computed from
+[analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv](../analysis/reviewer_fairness_cross_family_v1/evict_value_v1_final_42_20260810/policy_comparison.csv)
+and
+[analysis/reviewer_fairness/policy_comparison_lru.csv](../analysis/reviewer_fairness/policy_comparison_lru.csv).
+
+---
+
+### Major Comment 2 — Insufficient justification for finite-horizon eviction-loss supervision
+
+**Reviewer comment**
+
+> Insufficient justification for the finite-horizon eviction-loss
+> supervision target. Evidence is needed against alternative candidate-level
+> objectives such as reuse distance, next-arrival time, and pairwise
+> preference, to justify why eviction-loss should be preferred.
+
+**Response**
+
+We agree this premise was previously asserted rather than tested, and we now
+test it at two levels.
+
+First, using the same leave-one-family-out training and matched evaluation
+protocol as the Major Comment 1 response, we trained and evaluated three
+alternative supervision objectives in place of eviction-loss — reuse
+distance, next-arrival time, and pairwise preference — in the full
+`evict_value_v1` pipeline. In that pipeline, eviction-loss produces the most
+total misses of the four objectives (601,569), compared to next-arrival
+(573,059), reuse-distance (571,456), and pairwise preference (565,127).
+Eviction-loss is the single worst objective within every one of the seven
+trace families individually. We report this pipeline result directly.
+
+Second, that comparison does not isolate the training objective as the sole
+causal factor. We therefore added a matched common-model control on the same
+21 cells: identical folds, windows, features, architecture, and seed; only
+the objective changes; and the pairwise objective uses a corrected
+orientation. Under this control, eviction-loss is nominally best by total
+misses (571,976), ahead of pairwise (577,339), reuse-distance (615,850), and
+next-arrival (627,392). Eviction-loss is **not** materially worse than the
+alternatives. The matched experiment therefore does **not** support the
+hypothesis that the eviction-loss training objective itself explains the
+poor performance of the full learned policy.
+
+**Changes in the revised manuscript**
+
+- Section 3.5, "Direct Comparison Against Alternative Supervision
+  Objectives" (p. 10), retains Table 6 (full-pipeline comparison) and adds
+  Table 7 (matched common-model V2).
+- Section 3.8 ("Discussion and Synthesis", p. 12) is revised so that
+  the design lesson is decision informativeness and tie resolution, not
+  "the eviction-loss label is uniquely harmful."
+- Contributions list, item 3, and the Abstract state both the pipeline
+  result and the matched-control interpretation explicitly.
+
+**Additional clarification**
+
+We connect this distinction to the mechanistic diagnosis in Section 3.6:
+the stronger supported explanation is that the horizon-4 target is highly
+action-underdetermined, not that the eviction-loss training objective is
+the culprit.
+
+Supporting artifact: Common-Model V2 formal audit
+[reports/common_model_v2_formal_audit_20260814/AUDIT.md](../reports/common_model_v2_formal_audit_20260814/AUDIT.md)
+and compact totals in
+[analysis/common_model_objective_control_wulver_v2/summary.csv](../analysis/common_model_objective_control_wulver_v2/summary.csv).
+
+---
+
+### Major Comment 3 — Gap between offline learning and online cache performance; speculative distribution-shift explanation
+
+**Reviewer comment**
+
+> There remains a gap between offline learning performance and online cache
+> performance. The manuscript's explanation invoking distribution shift was
+> speculative. Controlled analyses/experiments are needed to test this
+> explanation rather than assert it.
+
+**Response**
+
+We agree the previous revision's account — a single, unconfirmed hypothesis
+attributing the online gap to "compounding distribution shift" from the
+LRU-continuation labeling assumption — was speculative, and we replace it
+with controlled evidence. We ran complementary diagnostics, all under the
+matched leave-one-family-out protocol:
+
+1. **Is inaccurate prediction the cause?** We compare the learned scorer's
+   decisions against an exact solver for the same eviction-loss target. The
+   learned scorer agrees with the exact target's optimal candidate set in
+   97.53% of decisions (set-aware agreement). Because that set is extremely
+   large (mean optimal-set fraction $\approx 0.991$), this agreement does
+   **not** by itself prove strong candidate discrimination; it does
+   disfavor gross model-fitting failure (the scorer rarely leaves the
+   target-defined set).
+2. **Is the target itself useful, even optimized perfectly?** A
+   *deterministic* exact horizon-4 oracle (minimum candidate identifier
+   among exact minimizers) loses to LRU on 18 of 21 cells (0 wins, 3 ties;
+   $+81{,}750$ total misses). This shows that this specific
+   target-plus-tie-resolution instantiation is a poor online policy. It
+   does **not**, by itself, prove that the exact target intrinsically loses
+   to LRU.
+3. **Is that deficit robust to valid within-minimum tie-breaking?** A
+   tie-aware follow-up on the same 21 cells finds
+   `fraction_tied_decisions = 1.0` on every non-LRU oracle row (mean
+   optimal-set fraction $\approx 0.991$). Choosing the LRU-most exact
+   minimizer never loses to LRU (16 wins / 5 ties / 0 losses; $413$ fewer
+   total misses than LRU). The deterministic deficit is therefore a
+   tie-breaking confound. It does **not** establish that the H4 target
+   intrinsically loses to LRU, and LRU-within-minima is not a claim that
+   $H=4$ supervision improves LRU as a learned policy. The strongest
+   supported diagnosis remains that the target is highly
+   action-underdetermined, so downstream selection among many exact
+   minimizers matters substantially. We do not claim that tie degeneracy
+   explains every aspect of learned-policy underperformance.
+4. **Why is the target so underdetermined?** Independent degeneracy and
+   reuse-tail diagnostics remain consistent with this picture: no decision
+   has a unique optimal candidate, and the horizon-4 window observes only a
+   small fraction of eventual reuse
+   ($P(T>4\mid\text{resident})=0.9939$). The replay-time mean all-tied
+   fraction ($\approx 0.649$) and the strict-preference all-tied rate
+   ($76.4\%$) are two diagnostics of the same qualitative degeneracy, not
+   interchangeable point estimates.
+
+We then directly test the continuation-mismatch hypothesis with a controlled
+causal ablation, changing exactly one thing between two trained policies
+(the continuation rule used to build training labels: LRU vs. a frozen
+first-stage policy). Correcting the continuation label improves 13 of 21
+cells (macro mean $-0.0102$) but worsens 5, including one severe
+counter-example (BrightKite, capacity 32, $+0.2433$) — we classify this as
+**partially supported and regime-dependent**, a real but secondary
+contributor, not a full explanation. A companion experiment tests whether
+reducing a *generic* measure of training-state distribution shift (one-step
+DAgger-style correction) improves performance: it reduces the measured shift
+in 16 of 21 cells while online misses simultaneously *worsen* in 16 of 21 —
+a clear negative result for this specific corrective intervention.
+
+**Changes in the revised manuscript**
+
+- Section 3.6, "Mechanistic Diagnosis of the Eviction-Loss Target" (p. 11),
+  includes the deterministic oracle, the degeneracy/agreement diagnostics,
+  and the completed tie-aware follow-up (no longer pending).
+- Section 3.7 (p. 12) reports the C0/C1/C2 causal ablation and the DAgger
+  distribution-shift-correction result.
+- Section 4.2, "Limitations" (p. 14), states that these experiments constrain
+  interpretation rather than proving one complete causal mechanism, and
+  that deterministic exact-oracle replay is tie-sensitive.
+- Contributions list, item 4, and the Abstract state the tie-aware
+  reinterpretation explicitly.
+
+**Additional clarification**
+
+We deliberately distinguish "distribution shift as a phenomenon" from "this
+specific corrective intervention as a remedy": the DAgger result shows the
+tested generic shift-reduction method does not help, not that distribution
+shift does not exist. We likewise distinguish "the deterministic exact
+oracle loses to LRU" from "the exact target intrinsically loses to LRU";
+only the former is supported, and it is explained by tie-breaking.
+
+Supporting artifact: tie-aware exact-target oracle audit
+[reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md](../reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md)
+(compact
+[analysis/tie_aware_exact_target_oracle_v1/summary.csv](../analysis/tie_aware_exact_target_oracle_v1/summary.csv)).
+Continuation / DAgger controls:
+[c0_continuation_summary.csv](../reports/kbs_final_evidence_20260813/c0_continuation_summary.csv)
+and
+[distribution_shift_summary.csv](../reports/kbs_final_evidence_20260813/distribution_shift_summary.csv).
+
+---
+
+### Major Comment 4 — Practical significance: high overhead and poor performance relative to lightweight baselines
+
+**Reviewer comment**
+
+> The practical significance of the proposed method is unclear given its
+> high computational overhead and poor performance relative to lightweight
+> baselines. The manuscript should clarify intended-use scenarios and when
+> the cost could be justified.
+
+**Response**
+
+We agree and address this directly rather than minimizing the cost. We
+replaced our earlier single-machine, single-run local timing probe with a
+controlled, repeated-measurement campaign: 7 families $\times$ 3 capacities
+$\times$ 5 repetitions per policy (420 total timed runs) for LRU,
+FIFO-Reinsertion, SIEVE, and a causal HALP reimplementation, executed on a
+dedicated compute node. `evict_value_v1` was not included in this controlled
+campaign — a full 5-repetition run was judged computationally infeasible
+given its substantially higher per-decision cost — so we report its runtime
+separately, as the single, non-repeated measurement already available from
+the Major Comment 1 evaluation, and we do not place it in the same table as
+the four controlled policies.
+
+LRU (4.68 $\mu$s/request mean), FIFO-Reinsertion (5.17 $\mu$s), and SIEVE
+(9.52 $\mu$s) remain single-digit-microsecond policies under repeated
+measurement. HALP is $186\times$ slower than LRU. `evict_value_v1`'s
+single-run measurement is roughly four orders of magnitude slower than LRU.
+Combined with the negative miss-ratio results (Major Comments 1–2 above), we
+state plainly that the current instantiation is not a candidate for
+replacing any evaluated baseline in latency- or throughput-sensitive
+deployments, and we do not identify or claim a deployment scenario in which
+its current cost/performance combination is justified. We frame its value
+instead as diagnostic and methodological: a controlled empirical test that
+isolates *why* a representative finite-horizon candidate-level target
+underperforms, which directly informs what a future redesign would need to
+change.
+
+**Changes in the revised manuscript**
+
+- Section 3.9, "Overhead and Scalability" (pp. 12–13), replaces the earlier
+  single-run local benchmark with the controlled 420-run campaign (Table 8,
+  p. 13) and the separately reported `evict_value_v1` single-run figure.
+- New Section 3.10, "Practical Significance" (p. 13), directly states the
+  absence of a currently justified deployment scenario and the narrower
+  research-tool framing.
+- Contributions list, item 5 (p. 2), and Abstract (p. 1) state the timing
+  result and the reframed contribution explicitly.
+- Section 4.2, "Limitations" (p. 14), records that
+  `evict_value_v1`'s timing is a single measurement, not part of the
+  controlled 5-repetition campaign, and should not be treated as directly
+  statistically comparable to it.
+
+**Additional clarification**
+
+We verified the $O(k)$-per-miss vs. $O(1)$ complexity-class comparison
+directly against our own implementations' source code (unchanged from the
+previous revision), and the new controlled campaign adds repeated-measurement
+statistical support (mean, median, 95% CI) rather than relying on a single
+run for the four lightweight/HALP policies.
+
+Supporting artifact: controlled timing campaign
+[controlled_timing_summary.csv](../reports/kbs_final_evidence_20260813/controlled_timing_summary.csv)
+(integrity
+[controlled_timing_integrity.md](../reports/kbs_final_evidence_20260813/controlled_timing_integrity.md);
+interpretation
+[controlled_timing_interpretation.md](../reports/kbs_final_evidence_20260813/controlled_timing_interpretation.md)).
 
 ---
 
 ## Response to Reviewer #3
 
-### Summary (R3-Summary)
+### Primary issue — untested causal claim about LRU-continuation label construction
 
-> We thank the reviewer for this thorough assessment. We agree that the
-> original submission's empirical evidence was concentrated in offline
-> target-quality metrics. In this revision we have added end-to-end
-> miss-ratio results across three cache capacities (32, 64, 128 slots) and
-> all seven trace families, added SIEVE/FIFO-Reinsertion baseline
-> comparisons at the same three capacities, and reduced hedging language
-> where the evidence now supports doing so. We have also added new hedging
-> where the end-to-end evidence is honestly negative: `evict_value_v1` does
-> not outperform LRU, SIEVE, or FIFO-Reinsertion in this evaluation, and we
-> now describe the method as a decision-aligned supervision-target study
-> rather than as a demonstrated improvement over strong lightweight
-> baselines. The remaining manuscript-level editing work is a shortening and
-> packaging pass, not a missing-capacity replay claim.
+**Reviewer comment**
 
-### Issue 1 (R3-Issue1) — no end-to-end cache miss ratio results
+> The manuscript attributed the offline/online performance gap partly to a
+> mismatch between LRU-continuation label construction and the learned
+> policy's actual deployed trajectory, but this causal claim had not been
+> tested.
 
-> We have added end-to-end online-replay results across all seven trace
-> families at three cache capacities (32, 64, 128 slots; Section "End-to-
-> End Online Replay Evaluation Across Available Capacities"). The
-> result is that `evict_value_v1` does not achieve a lower mean miss count
-> than LRU, SIEVE, or FIFO-Reinsertion at any of the three capacities (gap
-> vs LRU: +4.84%, +2.26%, +11.76% at cap32/64/128 respectively, where
-> positive means more misses). We report this directly rather than only
-> the offline target-quality metrics from the original submission, and we
-> discuss the non-monotonic widening at capacity 128 in the Discussion and
-> Limitations sections. REST is numerically tied with LRU on the three-
-> capacity average, so `evict_value_v1` also does not outperform REST on
-> average. Capacity 256 was not evaluated end-to-end and is not included in
-> this result.
+**Response**
 
-### Issue 2 (R3-Issue2) — insufficient differentiation from HALP
+We thank the reviewer for identifying this gap precisely; it is a direct,
+specific, and testable claim, and we agree it should not have been asserted
+without a controlled test. We designed and ran a three-arm causal ablation
+that isolates exactly this mechanism: **C0** replays LRU end-to-end (the
+reference). **C1** trains a policy $\pi_1$ on labels built under LRU
+continuation (the original specification) and deploys $\pi_1$ recursively.
+**C2** trains a second policy $\pi_2$ on labels built under a corrected
+continuation rule — the frozen $\pi_1$'s own decisions rather than LRU — and
+deploys $\pi_2$ recursively. This is the *only* change between C1 and C2,
+under the leave-one-family-out protocol used throughout this revision.
 
-> We thank the reviewer for this comparison. Unlike HALP (Song et al.,
-> NSDI '23), which learns a pairwise preference signal from realized future
-> re-access outcomes, our finite-horizon replay target explicitly
-> quantifies downstream miss-count harm under counterfactual eviction at
-> each decision point. A faithful empirical HALP reimplementation is
-> outside the scope of this revision; the analytical differentiation above
-> stands in its place.
+Across the 21 (family, capacity) cells: C2 improves over C1 in 13 cells, ties
+in 3 (the degenerate Wikimedia cells), and worsens in 5, with a macro mean
+miss-ratio improvement of $-0.0102$ (aggregate misses: C1 $601{,}569 \to$ C2
+$592{,}970$, against a C0/LRU reference of $565{,}126$). One cell — BrightKite
+at capacity 32 — regresses sharply ($+0.2433$), which by itself precludes a
+claim of uniform benefit.
 
-### Issue 3 (R3-Issue3) — missing comparisons to SIEVE / FIFO-Reinsertion
+**Our answer to the reviewer's question is therefore: partially supported and
+regime-dependent, not fully supported and not disfavored outright.** The
+continuation-label mismatch is a real, measurable, secondary contributor to
+the offline/online gap in most family/capacity combinations, but it does not
+fully explain the gap, and one specific case shows a large effect in the
+opposite direction. We have replaced the manuscript's previous speculative
+language with this controlled result throughout.
 
-> We have added SIEVE and FIFO-Reinsertion as additional baselines,
-> implemented and tested, and now included in our policy roster (Table 2)
-> and Related Work discussion. Both are evaluated end-to-end at all three
-> capacities alongside the rest of the roster. At capacity 128,
-> `evict_value_v1`'s gap is +9.13% vs SIEVE and +11.64% vs FIFO-Reinsertion
-> (mean misses, higher is worse); both baselines also outperform
-> `evict_value_v1` at cap32 and cap64. SIEVE and FIFO-Reinsertion themselves
-> remain close to LRU across all three capacities, consistent with their
-> design as strong, low-overhead baselines.
+We also tested, as a related but distinct question, whether correcting a
+*generic* measure of training-state distribution shift (rather than the
+continuation label specifically) helps: a one-step DAgger-style intervention
+reduces the measured shift metric in 16 of 21 cells, yet online misses
+*worsen* in 16 of 21 (macro mean $+0.0094$). We report this as a companion
+negative result and are careful not to conflate it with the continuation-label
+finding above: they test different mechanisms (label construction vs.
+broader state-visitation correction), and only the former shows partial
+positive support.
 
-### Issue 4 (R3-Issue4) — self-admitted empirical weakness undermines the contribution
+Supporting artifact: continuation control
+[c0_continuation_summary.csv](../reports/kbs_final_evidence_20260813/c0_continuation_summary.csv)
+and DAgger / distribution-shift control
+[distribution_shift_summary.csv](../reports/kbs_final_evidence_20260813/distribution_shift_summary.csv).
+A compact how-to-verify index is
+[docs/reviewer/REPRODUCTION_MATRIX.md](../docs/reviewer/REPRODUCTION_MATRIX.md)
+and
+[docs/reviewer/RESULT_VERIFICATION.md](../docs/reviewer/RESULT_VERIFICATION.md).
 
-> We thank the reviewer for this candid assessment, and we agree with its
-> substance. Rather than expanding evidence to support the original framing,
-> we have revised the abstract, Summary of Findings, and Discussion to more
-> accurately reflect what is empirically demonstrated: finite-horizon
-> eviction-value prediction is a well-motivated and learnable supervision-
-> target design, and the offline ablation supports this as a research
-> contribution in its own right, but the new end-to-end online evaluation
-> (Issue 1 above) shows that the present instantiation of `evict_value_v1`
-> is not yet a practically superior online replacement policy relative to
-> LRU, SIEVE, or FIFO-Reinsertion. We now describe the contribution
-> throughout as a decision-aligned supervision study rather than as a
-> demonstrated improvement in online cache miss ratio, and we no longer
-> claim or imply superiority over these baselines anywhere in the
-> manuscript.
+**Changes in the revised manuscript**
 
-### Issue 5 (R3-Issue5) — computational cost not addressed
+- Section 3.7 (p. 12) presents the full C0/
+  C1/C2 causal ablation and the DAgger distribution-shift result, replacing
+  the previous single unconfirmed hypothesis.
+- Section 4.2, "Limitations" (p. 14), states the causal account's
+  bounded scope (single horizon, one-step continuation correction, one-step
+  DAgger correction) and flags multi-round correction as future work
+  (Section 4.3, p. 14).
+- Contributions list, item 5 (p. 4), and Abstract (p. 1) state the partial,
+  regime-dependent finding explicitly, avoiding the word "explains" in favor
+  of "partial, family-dependent secondary contributor."
 
-> `evict_value_v1` performs O(capacity) model-inference calls per cache
-> miss (one feature vector + prediction per resident candidate), compared
-> to O(1) for LRU, SIEVE, and FIFO-Reinsertion. This complexity comparison
-> is code-verified. We have also run a controlled wall-clock timing
-> benchmark confirming this asymptotic cost empirically: on a 5,000-request
-> BrightKite prefix at capacities 32/64/128 (local machine under tmux, not
-> Wulver/Slurm), `evict_value_v1`'s mean per-decision cost rises from
-> 75.0 ms to 316.0 ms, versus approximately 0.001 ms for LRU/
-> FIFO-Reinsertion, 0.002-0.005 ms for SIEVE, and 0.04-0.18 ms for REST.
-> This is a single-trace, single-run probe, not a claim of representativeness
-> across all seven trace families.
+**Additional clarification**
 
-### Issue 6 (R3-Issue6) — fallback mechanism unvalidated and oversold
-
-> We have revised our treatment of the guarded fallback mechanism
-> throughout the manuscript (contributions list and method-section wording),
-> describing it as an implementation safeguard / optional guard rather than
-> a validated contribution. The method section no longer presents the guard
-> as a full algorithmic centerpiece: the former Algorithm~1 pseudocode block
-> has been removed and replaced with concise prose, and the guarded-fallback
-> subsection has been shortened accordingly. We confirm that no dedicated
-> fallback-triggered-vs-disabled ablation has been added in this revision;
-> the mechanism remains an unvalidated, clearly-scoped guard, and we have
-> ensured the manuscript does not claim otherwise.
-
-### Issue 7 (R3-Issue7) — single authorship and reliance on AI tools
-
-> We have added a candid discussion of our validation practices as a
-> single author using AI coding and writing tools, describing the specific
-> tools used, the verification steps taken (including an independent
-> sanity-audit cross-check and unit test coverage), and explicitly not
-> overclaiming multi-author or multi-institutional review that did not
-> occur. We have also added an explicit limitation statement to the
-> manuscript (Limitations, sixth point) acknowledging that single-author
-> validation cannot substitute for independent replication by additional
-> authors or institutions.
-
-### Minor Problem 8 (R3-Minor8) — verbosity and repetition
-
-> We acknowledge this concern. This revision prioritized adding the missing
-> end-to-end evaluation evidence (Issues 1/3/9), which grew the manuscript
-> rather than shrinking it. We have since applied two narrow, no-compute
-> repetition passes (2026-06-21) that removed duplicated restatements of
-> already-established claims in the Workload-Specific Breakdown, Summary of
-> Findings, and guard/fallback discussion, and compressed the overlap
-> between Sections 1.1 and 1.2 that this comment specifically names. This
-> is not the full 30-40% reduction requested in R3-Rec6; a more extensive
-> shortening and reframing pass remains available as a further revision if
-> the Editor and reviewers consider it necessary.
-
-### Minor Problem 9 (R3-Minor9) — missing workload-specific analysis
-
-> We have added a new "Workload-Specific Breakdown" subsection with a
-> per-trace-family table reporting `evict_value_v1`'s gap vs LRU
-> at each of cap32/64/128 for all seven families. The capacity-128
-> degradation is broad-based: BrightKite (+50.91%), Citi Bike (+45.49%),
-> MetaCDN (+17.62%), and Twemcache (+14.06%) all show double-digit gaps,
-> while CloudPhysics (+3.10%) and MetaKV (+0.76%) remain comparatively
-> stable and Wikimedia pageviews is degenerate (LRU achieves a 100% hit
-> ratio at all three capacities, so no policy differentiation is possible
-> on this trace). We discuss MetaCDN's U-shaped pattern and Twemcache's
-> steadily increasing gap as part of this breakdown.
-
-### Recommended Revisions (R3-Rec1–8)
-
-1. **(R3-Rec1)** End-to-end miss ratio results — added across cap32/64/128
-   and all seven families; see Issue 1.
-2. **(R3-Rec2)** Direct comparisons to HALP and SIEVE — SIEVE/
-   FIFO-Reinsertion now implemented, cited, and evaluated end-to-end at
-   cap32/64/128 (Issue 3); HALP addressed analytically only (Issue 2), a
-   faithful reimplementation is outside the scope of this revision.
-3. **(R3-Rec3)** Report computational overhead — see R2-MC2/Issue 5.
-4. **(R3-Rec4)** Reduce hedging or reframe scope — reframed: abstract,
-   Summary of Findings, and Discussion revised to describe
-   `evict_value_v1` as a decision-aligned supervision study rather than a
-   demonstrated improvement; see Issue 4.
-5. **(R3-Rec5)** Validate the fallback mechanism or remove it — we have not
-   added a dedicated fallback-triggered-vs-disabled ablation in this
-   revision; the mechanism remains explicitly described as an unvalidated,
-   clearly-scoped guard rather than a demonstrated robustness contribution;
-   see Issue 6.
-6. **(R3-Rec6)** Shorten the manuscript by 30-40% — two narrow repetition
-   passes applied (2026-06-21); see Minor Problem 8. The full 30-40% target
-   remains available as a further revision if the Editor and reviewers
-   consider it necessary.
-7. **(R3-Rec7)** Investigate why H=4 works best — see R2-MC1.
-8. **(R3-Rec8)** Provide workload-specific breakdowns — added in the
-   workload-specific breakdown subsection;
-   see Minor Problem 9.
+We chose a leave-one-family-out protocol for this ablation (rather than a
+single fixed split) specifically to avoid the train/test-overlap issue
+disclosed in our response to Major Comment 1 above, so that the causal
+ablation's own conclusions are not confounded by the same contamination
+concern.
 
 ---
 
-## Closing Note
+### Issue 2 — insufficient differentiation from HALP
 
-We believe this revision directly addresses the Associate Editor's and
-both reviewers' core concerns: it adds the previously missing end-to-end
-online-replay evidence across three cache capacities (32, 64, 128 slots)
-and all seven trace families; adds SIEVE and FIFO-Reinsertion as
-additional baselines; adds a quantitative overhead and scalability
-analysis; clarifies the differentiation from HALP; revises the guarded
-fallback mechanism's framing to match its current evidentiary status; and
-reports the resulting evidence honestly, including the negative result
-that `evict_value_v1` does not outperform LRU, SIEVE, FIFO-Reinsertion, or
-REST at any of the three evaluated capacities.
+**Reviewer comment**
 
-Three items remain explicitly out of scope for this revision rather than
-unresolved oversights: a dedicated fallback-triggered-vs-disabled ablation
-(Issue 6/Rec5), a faithful empirical HALP reimplementation (Issue 2/Rec2),
-and the full 30-40% length reduction requested in Rec6, of which two
-narrower, no-compute repetition passes have already been applied (Minor
-Problem 8). We present these as disclosed limitations of the present
-revision rather than as omissions, and we welcome further guidance from
-the Editor and reviewers on any of them.
+> Insufficient empirical differentiation from HALP, which the previous
+> revision addressed only analytically rather than empirically.
+
+**Response**
+
+We agree and have added an empirical HALP comparison. Section 3.4 (Table 5,
+p. 9) reports `evict_value_v1` against HALP under the matched
+leave-one-family-out protocol: `evict_value_v1` loses on 17 of 21 cells (1
+win, 3 ties), a $+3.59\%$ relative miss-ratio disadvantage. Because no
+official public HALP implementation exists, our comparison uses an
+independent reimplementation, which we disclose as a lower-fidelity
+supporting comparison (Section 3.4.4, p. 10) rather than an official
+empirical baseline; this is consistent with the reviewer's request for
+differentiation from HALP specifically, rather than a claim of an official
+reproduction.
+
+**Changes in the revised manuscript**
+
+- Table 5 (p. 9) includes HALP as an empirical row.
+- Section 3.4.4 (p. 10) and Section 4.2 (p. 14) disclose the
+  reimplementation-fidelity caveat.
+- Related Work (§1.3, p. 3) retains the analytical differentiation from HALP
+  and now also points to the empirical result.
+
+---
+
+### Issue 3 — cost not addressed with controlled measurement
+
+**Reviewer comment**
+
+> Computational cost was not addressed with a controlled measurement.
+
+**Response**
+
+Addressed in full above under Major Comment 4; see Section 3.9 (Table 8,
+p. 13) for the controlled 420-run, 5-repetition timing campaign.
+
+---
+
+## Summary of scientific-status changes
+
+| Concern | Previous status | Current status |
+|---|---|---|
+| R2 Major 1 (LRB/3L-Cache comparison) | Not present | Complete; negative result (§3.4, Table 5) |
+| R2 Major 2 (objective justification) | Asserted, not tested | Pipeline ablation: eviction-loss worst of four (§3.5, Table 6). Matched common-model V2: objective-causality **not supported** (§3.5, Table 7) |
+| R2 Major 3 (offline/online gap) | Speculative hypothesis | Mechanistically diagnosed (§3.6), including completed tie-aware follow-up; continuation/DAgger tested (§3.7) |
+| R2 Major 4 (practical significance) | Earlier single local run | Controlled 420-run campaign (§3.9, Table 8) + explicit scope statement (§3.10) |
+| R3 primary issue (continuation causal claim) | Untested | Tested; partially supported, regime-dependent (§3.7) |
+| R3 Issue 2 (HALP differentiation) | Analytical only | Empirical comparison added (§3.4, Table 5) |
+
+No claim in this revision states that `evict_value_v1` outperforms any
+evaluated baseline, that the eviction-loss *training objective itself* is
+established as the cause of poor performance, that the exact H4 target
+intrinsically loses to LRU, that continuation-label mismatch fully explains
+the offline/online gap, that the DAgger intervention improves online
+performance, or that `evict_value_v1` was part of the controlled
+5-repetition timing campaign. The manuscript reports a negative deployed
+result whose leading supported diagnosis is action-underdetermined
+supervision, and we believe this directly addresses each concern raised by
+the Associate Editor and both reviewers.
