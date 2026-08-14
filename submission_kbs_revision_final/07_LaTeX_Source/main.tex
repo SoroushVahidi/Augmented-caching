@@ -66,7 +66,7 @@ The main contributions of this paper are as follows.
 
 Belady's offline rule and competitive paging frame the core difficulty: eviction quality depends on future reuse, yet the choice is online \cite{belady1966replacement_algorithms,fiat1991competitive_paging}. Learning-augmented paging typically uses next-arrival or action advice with robustness when advice is wrong \cite{lykouris2021competitive_caching,rohatgi2020near_optimal_caching,bansal2022learning_augmented_weighted_paging,im2022parsimonious_lac,antoniadis2020online_metric_untrusted,wei2020better_simpler_lac,chledowski2021robust_lac_experimental,blum2000online_learning_mts}. We share the robustness concern but study a candidate-level cost target rather than hint-trust or expert switching.
 
-Learned replacement systems supervise from future-derived labels: PARROT imitates Belady; LRB and Raven predict Belady-guided reuse; Mockingjay estimates reuse times; HALP learns candidate preferences; 3L-Cache combines a lightweight scorer with bidirectional sampling; CACHEUS mixes eviction experts \cite{liu2020parrot,song2020lrb,hu2022raven,shah2022mockingjay,song2023halp,zhou2025threelcache,rodriguez2021cacheus}. LRB, 3L-Cache, CACHEUS, and HALP are compared directly in Section~\ref{subsec:major1_comparison}. Proxies in this literature (oracle actions, reuse distance, next arrival, pairwise order) still require translation into an eviction. Our target is a counterfactual finite-horizon miss count. Structural alignment does not imply informativeness; we use decision-focused/predict-then-optimize language only as a conceptual link, including the observation that multiple optima are a form of degeneracy \cite{elmachtoub2022smart_predict_optimize,wilder2019decision_focused_learning,shah2022lodl,elbalghiti2022generalization}.
+Learned replacement systems supervise from future-derived labels: PARROT imitates Belady; LRB and Raven predict Belady-guided reuse; Mockingjay estimates reuse times; HALP learns candidate preferences; 3L-Cache combines a lightweight scorer with bidirectional sampling; CACHEUS mixes eviction experts \cite{liu2020parrot,song2020lrb,hu2022raven,shah2022mockingjay,song2023halp,zhou2025threelcache,rodriguez2021cacheus}. LRB, 3L-Cache, CACHEUS, and HALP are compared directly in Section~\ref{subsec:major1_comparison}. HALP is the closest operational neighbour: it also scores residents and evicts a least-preferred candidate, but from a pairwise preference signal over realized re-access. We instead label each candidate with a counterfactual finite-horizon miss count under a fixed continuation rule. Proxies in this literature (oracle actions, reuse distance, next arrival, pairwise order) still require translation into an eviction. Structural alignment does not imply informativeness; we use decision-focused/predict-then-optimize language only as a conceptual link, including the observation that multiple optima are a form of degeneracy \cite{elmachtoub2022smart_predict_optimize,wilder2019decision_focused_learning,shah2022lodl,elbalghiti2022generalization}.
 
 MUSTACHE forecasts pages over a horizon; we supervise eviction cost instead \cite{tolomei2022mustache}. MAT, GL-Cache, LAH/S4-FIFO, and Merlin reduce hot-path inference; S3-FIFO and SIEVE show that simple queues can be competitive \cite{yang2023mat,yang2023glcache,xia2026lah,li2026merlin,yang2023s3fifo,zhang2024sieve}. Our comparison includes SIEVE and FIFO-Reinsertion as lightweight anchors.
 
@@ -106,14 +106,34 @@ An optional early-return guard that can temporarily delegate to a conservative b
 \subsection{Algorithmic Workflow}
 \label{subsec:workflow_implementation}
 
-Figure~\ref{fig:method_overview} summarizes the pipeline. Traces are converted to a common format. At each full-cache miss, one supervised example per candidate is built from $x(q,t)$ and $L_H(q,t)$. A scorer is fit; online, all $k$ residents are scored and the $\arg\min$ of \eqref{eq:eviction_rule} is evicted. Learned policies and baselines share the same simulator.
+Figure~\ref{fig:method_overview} summarizes the evaluated pipeline. Traces are converted to a common format. At each full-cache miss, one supervised example per candidate is built from $x(q,t)$ and $L_H(q,t)$. A scorer is fit; online, all $k$ residents are scored and the $\arg\min$ of \eqref{eq:eviction_rule} is evicted. Learned policies and baselines share the same simulator.
 
-\begin{figure*}[!tbp]
+\begin{figure}[!tbp]
 \centering
-\includegraphics[width=0.96\textwidth]{figures/method_overview.png}
-\caption{Eviction-value workflow: offline candidate-level labels, supervised scoring, and online $\arg\min$ eviction. An optional fallback layer is shown only for conceptual completeness; it is not evaluated here.}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners=1.5pt, align=center, font=\footnotesize,
+    minimum width=5.15cm, minimum height=0.58cm, inner sep=2.5pt, fill=gray!8},
+  arr/.style={-{Latex[length=1.6mm]}, thick},
+  coltitle/.style={font=\small\bfseries}
+]
+\node[coltitle] (ta) at (0,4.15) {(a) Offline training};
+\node[box] (a1) at (0,0.00) {Trace replay};
+\node[box] (a2) at (0,0.80) {Full-cache miss labeling};
+\node[box] (a3) at (0,1.60) {Candidate feature extraction};
+\node[box] (a4) at (0,2.40) {Counterfactual $L_H$ construction};
+\node[box] (a5) at (0,3.20) {Fit eviction-value model};
+\foreach \a/\b in {a1/a2,a2/a3,a3/a4,a4/a5} {\draw[arr] (\a) -- (\b);}
+\node[coltitle] (tb) at (6.0,4.15) {(b) Online deployment};
+\node[box] (b1) at (6.0,0.00) {Request arrives};
+\node[box] (b2) at (6.0,0.80) {Hit: update state};
+\node[box] (b3) at (6.0,1.60) {Miss, not full: insert};
+\node[box] (b4) at (6.0,2.40) {Miss, full: score candidates};
+\node[box] (b5) at (6.0,3.20) {Evict $\arg\min$ and update};
+\foreach \a/\b in {b1/b2,b2/b3,b3/b4,b4/b5} {\draw[arr] (\a) -- (\b);}
+\end{tikzpicture}
+\caption{Evaluated eviction-value workflow: offline candidate-level labels and online $\arg\min$ eviction. No fallback is used in any reported result.}
 \label{fig:method_overview}
-\end{figure*}
+\end{figure}
 
 \section{Experiments and Discussion}
 \label{sec:experiments}
@@ -186,7 +206,7 @@ EV (\texttt{evict\_value\_v1}) & Candidate-level finite-horizon eviction-value p
 \subsection{Offline Ablation and Model Selection}
 \label{subsec:main_results}
 
-Table~\ref{tab:evict-value-ablation} selects the scorer. Tree models beat ridge on regret and Top-1 at every horizon. $H=4$ is strongest; $H=8$ and $H=16$ degrade, including validation MAE/RMSE and regret-vs-oracle, in every validation family (BrightKite, CloudPhysics, MetaCDN, Twemcache, Wikimedia). A short horizon ties the label to the scored eviction; longer horizons mix in later continuation decisions. This is the empirical $H=4$ justification, not a claim of online superiority.
+Table~\ref{tab:evict-value-ablation} selects the scorer. Tree models beat ridge on regret and Top-1 at every horizon. $H=4$ is strongest; $H=8$ and $H=16$ degrade, including validation MAE/RMSE and regret-vs-oracle, in every validation family (BrightKite, CloudPhysics, MetaCDN, Twemcache, Wikimedia). A short horizon ties the label to the scored eviction; longer horizons mix in later continuation decisions. This is the empirical $H=4$ justification, not a claim of online superiority, theoretical optimality, or workload-universal horizon choice.
 
 \begin{table}[!htbp]
 \centering
@@ -280,7 +300,7 @@ FIFO-Reinsertion  & 0.6733 & 2 & 16 & 3 & $+4.04\%$ \\
 \end{tabular}
 \end{table}
 
-\texttt{evict\_value\_v1} loses on a majority of cells against every baseline (13--17 losses; relative miss-ratio gap $+1.13\%$ vs.\ 3L-Cache to $+4.12\%$ vs.\ LRU). It offers no matched advantage over LRB or 3L-Cache.
+\texttt{evict\_value\_v1} loses on a majority of cells against every baseline (13--17 losses; relative miss-ratio gap $+1.13\%$ vs.\ 3L-Cache to $+4.12\%$ vs.\ LRU). The closest mean comparison is 3L-Cache; the same negative pattern holds against both learned systems and lightweight queues, so the result is not an artifact of a single unusually strong comparator. It offers no matched advantage over LRB or 3L-Cache.
 
 \subsubsection{Implementation-fidelity caveats}
 
@@ -331,7 +351,7 @@ Next arrival              & 627{,}392 & 0.7469 \\
 \end{tabular}
 \end{table}
 
-Eviction-loss is nominally best by totals and macro mean miss ratio; pairwise is $\approx 0.9\%$ behind on totals but strongest by per-cell rank. Eviction-loss is not materially worse. The matched control does \emph{not} support blaming the eviction-loss training objective. Table~\ref{tab:objective-comparison} remains a valid pipeline ranking, not an isolated objective-causality result. Section~\ref{subsec:mechanistic_diagnosis} examines action-underdetermination.
+Eviction-loss is nominally best by totals and macro mean miss ratio; pairwise is $\approx 0.9\%$ behind on totals but strongest by per-cell rank. Eviction-loss is not materially worse. Tables~\ref{tab:objective-comparison} and~\ref{tab:common-model-v2} are not in conflict: the former ranks full deployed pipelines, the latter isolates the training label. Empirical superiority of eviction-loss is not claimed. The matched control does \emph{not} support blaming that objective for poor deployed performance. Section~\ref{subsec:mechanistic_diagnosis} examines action-underdetermination.
 
 \subsection{Mechanistic Diagnosis of the Eviction-Loss Target}
 \label{subsec:mechanistic_diagnosis}
@@ -432,7 +452,7 @@ The author received no specific funding for this work.
 
 \section*{AI Declaration}
 
-During the preparation of this manuscript, the author used ChatGPT for writing assistance and manuscript refinement, and Perplexity AI for literature exploration and background research. During the implementation stage of the project, the author used Cursor, ChatGPT Codex, and GitHub Copilot for coding assistance, and Gemini for limited recommendations, including assistance with auditing repository artifacts and checking internal consistency between the manuscript and the underlying code and results. All AI-assisted text, code, and analysis were independently verified by the author against the repository's artifacts before inclusion, including dedicated schema-validation, replay-artifact, and negative-result audits documented in the repository; AI assistance was not used to introduce any positive result that is not directly supported by these verified artifacts. The author takes full responsibility for the content of the manuscript, the code, and the reported results.
+The author used ChatGPT for writing assistance, Perplexity AI for literature exploration, and Cursor, ChatGPT Codex, GitHub Copilot, and Gemini for coding or consistency checks. All AI-assisted text, code, and analysis were independently verified by the author against repository artifacts. The author takes full responsibility for the manuscript, code, and reported results.
 
 \section*{Data Availability}
 
