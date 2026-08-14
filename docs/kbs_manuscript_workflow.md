@@ -18,12 +18,12 @@ Current evidence boundary:
 
 - The previous second-revision evidence campaign is complete and curated in
   [../reports/kbs_final_evidence_20260813/](../reports/kbs_final_evidence_20260813/).
-- Two additional acceptance-risk controls are complete and audited, but not
-  yet manuscript-integrated: common-model objective control V2 and the
-  tie-aware exact-target oracle. See
+- Two additional acceptance-risk controls are complete, audited, and
+  integrated into the canonical manuscript and response:
   [../reports/common_model_v2_formal_audit_20260814/AUDIT.md](../reports/common_model_v2_formal_audit_20260814/AUDIT.md)
   and
   [../reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md](../reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md).
+  See [../reports/kbs_final_manuscript_integration_20260814/AUDIT.md](../reports/kbs_final_manuscript_integration_20260814/AUDIT.md).
 
 Historical material:
 

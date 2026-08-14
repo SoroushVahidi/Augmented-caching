@@ -2,7 +2,7 @@
 
 Manuscript: KNOSYS-D-26-07461R1
 Decision: Second revision
-Date: 2026-08-13
+Date: 2026-08-14
 
 This letter responds point-by-point to Reviewer #2's four major comments and
 Reviewer #3's primary unresolved issue on the previous revision. All section,
@@ -31,20 +31,25 @@ performance.
 > our method; (2) directly tested, rather than merely argued for, the premise
 > that our eviction-loss supervision target is better suited to the eviction
 > decision than reuse-distance, next-arrival, or pairwise-preference
-> alternatives — the evidence rejects this premise; (3) replaced a previously
-> speculative causal account of the offline/online performance gap with a
-> mechanistic diagnosis (an exact-target oracle, a target-degeneracy audit,
-> and a learned/exact agreement analysis) and a controlled causal ablation
-> directly testing the continuation-label mismatch hypothesis Reviewer #3
-> identified as untested; (4) replaced our earlier single-run local timing
-> benchmark with a controlled, repeated-measurement wall-clock campaign and
-> added an explicit statement of intended use and current practical
-> limitations; and (5) disclosed and addressed a train/test-overlap issue we
-> found in the model underlying our original end-to-end table while
-> preparing this revision. We report all of this evidence candidly: the
-> revised manuscript's central finding is that the proposed target does not
-> outperform any tested baseline or alternative objective, and we now
-> explain why in detail rather than leaving the gap unexplained.
+> alternatives in the deployed pipeline — that pipeline comparison is
+> negative, but a matched common-model control that changes only the training
+> objective does **not** support blaming the eviction-loss label itself;
+> (3) replaced a previously speculative causal account of the offline/online
+> performance gap with a mechanistic diagnosis (an exact-target oracle, a
+> target-degeneracy audit, a learned/exact agreement analysis, and a
+> tie-aware follow-up) and a controlled causal ablation directly testing the
+> continuation-label mismatch hypothesis Reviewer #3 identified as untested;
+> (4) replaced our earlier single-run local timing benchmark with a
+> controlled, repeated-measurement wall-clock campaign and added an explicit
+> statement of intended use and current practical limitations; and
+> (5) disclosed and addressed a train/test-overlap issue we found in the
+> model underlying our original end-to-end table while preparing this
+> revision. We report all of this evidence candidly: the revised
+> manuscript's central finding is that the deployed method does not
+> outperform any tested baseline, that the eviction-loss training objective
+> is not established as the cause, and that the previously reported
+> deterministic exact-oracle deficit versus LRU is a tie-breaking confound
+> rather than proof that the exact target intrinsically loses to LRU.
 
 ---
 
@@ -137,39 +142,46 @@ future information or another family's data at any point.
 **Response**
 
 We agree this premise was previously asserted rather than tested, and we now
-test it directly. Using the same leave-one-family-out training and matched
-evaluation protocol as the Major Comment 1 response, we trained and evaluated
-three alternative supervision objectives in place of eviction-loss — reuse
-distance, next-arrival time, and pairwise preference — holding the horizon,
-model family, feature set, and every other pipeline component fixed.
+test it at two levels.
 
-The result rejects the premise that eviction-loss is inherently better
-aligned with the eviction decision: eviction-loss produces the most total
-misses of the four objectives (601,569), compared to next-arrival (573,059),
-reuse-distance (571,456), and pairwise preference (565,127, the best of the
-four). Eviction-loss is the single worst objective within every one of the
-seven trace families individually, not merely on average. We report this
-directly and reframe the manuscript's motivation for the target accordingly,
-rather than defending the original premise.
+First, using the same leave-one-family-out training and matched evaluation
+protocol as the Major Comment 1 response, we trained and evaluated three
+alternative supervision objectives in place of eviction-loss — reuse
+distance, next-arrival time, and pairwise preference — in the full
+`evict_value_v1` pipeline. In that pipeline, eviction-loss produces the most
+total misses of the four objectives (601,569), compared to next-arrival
+(573,059), reuse-distance (571,456), and pairwise preference (565,127).
+Eviction-loss is the single worst objective within every one of the seven
+trace families individually. We report this pipeline result directly.
+
+Second, that comparison does not isolate the training objective as the sole
+causal factor. We therefore added a matched common-model control on the same
+21 cells: identical folds, windows, features, architecture, and seed; only
+the objective changes; and the pairwise objective uses a corrected
+orientation. Under this control, eviction-loss is nominally best by total
+misses (571,976), ahead of pairwise (577,339), reuse-distance (615,850), and
+next-arrival (627,392). Eviction-loss is **not** materially worse than the
+alternatives. The matched experiment therefore does **not** support the
+hypothesis that the eviction-loss training objective itself explains the
+poor performance of the full learned policy.
 
 **Changes in the revised manuscript**
 
-- New Section 3.7, "Direct Comparison Against Alternative Supervision
-  Objectives" (p. 25), with Table 8 (Supervision-objective comparison,
-  p. 26).
-- Section 4.2 ("Implications of the Proposed Approach", p. 35) is revised to
-  state the more specific design lesson this finding supports: proximity of
-  a target to the eviction decision is not by itself sufficient for the
-  target to be effective; a finite-horizon target must also be checked for
-  decision-level informativeness and horizon adequacy.
-- Contributions list, item 3 (p. 4), and Abstract (p. 1) state this
-  comparison and its result explicitly.
+- Section 3.7, "Direct Comparison Against Alternative Supervision
+  Objectives", retains Table 8 (full-pipeline comparison) and adds a
+  matched common-model V2 table.
+- Section 4.2 ("Implications of the Proposed Approach") is revised so that
+  the design lesson is decision informativeness and tie resolution, not
+  "the eviction-loss label is uniquely harmful."
+- Contributions list, item 3, and the Abstract state both the pipeline
+  result and the matched-control interpretation explicitly.
 
 **Additional clarification**
 
-We connect this negative comparison to a mechanistic explanation rather than
-leaving it as an isolated ablation result — see the response to Major
-Comment 3 below and Section 3.8 of the manuscript.
+We connect this distinction to the mechanistic diagnosis in Section 3.8:
+the stronger supported explanation is that the horizon-4 target is highly
+action-underdetermined, not that the eviction-loss training objective is
+the culprit.
 
 ---
 
@@ -187,24 +199,35 @@ Comment 3 below and Section 3.8 of the manuscript.
 We agree the previous revision's account — a single, unconfirmed hypothesis
 attributing the online gap to "compounding distribution shift" from the
 LRU-continuation labeling assumption — was speculative, and we replace it
-with controlled evidence. We ran three complementary diagnostics, all under
-the matched leave-one-family-out protocol:
+with controlled evidence. We ran complementary diagnostics, all under the
+matched leave-one-family-out protocol:
 
 1. **Is inaccurate prediction the cause?** We compare the learned scorer's
    decisions against an exact solver for the same eviction-loss target. The
    learned scorer agrees with the exact target's optimal candidate set in
    97.53% of decisions, disfavoring gross model-fitting failure.
-2. **Is the target itself useful, even optimized perfectly?** We replay the
-   exact horizon-4 oracle online. It loses to LRU on 18 of 21 cells (0 wins,
-   3 ties), meaning even *perfect* optimization of the eviction-loss target
-   performs worse than LRU. This is the central diagnostic finding: the
-   problem is the target, not the approximation of it.
-3. **Why does the target fail even when optimized exactly?** We audit its
-   decision-level structure: no decision has a unique optimal candidate; in
-   76.4% of decisions every resident candidate is exactly tied for optimal.
-   A companion diagnostic shows the horizon-4 window observes only a small
-   fraction of eventual reuse behavior ($P(T>4\mid\text{resident})=0.9939$),
-   offering a mechanistic explanation for the degeneracy.
+2. **Is the target itself useful, even optimized perfectly?** A
+   *deterministic* exact horizon-4 oracle (minimum candidate identifier
+   among exact minimizers) loses to LRU on 18 of 21 cells (0 wins, 3 ties;
+   $+81{,}750$ total misses). This shows that this specific
+   target-plus-tie-resolution instantiation is a poor online policy. It
+   does **not**, by itself, prove that the exact target intrinsically loses
+   to LRU.
+3. **Is that deficit robust to valid within-minimum tie-breaking?** A
+   tie-aware follow-up on the same 21 cells finds
+   `fraction_tied_decisions = 1.0` on every non-LRU oracle row (mean
+   optimal-set fraction $\approx 0.991$). Choosing the LRU-most exact
+   minimizer never loses to LRU (16 wins / 5 ties / 0 losses; $413$ fewer
+   total misses than LRU). The deterministic deficit is therefore a
+   tie-breaking confound. The strongest supported diagnosis is that the
+   target is highly action-underdetermined, so downstream selection among
+   many exact minimizers matters substantially. We do not claim that tie
+   degeneracy explains every aspect of learned-policy underperformance.
+4. **Why is the target so underdetermined?** Independent degeneracy and
+   reuse-tail diagnostics remain consistent with this picture: no decision
+   has a unique optimal candidate, and the horizon-4 window observes only a
+   small fraction of eventual reuse
+   ($P(T>4\mid\text{resident})=0.9939$).
 
 We then directly test the continuation-mismatch hypothesis with a controlled
 causal ablation, changing exactly one thing between two trained policies
@@ -221,25 +244,25 @@ a clear negative result for this specific corrective intervention.
 
 **Changes in the revised manuscript**
 
-- New Section 3.8, "Mechanistic Diagnosis of the Eviction-Loss Target"
-  (pp. 26–28), covering the oracle, agreement, and degeneracy diagnostics.
-- Section 3.9, "Discussion and Analysis" (pp. 28–31), replaces the previous
-  speculative paragraph with the C0/C1/C2 causal ablation and the DAgger
-  distribution-shift-correction result, and its closing paragraph (p. 30)
-  restates the full causal picture.
-- Section 4.3, "Limitations" (p. 36), item 3, states the bounded scope of
-  this causal account (one horizon, one-step continuation correction,
-  one-step DAgger correction tested) and what remains open.
-- Contributions list, items 4–5 (p. 4), and Abstract (p. 1) state the
-  mechanistic diagnosis and the continuation/DAgger results explicitly.
+- Section 3.8, "Mechanistic Diagnosis of the Eviction-Loss Target", now
+  includes the deterministic oracle, the degeneracy/agreement diagnostics,
+  and the completed tie-aware follow-up (no longer pending).
+- Section 3.9 reports the C0/C1/C2 causal ablation and the DAgger
+  distribution-shift-correction result.
+- Section 4.3, "Limitations", states that these experiments constrain
+  interpretation rather than proving one complete causal mechanism, and
+  that deterministic exact-oracle replay is tie-sensitive.
+- Contributions list, item 4, and the Abstract state the tie-aware
+  reinterpretation explicitly.
 
 **Additional clarification**
 
 We deliberately distinguish "distribution shift as a phenomenon" from "this
 specific corrective intervention as a remedy": the DAgger result shows the
 tested generic shift-reduction method does not help, not that distribution
-shift does not exist. This distinction is stated explicitly in Section 3.9
-(p. 30) to avoid overclaiming in either direction.
+shift does not exist. We likewise distinguish "the deterministic exact
+oracle loses to LRU" from "the exact target intrinsically loses to LRU";
+only the former is supported, and it is explained by tie-breaking.
 
 ---
 
@@ -425,18 +448,19 @@ p. 32) for the controlled 420-run, 5-repetition timing campaign.
 | Concern | Previous status | Current status |
 |---|---|---|
 | R2 Major 1 (LRB/3L-Cache comparison) | Not present | Complete; negative result (§3.6) |
-| R2 Major 2 (objective justification) | Asserted, not tested | Tested; eviction-loss is worst of four (§3.7) |
-| R2 Major 3 (offline/online gap) | Speculative hypothesis | Mechanistically diagnosed (§3.8) and causally tested (§3.9) |
+| R2 Major 2 (objective justification) | Asserted, not tested | Pipeline ablation: eviction-loss worst of four (§3.7, Table 8). Matched common-model V2: objective-causality **not supported** (§3.7, common-model table) |
+| R2 Major 3 (offline/online gap) | Speculative hypothesis | Mechanistically diagnosed (§3.8), including completed tie-aware follow-up; continuation/DAgger tested (§3.9) |
 | R2 Major 4 (practical significance) | Earlier single local run | Controlled 420-run campaign (§3.10) + explicit scope statement (§3.11) |
 | R3 primary issue (continuation causal claim) | Untested | Tested; partially supported, regime-dependent (§3.9) |
 | R3 Issue 2 (HALP differentiation) | Analytical only | Empirical comparison added (§3.6, Table 7) |
 
 No claim in this revision states that `evict_value_v1` outperforms any
-evaluated baseline, that eviction-loss is empirically superior to the
-alternative objectives tested, that continuation-label mismatch fully
-explains the offline/online gap, that the DAgger intervention improves online
+evaluated baseline, that the eviction-loss *training objective itself* is
+established as the cause of poor performance, that the exact H4 target
+intrinsically loses to LRU, that continuation-label mismatch fully explains
+the offline/online gap, that the DAgger intervention improves online
 performance, or that `evict_value_v1` was part of the controlled
-5-repetition timing campaign. The manuscript reports a negative but
-mechanistically explained result throughout, and we believe this directly
-and completely addresses each concern raised by the Associate Editor and
-both reviewers.
+5-repetition timing campaign. The manuscript reports a negative deployed
+result whose leading supported diagnosis is action-underdetermined
+supervision, and we believe this directly addresses each concern raised by
+the Associate Editor and both reviewers.
