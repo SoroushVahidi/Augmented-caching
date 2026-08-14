@@ -21,17 +21,20 @@ That package covers:
   distribution-shift diagnostics;
 - controlled four-policy timing.
 
-## Running controls
+## Acceptance-risk controls
 
-Two additional acceptance-risk controls are currently running:
+Current acceptance-risk control status:
 
-- `kbs_common_model_objective_control_20260813_final`
-- `kbs_tie_aware_exact_oracle_20260813_final`
+- `analysis/common_model_objective_control_v1/` is
+  `SUPERSEDED_AFTER_IMPLEMENTATION_AUDIT`. An implementation audit identified
+  an orientation error in the initial common-model pairwise control; that run
+  was retired before use as manuscript evidence. The corrected V2 control is
+  regression-gated and pending.
+- `kbs_tie_aware_exact_oracle_20260813_final` is still running/pending.
 
-These controls are not integrated into the manuscript, are not part of the
-current primary evidence, and should not be summarized until they finish and
-pass integrity review. Do not inspect or modify their output directories while
-they are active.
+Neither control is integrated into the manuscript or current primary evidence.
+Do not summarize the tie-oracle run until it finishes and passes integrity
+review.
 
 ## Safe current work
 
@@ -43,9 +46,11 @@ they are active.
 
 ## Do not do now
 
-- Do not stop, restart, signal, or relaunch the two running controls.
-- Do not inspect active outputs under `analysis/common_model_objective_control_v1/`
-  or `analysis/tie_aware_exact_target_oracle_v1/`.
+- Do not stop, restart, signal, or relaunch the tie-aware oracle.
+- Do not inspect or modify active outputs under
+  `analysis/tie_aware_exact_target_oracle_v1/`.
+- Do not use `analysis/common_model_objective_control_v1/` as scientific
+  evidence; it is superseded after implementation audit.
 - Do not launch duplicate full campaigns for already validated evidence.
 - Do not run the intentionally stopped 100% learning-curve fraction unless a
   future protocol explicitly reopens that question.

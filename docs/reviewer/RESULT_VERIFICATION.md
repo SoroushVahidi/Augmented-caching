@@ -54,6 +54,7 @@ Regression tests cover the key implementation paths:
 - Baselines: [tests/test_lrb.py](../../tests/test_lrb.py), [tests/test_three_l_cache.py](../../tests/test_three_l_cache.py), [tests/test_cacheus.py](../../tests/test_cacheus.py), [tests/test_halp.py](../../tests/test_halp.py), [tests/test_sieve.py](../../tests/test_sieve.py).
 - Corrected held-out evaluation: [tests/test_run_cross_family_heldout_eval.py](../../tests/test_run_cross_family_heldout_eval.py), [tests/test_evict_value_v1_cross_family_eval.py](../../tests/test_evict_value_v1_cross_family_eval.py).
 - Objective and mechanistic diagnostics: [tests/test_supervision_objective_ablation.py](../../tests/test_supervision_objective_ablation.py), [tests/test_exact_target_oracle_replication.py](../../tests/test_exact_target_oracle_replication.py), [tests/test_strict_preference_horizon_diagnostic.py](../../tests/test_strict_preference_horizon_diagnostic.py), [tests/test_learned_exact_target_agreement.py](../../tests/test_learned_exact_target_agreement.py).
+- Corrected common-model V2 control: [tests/test_common_model_objective_control_v2.py](../../tests/test_common_model_objective_control_v2.py) covers the pairwise orientation correction, score-call caching, feature-only deployment row equivalence, held-out-fold invariants, resume behavior, and reducer cardinality checks.
 - Continuation and distribution-shift runners: [tests/test_continuation_policy_ablation.py](../../tests/test_continuation_policy_ablation.py), [tests/test_continuation_policy_production_runner.py](../../tests/test_continuation_policy_production_runner.py), [tests/test_distribution_shift_ablation.py](../../tests/test_distribution_shift_ablation.py), [tests/test_audit_distribution_shift_completion.py](../../tests/test_audit_distribution_shift_completion.py).
 
 ## Artifact hashes
@@ -113,5 +114,8 @@ Baseline provenance and tests should be read together:
 - CI status is not documented here as a repository-level guarantee.
 - Some script paths remain targeted for portability cleanup in a later query;
   reviewer-facing docs use `$REPO_ROOT` or relative paths.
-- Two acceptance-risk controls are running and are not integrated into the
-  current primary evidence.
+- The initial common-model control V1 is superseded after implementation audit
+  and is not integrated into current primary evidence. The corrected V2 control
+  is regression-gated and pending a full integrity-audited run.
+- The tie-aware exact-oracle control remains running/pending and is not
+  integrated into current primary evidence.

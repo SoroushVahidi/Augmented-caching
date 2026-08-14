@@ -1,0 +1,11 @@
+2026-08-13 21:11:55 EDT -0400
+579066feaf938d30f77618d0ce1ecefd95fc8393
+2752857bd6a6a1a12e6e3fed44340b407f5c8e56
+kbs_common_model_objective_control_20260813_final: 1 windows (created Thu Aug 13 13:41:23 2026)
+kbs_learning_curve_50pct_wiki2018_resume_20260811: 1 windows (created Tue Aug 11 09:30:47 2026) (attached)
+kbs_tie_aware_exact_oracle_20260813_final: 1 windows (created Thu Aug 13 13:41:23 2026)
+shellfish-1: 1 windows (created Mon Aug 10 13:09:31 2026) (attached)
+3724570 3367674 Thu Aug 13 13:41:22 2026    07:30:32  0.0  0.0 Ss+  bash -c cd /home/soroush/Augmented-caching-kbs-second-revision && PYTHONPATH=src python -u scripts/experiments/run_common_model_objective_control.py > logs/common_model_objective_control_20260813_final.log 2>&1
+3724576 3724570 Thu Aug 13 13:41:22 2026    07:30:32  100  0.5 Rl+  python -u scripts/experiments/run_common_model_objective_control.py
+3724578 3367674 Thu Aug 13 13:41:22 2026    07:30:32  0.0  0.0 Ss+  bash -c cd /home/soroush/Augmented-caching-kbs-second-revision && PYTHONPATH=src python -u scripts/experiments/run_tie_aware_exact_target_oracle.py > logs/tie_aware_exact_oracle_20260813_final.log 2>&1
+3724579 3724578 Thu Aug 13 13:41:22 2026    07:30:32  100  1.6 Rl+  python -u scripts/experiments/run_tie_aware_exact_target_oracle.py

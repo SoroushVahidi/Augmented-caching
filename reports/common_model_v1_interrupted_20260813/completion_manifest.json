@@ -1,0 +1,11 @@
+{
+  "completed_units": 1,
+  "expected_units": 21,
+  "source_head": "2752857bd6a6a1a12e6e3fed44340b407f5c8e56",
+  "status": "RUNNING",
+  "units": {
+    "brightkite_32": {
+      "status": "COMPLETE"
+    }
+  }
+}

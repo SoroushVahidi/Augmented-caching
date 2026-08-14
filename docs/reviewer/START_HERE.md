@@ -162,7 +162,12 @@ provenance, not as current primary evidence. Do not use
 claims; it is contaminated by train/test overlap. Use the corrected held-out
 evidence summarized in [reports/kbs_final_evidence_20260813/](../../reports/kbs_final_evidence_20260813/).
 
-Two acceptance-risk controls are currently running and are not yet primary:
+Acceptance-risk controls are not yet primary:
 
-- `kbs_common_model_objective_control_20260813_final`
-- `kbs_tie_aware_exact_oracle_20260813_final`
+- `analysis/common_model_objective_control_v1/` is
+  `SUPERSEDED_AFTER_IMPLEMENTATION_AUDIT`: an implementation audit identified
+  an orientation error in the initial common-model pairwise control; that run
+  was retired before use as manuscript evidence. The corrected V2 control is
+  regression-gated and pending.
+- `kbs_tie_aware_exact_oracle_20260813_final` remains a running/pending
+  control and is not yet manuscript evidence.

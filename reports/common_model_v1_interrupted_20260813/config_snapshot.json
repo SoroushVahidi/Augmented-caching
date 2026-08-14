@@ -1,0 +1,59 @@
+{
+  "architecture": {
+    "epochs": 40,
+    "hidden_units": 8,
+    "l2": 0.0001,
+    "lr": 0.02,
+    "output_bias": false,
+    "type": "shared_two_layer_relu_candidate_scorer"
+  },
+  "atomic_units": true,
+  "capacities": [
+    32,
+    64,
+    128
+  ],
+  "expected_evaluation_rows": 84,
+  "families": [
+    "brightkite",
+    "citibike",
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "held_out_leakage": "forbidden",
+  "history": [
+    0,
+    10000
+  ],
+  "horizon": 4,
+  "objectives": {
+    "objective_eviction_loss": {
+      "direction": "min",
+      "label": "eviction_loss_label"
+    },
+    "objective_next_arrival": {
+      "direction": "max",
+      "label": "next_arrival_label_censored"
+    },
+    "objective_pairwise": {
+      "direction": "max",
+      "label": "next_arrival_label_censored"
+    },
+    "objective_reuse_distance": {
+      "direction": "max",
+      "label": "reuse_distance_label_censored"
+    }
+  },
+  "pair_max_pairs_per_decision": 256,
+  "protocol_id": "common_model_objective_control_v1",
+  "score": [
+    10000,
+    50000
+  ],
+  "seed": 0,
+  "train_decisions_per_family": 80,
+  "validation_decisions": 40
+}
