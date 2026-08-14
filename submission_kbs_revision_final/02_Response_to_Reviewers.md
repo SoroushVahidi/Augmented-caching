@@ -15,11 +15,11 @@ evidence.
 We thank both reviewers for pushing this manuscript toward a substantially
 more rigorous and honest empirical study. In preparing this revision we also
 identified, and disclose directly here and in the manuscript, a train/test
-overlap in the model underlying the manuscript's original end-to-end
-evaluation (Table 4, Section 3.3); the corrected, leakage-free evaluation
-built to address Reviewer #2's Major Comment 1 also resolves this issue and
-is now the paper's primary evidence for `evict_value_v1`'s comparative
-performance.
+overlap in the model underlying an earlier single-split end-to-end
+evaluation; the corrected, leakage-free matched evaluation built to address
+Reviewer #2's Major Comment 1 is now the paper's primary evidence for
+`evict_value_v1`'s comparative performance, including the family-level LRU
+gaps in Table 4.
 
 ---
 
@@ -103,10 +103,10 @@ had underpinned the manuscript's original end-to-end table.
 - Table 2 (Main policy families, p. 7) now lists LRB, 3L-Cache, CACHEUS,
   and HALP as learned baselines, with their evaluation location and
   fidelity noted.
-- Section 3.3 (Offline Ablation, p. 5) retains a compact historical
-  family-level gap table (Table 4, p. 8) from the leaky single-split
-  evaluation, labeled as non-primary, and points to §3.4 as the corrected
-  primary evidence.
+- Section 3.3 (Offline Ablation, p. 5) includes a compact matched-protocol
+  family-level LRU-gap table (Table 4, p. 8) computed from the same
+  leave-one-family-out scored window as §3.4, replacing a superseded
+  leaky single-split breakdown.
 - Contributions list, item 2 (p. 4), and Abstract (p. 1) state the matched
   comparison and its negative result explicitly.
 
@@ -209,7 +209,11 @@ matched leave-one-family-out protocol:
 1. **Is inaccurate prediction the cause?** We compare the learned scorer's
    decisions against an exact solver for the same eviction-loss target. The
    learned scorer agrees with the exact target's optimal candidate set in
-   97.53% of decisions, disfavoring gross model-fitting failure.
+   97.53% of decisions (set-aware agreement). Because that set is extremely
+   large (mean optimal-set fraction $\approx 0.991$), this agreement does
+   **not** by itself prove strong candidate discrimination; it does
+   disfavor gross model-fitting failure (the scorer rarely leaves the
+   target-defined set).
 2. **Is the target itself useful, even optimized perfectly?** A
    *deterministic* exact horizon-4 oracle (minimum candidate identifier
    among exact minimizers) loses to LRU on 18 of 21 cells (0 wins, 3 ties;
@@ -223,15 +227,21 @@ matched leave-one-family-out protocol:
    optimal-set fraction $\approx 0.991$). Choosing the LRU-most exact
    minimizer never loses to LRU (16 wins / 5 ties / 0 losses; $413$ fewer
    total misses than LRU). The deterministic deficit is therefore a
-   tie-breaking confound. The strongest supported diagnosis is that the
-   target is highly action-underdetermined, so downstream selection among
-   many exact minimizers matters substantially. We do not claim that tie
-   degeneracy explains every aspect of learned-policy underperformance.
+   tie-breaking confound. It does **not** establish that the H4 target
+   intrinsically loses to LRU, and LRU-within-minima is not a claim that
+   $H=4$ supervision improves LRU as a learned policy. The strongest
+   supported diagnosis remains that the target is highly
+   action-underdetermined, so downstream selection among many exact
+   minimizers matters substantially. We do not claim that tie degeneracy
+   explains every aspect of learned-policy underperformance.
 4. **Why is the target so underdetermined?** Independent degeneracy and
    reuse-tail diagnostics remain consistent with this picture: no decision
    has a unique optimal candidate, and the horizon-4 window observes only a
    small fraction of eventual reuse
-   ($P(T>4\mid\text{resident})=0.9939$).
+   ($P(T>4\mid\text{resident})=0.9939$). The replay-time mean all-tied
+   fraction ($\approx 0.649$) and the strict-preference all-tied rate
+   ($76.4\%$) are two diagnostics of the same qualitative degeneracy, not
+   interchangeable point estimates.
 
 We then directly test the continuation-mismatch hypothesis with a controlled
 causal ablation, changing exactly one thing between two trained policies

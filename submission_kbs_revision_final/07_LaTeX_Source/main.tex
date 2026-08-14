@@ -91,7 +91,7 @@ is the miss count over the next $H$ requests after evicting $q$ at $t$ and repla
 \subsection{Eviction-Value Prediction Framework}
 \label{subsec:eviction_value_framework}
 
-Each candidate receives a feature vector $x(q,t)\in\mathbb{R}^{d}$ summarizing the request, cache state, and candidate context. Features fall into six groups: request-side context, candidate recency/reuse, predictor--LRU comparison, cache-state summary, predictor/recency disagreement, and recent activity. The repository holds the full specification. The scorer is
+Each candidate receives a feature vector $x(q,t)\in\mathbb{R}^{d}$ summarizing the request, cache state, and candidate context. Features fall into six groups: request-side context, candidate recency/reuse, predictor--LRU comparison, cache-state summary, predictor/recency disagreement, and recent activity. The accompanying code release contains the full feature specification. The scorer is
 \begin{equation}
 \widehat{L}_H(q,t)=f_{\theta}\!\bigl(x(q,t)\bigr),
 \label{eq:predicted_loss}
@@ -101,7 +101,7 @@ and the victim is
 q_t^{*}=\arg\min_{q\in\mathcal{V}_t}\widehat{L}_H(q,t).
 \label{eq:eviction_rule}
 \end{equation}
-An optional early-return guard that can temporarily delegate to a conservative baseline exists in the repository; it is unvalidated and unused in any quantitative claim (Section~\ref{subsec:limitations}).
+An optional early-return guard that can temporarily delegate to a conservative baseline exists in the accompanying code; it is unvalidated and unused in any quantitative claim (Section~\ref{subsec:limitations}).
 
 \subsection{Algorithmic Workflow}
 \label{subsec:workflow_implementation}
@@ -214,11 +214,11 @@ Horizon & Model & Val.\ regret & Test regret & Val.\ Top-1 & Test Top-1 \\
 \end{tabular}
 \end{table}
 
-A pre-correction single-split replay (train/test overlap; not primary evidence) still underperformed LRU, SIEVE, FIFO-Reinsertion, PredMk, T\&D, BO/LRU, and REST at capacities 32/64/128. Table~\ref{tab:family-capacity-gap} gives the workload-specific LRU gap from that historical sweep: Wikimedia is degenerate (full misses); CloudPhysics and MetaKV stay near LRU; the capacity-128 widening is broad (four of six informative families exceed $+10\%$), largest on BrightKite and Citi Bike.
+Table~\ref{tab:family-capacity-gap} reports the leave-one-family-out matched-protocol miss gap versus LRU by family on the primary scored window. Wikimedia is degenerate. CloudPhysics and MetaKV stay near LRU (MetaKV at capacity 128 is a $0.03\%$ improvement). The largest gaps are MetaCDN at capacity 32 and Twemcache at capacity 128; BrightKite and Citi Bike remain worse than LRU at every capacity. A superseded single-split sweep that also included PredMk, T\&D, BO/LRU, and REST is not primary evidence.
 
 \begin{table}[!htbp]
 \centering
-\caption{Historical (leaky) \texttt{evict\_value\_v1} miss gap vs.\ LRU by family. Positive is worse. Not primary evidence.}
+\caption{Matched-protocol \texttt{evict\_value\_v1} miss gap vs.\ LRU by family (leave-one-family-out; 40{,}000 scored requests). Positive is worse.}
 \label{tab:family-capacity-gap}
 \label{subsec:end_to_end_capacities}
 \renewcommand{\arraystretch}{1.15}
@@ -227,12 +227,12 @@ A pre-correction single-split replay (train/test overlap; not primary evidence) 
 \toprule
 Trace family & Cap.\ 32 & Cap.\ 64 & Cap.\ 128 \\
 \midrule
-BrightKite    & $+10.47\%$ & $+10.72\%$ & $+50.91\%$ \\
-Citi Bike     & $+7.90\%$  & $+4.70\%$  & $+45.49\%$ \\
-CloudPhysics  & $+0.72\%$  & $+1.57\%$  & $+3.10\%$ \\
-MetaCDN       & $+22.37\%$ & $+2.73\%$  & $+17.62\%$ \\
-MetaKV        & $+1.70\%$  & $+0.01\%$  & $+0.76\%$ \\
-Twemcache     & $+1.84\%$  & $+3.16\%$  & $+14.06\%$ \\
+BrightKite    & $+8.69\%$  & $+6.37\%$  & $+12.82\%$ \\
+Citi Bike     & $+5.55\%$  & $+2.54\%$  & $+9.45\%$ \\
+CloudPhysics  & $+0.74\%$  & $+1.35\%$  & $+2.84\%$ \\
+MetaCDN       & $+25.85\%$ & $+4.08\%$  & $+5.73\%$ \\
+MetaKV        & $+2.31\%$  & $+0.00\%$  & $-0.03\%$ \\
+Twemcache     & $+3.27\%$  & $+4.51\%$  & $+15.68\%$ \\
 Wikimedia$^\dagger$ & $+0.00\%$  & $+0.00\%$  & $+0.00\%$ \\
 \bottomrule
 \end{tabular}
@@ -240,16 +240,16 @@ Wikimedia$^\dagger$ & $+0.00\%$  & $+0.00\%$  & $+0.00\%$ \\
 \footnotesize $^\dagger$All policies miss every request (working set exceeds capacity). Not informative for ranking.
 \end{table}
 
-The primary comparison is the leakage-free matched evaluation next.
+The aggregate matched comparison against all seven baselines is next.
 
 \subsection{Matched Comparison Against Learned Cache-Replacement Baselines}
 \label{subsec:major1_comparison}
 
-This section is the primary evidence: leave-one-family-out training of \texttt{evict\_value\_v1} and a matched comparison to LRB, 3L-Cache, CACHEUS, HALP, LRU, SIEVE, and FIFO-Reinsertion. It also removes the train/test overlap of the historical model behind Table~\ref{tab:family-capacity-gap}.
+This section is the primary evidence: leave-one-family-out training of \texttt{evict\_value\_v1} and a matched comparison to LRB, 3L-Cache, CACHEUS, HALP, LRU, SIEVE, and FIFO-Reinsertion. Table~\ref{tab:family-capacity-gap} is the family-level view of the same protocol versus LRU.
 
 \subsubsection{Corrected training protocol}
 
-\texttt{evict\_value\_v1} is retrained under leave-one-family-out: for each of seven families, the model is trained on the other six (five train, one validation-only), and the held-out family contributes no rows to training, validation, hyperparameter, feature, horizon, seed, or early-stopping choices. This removes the overlap behind Table~\ref{tab:family-capacity-gap}.
+\texttt{evict\_value\_v1} is retrained under leave-one-family-out: for each of seven families, the model is trained on the other six (five train, one validation-only), and the held-out family contributes no rows to training, validation, hyperparameter, feature, horizon, seed, or early-stopping choices.
 
 \subsubsection{Matched evaluation protocol}
 
@@ -289,7 +289,7 @@ LRB and 3L-Cache are independent reimplementations (3L-Cache uses an untuned def
 \subsection{Direct Comparison Against Alternative Supervision Objectives}
 \label{subsec:objective_comparison}
 
-Section~\ref{subsec:eviction_value_framework} claims eviction-loss is more decision-aligned than reuse distance, next arrival, or pairwise preference. We test that claim rather than argue it.
+Section~\ref{subsec:eviction_value_framework} treats eviction-loss as structurally decision-aligned: the label is a candidate-level miss count, not an indirect proxy. Whether that alignment is empirically preferable to reuse distance, next arrival, or pairwise preference is tested rather than assumed.
 
 Under the same leave-one-family-out protocol, we swap only the candidate-level label. Table~\ref{tab:objective-comparison} is the full pipeline.
 
@@ -338,15 +338,15 @@ Eviction-loss is nominally best by totals and macro mean miss ratio; pairwise is
 
 The matched comparison and pipeline ablation are negative; Table~\ref{tab:common-model-v2} shows the training objective is not the isolated cause. We diagnose the target on the same 21 cells.
 
-\textbf{Is inaccurate prediction the cause?} An exact horizon-4 solver for the same target agrees with the learned scorer on $97.53\%$ of decisions (macro mean set-aware agreement), with mean target regret $0.0247$ and positive-regret fraction $0.0247$. Learned misses ($601{,}569$) are within $6.4\%$ of LRU ($565{,}126$). Gross fitting failure is disfavored.
+\textbf{Is inaccurate prediction the cause?} An exact horizon-4 solver for the same target agrees with the learned scorer on $97.53\%$ of decisions (macro mean \emph{set-aware} agreement): the learned victim usually lies in the exact optimal set. Mean target regret is $0.0247$ and the positive-regret fraction is $0.0247$; learned misses ($601{,}569$) are within $6.4\%$ of LRU ($565{,}126$). Because that set is itself extremely large (below), set-aware agreement is weak evidence of candidate discrimination. It does disfavor \emph{gross} fitting failure---the scorer rarely leaves the set the target defines.
 
 \textbf{Is the target useful if optimized perfectly?} Under deterministic tie-breaking (minimum candidate identifier), the exact oracle has mean miss ratio $0.770090$ vs.\ $0.672769$ for LRU: 0 wins / 3 ties / 18 losses, $+81{,}750$ misses ($646{,}876$ vs.\ $565{,}126$). That instantiation is a poor online policy; it is not a statement about every way of resolving the same optimal sets.
 
-A tie-aware control varies only how exact minimizers are chosen. Every measured non-LRU oracle decision has multiple optima (\texttt{fraction\_tied\_decisions}${}=1.0$ on all $168$ non-LRU rows; mean fraction all-tied $\approx 0.649$; mean optimal-set fraction $\approx 0.991$; Wikimedia fully degenerate). LRU-within-minima never loses to LRU (16/5/0; $-413$ misses; $564{,}713$ vs.\ $565{,}126$). MRU-within-minima matches the deterministic deficit (0/3/18; $+89{,}135$). Uniform random among minimizers (five seeds) usually loses to LRU (7/15/83 over $105$ rows) but usually beats the deterministic oracle (90/15/0). The deterministic deficit is therefore a tie-breaking confound. It does \emph{not} show that the exact H4 target intrinsically loses to LRU. Downstream selection among minimizers can move the result from a large deficit to a small LRU advantage.
+A tie-aware control varies only how exact minimizers are chosen. Every measured non-LRU oracle decision has multiple optima (tied-decision fraction $1.0$ on all $168$ non-LRU rows; mean fraction of all-candidates-tied decisions $\approx 0.649$; mean optimal-set fraction $\approx 0.991$; Wikimedia fully degenerate). Choosing the LRU-most minimizer never loses to LRU (16/5/0; $-413$ misses; $564{,}713$ vs.\ $565{,}126$). Choosing the MRU-most minimizer matches the deterministic deficit (0/3/18; $+89{,}135$). Uniform random among minimizers (five seeds) usually loses to LRU (7/15/83 over $105$ rows) but usually beats the deterministic oracle (90/15/0). The deterministic deficit is therefore a tie-breaking confound. It does \emph{not} show that the exact H4 target intrinsically loses to LRU, nor that $H=4$ supervision improves LRU as a learned policy. It shows that a recency secondary rule among exact minimizers can remove the identifier-tie deficit.
 
-\textbf{Why so underdetermined?} Independently of tie rules: unique-winner fraction $0.0$; multiple-optimum fraction $1.0$; $76.4\%$ of strict-preference decisions are all-tied; mean optimal-set fraction $0.9949$. Across $41{,}615{,}776$ candidate-residency observations at $565{,}126$ decisions, $P(T>4)=0.9939$ overall and $0.9793$ even conditioned on eventual reuse. Most consequences lie outside $H=4$, so the target often cannot distinguish candidates.
+\textbf{Why so underdetermined?} Two diagnostics agree qualitatively and should not be treated as interchangeable point estimates. In the tie-aware replay above, the mean fraction of decisions in which every candidate is tied is $\approx 0.649$ and the mean optimal-set fraction is $\approx 0.991$. An independent strict-preference audit of the same $H=4$ target reports unique-winner fraction $0.0$, multiple-optimum fraction $1.0$, $76.4\%$ all-tied decisions, and mean optimal-set fraction $0.9949$. The numerical gap reflects different instrumentation (online oracle replay vs.\ a strict-preference diagnostic), not a contradiction. Across $41{,}615{,}776$ candidate-residency observations at $565{,}126$ decisions, $P(T>4)=0.9939$ overall and $0.9793$ even conditioned on eventual reuse. Most consequences lie outside $H=4$, so the target often cannot distinguish candidates.
 
-\textbf{Summary.} A learning-curve check at $1$--$50\%$ of candidate examples shows no material target-quality gain (H1 disfavored). Fitting failure is disfavored; the eviction-loss \emph{objective} is not supported as the culprit (Table~\ref{tab:common-model-v2}). The strongest supported diagnosis is action-underdetermined $H=4$ supervision. Tie degeneracy is not claimed to explain every aspect of learned underperformance. Section~\ref{subsec:continuation_ablations} tests a secondary continuation/deployment contributor.
+\textbf{Summary.} A learning-curve check at $1$--$50\%$ of candidate examples shows no material target-quality gain, which disfavors a sample-size explanation. Gross fitting failure is likewise disfavored, with the caveat above that set-aware agreement does not imply discrimination inside a near-full optimal set. The eviction-loss \emph{training objective} is not supported as the culprit (Table~\ref{tab:common-model-v2}). The strongest supported diagnosis is action-underdetermined $H=4$ supervision. Tie degeneracy is not claimed to explain every aspect of learned underperformance. Section~\ref{subsec:continuation_ablations} tests a secondary continuation/deployment contributor.
 
 \subsection{Continuation-Mismatch and Distribution-Shift Ablations}
 \label{subsec:continuation_ablations}
@@ -361,7 +361,7 @@ A one-step DAgger-style mix of on- and off-policy states reduces a generic shift
 \label{subsec:discussion_analysis}
 \label{subsec:implications}
 
-The canonical interpretation is as follows. Alignment of $L_H$ with the eviction action does not imply informativeness or efficiency. Offline, short-horizon nonlinear scorers learn the target (Section~\ref{subsec:main_results}). Online, \texttt{evict\_value\_v1} loses to all seven matched baselines (Section~\ref{subsec:major1_comparison}). In the deployed pipeline eviction-loss is worst of four objectives (Table~\ref{tab:objective-comparison}), but matched Common-Model V2 does not support blaming that training objective (Table~\ref{tab:common-model-v2}). H3 target/tie degeneracy is strongly supported: every measured non-LRU exact decision has multiple optima, and deterministic exact-oracle failure vs.\ LRU is tie-confounded (Section~\ref{subsec:mechanistic_diagnosis}). Exact-target intrinsic inferiority is not supported. Continuation mismatch is a partial, family-dependent contributor; the tested DAgger correction does not help (Section~\ref{subsec:continuation_ablations}). The current implementation is neither miss-competitive nor deployment-efficient.
+The canonical interpretation is as follows. Alignment of $L_H$ with the eviction action does not imply informativeness or efficiency. Offline, short-horizon nonlinear scorers learn the target (Section~\ref{subsec:main_results}). Online, \texttt{evict\_value\_v1} loses to all seven matched baselines (Section~\ref{subsec:major1_comparison}). In the deployed pipeline eviction-loss is worst of four objectives (Table~\ref{tab:objective-comparison}), but matched Common-Model V2 does not support blaming that training objective (Table~\ref{tab:common-model-v2}). Target/tie degeneracy is strongly supported: every measured non-LRU exact decision has multiple optima, and deterministic exact-oracle failure vs.\ LRU is tie-confounded (Section~\ref{subsec:mechanistic_diagnosis}). Exact-target intrinsic inferiority is not supported. Continuation mismatch is a partial, family-dependent contributor; the tested DAgger correction does not help (Section~\ref{subsec:continuation_ablations}). The current implementation is neither miss-competitive nor deployment-efficient.
 
 \subsection{Overhead and Scalability}
 \label{subsec:overhead_scalability}
@@ -410,9 +410,9 @@ Candidate-level $H=4$ eviction-value scoring is learnable offline and unsuccessf
 \item Finite $H=4$ local proxy, not an offline-optimal rule.
 \item Implementation fidelity: 3L-Cache untuned batch size; CACHEUS provenance; HALP low-to-medium reimplementation (Section~\ref{subsec:major1_comparison}).
 \item 21 cells, fixed seeds, descriptive paired results; BrightKite/Citi Bike are event streams; Wikimedia is a pageview proxy; 50k-request windows.
-\item Historical family gaps (Table~\ref{tab:family-capacity-gap}) have train/test overlap; primary evidence is Section~\ref{subsec:major1_comparison}. Capacity 256 unevaluated.
+\item Family-level LRU gaps in Table~\ref{tab:family-capacity-gap} use the same matched protocol as Section~\ref{subsec:major1_comparison}. Capacity 256 is unevaluated.
 \item \texttt{evict\_value\_v1} timing is a single run, not in the 5-repetition campaign.
-\item No validated fallback; repository guard is unused for claims.
+\item No validated fallback; an optional early-return guard exists in the accompanying code and is unused for claims.
 \item Single-author revision; audits do not replace independent replication.
 \item Diagnostics constrain interpretation; they do not isolate every downstream cause of underperformance.
 \end{itemize}
