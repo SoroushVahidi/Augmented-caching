@@ -7,13 +7,16 @@ Date: 2026-08-14
 This letter responds point-by-point to Reviewer #2's four major comments and
 Reviewer #3's primary unresolved issue on the previous revision. All section,
 table, and page references below are to the enclosed revised manuscript PDF
-(44 pages).
+(20 pages). The manuscript was also shortened substantially relative to the
+previous revision (historical appendix, unvalidated fallback formalism, and
+redundant figures/prose removed) while retaining all reviewer-critical
+evidence.
 
 We thank both reviewers for pushing this manuscript toward a substantially
 more rigorous and honest empirical study. In preparing this revision we also
 identified, and disclose directly here and in the manuscript, a train/test
 overlap in the model underlying the manuscript's original end-to-end
-evaluation (Table 5, Section 3.4); the corrected, leakage-free evaluation
+evaluation (Table 4, Section 3.3); the corrected, leakage-free evaluation
 built to address Reviewer #2's Major Comment 1 also resolves this issue and
 is now the paper's primary evidence for `evict_value_v1`'s comparative
 performance.
@@ -90,19 +93,20 @@ had underpinned the manuscript's original end-to-end table.
 
 **Changes in the revised manuscript**
 
-- New Section 3.6, "Matched Comparison Against Learned Cache-Replacement
-  Baselines" (pp. 23–25), with subsections on the corrected training
-  protocol (§3.6.1), the matched evaluation protocol (§3.6.2), results
-  (§3.6.3, Table 7, p. 24), and implementation-fidelity caveats (§3.6.4).
-- Related Work (§1.4, p. 5) now introduces 3L-Cache and CACHEUS with proper
+- New Section 3.4, "Matched Comparison Against Learned Cache-Replacement
+  Baselines" (pp. 6–10), with subsections on the corrected training
+  protocol (§3.4.1), the matched evaluation protocol (§3.4.2), results
+  (§3.4.3, Table 5, p. 9), and implementation-fidelity caveats (§3.4.4).
+- Related Work (§1.3, p. 3) now introduces 3L-Cache and CACHEUS with proper
   citations alongside the existing LRB and HALP citations, and states that
-  all four are directly compared in §3.6.
-- Table 3 (Main policy families, p. 17) now lists LRB, 3L-Cache, CACHEUS,
+  all four are directly compared in §3.4.
+- Table 2 (Main policy families, p. 7) now lists LRB, 3L-Cache, CACHEUS,
   and HALP as learned baselines, with their evaluation location and
   fidelity noted.
-- Section 3.4 (End-to-End Online Replay Evaluation, p. 18) now discloses the
-  train/test-overlap limitation of its underlying model directly and points
-  to §3.6 as the corrected, primary evidence.
+- Section 3.3 (Offline Ablation, p. 5) retains a compact historical
+  family-level gap table (Table 4, p. 8) from the leaky single-split
+  evaluation, labeled as non-primary, and points to §3.4 as the corrected
+  primary evidence.
 - Contributions list, item 2 (p. 4), and Abstract (p. 1) state the matched
   comparison and its negative result explicitly.
 
@@ -167,10 +171,10 @@ poor performance of the full learned policy.
 
 **Changes in the revised manuscript**
 
-- Section 3.7, "Direct Comparison Against Alternative Supervision
-  Objectives", retains Table 8 (full-pipeline comparison) and adds a
-  matched common-model V2 table.
-- Section 4.2 ("Implications of the Proposed Approach") is revised so that
+- Section 3.5, "Direct Comparison Against Alternative Supervision
+  Objectives" (p. 10), retains Table 6 (full-pipeline comparison) and adds
+  Table 7 (matched common-model V2).
+- Section 3.8 ("Discussion and Synthesis", p. 12) is revised so that
   the design lesson is decision informativeness and tie resolution, not
   "the eviction-loss label is uniquely harmful."
 - Contributions list, item 3, and the Abstract state both the pipeline
@@ -178,7 +182,7 @@ poor performance of the full learned policy.
 
 **Additional clarification**
 
-We connect this distinction to the mechanistic diagnosis in Section 3.8:
+We connect this distinction to the mechanistic diagnosis in Section 3.6:
 the stronger supported explanation is that the horizon-4 target is highly
 action-underdetermined, not that the eviction-loss training objective is
 the culprit.
@@ -244,12 +248,12 @@ a clear negative result for this specific corrective intervention.
 
 **Changes in the revised manuscript**
 
-- Section 3.8, "Mechanistic Diagnosis of the Eviction-Loss Target", now
+- Section 3.6, "Mechanistic Diagnosis of the Eviction-Loss Target" (p. 11),
   includes the deterministic oracle, the degeneracy/agreement diagnostics,
   and the completed tie-aware follow-up (no longer pending).
-- Section 3.9 reports the C0/C1/C2 causal ablation and the DAgger
+- Section 3.7 (p. 12) reports the C0/C1/C2 causal ablation and the DAgger
   distribution-shift-correction result.
-- Section 4.3, "Limitations", states that these experiments constrain
+- Section 4.2, "Limitations" (p. 14), states that these experiments constrain
   interpretation rather than proving one complete causal mechanism, and
   that deterministic exact-oracle replay is tie-sensitive.
 - Contributions list, item 4, and the Abstract state the tie-aware
@@ -305,15 +309,15 @@ change.
 
 **Changes in the revised manuscript**
 
-- Section 3.10, "Overhead and Scalability" (pp. 31–33), replaces the earlier
-  single-run local benchmark with the controlled 420-run campaign (Table 9,
-  p. 32) and the separately reported `evict_value_v1` single-run figure.
-- New Section 3.11, "Practical Significance" (p. 33), directly states the
+- Section 3.9, "Overhead and Scalability" (pp. 12–13), replaces the earlier
+  single-run local benchmark with the controlled 420-run campaign (Table 8,
+  p. 13) and the separately reported `evict_value_v1` single-run figure.
+- New Section 3.10, "Practical Significance" (p. 13), directly states the
   absence of a currently justified deployment scenario and the narrower
   research-tool framing.
-- Contributions list, item 6 (p. 4), and Abstract (p. 1) state the timing
+- Contributions list, item 5 (p. 2), and Abstract (p. 1) state the timing
   result and the reframed contribution explicitly.
-- Section 4.3, "Limitations" (p. 36), item 6, records that
+- Section 4.2, "Limitations" (p. 14), records that
   `evict_value_v1`'s timing is a single measurement, not part of the
   controlled 5-repetition campaign, and should not be treated as directly
   statistically comparable to it.
@@ -379,13 +383,13 @@ positive support.
 
 **Changes in the revised manuscript**
 
-- Section 3.9, "Discussion and Analysis" (pp. 28–30), presents the full C0/
+- Section 3.7 (p. 12) presents the full C0/
   C1/C2 causal ablation and the DAgger distribution-shift result, replacing
   the previous single unconfirmed hypothesis.
-- Section 4.3, "Limitations" (p. 36), item 3, states the causal account's
+- Section 4.2, "Limitations" (p. 14), states the causal account's
   bounded scope (single horizon, one-step continuation correction, one-step
   DAgger correction) and flags multi-round correction as future work
-  (Section 4.4, p. 38).
+  (Section 4.3, p. 14).
 - Contributions list, item 5 (p. 4), and Abstract (p. 1) state the partial,
   regime-dependent finding explicitly, avoiding the word "explains" in favor
   of "partial, family-dependent secondary contributor."
@@ -409,23 +413,23 @@ concern.
 
 **Response**
 
-We agree and have added an empirical HALP comparison. Section 3.6 (Table 7,
-p. 24) reports `evict_value_v1` against HALP under the matched
+We agree and have added an empirical HALP comparison. Section 3.4 (Table 5,
+p. 9) reports `evict_value_v1` against HALP under the matched
 leave-one-family-out protocol: `evict_value_v1` loses on 17 of 21 cells (1
 win, 3 ties), a $+3.59\%$ relative miss-ratio disadvantage. Because no
 official public HALP implementation exists, our comparison uses an
 independent reimplementation, which we disclose as a lower-fidelity
-supporting comparison (Section 3.6.4, p. 25) rather than an official
+supporting comparison (Section 3.4.4, p. 10) rather than an official
 empirical baseline; this is consistent with the reviewer's request for
 differentiation from HALP specifically, rather than a claim of an official
 reproduction.
 
 **Changes in the revised manuscript**
 
-- Table 7 (p. 24) includes HALP as an empirical row.
-- Section 3.6.4 (p. 25) and Section 4.3 (p. 36), item 6, disclose the
+- Table 5 (p. 9) includes HALP as an empirical row.
+- Section 3.4.4 (p. 10) and Section 4.2 (p. 14) disclose the
   reimplementation-fidelity caveat.
-- Related Work (§1.4, p. 5) retains the analytical differentiation from HALP
+- Related Work (§1.3, p. 3) retains the analytical differentiation from HALP
   and now also points to the empirical result.
 
 ---
@@ -438,8 +442,8 @@ reproduction.
 
 **Response**
 
-Addressed in full above under Major Comment 4; see Section 3.10 (Table 9,
-p. 32) for the controlled 420-run, 5-repetition timing campaign.
+Addressed in full above under Major Comment 4; see Section 3.9 (Table 8,
+p. 13) for the controlled 420-run, 5-repetition timing campaign.
 
 ---
 
@@ -447,12 +451,12 @@ p. 32) for the controlled 420-run, 5-repetition timing campaign.
 
 | Concern | Previous status | Current status |
 |---|---|---|
-| R2 Major 1 (LRB/3L-Cache comparison) | Not present | Complete; negative result (§3.6) |
-| R2 Major 2 (objective justification) | Asserted, not tested | Pipeline ablation: eviction-loss worst of four (§3.7, Table 8). Matched common-model V2: objective-causality **not supported** (§3.7, common-model table) |
-| R2 Major 3 (offline/online gap) | Speculative hypothesis | Mechanistically diagnosed (§3.8), including completed tie-aware follow-up; continuation/DAgger tested (§3.9) |
-| R2 Major 4 (practical significance) | Earlier single local run | Controlled 420-run campaign (§3.10) + explicit scope statement (§3.11) |
-| R3 primary issue (continuation causal claim) | Untested | Tested; partially supported, regime-dependent (§3.9) |
-| R3 Issue 2 (HALP differentiation) | Analytical only | Empirical comparison added (§3.6, Table 7) |
+| R2 Major 1 (LRB/3L-Cache comparison) | Not present | Complete; negative result (§3.4, Table 5) |
+| R2 Major 2 (objective justification) | Asserted, not tested | Pipeline ablation: eviction-loss worst of four (§3.5, Table 6). Matched common-model V2: objective-causality **not supported** (§3.5, Table 7) |
+| R2 Major 3 (offline/online gap) | Speculative hypothesis | Mechanistically diagnosed (§3.6), including completed tie-aware follow-up; continuation/DAgger tested (§3.7) |
+| R2 Major 4 (practical significance) | Earlier single local run | Controlled 420-run campaign (§3.9, Table 8) + explicit scope statement (§3.10) |
+| R3 primary issue (continuation causal claim) | Untested | Tested; partially supported, regime-dependent (§3.7) |
+| R3 Issue 2 (HALP differentiation) | Analytical only | Empirical comparison added (§3.4, Table 5) |
 
 No claim in this revision states that `evict_value_v1` outperforms any
 evaluated baseline, that the eviction-loss *training objective itself* is
