@@ -127,7 +127,7 @@ constraints remain those of the original providers. See
 [docs/datasets_wulver_trace_acquisition.md](docs/datasets_wulver_trace_acquisition.md),
 and [reports/kbs_verified_literature_20260813.md](reports/kbs_verified_literature_20260813.md).
 
-## Primary, Supporting, Historical, Running
+## Primary, Supporting, Historical, Audited
 
 - **PRIMARY**: corrected matched evaluation and curated second-revision
   evidence in [reports/kbs_final_evidence_20260813/](reports/kbs_final_evidence_20260813/).
@@ -137,10 +137,12 @@ and [reports/kbs_verified_literature_20260813.md](reports/kbs_verified_literatur
   retained for provenance. In particular,
   `analysis/reviewer_fairness/policy_comparison_evict_value_v1.csv` is
   contaminated/historical and must not be used as primary evidence.
-- **RUNNING**: two acceptance-risk controls are currently in progress and are
-  not part of the primary evidence or manuscript conclusions:
-  `kbs_common_model_objective_control_20260813_final` and
-  `kbs_tie_aware_exact_oracle_20260813_final`.
+- **AUDITED_NOT_YET_MANUSCRIPT**: two acceptance-risk controls are
+  scientifically complete and audited, but are not yet integrated into the
+  manuscript: common-model objective control V2
+  ([reports/common_model_v2_formal_audit_20260814/AUDIT.md](reports/common_model_v2_formal_audit_20260814/AUDIT.md))
+  and the tie-aware exact-target oracle
+  ([reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md](reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md)).
 
 ## Setup And Checks
 

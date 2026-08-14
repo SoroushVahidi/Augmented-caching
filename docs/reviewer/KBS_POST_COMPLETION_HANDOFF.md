@@ -1,15 +1,11 @@
 # KBS Second-Revision Post-Completion Handoff
 
-Status decision: the previous second-revision campaign is complete; two
-additional acceptance-risk controls are currently running and are not yet
-primary evidence.
+Status decision: the previous second-revision campaign is complete; the two
+additional acceptance-risk controls are now also complete and audited, but
+are not yet integrated into the manuscript.
 
-Snapshot date: 2026-08-13 (updated from 2026-08-12: both previously-active
-campaigns below have completed and passed formal post-completion integrity
-audit; moved to "Final-validated campaigns"). This document distinguishes
-durable campaign status from live progress. Counts for active campaigns are
-snapshots only; their manifests and logs are authoritative for later
-progress checks. Partial outputs are not citable scientific evidence.
+Snapshot date: 2026-08-14. Counts below are post-audit. Do not rerun these
+campaigns.
 
 No prior second-revision campaign should be relaunched unless a completed
 campaign fails integrity validation or the reviewer/editor explicitly requests
@@ -24,9 +20,14 @@ additional evidence.
 | Learned/exact agreement and regret | `analysis/learned_exact_target_agreement_v1/` | 21/21 units, 21/21 summaries | Set-aware agreement ≈0.975301; positive regret ≈0.024699; learned misses 601,569 vs LRU 565,126 |
 | C0/C1/C2 continuation-policy causal ablation | `analysis/continuation_policy_causal_ablation_production_v1/` | 21/21 units, 63/63 policy rows, 21/21 label-agreement rows, 21/21 training-summary rows | C2 improves over C1 in 13/21 cells (macro delta ≈−0.0102), worsens 5/21 (largest: `brightkite` cap32, +0.2433), ties 3/21 (degenerate Wiki2018); H5 `PARTIALLY_SUPPORTED` |
 | Distribution-shift completion | `analysis/distribution_shift_ablation_v1/` | 7/7 folds, 42/42 primary rows, 42/42 state-shift rows, 21/21 trajectory rows | DAgger worsens misses in 16/21 cells (macro delta ≈+0.0094) despite improving the state-shift index in 16/21; H6 `DISFAVORED` as a shift-reduction-improves-performance story |
+| Common-model objective control V2 | `analysis/common_model_objective_control_wulver_v2/` | 21/21 units, 84/84 rows, integrity PASS | eviction_loss 571,976 < pairwise 577,339 < reuse 615,850 < next_arrival 627,392; eviction-loss is not materially worse; matched control does not support objective-causality |
+| Tie-aware exact-target oracle v1 | `analysis/tie_aware_exact_target_oracle_v1/` | 21/21 units, 189/189 rows, integrity PASS after CSV recovery | CURRENT_DETERMINISTIC vs LRU 0/3/18; LRU_WITHIN_MINIMA 16/5/0; fraction_tied_decisions=1.0 on all 168 tie-aware rows; deterministic oracle-vs-LRU is tie-confounded |
 
-These campaigns must not be rerun. Their generated outputs remain local and
-ignored; the runners, configs, tests, and this handoff are durable source.
+These campaigns must not be rerun. Compact tracked evidence for C0/C1/C2 and
+distribution-shift remains in `reports/kbs_final_evidence_20260813/`. Common V2
+and the tie-aware oracle are tracked under
+`analysis/common_model_objective_control_wulver_v2/` and
+`analysis/tie_aware_exact_target_oracle_v1/` with formal audits in `reports/`.
 Compact tracked evidence for the last two: `reports/kbs_final_evidence_20260813/`.
 Both completed naturally (tmux sessions
 `kbs_continuation_c0_c1_c2_production_resume2_retry_20260812` and
@@ -38,14 +39,9 @@ passed a formal, read-only post-completion integrity audit on 2026-08-13
 
 ## Active campaigns
 
-Two additional acceptance-risk controls are active as of 2026-08-13:
-
-- `kbs_common_model_objective_control_20260813_final`
-- `kbs_tie_aware_exact_oracle_20260813_final`
-
-They are not part of the primary evidence, are not integrated into the
-manuscript, and should not be summarized until they complete and pass integrity
-review.
+None. The 2026-08-13/14 acceptance-risk controls have completed and are listed
+under Final-validated campaigns. Next authorized work is manuscript/rebuttal
+integration, not new compute.
 
 ## Recorded launch commands
 

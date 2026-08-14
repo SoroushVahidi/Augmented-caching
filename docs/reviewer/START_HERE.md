@@ -148,7 +148,7 @@ Detailed commands, inputs, outputs, approximate cost, and availability are in
 
 ```bash
 PYTHONPATH=src pytest tests/test_sieve.py tests/test_lrb.py tests/test_three_l_cache.py tests/test_halp.py tests/test_cacheus.py -q
-PYTHONPATH=src pytest tests/test_exact_target_oracle_replication.py tests/test_continuation_policy_ablation.py -q
+PYTHONPATH=src pytest tests/test_exact_target_oracle_replication.py tests/test_continuation_policy_ablation.py tests/test_common_model_objective_control_v2.py tests/test_tie_aware_exact_target_oracle.py -q
 git diff --check
 ```
 
@@ -162,12 +162,17 @@ provenance, not as current primary evidence. Do not use
 claims; it is contaminated by train/test overlap. Use the corrected held-out
 evidence summarized in [reports/kbs_final_evidence_20260813/](../../reports/kbs_final_evidence_20260813/).
 
-Acceptance-risk controls are not yet primary:
+Acceptance-risk controls (audited, not yet manuscript-integrated):
 
-- `analysis/common_model_objective_control_v1/` is
-  `SUPERSEDED_AFTER_IMPLEMENTATION_AUDIT`: an implementation audit identified
-  an orientation error in the initial common-model pairwise control; that run
-  was retired before use as manuscript evidence. The corrected V2 control is
-  regression-gated and pending.
-- `kbs_tie_aware_exact_oracle_20260813_final` remains a running/pending
-  control and is not yet manuscript evidence.
+- Common-model objective control V2 is `COMPLETE_AUDITED`: 21/21 units, 84/84
+  rows, integrity `PASS`. Eviction-loss is nominally best by total misses and
+  is not materially worse than alternatives; the matched control does not
+  support blaming the eviction-loss training objective. See
+  [common_model_v2_formal_audit_20260814/AUDIT.md](../../reports/common_model_v2_formal_audit_20260814/AUDIT.md).
+  V1 remains `SUPERSEDED_AFTER_IMPLEMENTATION_AUDIT`.
+- Tie-aware exact-target oracle v1 is `COMPLETE_AUDITED` after campaign-CSV
+  recovery: 21/21 units, 189/189 rows, integrity `PASS`.
+  `CURRENT_DETERMINISTIC` loses to LRU 18/21; `LRU_WITHIN_MINIMA` never loses
+  to LRU. The deterministic exact-oracle-versus-LRU result is tie-confounded.
+  See
+  [tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md](../../reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md).

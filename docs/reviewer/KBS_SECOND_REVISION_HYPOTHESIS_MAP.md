@@ -73,6 +73,23 @@ exact-target, strict-preference, and learned/exact campaigns passing their
 - Experiment state: 21-cell learned/exact agreement diagnostic
   `FINAL_VALIDATED`; do not rerun.
 
+## Common-model training-objective hypothesis
+
+- Statement: the eviction-loss *training objective* itself is responsible
+  for poor learned-policy performance, relative to alternative finite-horizon
+  objectives, under a matched model/fold/feature protocol.
+- Current evidence: common-model objective control V2 (21 cells × 4
+  objectives, 84/84 rows, integrity PASS). Total misses:
+  eviction_loss 571,976; pairwise 577,339; reuse_distance 615,850;
+  next_arrival 627,392. Eviction-loss is nominally best by aggregate misses
+  and is not materially worse than alternatives. Valid V2 pairwise is second
+  by totals but best by per-cell rank. V1 pairwise is invalid and superseded.
+- Status: `NOT_SUPPORTED` as an objective-causality claim in this matched
+  control. The full `evict_value_v1` pipeline deficit is not attributable to
+  the eviction-loss training objective per se.
+- Experiment state: `FINAL_VALIDATED`. Formal audit:
+  `reports/common_model_v2_formal_audit_20260814/AUDIT.md`. Do not rerun.
+
 ## H3 -- target degeneracy / low resolution at H=4
 
 - Statement: the finite-horizon `H=4` eviction-loss target carries very
@@ -84,8 +101,9 @@ exact-target, strict-preference, and learned/exact campaigns passing their
   `mean_optimal_set_fraction=0.9932` (99.3% of 64 candidates tie for
   optimal), median distinct-target-value count `1`, target entropy mean
   `0.048` bits.
-- Status: `STRONGLY_SUPPORTED` by the validated 21-cell exact-target and
-  strict-preference diagnostics.
+- Status: `STRONGLY_SUPPORTED` by the validated 21-cell exact-target,
+  strict-preference, and tie-aware oracle diagnostics. The tie-aware control
+  finds `fraction_tied_decisions = 1.0` on all 168 non-LRU rows.
 - Decisive next experiment: none required for this revision; broader target
   formulations remain future work.
 - Stopping rule: would be disfavored as a general phenomenon if a majority of
@@ -94,8 +112,9 @@ exact-target, strict-preference, and learned/exact campaigns passing their
 - Reviewer relevance: MC1, R3-Issue4.
 - Owner of next work: LOCAL.
 - Experiment state: exact-target replication and strict-preference/horizon
-  diagnostic `FINAL_VALIDATED`; do not rerun. The prior `50%` learning-curve
-  campaign is also complete under its stopping rule.
+  diagnostic `FINAL_VALIDATED`; tie-aware exact-target oracle v1
+  `FINAL_VALIDATED` after campaign-CSV recovery. Do not rerun. The prior
+  `50%` learning-curve campaign is also complete under its stopping rule.
 
 ## H4 -- horizon truncation / temporal credit assignment
 
@@ -111,9 +130,17 @@ exact-target, strict-preference, and learned/exact campaigns passing their
   and three capacities. At H=4,
   `P(T>4 | resident)=0.9938544459677984`; even after conditioning on
   eventual reuse, `P(T>4 | resident, eventually reused)=0.9793302186526528`.
-  The never-reused fraction is `0.7026792916224847`.
-- Status: `SUPPORTED_AS_OBSERVABILITY_LIMITATION`. This is not a causal
-  excess-miss result.
+  The never-reused fraction is `0.7026792916224847`. The tie-aware exact
+  oracle shows that the older deterministic exact-oracle-versus-LRU result
+  (0 wins / 3 ties / 18 losses) is reproduced by `CURRENT_DETERMINISTIC`
+  but is **not robust** to LRU-within-minima tie-breaking (16 wins / 5 ties
+  / 0 losses vs LRU). The claim that the exact H4 target intrinsically
+  loses to LRU is therefore **not supported**; that comparison was
+  confounded with the deterministic deployment rule.
+- Status: `SUPPORTED_AS_OBSERVABILITY_LIMITATION` for unseen reuse beyond H.
+  The additional claim that exact optimization of the H4 target is
+  intrinsically worse than LRU is `NOT_SUPPORTED` after the tie-aware
+  control.
 - Decisive next experiment: none required for this revision; H11 causal
   attribution remains optional future work.
 - Stopping rule: stop treating horizon length alone as sufficient if
@@ -123,7 +150,8 @@ exact-target, strict-preference, and learned/exact campaigns passing their
 - Owner of next work: LOCAL first (cheap, existing tooling); WULVER for
   full-scale confirmation.
 - Experiment state: strict-preference/horizon diagnostic `FINAL_VALIDATED`;
-  reuse-tail diagnostic `LOCAL_COMPLETE`.
+  reuse-tail diagnostic `LOCAL_COMPLETE`; tie-aware exact-target oracle v1
+  `FINAL_VALIDATED` after campaign-CSV recovery.
 
 ## H5 -- continuation-policy mismatch
 
@@ -416,16 +444,16 @@ pages** between two accesses to the same page. Below, `T` denotes
   section 7 for full reasoning, and
   `reports/kbs_final_evidence_20260813/mechanistic_hypothesis_summary.md`
   for the 2026-08-13 update): primarily a **target problem** (H3, and by
-  extension H4/H9/H10/H11) -- neither full-scale H5 nor H6 campaign
-  contradicts this, and both independently rediscover the identical
-  Wiki2018 100%-miss degeneracy already central to H3. Secondarily a
-  **combination** weighted toward target/deployment interaction, now more
-  precisely characterized: H5 (continuation-policy mismatch) is
-  `PARTIALLY_SUPPORTED` (real but inconsistent, regime-dependent), H6
-  (generic state-shift reduction improving performance) is `DISFAVORED`
-  (the shift-reduction mechanism works, its link to performance does not
-  hold). Pure **model-fitting failure** (H2) and **argmin instability** (H7)
-  remain the least supported.
+  extension H4/H9/H10/H11). The 2026-08-14 tie-aware oracle strengthens H3
+  (`fraction_tied_decisions = 1.0` on all 168 tie-aware rows) and shows that
+  the deterministic exact-oracle-versus-LRU comparison was tie-confounded,
+  so it cannot establish that the target intrinsically loses to LRU.
+  Neither full-scale H5 nor H6 campaign contradicts the target-problem
+  ranking. Secondarily a **combination** weighted toward target/deployment
+  interaction: H5 is `PARTIALLY_SUPPORTED`, H6 is `DISFAVORED`. Pure
+  **model-fitting failure** (H2) remains disfavored. The matched common-model
+  V2 control does **not** support blaming the eviction-loss training
+  objective itself.
 - Do not launch `100%` for H1 unless a future, separately justified
   protocol change explicitly reopens the sample-size question.
 - `NO_NEW_EXPERIMENT_REQUIRED` for H1-H6 and H9 under current stopping

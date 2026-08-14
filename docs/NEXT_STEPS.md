@@ -23,34 +23,38 @@ That package covers:
 
 ## Acceptance-risk controls
 
-Current acceptance-risk control status:
+Both authorized acceptance-risk controls are scientifically complete and
+audited. They are not yet integrated into the manuscript.
 
-- `analysis/common_model_objective_control_v1/` is
-  `SUPERSEDED_AFTER_IMPLEMENTATION_AUDIT`. An implementation audit identified
-  an orientation error in the initial common-model pairwise control; that run
-  was retired before use as manuscript evidence. The corrected V2 control is
-  regression-gated and pending.
-- `kbs_tie_aware_exact_oracle_20260813_final` is still running/pending.
-
-Neither control is integrated into the manuscript or current primary evidence.
-Do not summarize the tie-oracle run until it finishes and passes integrity
-review.
+- Common-model objective control V2 (`analysis/common_model_objective_control_wulver_v2/`):
+  Wulver job `1176758`, 21/21 units, 84/84 rows, integrity `PASS`.
+  Aggregate misses: eviction_loss 571,976 < pairwise 577,339 < reuse_distance
+  615,850 < next_arrival 627,392. Eviction-loss is not materially worse;
+  the matched control does **not** support blaming the eviction-loss
+  *training objective* for poor policy performance. See
+  [reports/common_model_v2_formal_audit_20260814/AUDIT.md](../reports/common_model_v2_formal_audit_20260814/AUDIT.md).
+  V1 remains `SUPERSEDED_AFTER_IMPLEMENTATION_AUDIT`.
+- Tie-aware exact-target oracle v1 (`analysis/tie_aware_exact_target_oracle_v1/`):
+  21/21 units, 189/189 rows, integrity `PASS` after campaign-CSV recovery.
+  `CURRENT_DETERMINISTIC` loses to LRU 18/21 (ties 3/21).
+  `LRU_WITHIN_MINIMA` never loses to LRU (16 wins, 5 ties). Every tie-aware
+  row has `fraction_tied_decisions = 1.0`. The old deterministic
+  exact-oracle-versus-LRU result is tie-confounded. See
+  [reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md](../reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md).
 
 ## Safe current work
 
+- Manuscript and response-to-reviewers rewrite using the audited controls
+  above. Do not rerun either campaign.
 - Reviewer-facing documentation, link checks, and evidence navigation.
-- Final package consistency audits that read committed summaries and
-  non-running artifacts only.
-- Dataset inventory or release-prep notes that do not upload data and do not
-  alter generated scientific outputs.
 
 ## Do not do now
 
-- Do not stop, restart, signal, or relaunch the tie-aware oracle.
-- Do not inspect or modify active outputs under
-  `analysis/tie_aware_exact_target_oracle_v1/`.
+- Do not rerun Common V2 or any tie-oracle family/capacity unit.
 - Do not use `analysis/common_model_objective_control_v1/` as scientific
   evidence; it is superseded after implementation audit.
+- Do not cite the deterministic exact-oracle-versus-LRU table as proof that
+  the H4 target itself is intrinsically worse than LRU.
 - Do not launch duplicate full campaigns for already validated evidence.
 - Do not run the intentionally stopped 100% learning-curve fraction unless a
   future protocol explicitly reopens that question.

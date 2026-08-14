@@ -35,6 +35,12 @@ rewritten there (see Pass #3 report); this registry uses the vocabulary
 above going forward and gives the mapping inline per row where the two
 differ.
 
+**2026-08-14 note:** acceptance-risk controls are complete and audited:
+common-model objective control V2 (`FINAL_VALIDATED`, 84/84 rows) and
+tie-aware exact-target oracle v1 (`FINAL_VALIDATED` after campaign-CSV
+recovery, 189/189 rows). See entries #14 and #15. Neither is yet
+manuscript-integrated.
+
 **2026-08-13 note (sync):** experiment #3 (corrected held-out `evict_value_v1`
 replay) and #12 (controlled timing) have now been synced from Wulver to this
 workstation and independently re-audited locally (16/16 and 13/13 transfer
@@ -351,6 +357,42 @@ see [`../CROSS_ENVIRONMENT_EVIDENCE_MATRIX.md`](../CROSS_ENVIRONMENT_EVIDENCE_MA
 - Primary/diagnostic/supporting: historical
 - Next action: none; do not conflate with experiment #10
 - Canonical documentation: `docs/reviewer/kbs_negative_results_interpretation.md` 9.7 (this pass's cross-reference note); `docs/internal_current_project_decisions.md` 6-7
+
+### 14. Common-model objective control V2
+- Scientific question: under a matched model, fold, feature, and seed
+  protocol, does training on eviction-loss perform worse than alternative
+  finite-horizon objectives?
+- Reviewer concern: R2 Major 2 (objective causality), MC1
+- Machine: WULVER (Slurm job `1176758`)
+- Protocol: `configs/common_model_objective_control_v2.json`; V1 pairwise
+  orientation error corrected
+- Scope: 21 family-capacity cells × 4 objectives = 84 rows
+- Source entry point: `scripts/experiments/run_common_model_objective_control_v2.py`;
+  reducer `scripts/experiments/reduce_common_model_objective_control_v2.py`
+- Output path: `analysis/common_model_objective_control_wulver_v2/`
+- Status: `FINAL_VALIDATED`
+- Evidence strength: `MECHANISTIC_DIAGNOSTIC_HIGH`
+- Primary/diagnostic/supporting: diagnostic; not yet manuscript-integrated
+- Next action: manuscript/rebuttal synthesis only; do not rerun
+- Canonical documentation: `reports/common_model_v2_formal_audit_20260814/AUDIT.md`
+
+### 15. Tie-aware exact-target oracle v1
+- Scientific question: is the deterministic exact-oracle-versus-LRU result
+  robust to valid within-minimum tie-breaking?
+- Reviewer concern: MC1, R3-Issue4; H3/H4
+- Machine: LOCAL (tmux `kbs_tie_aware_exact_oracle_20260813_final`)
+- Protocol: `configs/tie_aware_exact_target_oracle_v1.json`
+- Scope: 21 family-capacity cells × 9 policy rows = 189 rows
+- Source entry point: `scripts/experiments/run_tie_aware_exact_target_oracle.py`
+  (`--aggregate-only` for campaign reconstruction)
+- Output path: `analysis/tie_aware_exact_target_oracle_v1/`
+- Status: `FINAL_VALIDATED` after campaign-CSV recovery (`CSV_SCHEMA_UNION_BUG`
+  only; zero scientific units rerun)
+- Evidence strength: `MECHANISTIC_DIAGNOSTIC_HIGH`
+- Primary/diagnostic/supporting: diagnostic; not yet manuscript-integrated
+- Next action: manuscript/rebuttal synthesis only; do not rerun units
+- Canonical documentation: `reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md`;
+  recovery provenance `reports/tie_aware_exact_oracle_recovery_20260814/`
 
 ---
 

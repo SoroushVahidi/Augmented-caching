@@ -21,7 +21,9 @@ Statuses used: `ANSWERED`, `ANSWERED_WITH_CAVEATS`,
 `EXPERIMENTALLY_COMPLETE_SYNTHESIS_PENDING`, `PARTIAL`, `RUNNING`,
 `LOCAL_COMPLETE`, `WULVER_PENDING`, `MISSING`, `TEXT_ONLY`.
 
-Last updated: 2026-08-13 (C0/C1/C2 and distribution-shift closure -- see the
+Last updated: 2026-08-14 (common-model V2 and tie-aware exact-oracle
+acceptance-risk controls complete and audited; not yet manuscript-integrated).
+Prior update 2026-08-13 (C0/C1/C2 and distribution-shift closure -- see the
 Reviewer #2 Major 3 / Reviewer #3 section below). Prior update 2026-08-11
 incorporated fresh Wulver-side facts
 relayed by the user from a separately audited Wulver session -- these are
@@ -189,6 +191,13 @@ mechanistic science for this concern is now complete. Compact evidence:
   already-validated target-degeneracy finding (H3) than by either
   continuation-policy mismatch or generic state-distribution shift alone;
   H5/H6 are real but partial, secondary, regime-dependent contributors.
+
+**Update 2026-08-14:** the two acceptance-risk controls are now also
+`FINAL_VALIDATED` and should be used in the forthcoming manuscript rewrite:
+common-model V2 does not support blaming the eviction-loss training
+objective; the tie-aware oracle shows H3 degeneracy on all 21 cells and
+shows that the deterministic exact-oracle-versus-LRU result is
+tie-confounded. Neither control is yet in the manuscript.
 
 **Status (updated 2026-08-13): `SCIENTIFICALLY_COMPLETE_SYNTHESIS_PENDING`.**
 Remaining work for this concern is manuscript/rebuttal synthesis only -- no

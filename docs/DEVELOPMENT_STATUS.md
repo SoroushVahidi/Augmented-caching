@@ -5,7 +5,9 @@ not reviewers and not a manuscript response document. If you are a new
 agent with no conversation history, start here, then follow the checklist
 in section 10.
 
-**Last consolidated:** 2026-08-13, later pass (corrected held-out
+**Last consolidated:** 2026-08-14 (acceptance-risk controls complete and
+audited: common-model V2 and tie-aware exact-oracle; not yet manuscript-
+integrated). Prior consolidation 2026-08-13, later pass (corrected held-out
 `evict_value_v1` treatment and controlled timing campaign synced from Wulver
 under explicit task authorization and independently re-audited locally;
 both former `SYNC_PENDING` blockers now `FINAL_VALIDATED_SYNCED` -- see

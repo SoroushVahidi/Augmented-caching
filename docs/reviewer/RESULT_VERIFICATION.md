@@ -54,7 +54,8 @@ Regression tests cover the key implementation paths:
 - Baselines: [tests/test_lrb.py](../../tests/test_lrb.py), [tests/test_three_l_cache.py](../../tests/test_three_l_cache.py), [tests/test_cacheus.py](../../tests/test_cacheus.py), [tests/test_halp.py](../../tests/test_halp.py), [tests/test_sieve.py](../../tests/test_sieve.py).
 - Corrected held-out evaluation: [tests/test_run_cross_family_heldout_eval.py](../../tests/test_run_cross_family_heldout_eval.py), [tests/test_evict_value_v1_cross_family_eval.py](../../tests/test_evict_value_v1_cross_family_eval.py).
 - Objective and mechanistic diagnostics: [tests/test_supervision_objective_ablation.py](../../tests/test_supervision_objective_ablation.py), [tests/test_exact_target_oracle_replication.py](../../tests/test_exact_target_oracle_replication.py), [tests/test_strict_preference_horizon_diagnostic.py](../../tests/test_strict_preference_horizon_diagnostic.py), [tests/test_learned_exact_target_agreement.py](../../tests/test_learned_exact_target_agreement.py).
-- Corrected common-model V2 control: [tests/test_common_model_objective_control_v2.py](../../tests/test_common_model_objective_control_v2.py) covers the pairwise orientation correction, score-call caching, feature-only deployment row equivalence, held-out-fold invariants, resume behavior, and reducer cardinality checks.
+- Corrected common-model V2 control: [tests/test_common_model_objective_control_v2.py](../../tests/test_common_model_objective_control_v2.py) covers the pairwise orientation correction, score-call caching, feature-only deployment row equivalence, held-out-fold invariants, resume behavior, and reducer cardinality checks. The full Wulver campaign (Slurm job `1176758`, commit `4e9298d`) completed 21/21 with all `ExitCode 0:0`; reducer and integrity audit PASS (84/84 rows, 84/84 unique keys); a byte-verified local archive and an independent aggregate recheck are documented in [common_model_v2_formal_audit_20260814/AUDIT.md](../../reports/common_model_v2_formal_audit_20260814/AUDIT.md).
+- Tie-aware exact-oracle control: [tests/test_tie_aware_exact_target_oracle.py](../../tests/test_tie_aware_exact_target_oracle.py) covers heterogeneous CSV fieldnames and `--aggregate-only` reconstruction. Production completed 21/21 units (189/189 rows); campaign CSV recovery and integrity PASS are documented in [tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md](../../reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md).
 - Continuation and distribution-shift runners: [tests/test_continuation_policy_ablation.py](../../tests/test_continuation_policy_ablation.py), [tests/test_continuation_policy_production_runner.py](../../tests/test_continuation_policy_production_runner.py), [tests/test_distribution_shift_ablation.py](../../tests/test_distribution_shift_ablation.py), [tests/test_audit_distribution_shift_completion.py](../../tests/test_audit_distribution_shift_completion.py).
 
 ## Artifact hashes
@@ -116,6 +117,10 @@ Baseline provenance and tests should be read together:
   reviewer-facing docs use `$REPO_ROOT` or relative paths.
 - The initial common-model control V1 is superseded after implementation audit
   and is not integrated into current primary evidence. The corrected V2 control
-  is regression-gated and pending a full integrity-audited run.
-- The tie-aware exact-oracle control remains running/pending and is not
-  integrated into current primary evidence.
+  has completed (Slurm job `1176758`), passed the reducer and integrity audit,
+  and is byte-verified in the local immutable archive; see
+  [common_model_v2_formal_audit_20260814/AUDIT.md](../../reports/common_model_v2_formal_audit_20260814/AUDIT.md).
+- The tie-aware exact-oracle control has completed and passed integrity review
+  after campaign-CSV recovery; see
+  [tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md](../../reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md).
+  Neither control is yet integrated into the manuscript.

@@ -15,10 +15,15 @@ current reviewer-science work; other local worktrees
 `-kbs-parallel`, `-objective-ablation`) are feature-development or
 historical, not entry points -- see `git worktree list`.
 
-**Last consolidated:** 2026-08-13 -- **both remaining local heavy campaigns
+**Last consolidated:** 2026-08-14 -- both authorized acceptance-risk
+controls (common-model objective control V2; tie-aware exact-target oracle)
+are complete and audited. They are not yet manuscript-integrated. There is
+no local heavy compute running. Compact audits:
+`reports/common_model_v2_formal_audit_20260814/` and
+`reports/tie_aware_exact_oracle_formal_audit_20260814/`. Prior consolidation
+2026-08-13 -- **both remaining local heavy campaigns
 (C0/C1/C2 continuation-policy causal ablation, distribution-shift ablation)
-have completed and passed formal post-completion integrity audit.** There is
-no local heavy compute running. Compact evidence:
+have completed and passed formal post-completion integrity audit.** Compact evidence:
 `reports/kbs_final_evidence_20260813/`. Prior consolidation 2026-08-11
 (local finalization/handoff pass, plus a same-day reconciliation against
 fresh Wulver-side facts relayed by the user -- see

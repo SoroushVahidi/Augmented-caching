@@ -26,16 +26,18 @@ The previous second-revision evidence campaign is complete and validated:
 The current primary evidence remains the curated package in
 [reports/kbs_final_evidence_20260813/](../reports/kbs_final_evidence_20260813/).
 
-## Running acceptance-risk controls
+## Completed acceptance-risk controls
 
-Two additional controls are running and are not yet integrated into the
-manuscript or primary evidence:
+Both authorized acceptance-risk controls are complete and audited; they are
+not yet integrated into the manuscript.
 
-- `kbs_common_model_objective_control_20260813_final`
-- `kbs_tie_aware_exact_oracle_20260813_final`
-
-Do not inspect, summarize, or cite their output until each has completed and
-passed integrity review.
+- `common_model_objective_control_v2` completed on Wulver (Slurm job
+  `1176758`): 21/21 tasks, all `ExitCode 0:0`, reducer + integrity audit PASS;
+  see
+  [reports/common_model_v2_formal_audit_20260814/AUDIT.md](../reports/common_model_v2_formal_audit_20260814/AUDIT.md).
+- Tie-aware exact-target oracle v1 completed locally (21/21 units, 189/189
+  rows, integrity PASS after campaign-CSV recovery); see
+  [reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md](../reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md).
 
 ## Primary ineligible historical result
 

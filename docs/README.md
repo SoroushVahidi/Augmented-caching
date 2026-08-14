@@ -55,7 +55,7 @@ navigation, start with [reviewer/START_HERE.md](reviewer/START_HERE.md).
 
 | Document | Role |
 |---|---|
-| [NEXT_STEPS.md](NEXT_STEPS.md) | Project-management roadmap; current top note distinguishes completed prior campaign from running acceptance-risk controls. |
+| [NEXT_STEPS.md](NEXT_STEPS.md) | Project-management roadmap; current top note records completed and audited acceptance-risk controls awaiting manuscript integration. |
 | [reviewer/KBS_POST_COMPLETION_HANDOFF.md](reviewer/KBS_POST_COMPLETION_HANDOFF.md) | Handoff/status note; not the reviewer entry point. |
 | [reviewer_revision_roadmap.md](reviewer_revision_roadmap.md) | Historical high-level roadmap retained for project context. |
 | [DEVELOPMENT_STATUS.md](DEVELOPMENT_STATUS.md) | Developer/research handoff, not reviewer-facing evidence. |
