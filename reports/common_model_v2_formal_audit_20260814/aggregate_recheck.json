@@ -1,0 +1,91 @@
+{
+  "source": {
+    "summary_csv": "/home/soroush/kbs_wulver_archives/common_model_v2_1176758_20260814/analysis/common_model_objective_control_wulver_v2/summary.csv",
+    "expected_rows": 84,
+    "observed_rows": 84
+  },
+  "aggregate_by_total_misses": {
+    "objective_eviction_loss": 571976,
+    "objective_next_arrival": 627392,
+    "objective_reuse_distance": 615850,
+    "objective_pairwise": 577339
+  },
+  "aggregate_by_macro_mean_miss_ratio": {
+    "objective_eviction_loss": 0.680924,
+    "objective_next_arrival": 0.746895,
+    "objective_reuse_distance": 0.733155,
+    "objective_pairwise": 0.687308
+  },
+  "ordering_by_total_misses": [
+    "objective_eviction_loss",
+    "objective_pairwise",
+    "objective_reuse_distance",
+    "objective_next_arrival"
+  ],
+  "ordering_by_macro_mean_miss_ratio": [
+    "objective_eviction_loss",
+    "objective_pairwise",
+    "objective_reuse_distance",
+    "objective_next_arrival"
+  ],
+  "validation_mean_regret": {
+    "objective_eviction_loss": 0.052381,
+    "objective_next_arrival": 0.055952,
+    "objective_reuse_distance": 0.084524,
+    "objective_pairwise": 0.011905
+  },
+  "per_cell_rank": {
+    "objective_eviction_loss": {
+      "mean_rank": 2.0,
+      "rank1_of_21": 7,
+      "rank4_of_21": 3
+    },
+    "objective_next_arrival": {
+      "mean_rank": 3.4762,
+      "rank1_of_21": 0,
+      "rank4_of_21": 14
+    },
+    "objective_reuse_distance": {
+      "mean_rank": 2.9524,
+      "rank1_of_21": 1,
+      "rank4_of_21": 4
+    },
+    "objective_pairwise": {
+      "mean_rank": 1.5714,
+      "rank1_of_21": 13,
+      "rank4_of_21": 0
+    }
+  },
+  "head_to_head": {
+    "objective_eviction_loss__vs__objective_next_arrival": {
+      "a_wins": 15,
+      "ties": 3,
+      "a_losses": 3
+    },
+    "objective_eviction_loss__vs__objective_reuse_distance": {
+      "a_wins": 13,
+      "ties": 4,
+      "a_losses": 4
+    },
+    "objective_eviction_loss__vs__objective_pairwise": {
+      "a_wins": 4,
+      "ties": 3,
+      "a_losses": 14
+    },
+    "objective_next_arrival__vs__objective_reuse_distance": {
+      "a_wins": 1,
+      "ties": 3,
+      "a_losses": 17
+    },
+    "objective_next_arrival__vs__objective_pairwise": {
+      "a_wins": 1,
+      "ties": 3,
+      "a_losses": 17
+    },
+    "objective_reuse_distance__vs__objective_pairwise": {
+      "a_wins": 1,
+      "ties": 3,
+      "a_losses": 17
+    }
+  }
+}
