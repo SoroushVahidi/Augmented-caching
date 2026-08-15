@@ -1,0 +1,203 @@
+{
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "hostname": "al-khwarizmi",
+  "protocol": {
+    "aggregate_only_when_all_units_complete": true,
+    "atomic_unit_completion": true,
+    "capacities": [
+      32,
+      64,
+      128
+    ],
+    "families": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "historical_regression": {
+      "capacity": 64,
+      "event_count": 19079,
+      "family": "brightkite",
+      "horizon": 4,
+      "mean_optimal_set_fraction": 0.9932132514806856,
+      "ordinary_margin_zero_fraction": 1.0,
+      "tie_event_fraction": 1.0
+    },
+    "history": [
+      0,
+      10000
+    ],
+    "horizons": [
+      4,
+      8,
+      16,
+      32
+    ],
+    "name": "strict_preference_horizon_diagnostic_v1",
+    "optimal_set_semantics": "All candidates attaining the minimum target value; no total order is imposed on ties.",
+    "pairwise_reversal": "not computed; optimal-set and unique-winner comparisons avoid arbitrary tie ordering",
+    "purpose": "Measure H4 target informativeness and H4 versus longer-horizon preference stability.",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "Shared build_candidate_rows_for_full_cache_state eviction_loss_label with LRU continuation.",
+    "trajectory": "exact H=4 eviction-loss oracle trajectory with lexicographic H4 tie break"
+  },
+  "trace_hashes": {
+    "brightkite_cap128": {
+      "capacity": 128,
+      "family": "brightkite",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/brightkite_cap128/summary.json",
+      "trace_sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de"
+    },
+    "brightkite_cap32": {
+      "capacity": 32,
+      "family": "brightkite",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/brightkite_cap32/summary.json",
+      "trace_sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de"
+    },
+    "brightkite_cap64": {
+      "capacity": 64,
+      "family": "brightkite",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/brightkite_cap64/summary.json",
+      "trace_sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de"
+    },
+    "citibike_cap128": {
+      "capacity": 128,
+      "family": "citibike",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/citibike_cap128/summary.json",
+      "trace_sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130"
+    },
+    "citibike_cap32": {
+      "capacity": 32,
+      "family": "citibike",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/citibike_cap32/summary.json",
+      "trace_sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130"
+    },
+    "citibike_cap64": {
+      "capacity": 64,
+      "family": "citibike",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/citibike_cap64/summary.json",
+      "trace_sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130"
+    },
+    "cloudphysics_cap128": {
+      "capacity": 128,
+      "family": "cloudphysics",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/cloudphysics_cap128/summary.json",
+      "trace_sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57"
+    },
+    "cloudphysics_cap32": {
+      "capacity": 32,
+      "family": "cloudphysics",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/cloudphysics_cap32/summary.json",
+      "trace_sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57"
+    },
+    "cloudphysics_cap64": {
+      "capacity": 64,
+      "family": "cloudphysics",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/cloudphysics_cap64/summary.json",
+      "trace_sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57"
+    },
+    "metacdn_cap128": {
+      "capacity": 128,
+      "family": "metacdn",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/metacdn_cap128/summary.json",
+      "trace_sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73"
+    },
+    "metacdn_cap32": {
+      "capacity": 32,
+      "family": "metacdn",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/metacdn_cap32/summary.json",
+      "trace_sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73"
+    },
+    "metacdn_cap64": {
+      "capacity": 64,
+      "family": "metacdn",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/metacdn_cap64/summary.json",
+      "trace_sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73"
+    },
+    "metakv_cap128": {
+      "capacity": 128,
+      "family": "metakv",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/metakv_cap128/summary.json",
+      "trace_sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de"
+    },
+    "metakv_cap32": {
+      "capacity": 32,
+      "family": "metakv",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/metakv_cap32/summary.json",
+      "trace_sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de"
+    },
+    "metakv_cap64": {
+      "capacity": 64,
+      "family": "metakv",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/metakv_cap64/summary.json",
+      "trace_sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de"
+    },
+    "twemcache_cap128": {
+      "capacity": 128,
+      "family": "twemcache",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/twemcache_cap128/summary.json",
+      "trace_sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9"
+    },
+    "twemcache_cap32": {
+      "capacity": 32,
+      "family": "twemcache",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/twemcache_cap32/summary.json",
+      "trace_sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9"
+    },
+    "twemcache_cap64": {
+      "capacity": 64,
+      "family": "twemcache",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/twemcache_cap64/summary.json",
+      "trace_sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9"
+    },
+    "wiki2018_cap128": {
+      "capacity": 128,
+      "family": "wiki2018",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/wiki2018_cap128/summary.json",
+      "trace_sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608"
+    },
+    "wiki2018_cap32": {
+      "capacity": 32,
+      "family": "wiki2018",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/wiki2018_cap32/summary.json",
+      "trace_sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608"
+    },
+    "wiki2018_cap64": {
+      "capacity": 64,
+      "family": "wiki2018",
+      "status": "COMPLETE",
+      "summary": "analysis/strict_preference_horizon_diagnostic_v1/units/wiki2018_cap64/summary.json",
+      "trace_sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608"
+    }
+  }
+}

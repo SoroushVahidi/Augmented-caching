@@ -1,0 +1,23 @@
+{
+  "capacities_evaluated": [
+    32,
+    64,
+    128
+  ],
+  "fraction": "0.05",
+  "held_out_family": "citibike",
+  "pairwise_model_sha256": "39a2e157fb01d38959e1e17ee530c3d02d0a36bf6ebc9413da821e6512bef4a7",
+  "pairwise_train_runtime_seconds": 1.3886,
+  "protocol_id": "supervision_objective_learning_curve_v1",
+  "same_example_guarantee": "train scalar rows and regret-derived pairwise rows share the exact same filtered decision ids",
+  "scalar_model_family": "hist_gb",
+  "scalar_model_sha256": "1ff226746bb21ae2061013f9cc84ed3e04cca22c331766fba7a816a16961aec4",
+  "scalar_train_runtime_seconds": 10.3622,
+  "train_candidate_row_count": 1843616,
+  "train_decision_count": 25145,
+  "train_decision_subset_sha256": "a8c0c82bc42bc8e5b92c7b63c4aac71c0c8bd29cab096e484c850ff3dd6532b5",
+  "train_pair_count": 2577,
+  "validation_candidate_row_count": 107680,
+  "validation_decision_count": 1454,
+  "validation_decision_subset_sha256": "5f6182561de8d15674d0fba640d7dc760a395a5f58735904793ffd68eab264e8"
+}

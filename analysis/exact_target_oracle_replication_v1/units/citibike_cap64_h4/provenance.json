@@ -1,0 +1,61 @@
+{
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "learned_model": {
+    "reason": "disabled by replication protocol; optional learned comparison not required",
+    "status": "NOT_AVAILABLE"
+  },
+  "protocol": {
+    "capacity": 64,
+    "capacity_semantics": "object_slots",
+    "continuation_policy": "LRU within finite H-step label suffix",
+    "exact_oracle_tie_break": "lexicographically first among exact-target optimal candidates",
+    "history_start": 0,
+    "horizon": 4,
+    "learned_policy_tie_break": "deployed scalar policy semantics: cache-order tie for min direction",
+    "object_size_semantics": "unit",
+    "objective": "eviction_loss",
+    "purpose": "decompose LRU vs exact finite-horizon eviction-loss oracle vs learned eviction-loss policy vs Belady",
+    "request_count": 50000,
+    "score_end": 50000,
+    "score_start": 10000,
+    "target_semantics": "Finite-horizon H-step eviction-loss target with LRU continuation, matching the current frozen training-label definition exactly."
+  },
+  "trace": {
+    "family": "citibike",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/citibike/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/citibike_family_split_map.json",
+      "fold_id": "cross_family_v1_citibike",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_citibike.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "citibike",
+      "test_trace_name": "citibike_202401_50k",
+      "test_trace_path": "data/processed/citibike/trace.jsonl",
+      "test_trace_sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130",
+      "train_manifest": "configs/fair_cross_family_v1/folds/citibike_train_manifest.csv",
+      "training_families": [
+        "brightkite",
+        "metacdn",
+        "metakv",
+        "twemcache",
+        "wiki2018"
+      ],
+      "validation_family": "cloudphysics"
+    },
+    "name": "citibike_202401_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/citibike/trace.jsonl",
+    "sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130"
+  }
+}

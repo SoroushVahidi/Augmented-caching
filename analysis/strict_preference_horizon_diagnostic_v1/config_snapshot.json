@@ -1,0 +1,47 @@
+{
+  "aggregate_only_when_all_units_complete": true,
+  "atomic_unit_completion": true,
+  "capacities": [
+    32,
+    64,
+    128
+  ],
+  "families": [
+    "brightkite",
+    "citibike",
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "historical_regression": {
+    "capacity": 64,
+    "event_count": 19079,
+    "family": "brightkite",
+    "horizon": 4,
+    "mean_optimal_set_fraction": 0.9932132514806856,
+    "ordinary_margin_zero_fraction": 1.0,
+    "tie_event_fraction": 1.0
+  },
+  "history": [
+    0,
+    10000
+  ],
+  "horizons": [
+    4,
+    8,
+    16,
+    32
+  ],
+  "name": "strict_preference_horizon_diagnostic_v1",
+  "optimal_set_semantics": "All candidates attaining the minimum target value; no total order is imposed on ties.",
+  "pairwise_reversal": "not computed; optimal-set and unique-winner comparisons avoid arbitrary tie ordering",
+  "purpose": "Measure H4 target informativeness and H4 versus longer-horizon preference stability.",
+  "score": [
+    10000,
+    50000
+  ],
+  "target_semantics": "Shared build_candidate_rows_for_full_cache_state eviction_loss_label with LRU continuation.",
+  "trajectory": "exact H=4 eviction-loss oracle trajectory with lexicographic H4 tie break"
+}

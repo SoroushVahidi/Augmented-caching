@@ -1,0 +1,73 @@
+{
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "hostname": "al-khwarizmi",
+  "model": {
+    "held_out_family": "cloudphysics",
+    "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/cloudphysics.pkl",
+    "model_sha256": "b3a9c7d7c2ad0af5bdd95fc78de60115feac52ed573fdd8f94eb9f27f490f66d",
+    "objective": "objective_eviction_loss",
+    "selected_hyperparameters": "random_forest",
+    "training_families": [
+      "brightkite",
+      "citibike",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "validation_family": "metacdn"
+  },
+  "protocol": {
+    "capacity": 128,
+    "family": "cloudphysics",
+    "history": [
+      0,
+      10000
+    ],
+    "horizon": 4,
+    "regret_definition": "chosen exact target value minus minimum exact target value",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "Finite-horizon H4 eviction-loss target with LRU continuation",
+    "trajectory": "learned evict_value_v1 scalar deployment trajectory; exact target evaluated on each learned decision state"
+  },
+  "trace": {
+    "family": "cloudphysics",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/cloudphysics/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/cloudphysics_family_split_map.json",
+      "fold_id": "cross_family_v1_cloudphysics",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_cloudphysics.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "cloudphysics",
+      "test_trace_name": "cloudphysics_alibaba_block_head_50k",
+      "test_trace_path": "data/processed/cloudphysics/trace.jsonl",
+      "test_trace_sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57",
+      "train_manifest": "configs/fair_cross_family_v1/folds/cloudphysics_train_manifest.csv",
+      "training_families": [
+        "brightkite",
+        "citibike",
+        "metakv",
+        "twemcache",
+        "wiki2018"
+      ],
+      "validation_family": "metacdn"
+    },
+    "name": "cloudphysics_alibaba_block_head_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/cloudphysics/trace.jsonl",
+    "sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57"
+  }
+}

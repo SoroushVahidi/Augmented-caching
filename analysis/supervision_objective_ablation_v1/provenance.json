@@ -1,0 +1,13 @@
+{
+  "repository_commit": "3dce9d0a51d21bcd5568d32a9bdb67eb70fee468",
+  "repository_branch": "feat/supervision-objective-ablation",
+  "python_version": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+  "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.39",
+  "protocol_version": "reviewer_fairness_v1",
+  "protocol_id": "supervision_objective_ablation_v1",
+  "registry_sha256": "02804553e7b21b62051e865f1c964461f2c3bc16dd72fc40f421eeeb4b0325c9",
+  "n_blocked": 0,
+  "rows_written_this_invocation": 84,
+  "rows_skipped_already_present": 0,
+  "rows_failed_this_invocation": 0
+}

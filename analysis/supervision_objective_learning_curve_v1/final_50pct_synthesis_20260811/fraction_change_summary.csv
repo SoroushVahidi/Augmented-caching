@@ -1,0 +1,3 @@
+from_fraction,to_fraction,scalar_validation_mae_change,scalar_downstream_miss_ratio_change,pairwise_downstream_miss_ratio_change,pairwise_minus_scalar_gap_change
+0.25,0.5,7.40000000000185e-05,-0.001039583333333316,0.00041041666666663534,0.001449999999999979
+0.01,0.5,-0.003998249999999981,-0.012993750000000026,4.999999999999449e-05,0.013043749999999965

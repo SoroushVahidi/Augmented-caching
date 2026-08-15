@@ -1,0 +1,55 @@
+{
+  "repository_commit": "0e56774af7626ff7c1e74102cc2ac879fe029f29",
+  "repository_branch": "kbs/second-revision-science",
+  "python_version": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+  "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.39",
+  "protocol_id": "supervision_objective_learning_curve_v1",
+  "expected_rows": 6,
+  "dataset_repo_root": "/home/soroush/Augmented-caching-kbs-second-revision/../Augmented-caching-objective-ablation",
+  "dataset_root": "/home/soroush/Augmented-caching-kbs-second-revision/../Augmented-caching-objective-ablation/data/derived/supervision_objective_ablation_v1",
+  "data_read_root": "/home/soroush/Augmented-caching-kbs-second-revision/../Augmented-caching",
+  "held_out_families": [
+    "wiki2018"
+  ],
+  "fractions": [
+    "0.5"
+  ],
+  "capacities": [
+    32,
+    64,
+    128
+  ],
+  "max_wall_hours": 3.0,
+  "completed_units": [
+    "brightkite|0.010000",
+    "brightkite|0.020000",
+    "brightkite|0.050000",
+    "brightkite|0.100000",
+    "citibike|0.010000",
+    "citibike|0.020000",
+    "citibike|0.050000",
+    "citibike|0.100000",
+    "cloudphysics|0.010000",
+    "cloudphysics|0.020000",
+    "cloudphysics|0.050000",
+    "cloudphysics|0.100000",
+    "metacdn|0.010000",
+    "metacdn|0.020000",
+    "metacdn|0.050000",
+    "metacdn|0.100000",
+    "brightkite|0.250000",
+    "citibike|0.250000",
+    "cloudphysics|0.250000",
+    "metacdn|0.250000",
+    "metakv|0.250000",
+    "twemcache|0.250000",
+    "wiki2018|0.250000",
+    "brightkite|0.500000",
+    "citibike|0.500000",
+    "cloudphysics|0.500000",
+    "metacdn|0.500000",
+    "metakv|0.500000",
+    "twemcache|0.500000",
+    "wiki2018|0.500000"
+  ]
+}

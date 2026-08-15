@@ -1,0 +1,63 @@
+{
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "hostname": "al-khwarizmi",
+  "protocol": {
+    "capacity": 128,
+    "family": "citibike",
+    "history": [
+      0,
+      10000
+    ],
+    "horizons": [
+      4,
+      8,
+      16,
+      32
+    ],
+    "optimal_set_semantics": "all candidates attaining the minimum target value; no total order imposed on ties",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "shared build_candidate_rows_for_full_cache_state eviction_loss_label with LRU continuation",
+    "trajectory": "exact H=4 eviction-loss oracle trajectory with lexicographic H4 tie break"
+  },
+  "trace": {
+    "family": "citibike",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/citibike/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/citibike_family_split_map.json",
+      "fold_id": "cross_family_v1_citibike",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_citibike.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "citibike",
+      "test_trace_name": "citibike_202401_50k",
+      "test_trace_path": "data/processed/citibike/trace.jsonl",
+      "test_trace_sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130",
+      "train_manifest": "configs/fair_cross_family_v1/folds/citibike_train_manifest.csv",
+      "training_families": [
+        "brightkite",
+        "metacdn",
+        "metakv",
+        "twemcache",
+        "wiki2018"
+      ],
+      "validation_family": "cloudphysics"
+    },
+    "name": "citibike_202401_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/citibike/trace.jsonl",
+    "sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130"
+  }
+}

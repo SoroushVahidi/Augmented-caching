@@ -1,0 +1,162 @@
+{
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "hostname": "al-khwarizmi",
+  "model_registry": {
+    "MODEL_SELECTION_FROZEN": true,
+    "path": "/home/soroush/Augmented-caching-kbs-second-revision/analysis/supervision_objective_ablation_v1/model_registry.json",
+    "records": {
+      "brightkite": {
+        "held_out_family": "brightkite",
+        "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/brightkite.pkl",
+        "model_sha256": "f6e2c89db497e6281b066e3a86db813739059255a4e4ccca00dbf8e11dfb07b9",
+        "objective": "objective_eviction_loss",
+        "selected_hyperparameters": "ridge",
+        "training_families": [
+          "cloudphysics",
+          "metacdn",
+          "metakv",
+          "twemcache",
+          "wiki2018"
+        ],
+        "validation_family": "citibike"
+      },
+      "citibike": {
+        "held_out_family": "citibike",
+        "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/citibike.pkl",
+        "model_sha256": "f3f7774d003f5241574f7edfaf402d5a7e4c1a756f0b3110a7ab8aee236be25a",
+        "objective": "objective_eviction_loss",
+        "selected_hyperparameters": "hist_gb",
+        "training_families": [
+          "brightkite",
+          "metacdn",
+          "metakv",
+          "twemcache",
+          "wiki2018"
+        ],
+        "validation_family": "cloudphysics"
+      },
+      "cloudphysics": {
+        "held_out_family": "cloudphysics",
+        "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/cloudphysics.pkl",
+        "model_sha256": "b3a9c7d7c2ad0af5bdd95fc78de60115feac52ed573fdd8f94eb9f27f490f66d",
+        "objective": "objective_eviction_loss",
+        "selected_hyperparameters": "random_forest",
+        "training_families": [
+          "brightkite",
+          "citibike",
+          "metakv",
+          "twemcache",
+          "wiki2018"
+        ],
+        "validation_family": "metacdn"
+      },
+      "metacdn": {
+        "held_out_family": "metacdn",
+        "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/metacdn.pkl",
+        "model_sha256": "d4111f1e6aca557ebd2de2e836f120279f2818b167ee44765c294a81a1356fc3",
+        "objective": "objective_eviction_loss",
+        "selected_hyperparameters": "hist_gb",
+        "training_families": [
+          "brightkite",
+          "citibike",
+          "cloudphysics",
+          "twemcache",
+          "wiki2018"
+        ],
+        "validation_family": "metakv"
+      },
+      "metakv": {
+        "held_out_family": "metakv",
+        "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/metakv.pkl",
+        "model_sha256": "a5e74b10eb5b2eedd15583040e9c9e23ade0c9e6b2b99b7cf7a3cf51a631180d",
+        "objective": "objective_eviction_loss",
+        "selected_hyperparameters": "hist_gb",
+        "training_families": [
+          "brightkite",
+          "citibike",
+          "cloudphysics",
+          "metacdn",
+          "wiki2018"
+        ],
+        "validation_family": "twemcache"
+      },
+      "twemcache": {
+        "held_out_family": "twemcache",
+        "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/twemcache.pkl",
+        "model_sha256": "ca4da18f17ba7d3131437e2d39dac5ddd1e109b78450e530efd1f9785827e6c9",
+        "objective": "objective_eviction_loss",
+        "selected_hyperparameters": "random_forest",
+        "training_families": [
+          "brightkite",
+          "citibike",
+          "cloudphysics",
+          "metacdn",
+          "metakv"
+        ],
+        "validation_family": "wiki2018"
+      },
+      "wiki2018": {
+        "held_out_family": "wiki2018",
+        "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/wiki2018.pkl",
+        "model_sha256": "7ec9108b0bbc8b7f29e9f8ba3c21d91b948bd00ac142c36449a96907e246f856",
+        "objective": "objective_eviction_loss",
+        "selected_hyperparameters": "hist_gb",
+        "training_families": [
+          "citibike",
+          "cloudphysics",
+          "metacdn",
+          "metakv",
+          "twemcache"
+        ],
+        "validation_family": "brightkite"
+      }
+    }
+  },
+  "protocol": {
+    "aggregate_only_when_all_units_complete": true,
+    "atomic_unit_completion": true,
+    "capacities": [
+      32,
+      64,
+      128
+    ],
+    "families": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "historical_regression": {
+      "capacity": 64,
+      "family": "brightkite",
+      "horizon": 4,
+      "lexicographic_agreement": 0.017023755582885623,
+      "mean_target_regret": 0.035342093339374714,
+      "set_aware_agreement": 0.9646579066606252
+    },
+    "history": [
+      0,
+      10000
+    ],
+    "horizon": 4,
+    "lexicographic_agreement": "learned-selected victim equals deterministic lexicographically first exact target-optimal victim",
+    "name": "learned_exact_target_agreement_v1",
+    "purpose": "Measure frozen held-out evict_value_v1 agreement with exact H4 eviction-loss targets across the canonical 21 cells.",
+    "registry": "analysis/supervision_objective_ablation_v1/model_registry.json",
+    "registry_objective": "objective_eviction_loss",
+    "regret": "learned selected target value minus minimum exact target value",
+    "required_model_count": 7,
+    "score": [
+      10000,
+      50000
+    ],
+    "set_aware_agreement": "learned-selected victim belongs to exact target-optimal set",
+    "target_semantics": "Finite-horizon H4 eviction-loss target with LRU continuation."
+  }
+}

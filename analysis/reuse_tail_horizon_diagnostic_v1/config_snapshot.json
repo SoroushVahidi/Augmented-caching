@@ -1,0 +1,30 @@
+{
+  "capacities": [
+    32,
+    64,
+    128
+  ],
+  "conditioning_population": "full-cache misses under LRU reference state; every resident candidate before incoming missed object is inserted; canonical score window",
+  "families": [
+    "brightkite",
+    "citibike",
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "horizons": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "primary_horizon": 4,
+  "primary_quantity": "P(T > H | object is resident at the decision point)",
+  "protocol_id": "reuse_tail_horizon_diagnostic_v1",
+  "scientific_definition": "T is future request-position delay to the next request for a resident candidate; not classical reuse/stack distance.",
+  "score_end": 50000,
+  "score_start": 10000
+}

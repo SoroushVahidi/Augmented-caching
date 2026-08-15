@@ -1,0 +1,157 @@
+{
+  "held_out_family": "brightkite",
+  "fold_id": "cross_family_v1_brightkite",
+  "objectives": {
+    "objective_eviction_loss": {
+      "label_column": "eviction_loss_label",
+      "direction": "min",
+      "best_model_name": "ridge",
+      "comparison_rows": [
+        {
+          "objective": "objective_eviction_loss",
+          "model": "ridge",
+          "val_mae": 1.7369844055717536,
+          "val_rmse": 2.0793337963614245,
+          "test_mae": 1.7369844055717536,
+          "test_rmse": 2.0793337963614245,
+          "val_top1": 0.09472,
+          "test_top1": 0.09472,
+          "val_mean_regret": 0.0048,
+          "test_mean_regret": 0.0048
+        },
+        {
+          "objective": "objective_eviction_loss",
+          "model": "random_forest",
+          "val_mae": 1.5554817132066323,
+          "val_rmse": 1.8976038519875178,
+          "test_mae": 1.5554817132066323,
+          "test_rmse": 1.8976038519875178,
+          "val_top1": 0.09536,
+          "test_top1": 0.09536,
+          "val_mean_regret": 0.03552,
+          "test_mean_regret": 0.03552
+        },
+        {
+          "objective": "objective_eviction_loss",
+          "model": "hist_gb",
+          "val_mae": 1.6389016295857832,
+          "val_rmse": 1.9788775019532836,
+          "test_mae": 1.6389016295857832,
+          "test_rmse": 1.9788775019532836,
+          "val_top1": 0.11584,
+          "test_top1": 0.11584,
+          "val_mean_regret": 0.0128,
+          "test_mean_regret": 0.0128
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_eviction_loss/brightkite.pkl",
+      "model_sha256": "f6e2c89db497e6281b066e3a86db813739059255a4e4ccca00dbf8e11dfb07b9",
+      "seed": 0
+    },
+    "objective_next_arrival": {
+      "label_column": "next_arrival_label_censored",
+      "direction": "max",
+      "best_model_name": "ridge",
+      "comparison_rows": [
+        {
+          "objective": "objective_next_arrival",
+          "model": "ridge",
+          "val_mae": 0.044015490170180374,
+          "val_rmse": 0.28655899862537376,
+          "test_mae": 0.044015490170180374,
+          "test_rmse": 0.28655899862537376,
+          "val_top1": 0.12544,
+          "test_top1": 0.12544,
+          "val_mean_regret": 0.00448,
+          "test_mean_regret": 0.00448
+        },
+        {
+          "objective": "objective_next_arrival",
+          "model": "random_forest",
+          "val_mae": 0.04518920901800648,
+          "val_rmse": 0.2872944955419816,
+          "test_mae": 0.04518920901800648,
+          "test_rmse": 0.2872944955419816,
+          "val_top1": 0.1008,
+          "test_top1": 0.1008,
+          "val_mean_regret": 0.02208,
+          "test_mean_regret": 0.02208
+        },
+        {
+          "objective": "objective_next_arrival",
+          "model": "hist_gb",
+          "val_mae": 0.039849668314709354,
+          "val_rmse": 0.28974470417022236,
+          "test_mae": 0.039849668314709354,
+          "test_rmse": 0.28974470417022236,
+          "val_top1": 0.13152,
+          "test_top1": 0.13152,
+          "val_mean_regret": 0.12,
+          "test_mean_regret": 0.12
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_next_arrival/brightkite.pkl",
+      "model_sha256": "182c682b16d684590fe123fa161884e2e6a0e50405a4d02d3037b94e56920aec",
+      "seed": 0
+    },
+    "objective_reuse_distance": {
+      "label_column": "reuse_distance_label_censored",
+      "direction": "max",
+      "best_model_name": "ridge",
+      "comparison_rows": [
+        {
+          "objective": "objective_reuse_distance",
+          "model": "ridge",
+          "val_mae": 0.07329990093968305,
+          "val_rmse": 0.42027000998049735,
+          "test_mae": 0.07329990093968305,
+          "test_rmse": 0.42027000998049735,
+          "val_top1": 0.1264,
+          "test_top1": 0.1264,
+          "val_mean_regret": 0.00704,
+          "test_mean_regret": 0.00704
+        },
+        {
+          "objective": "objective_reuse_distance",
+          "model": "random_forest",
+          "val_mae": 0.0766815485850837,
+          "val_rmse": 0.4211440235629457,
+          "test_mae": 0.0766815485850837,
+          "test_rmse": 0.4211440235629457,
+          "val_top1": 0.10784,
+          "test_top1": 0.10784,
+          "val_mean_regret": 0.03968,
+          "test_mean_regret": 0.03968
+        },
+        {
+          "objective": "objective_reuse_distance",
+          "model": "hist_gb",
+          "val_mae": 0.0673773294556414,
+          "val_rmse": 0.42455109713033257,
+          "test_mae": 0.0673773294556414,
+          "test_rmse": 0.42455109713033257,
+          "val_top1": 0.14432,
+          "test_top1": 0.14432,
+          "val_mean_regret": 0.14336,
+          "test_mean_regret": 0.14336
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_reuse_distance/brightkite.pkl",
+      "model_sha256": "a12d9efa99f2fac624cdba63ce4a4104c5221b96d022fb62ac366ee1fe417241",
+      "seed": 0
+    },
+    "objective_pairwise": {
+      "label_source": "next_arrival",
+      "n_train_pairs": 34588,
+      "model_path": "models/supervision_objective_ablation_v1/objective_pairwise/brightkite.pkl",
+      "model_sha256": "84fc1ae9776d781a154c6059dbf7a6dd813427edbec474cb54665272d91566b4",
+      "seed": 0
+    }
+  }
+}

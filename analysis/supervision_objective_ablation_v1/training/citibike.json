@@ -1,0 +1,157 @@
+{
+  "held_out_family": "citibike",
+  "fold_id": "cross_family_v1_citibike",
+  "objectives": {
+    "objective_eviction_loss": {
+      "label_column": "eviction_loss_label",
+      "direction": "min",
+      "best_model_name": "hist_gb",
+      "comparison_rows": [
+        {
+          "objective": "objective_eviction_loss",
+          "model": "ridge",
+          "val_mae": 1.1428456059993173,
+          "val_rmse": 1.188346939221241,
+          "test_mae": 1.1428456059993173,
+          "test_rmse": 1.188346939221241,
+          "val_top1": 0.13408,
+          "test_top1": 0.13408,
+          "val_mean_regret": 0.00928,
+          "test_mean_regret": 0.00928
+        },
+        {
+          "objective": "objective_eviction_loss",
+          "model": "random_forest",
+          "val_mae": 1.0158595176818503,
+          "val_rmse": 1.0809086424400434,
+          "test_mae": 1.0158595176818503,
+          "test_rmse": 1.0809086424400434,
+          "val_top1": 0.09216,
+          "test_top1": 0.09216,
+          "val_mean_regret": 0.0064,
+          "test_mean_regret": 0.0064
+        },
+        {
+          "objective": "objective_eviction_loss",
+          "model": "hist_gb",
+          "val_mae": 1.0197824956566013,
+          "val_rmse": 1.085203742361846,
+          "test_mae": 1.0197824956566013,
+          "test_rmse": 1.085203742361846,
+          "val_top1": 0.0992,
+          "test_top1": 0.0992,
+          "val_mean_regret": 0.00608,
+          "test_mean_regret": 0.00608
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_eviction_loss/citibike.pkl",
+      "model_sha256": "f3f7774d003f5241574f7edfaf402d5a7e4c1a756f0b3110a7ab8aee236be25a",
+      "seed": 0
+    },
+    "objective_next_arrival": {
+      "label_column": "next_arrival_label_censored",
+      "direction": "max",
+      "best_model_name": "ridge",
+      "comparison_rows": [
+        {
+          "objective": "objective_next_arrival",
+          "model": "ridge",
+          "val_mae": 0.017598204340586374,
+          "val_rmse": 0.07724275748917638,
+          "test_mae": 0.017598204340586374,
+          "test_rmse": 0.07724275748917638,
+          "val_top1": 0.0896,
+          "test_top1": 0.0896,
+          "val_mean_regret": 0.00064,
+          "test_mean_regret": 0.00064
+        },
+        {
+          "objective": "objective_next_arrival",
+          "model": "random_forest",
+          "val_mae": 0.012028247657260755,
+          "val_rmse": 0.08264200708370388,
+          "test_mae": 0.012028247657260755,
+          "test_rmse": 0.08264200708370388,
+          "val_top1": 0.23296,
+          "test_top1": 0.23296,
+          "val_mean_regret": 0.0048,
+          "test_mean_regret": 0.0048
+        },
+        {
+          "objective": "objective_next_arrival",
+          "model": "hist_gb",
+          "val_mae": 0.01104955319458625,
+          "val_rmse": 0.0796923462229777,
+          "test_mae": 0.01104955319458625,
+          "test_rmse": 0.0796923462229777,
+          "val_top1": 0.20928,
+          "test_top1": 0.20928,
+          "val_mean_regret": 0.00288,
+          "test_mean_regret": 0.00288
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_next_arrival/citibike.pkl",
+      "model_sha256": "05f306f7c2b23d393b847f54203af0bccf7312aef822ff399cdd7b42730a2e1a",
+      "seed": 0
+    },
+    "objective_reuse_distance": {
+      "label_column": "reuse_distance_label_censored",
+      "direction": "max",
+      "best_model_name": "ridge",
+      "comparison_rows": [
+        {
+          "objective": "objective_reuse_distance",
+          "model": "ridge",
+          "val_mae": 0.03015688160429861,
+          "val_rmse": 0.1171181247994421,
+          "test_mae": 0.03015688160429861,
+          "test_rmse": 0.1171181247994421,
+          "val_top1": 0.08928,
+          "test_top1": 0.08928,
+          "val_mean_regret": 0.00128,
+          "test_mean_regret": 0.00128
+        },
+        {
+          "objective": "objective_reuse_distance",
+          "model": "random_forest",
+          "val_mae": 0.020465928360763375,
+          "val_rmse": 0.12660459976388463,
+          "test_mae": 0.020465928360763375,
+          "test_rmse": 0.12660459976388463,
+          "val_top1": 0.24928,
+          "test_top1": 0.24928,
+          "val_mean_regret": 0.00928,
+          "test_mean_regret": 0.00928
+        },
+        {
+          "objective": "objective_reuse_distance",
+          "model": "hist_gb",
+          "val_mae": 0.017702025616562974,
+          "val_rmse": 0.12381307055818128,
+          "test_mae": 0.017702025616562974,
+          "test_rmse": 0.12381307055818128,
+          "val_top1": 0.18912,
+          "test_top1": 0.18912,
+          "val_mean_regret": 0.00192,
+          "test_mean_regret": 0.00192
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_reuse_distance/citibike.pkl",
+      "model_sha256": "52c69dc702b3846b6a2afaea0cb05036f6871ea56686bc2daa8fe8e41eef547b",
+      "seed": 0
+    },
+    "objective_pairwise": {
+      "label_source": "next_arrival",
+      "n_train_pairs": 41176,
+      "model_path": "models/supervision_objective_ablation_v1/objective_pairwise/citibike.pkl",
+      "model_sha256": "a55e8d75b935de4061c854ba77eea3ba4964ad1ddd09627cb3634b3c6354cf2c",
+      "seed": 0
+    }
+  }
+}

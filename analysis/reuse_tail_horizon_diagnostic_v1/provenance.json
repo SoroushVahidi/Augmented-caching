@@ -1,0 +1,58 @@
+{
+  "argv": [
+    "scripts/experiments/run_reuse_tail_horizon_diagnostic.py",
+    "--families",
+    "brightkite,citibike,cloudphysics,metacdn,metakv,twemcache,wiki2018",
+    "--capacities",
+    "32,64,128",
+    "--horizons",
+    "1,2,4,8,16",
+    "--score-start",
+    "10000",
+    "--score-end",
+    "50000",
+    "--out-dir",
+    "analysis/reuse_tail_horizon_diagnostic_v1",
+    "--audit-sample-limit-per-cell",
+    "20",
+    "--max-wall-hours",
+    "4"
+  ],
+  "config_snapshot": {
+    "capacities": [
+      32,
+      64,
+      128
+    ],
+    "conditioning_population": "full-cache misses under LRU reference state; every resident candidate before incoming missed object is inserted; canonical score window",
+    "families": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "horizons": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "primary_horizon": 4,
+    "primary_quantity": "P(T > H | object is resident at the decision point)",
+    "protocol_id": "reuse_tail_horizon_diagnostic_v1",
+    "scientific_definition": "T is future request-position delay to the next request for a resident candidate; not classical reuse/stack distance.",
+    "score_end": 50000,
+    "score_start": 10000
+  },
+  "created_utc": "2026-08-11T16:55:36Z",
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "",
+    "head": "167db32478b423c21c2232e6ee1b063bf2e67675"
+  },
+  "protocol_id": "reuse_tail_horizon_diagnostic_v1"
+}

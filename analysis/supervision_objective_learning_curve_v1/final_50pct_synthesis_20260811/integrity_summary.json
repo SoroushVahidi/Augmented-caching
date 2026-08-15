@@ -1,0 +1,48 @@
+{
+  "campaign_state_fraction_0.5_complete": true,
+  "campaign_state_fraction_0.5_missing_families": [],
+  "duplicate_key_count": 0,
+  "fraction_0.5_audit_count": 7,
+  "fraction_0.5_audit_problem_count": 0,
+  "fraction_0.5_audit_problems": [],
+  "fraction_0.5_capacities": [
+    32,
+    64,
+    128
+  ],
+  "fraction_0.5_conditions": [
+    "eviction_loss_pairwise",
+    "eviction_loss_scalar"
+  ],
+  "fraction_0.5_families": [
+    "brightkite",
+    "citibike",
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "fraction_0.5_missing_expected_cells": [],
+  "fraction_0.5_model_missing_count": 0,
+  "fraction_0.5_model_sha_mismatch_count": 0,
+  "fraction_0.5_rows": 42,
+  "fraction_0.5_status_counts": {
+    "ok": 42
+  },
+  "generated_at_utc": "2026-08-11T16:31:23.793944+00:00",
+  "hundred_percent_status": "INTENTIONALLY_NOT_RUN_DUE_STOPPING_RULE",
+  "nan_inf_count": 0,
+  "nonfinite_examples": [],
+  "source_campaign_state": "analysis/supervision_objective_learning_curve_v1/campaign_state.json",
+  "source_hashes": {
+    "campaign_state_sha256": "2eee0974be069aba342bbd40a3dc6114ea61a92129b811b492ecc37dd7572917",
+    "policy_comparison_sha256": "5323eea6e3f6fb9a44b2fab2f6632f61917442ba239eababc1b2cda1fca8612a",
+    "protocol_snapshot_sha256": "5e6c0a9da3f74a10b4a00e446013d489f23a6368e00f900e236612c1cea75acf",
+    "provenance_sha256": "d607b476e76e460fa11de5fa014c0f2b482b56487dc2523b5cb6601e29bfe3a9"
+  },
+  "source_models_root": "models/supervision_objective_learning_curve_v1",
+  "source_policy_comparison": "analysis/supervision_objective_learning_curve_v1/policy_comparison.csv",
+  "stopping_decision": "STOP_SAMPLE_SIZE_HYPOTHESIS",
+  "total_audit_file_count": 30
+}

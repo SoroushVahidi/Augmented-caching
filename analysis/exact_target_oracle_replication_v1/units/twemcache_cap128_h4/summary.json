@@ -1,0 +1,116 @@
+{
+  "created_utc": "2026-08-12T22:40:06Z",
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "M docs/NEXT_STEPS.md\n M docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md\n?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? docs/reviewer/KBS_POST_COMPLETION_HANDOFF.md\n?? models/\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "learned_model": {
+    "reason": "disabled by replication protocol; optional learned comparison not required",
+    "status": "NOT_AVAILABLE"
+  },
+  "margin_bins_scored_window": [],
+  "outputs": {
+    "learned_decisions_csv": null,
+    "margin_bins_csv": null,
+    "provenance_json": "analysis/exact_target_oracle_replication_v1/units/twemcache_cap128_h4/provenance.json",
+    "report_md": "analysis/exact_target_oracle_replication_v1/units/twemcache_cap128_h4/report.md",
+    "summary_json": "analysis/exact_target_oracle_replication_v1/units/twemcache_cap128_h4/summary.json"
+  },
+  "policies": {
+    "exact_finite_horizon_eviction_loss_oracle": {
+      "agreement_with_self_rate": 1.0,
+      "decision_count_scored": 35161,
+      "excess_misses_relative_to_lru": 10248,
+      "gap_to_belady_misses": 14937,
+      "history_requests": 10000,
+      "hits": 4839,
+      "information_class": "FUTURE_AWARE_DIAGNOSTIC_TARGET_ORACLE",
+      "miss_ratio": 0.879025,
+      "misses": 35161,
+      "score_end": 50000,
+      "score_start": 10000,
+      "scored_requests": 40000
+    },
+    "lru": {
+      "excess_misses_relative_to_lru": 0,
+      "gap_to_belady_misses": 4689,
+      "history_requests": 10000,
+      "hits": 15087,
+      "information_class": "ONLINE_DEPLOYABLE",
+      "miss_ratio": 0.622825,
+      "misses": 24913,
+      "score_end": 50000,
+      "score_start": 10000,
+      "scored_requests": 40000
+    },
+    "offline_belady": {
+      "excess_misses_relative_to_lru": -4689,
+      "gap_to_belady_misses": 0,
+      "history_requests": 10000,
+      "hits": 19776,
+      "information_class": "FUTURE_AWARE_REFERENCE",
+      "miss_ratio": 0.5056,
+      "misses": 20224,
+      "score_end": 50000,
+      "score_start": 10000,
+      "scored_requests": 40000
+    }
+  },
+  "protocol": {
+    "capacity": 128,
+    "capacity_semantics": "object_slots",
+    "continuation_policy": "LRU within finite H-step label suffix",
+    "exact_oracle_tie_break": "lexicographically first among exact-target optimal candidates",
+    "history_start": 0,
+    "horizon": 4,
+    "learned_policy_tie_break": "deployed scalar policy semantics: cache-order tie for min direction",
+    "object_size_semantics": "unit",
+    "objective": "eviction_loss",
+    "purpose": "decompose LRU vs exact finite-horizon eviction-loss oracle vs learned eviction-loss policy vs Belady",
+    "request_count": 50000,
+    "score_end": 50000,
+    "score_start": 10000,
+    "target_semantics": "Finite-horizon H-step eviction-loss target with LRU continuation, matching the current frozen training-label definition exactly."
+  },
+  "status": "COMPLETE",
+  "timings": {
+    "exact_target_oracle_seconds": 2292.863445043564,
+    "lru_seconds": 0.09954452514648438,
+    "offline_belady_seconds": 0.4299781322479248
+  },
+  "trace": {
+    "family": "twemcache",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/twemcache/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/twemcache_family_split_map.json",
+      "fold_id": "cross_family_v1_twemcache",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_twemcache.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "twemcache",
+      "test_trace_name": "twemcache_cluster26_sample100_50k",
+      "test_trace_path": "data/processed/twemcache/trace.jsonl",
+      "test_trace_sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9",
+      "train_manifest": "configs/fair_cross_family_v1/folds/twemcache_train_manifest.csv",
+      "training_families": [
+        "brightkite",
+        "citibike",
+        "cloudphysics",
+        "metacdn",
+        "metakv"
+      ],
+      "validation_family": "wiki2018"
+    },
+    "name": "twemcache_cluster26_sample100_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/twemcache/trace.jsonl",
+    "sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9"
+  }
+}

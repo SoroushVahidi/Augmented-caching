@@ -1,0 +1,82 @@
+{
+  "by_family": [
+    {
+      "cells": 3,
+      "family": "brightkite",
+      "pairwise_better_cells": 0,
+      "pairwise_minus_scalar_mean": 0.22840000000000002,
+      "pairwise_miss_ratio_mean": 0.6320666666666667,
+      "scalar_better_cells": 3,
+      "scalar_miss_ratio_mean": 0.4036666666666667,
+      "ties": 0
+    },
+    {
+      "cells": 3,
+      "family": "citibike",
+      "pairwise_better_cells": 0,
+      "pairwise_minus_scalar_mean": 0.4184833333333333,
+      "pairwise_miss_ratio_mean": 0.828825,
+      "scalar_better_cells": 3,
+      "scalar_miss_ratio_mean": 0.41034166666666666,
+      "ties": 0
+    },
+    {
+      "cells": 3,
+      "family": "cloudphysics",
+      "pairwise_better_cells": 0,
+      "pairwise_minus_scalar_mean": 0.012525000000000008,
+      "pairwise_miss_ratio_mean": 0.9997083333333334,
+      "scalar_better_cells": 3,
+      "scalar_miss_ratio_mean": 0.9871833333333333,
+      "ties": 0
+    },
+    {
+      "cells": 3,
+      "family": "metacdn",
+      "pairwise_better_cells": 0,
+      "pairwise_minus_scalar_mean": 0.21005833333333326,
+      "pairwise_miss_ratio_mean": 0.8593166666666666,
+      "scalar_better_cells": 3,
+      "scalar_miss_ratio_mean": 0.6492583333333334,
+      "ties": 0
+    },
+    {
+      "cells": 3,
+      "family": "metakv",
+      "pairwise_better_cells": 0,
+      "pairwise_minus_scalar_mean": 0.05149999999999999,
+      "pairwise_miss_ratio_mean": 0.8201999999999999,
+      "scalar_better_cells": 3,
+      "scalar_miss_ratio_mean": 0.7686999999999999,
+      "ties": 0
+    },
+    {
+      "cells": 3,
+      "family": "twemcache",
+      "pairwise_better_cells": 0,
+      "pairwise_minus_scalar_mean": 0.2064166666666667,
+      "pairwise_miss_ratio_mean": 0.947075,
+      "scalar_better_cells": 3,
+      "scalar_miss_ratio_mean": 0.7406583333333333,
+      "ties": 0
+    },
+    {
+      "cells": 3,
+      "family": "wiki2018",
+      "pairwise_better_cells": 0,
+      "pairwise_minus_scalar_mean": 0.0,
+      "pairwise_miss_ratio_mean": 1.0,
+      "scalar_better_cells": 0,
+      "scalar_miss_ratio_mean": 1.0,
+      "ties": 3
+    }
+  ],
+  "overall": {
+    "paired_family_capacity_cells": 21,
+    "pairwise_better_cells": 0,
+    "pairwise_minus_scalar_miss_ratio_mean": 0.1610547619047619,
+    "pairwise_minus_scalar_miss_ratio_median": 0.17335,
+    "scalar_better_cells": 18,
+    "ties": 3
+  }
+}

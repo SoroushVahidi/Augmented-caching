@@ -1,0 +1,63 @@
+{
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "M docs/NEXT_STEPS.md\n M docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md\n?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? docs/reviewer/KBS_POST_COMPLETION_HANDOFF.md\n?? models/\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "hostname": "al-khwarizmi",
+  "protocol": {
+    "capacity": 128,
+    "family": "metakv",
+    "history": [
+      0,
+      10000
+    ],
+    "horizons": [
+      4,
+      8,
+      16,
+      32
+    ],
+    "optimal_set_semantics": "all candidates attaining the minimum target value; no total order imposed on ties",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "shared build_candidate_rows_for_full_cache_state eviction_loss_label with LRU continuation",
+    "trajectory": "exact H=4 eviction-loss oracle trajectory with lexicographic H4 tie break"
+  },
+  "trace": {
+    "family": "metakv",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/metakv/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/metakv_family_split_map.json",
+      "fold_id": "cross_family_v1_metakv",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_metakv.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "metakv",
+      "test_trace_name": "metakv_kvcache_202206_head_50k",
+      "test_trace_path": "data/processed/metakv/trace.jsonl",
+      "test_trace_sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de",
+      "train_manifest": "configs/fair_cross_family_v1/folds/metakv_train_manifest.csv",
+      "training_families": [
+        "brightkite",
+        "citibike",
+        "cloudphysics",
+        "metacdn",
+        "wiki2018"
+      ],
+      "validation_family": "twemcache"
+    },
+    "name": "metakv_kvcache_202206_head_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/metakv/trace.jsonl",
+    "sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de"
+  }
+}

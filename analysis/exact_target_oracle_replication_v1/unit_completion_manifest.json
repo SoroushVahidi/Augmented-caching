@@ -1,0 +1,208 @@
+{
+  "completed_units": 21,
+  "created_utc": "2026-08-12T16:14:45Z",
+  "expected_units": 21,
+  "protocol": {
+    "aggregate_only_when_all_units_complete": true,
+    "atomic_unit_completion": true,
+    "capacities": [
+      32,
+      64,
+      128
+    ],
+    "capacity_semantics": "object_slots",
+    "exact_oracle_tie_break": "lexicographically first among exact-target optimal candidates",
+    "families": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "historical_regression": {
+      "capacity": 64,
+      "exact_oracle_misses": 19079,
+      "family": "brightkite",
+      "horizon": 4,
+      "lru_misses": 13225
+    },
+    "history": [
+      0,
+      10000
+    ],
+    "horizon": 4,
+    "learned_policy": "disabled_by_default",
+    "name": "exact_target_oracle_replication_v1",
+    "object_size_semantics": "unit",
+    "optional_policies": [
+      "learned_eviction_loss_scalar",
+      "offline_belady"
+    ],
+    "purpose": "Replicate the finite-horizon eviction-loss target oracle across the canonical 21 family-capacity cells.",
+    "required_policies": [
+      "lru",
+      "exact_finite_horizon_eviction_loss_oracle"
+    ],
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "Finite-horizon H-step eviction-loss target with LRU continuation, matching the frozen training-label definition."
+  },
+  "source": {
+    "branch": "kbs/second-revision-science",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "status": "COMPLETE",
+  "units": {
+    "brightkite_cap128_h4": {
+      "capacity": 128,
+      "family": "brightkite",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/brightkite_cap128_h4/summary.json",
+      "trace_sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de"
+    },
+    "brightkite_cap32_h4": {
+      "capacity": 32,
+      "family": "brightkite",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/brightkite_cap32_h4/summary.json",
+      "trace_sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de"
+    },
+    "brightkite_cap64_h4": {
+      "capacity": 64,
+      "family": "brightkite",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/brightkite_cap64_h4/summary.json",
+      "trace_sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de"
+    },
+    "citibike_cap128_h4": {
+      "capacity": 128,
+      "family": "citibike",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/citibike_cap128_h4/summary.json",
+      "trace_sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130"
+    },
+    "citibike_cap32_h4": {
+      "capacity": 32,
+      "family": "citibike",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/citibike_cap32_h4/summary.json",
+      "trace_sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130"
+    },
+    "citibike_cap64_h4": {
+      "capacity": 64,
+      "family": "citibike",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/citibike_cap64_h4/summary.json",
+      "trace_sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130"
+    },
+    "cloudphysics_cap128_h4": {
+      "capacity": 128,
+      "family": "cloudphysics",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/cloudphysics_cap128_h4/summary.json",
+      "trace_sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57"
+    },
+    "cloudphysics_cap32_h4": {
+      "capacity": 32,
+      "family": "cloudphysics",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/cloudphysics_cap32_h4/summary.json",
+      "trace_sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57"
+    },
+    "cloudphysics_cap64_h4": {
+      "capacity": 64,
+      "family": "cloudphysics",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/cloudphysics_cap64_h4/summary.json",
+      "trace_sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57"
+    },
+    "metacdn_cap128_h4": {
+      "capacity": 128,
+      "family": "metacdn",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/metacdn_cap128_h4/summary.json",
+      "trace_sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73"
+    },
+    "metacdn_cap32_h4": {
+      "capacity": 32,
+      "family": "metacdn",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/metacdn_cap32_h4/summary.json",
+      "trace_sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73"
+    },
+    "metacdn_cap64_h4": {
+      "capacity": 64,
+      "family": "metacdn",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/metacdn_cap64_h4/summary.json",
+      "trace_sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73"
+    },
+    "metakv_cap128_h4": {
+      "capacity": 128,
+      "family": "metakv",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/metakv_cap128_h4/summary.json",
+      "trace_sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de"
+    },
+    "metakv_cap32_h4": {
+      "capacity": 32,
+      "family": "metakv",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/metakv_cap32_h4/summary.json",
+      "trace_sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de"
+    },
+    "metakv_cap64_h4": {
+      "capacity": 64,
+      "family": "metakv",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/metakv_cap64_h4/summary.json",
+      "trace_sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de"
+    },
+    "twemcache_cap128_h4": {
+      "capacity": 128,
+      "family": "twemcache",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/twemcache_cap128_h4/summary.json",
+      "trace_sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9"
+    },
+    "twemcache_cap32_h4": {
+      "capacity": 32,
+      "family": "twemcache",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/twemcache_cap32_h4/summary.json",
+      "trace_sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9"
+    },
+    "twemcache_cap64_h4": {
+      "capacity": 64,
+      "family": "twemcache",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/twemcache_cap64_h4/summary.json",
+      "trace_sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9"
+    },
+    "wiki2018_cap128_h4": {
+      "capacity": 128,
+      "family": "wiki2018",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/wiki2018_cap128_h4/summary.json",
+      "trace_sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608"
+    },
+    "wiki2018_cap32_h4": {
+      "capacity": 32,
+      "family": "wiki2018",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/wiki2018_cap32_h4/summary.json",
+      "trace_sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608"
+    },
+    "wiki2018_cap64_h4": {
+      "capacity": 64,
+      "family": "wiki2018",
+      "status": "COMPLETE",
+      "summary": "analysis/exact_target_oracle_replication_v1/units/wiki2018_cap64_h4/summary.json",
+      "trace_sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608"
+    }
+  }
+}

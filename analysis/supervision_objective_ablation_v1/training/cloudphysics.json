@@ -1,0 +1,157 @@
+{
+  "held_out_family": "cloudphysics",
+  "fold_id": "cross_family_v1_cloudphysics",
+  "objectives": {
+    "objective_eviction_loss": {
+      "label_column": "eviction_loss_label",
+      "direction": "min",
+      "best_model_name": "random_forest",
+      "comparison_rows": [
+        {
+          "objective": "objective_eviction_loss",
+          "model": "ridge",
+          "val_mae": 1.055054431932391,
+          "val_rmse": 1.3699088532756951,
+          "test_mae": 1.055054431932391,
+          "test_rmse": 1.3699088532756951,
+          "val_top1": 0.12476007677543186,
+          "test_top1": 0.12476007677543186,
+          "val_mean_regret": 0.12412028150991683,
+          "test_mean_regret": 0.12412028150991683
+        },
+        {
+          "objective": "objective_eviction_loss",
+          "model": "random_forest",
+          "val_mae": 1.001606366660064,
+          "val_rmse": 1.2941730120465007,
+          "test_mae": 1.001606366660064,
+          "test_rmse": 1.2941730120465007,
+          "val_top1": 0.10236724248240563,
+          "test_top1": 0.10236724248240563,
+          "val_mean_regret": 0.09724888035828536,
+          "test_mean_regret": 0.09724888035828536
+        },
+        {
+          "objective": "objective_eviction_loss",
+          "model": "hist_gb",
+          "val_mae": 1.0028210061525344,
+          "val_rmse": 1.2970959624757674,
+          "test_mae": 1.0028210061525344,
+          "test_rmse": 1.2970959624757674,
+          "val_top1": 0.09596928982725528,
+          "test_top1": 0.09596928982725528,
+          "val_mean_regret": 0.10428662827895073,
+          "test_mean_regret": 0.10428662827895073
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_eviction_loss/cloudphysics.pkl",
+      "model_sha256": "b3a9c7d7c2ad0af5bdd95fc78de60115feac52ed573fdd8f94eb9f27f490f66d",
+      "seed": 0
+    },
+    "objective_next_arrival": {
+      "label_column": "next_arrival_label_censored",
+      "direction": "max",
+      "best_model_name": "ridge",
+      "comparison_rows": [
+        {
+          "objective": "objective_next_arrival",
+          "model": "ridge",
+          "val_mae": 0.020509155508525976,
+          "val_rmse": 0.19821432402995137,
+          "test_mae": 0.020509155508525976,
+          "test_rmse": 0.19821432402995137,
+          "val_top1": 0.0,
+          "test_top1": 0.0,
+          "val_mean_regret": 0.0006397952655150352,
+          "test_mean_regret": 0.0006397952655150352
+        },
+        {
+          "objective": "objective_next_arrival",
+          "model": "random_forest",
+          "val_mae": 0.017869535454012393,
+          "val_rmse": 0.18341744168639956,
+          "test_mae": 0.017869535454012393,
+          "test_rmse": 0.18341744168639956,
+          "val_top1": 0.581573896353167,
+          "test_top1": 0.581573896353167,
+          "val_mean_regret": 0.01599488163787588,
+          "test_mean_regret": 0.01599488163787588
+        },
+        {
+          "objective": "objective_next_arrival",
+          "model": "hist_gb",
+          "val_mae": 0.018013331857515073,
+          "val_rmse": 0.19223328688023064,
+          "test_mae": 0.018013331857515073,
+          "test_rmse": 0.19223328688023064,
+          "val_top1": 0.009596928982725527,
+          "test_top1": 0.009596928982725527,
+          "val_mean_regret": 0.006397952655150352,
+          "test_mean_regret": 0.006397952655150352
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_next_arrival/cloudphysics.pkl",
+      "model_sha256": "5080ca6b914484f06414edd3cd4e61b03f1c7a36828255f81565b0579670b2eb",
+      "seed": 0
+    },
+    "objective_reuse_distance": {
+      "label_column": "reuse_distance_label_censored",
+      "direction": "max",
+      "best_model_name": "ridge",
+      "comparison_rows": [
+        {
+          "objective": "objective_reuse_distance",
+          "model": "ridge",
+          "val_mae": 0.03303028224923021,
+          "val_rmse": 0.2894170817837934,
+          "test_mae": 0.03303028224923021,
+          "test_rmse": 0.2894170817837934,
+          "val_top1": 0.0,
+          "test_top1": 0.0,
+          "val_mean_regret": 0.0012795905310300703,
+          "test_mean_regret": 0.0012795905310300703
+        },
+        {
+          "objective": "objective_reuse_distance",
+          "model": "random_forest",
+          "val_mae": 0.028191315051223634,
+          "val_rmse": 0.26681762317432955,
+          "test_mae": 0.028191315051223634,
+          "test_rmse": 0.26681762317432955,
+          "val_top1": 0.5802943058221369,
+          "test_top1": 0.5802943058221369,
+          "val_mean_regret": 0.025591810620601407,
+          "test_mean_regret": 0.025591810620601407
+        },
+        {
+          "objective": "objective_reuse_distance",
+          "model": "hist_gb",
+          "val_mae": 0.02893272371199148,
+          "val_rmse": 0.2789884722172576,
+          "test_mae": 0.02893272371199148,
+          "test_rmse": 0.2789884722172576,
+          "val_top1": 0.010876519513755598,
+          "test_top1": 0.010876519513755598,
+          "val_mean_regret": 0.016634676903390915,
+          "test_mean_regret": 0.016634676903390915
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_reuse_distance/cloudphysics.pkl",
+      "model_sha256": "299b06898cdb64b567796505725e794d9625148c81dc65c52a756737fef4d4bd",
+      "seed": 0
+    },
+    "objective_pairwise": {
+      "label_source": "next_arrival",
+      "n_train_pairs": 35613,
+      "model_path": "models/supervision_objective_ablation_v1/objective_pairwise/cloudphysics.pkl",
+      "model_sha256": "162a2667d1bc52bb32b277280f0792a2708015789210fded340b924de9c2b1c8",
+      "seed": 0
+    }
+  }
+}

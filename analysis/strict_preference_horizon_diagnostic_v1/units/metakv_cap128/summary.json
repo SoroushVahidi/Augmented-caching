@@ -1,0 +1,206 @@
+{
+  "created_utc": "2026-08-12T19:51:09Z",
+  "decision_relevance_h4_unique": {
+    "never_reused_observed_suffix": 0,
+    "reused_after_h4": 0,
+    "reused_within_h4": 0
+  },
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "M docs/NEXT_STEPS.md\n M docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md\n?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? docs/reviewer/KBS_POST_COMPLETION_HANDOFF.md\n?? models/\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "h4_informativeness": {
+    "all_candidates_tied_count": 27189,
+    "all_candidates_tied_fraction": 0.8885874893783907,
+    "event_count": 30598,
+    "mean_optimal_set_fraction": 0.999080056294529,
+    "mean_optimal_set_size": 127.88224720569971,
+    "median_optimal_set_size": 128.0,
+    "multiple_optimum_count": 30598,
+    "multiple_optimum_fraction": 1.0,
+    "ordinary_margin_summary": {
+      "max": 0.0,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "p90": 0.0
+    },
+    "ordinary_margin_zero_fraction": 1.0,
+    "positive_ordinary_margin_summary": {
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p90": null
+    },
+    "strict_distinct_margin_summary": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "p90": 1.0
+    },
+    "strict_positive_ordinary_margin_fraction": 0.0,
+    "unique_winner_count": 0,
+    "unique_winner_fraction": 0.0
+  },
+  "horizon_comparisons": [
+    {
+      "all_event_count": 30598,
+      "h4_multiple_event_count": 30598,
+      "h4_tied_set_long_resolution_denominator": 30598,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 8,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 128.0,
+        "mean": 127.85936989345709,
+        "median": 128.0,
+        "min": 124.0,
+        "p90": 128.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.022027583502189686,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 1.0,
+        "mean": 0.022027583502189686,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.022877312242630236,
+      "optimal_set_jaccard_mean": 0.9998209265083334
+    },
+    {
+      "all_event_count": 30598,
+      "h4_multiple_event_count": 30598,
+      "h4_tied_set_long_resolution_denominator": 30598,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 16,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 128.0,
+        "mean": 127.83077325315381,
+        "median": 128.0,
+        "min": 124.0,
+        "p90": 128.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.04438198575070266,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 1.0,
+        "mean": 0.04438198575070266,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.051473952545918036,
+      "optimal_set_jaccard_mean": 0.9995970821476008
+    },
+    {
+      "all_event_count": 30598,
+      "h4_multiple_event_count": 30598,
+      "h4_tied_set_long_resolution_denominator": 30598,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 32,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 128.0,
+        "mean": 127.76988692071377,
+        "median": 128.0,
+        "min": 103.0,
+        "p90": 128.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.08412314530361462,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 2.0,
+        "mean": 0.08425387280214393,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.11236028498594679,
+      "optimal_set_jaccard_mean": 0.9991205657102015
+    }
+  ],
+  "outputs": {
+    "provenance_json": "analysis/strict_preference_horizon_diagnostic_v1/units/metakv_cap128/provenance.json",
+    "summary_json": "analysis/strict_preference_horizon_diagnostic_v1/units/metakv_cap128/summary.json"
+  },
+  "protocol": {
+    "capacity": 128,
+    "family": "metakv",
+    "history": [
+      0,
+      10000
+    ],
+    "horizons": [
+      4,
+      8,
+      16,
+      32
+    ],
+    "optimal_set_semantics": "all candidates attaining the minimum target value; no total order imposed on ties",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "shared build_candidate_rows_for_full_cache_state eviction_loss_label with LRU continuation",
+    "trajectory": "exact H=4 eviction-loss oracle trajectory with lexicographic H4 tie break"
+  },
+  "status": "COMPLETE",
+  "trace": {
+    "family": "metakv",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/metakv/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/metakv_family_split_map.json",
+      "fold_id": "cross_family_v1_metakv",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_metakv.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "metakv",
+      "test_trace_name": "metakv_kvcache_202206_head_50k",
+      "test_trace_path": "data/processed/metakv/trace.jsonl",
+      "test_trace_sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de",
+      "train_manifest": "configs/fair_cross_family_v1/folds/metakv_train_manifest.csv",
+      "training_families": [
+        "brightkite",
+        "citibike",
+        "cloudphysics",
+        "metacdn",
+        "wiki2018"
+      ],
+      "validation_family": "twemcache"
+    },
+    "name": "metakv_kvcache_202206_head_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/metakv/trace.jsonl",
+    "sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de"
+  }
+}

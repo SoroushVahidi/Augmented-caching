@@ -1,0 +1,206 @@
+{
+  "created_utc": "2026-08-12T19:08:19Z",
+  "decision_relevance_h4_unique": {
+    "never_reused_observed_suffix": 0,
+    "reused_after_h4": 0,
+    "reused_within_h4": 0
+  },
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? models/\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "h4_informativeness": {
+    "all_candidates_tied_count": 12978,
+    "all_candidates_tied_fraction": 0.4907358390682901,
+    "event_count": 26446,
+    "mean_optimal_set_fraction": 0.9811880813733646,
+    "mean_optimal_set_size": 31.398018603947666,
+    "median_optimal_set_size": 31.0,
+    "multiple_optimum_count": 26446,
+    "multiple_optimum_fraction": 1.0,
+    "ordinary_margin_summary": {
+      "max": 0.0,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "p90": 0.0
+    },
+    "ordinary_margin_zero_fraction": 1.0,
+    "positive_ordinary_margin_summary": {
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p90": null
+    },
+    "strict_distinct_margin_summary": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "p90": 1.0
+    },
+    "strict_positive_ordinary_margin_fraction": 0.0,
+    "unique_winner_count": 0,
+    "unique_winner_fraction": 0.0
+  },
+  "horizon_comparisons": [
+    {
+      "all_event_count": 26446,
+      "h4_multiple_event_count": 26446,
+      "h4_tied_set_long_resolution_denominator": 26446,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 8,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 32.0,
+        "mean": 31.177796264085305,
+        "median": 31.0,
+        "min": 24.0,
+        "p90": 32.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.19965212130378884,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 1.0,
+        "mean": 0.19965212130378884,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 1.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.22022233986236103,
+      "optimal_set_jaccard_mean": 0.9930000951516567
+    },
+    {
+      "all_event_count": 26446,
+      "h4_multiple_event_count": 26446,
+      "h4_tied_set_long_resolution_denominator": 26446,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 16,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 32.0,
+        "mean": 30.925017015805793,
+        "median": 31.0,
+        "min": 17.0,
+        "p90": 32.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.3616425924525448,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 2.0,
+        "mean": 0.36296604401421767,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 1.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.473001588141874,
+      "optimal_set_jaccard_mean": 0.9849589392150295
+    },
+    {
+      "all_event_count": 26446,
+      "h4_multiple_event_count": 26446,
+      "h4_tied_set_long_resolution_denominator": 26446,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 32,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 32.0,
+        "mean": 30.60443923466687,
+        "median": 31.0,
+        "min": 5.0,
+        "p90": 32.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.47735007184451334,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 2.0,
+        "mean": 0.4827195038947289,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 1.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.7935793692807986,
+      "optimal_set_jaccard_mean": 0.9747574429486444
+    }
+  ],
+  "outputs": {
+    "provenance_json": "analysis/strict_preference_horizon_diagnostic_v1/units/metacdn_cap32/provenance.json",
+    "summary_json": "analysis/strict_preference_horizon_diagnostic_v1/units/metacdn_cap32/summary.json"
+  },
+  "protocol": {
+    "capacity": 32,
+    "family": "metacdn",
+    "history": [
+      0,
+      10000
+    ],
+    "horizons": [
+      4,
+      8,
+      16,
+      32
+    ],
+    "optimal_set_semantics": "all candidates attaining the minimum target value; no total order imposed on ties",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "shared build_candidate_rows_for_full_cache_state eviction_loss_label with LRU continuation",
+    "trajectory": "exact H=4 eviction-loss oracle trajectory with lexicographic H4 tie break"
+  },
+  "status": "COMPLETE",
+  "trace": {
+    "family": "metacdn",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/metacdn/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/metacdn_family_split_map.json",
+      "fold_id": "cross_family_v1_metacdn",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_metacdn.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "metacdn",
+      "test_trace_name": "metacdn_cdn_202303_head_50k",
+      "test_trace_path": "data/processed/metacdn/trace.jsonl",
+      "test_trace_sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73",
+      "train_manifest": "configs/fair_cross_family_v1/folds/metacdn_train_manifest.csv",
+      "training_families": [
+        "brightkite",
+        "citibike",
+        "cloudphysics",
+        "twemcache",
+        "wiki2018"
+      ],
+      "validation_family": "metakv"
+    },
+    "name": "metacdn_cdn_202303_head_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/metacdn/trace.jsonl",
+    "sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73"
+  }
+}

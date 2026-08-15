@@ -1,0 +1,7 @@
+fraction,families,paired_family_capacity_cells,scalar_validation_mae_mean,scalar_downstream_miss_ratio_mean,pairwise_downstream_miss_ratio_mean,pairwise_minus_scalar_miss_ratio_mean,scalar_better_cells,ties,pairwise_better_cells
+0.01,"brightkite,citibike,cloudphysics,metacdn",12,0.9866655,0.62560625,0.8299291666666666,0.20432291666666666,12,0,0
+0.02,"brightkite,citibike,cloudphysics,metacdn",12,0.9839315000000001,0.61833125,0.8295770833333332,0.21124583333333333,12,0,0
+0.05,"brightkite,citibike,cloudphysics,metacdn",12,0.9838035,0.6164583333333333,0.8296208333333333,0.2131625,12,0,0
+0.1,"brightkite,citibike,cloudphysics,metacdn",12,0.9825035,0.6110208333333333,0.8296583333333333,0.2186375,12,0,0
+0.25,"brightkite,citibike,cloudphysics,metacdn",12,0.98259325,0.6136520833333333,0.82956875,0.21591666666666665,12,0,0
+0.5,"brightkite,citibike,cloudphysics,metacdn",12,0.98266725,0.6126125,0.8299791666666666,0.21736666666666662,12,0,0

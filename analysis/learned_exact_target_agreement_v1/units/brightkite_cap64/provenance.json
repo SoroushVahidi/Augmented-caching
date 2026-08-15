@@ -1,0 +1,73 @@
+{
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "hostname": "al-khwarizmi",
+  "model": {
+    "held_out_family": "brightkite",
+    "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/brightkite.pkl",
+    "model_sha256": "f6e2c89db497e6281b066e3a86db813739059255a4e4ccca00dbf8e11dfb07b9",
+    "objective": "objective_eviction_loss",
+    "selected_hyperparameters": "ridge",
+    "training_families": [
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "validation_family": "citibike"
+  },
+  "protocol": {
+    "capacity": 64,
+    "family": "brightkite",
+    "history": [
+      0,
+      10000
+    ],
+    "horizon": 4,
+    "regret_definition": "chosen exact target value minus minimum exact target value",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "Finite-horizon H4 eviction-loss target with LRU continuation",
+    "trajectory": "learned evict_value_v1 scalar deployment trajectory; exact target evaluated on each learned decision state"
+  },
+  "trace": {
+    "family": "brightkite",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/brightkite/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/brightkite_family_split_map.json",
+      "fold_id": "cross_family_v1_brightkite",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_brightkite.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "brightkite",
+      "test_trace_name": "brightkite_50k",
+      "test_trace_path": "data/processed/brightkite/trace.jsonl",
+      "test_trace_sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de",
+      "train_manifest": "configs/fair_cross_family_v1/folds/brightkite_train_manifest.csv",
+      "training_families": [
+        "cloudphysics",
+        "metacdn",
+        "metakv",
+        "twemcache",
+        "wiki2018"
+      ],
+      "validation_family": "citibike"
+    },
+    "name": "brightkite_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/brightkite/trace.jsonl",
+    "sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de"
+  }
+}

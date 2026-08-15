@@ -1,0 +1,23 @@
+{
+  "capacities_evaluated": [
+    32,
+    64,
+    128
+  ],
+  "fraction": "0.05",
+  "held_out_family": "cloudphysics",
+  "pairwise_model_sha256": "c44dc92b0ab07ff0f6a663b4c85534d1e6ecc0d61373b7756a850280bd2eb2bb",
+  "pairwise_train_runtime_seconds": 1.2606,
+  "protocol_id": "supervision_objective_learning_curve_v1",
+  "same_example_guarantee": "train scalar rows and regret-derived pairwise rows share the exact same filtered decision ids",
+  "scalar_model_family": "random_forest",
+  "scalar_model_sha256": "500101ed712f82cedc1c93eb0873f5328b0621353da798ac78adaf080ed63367",
+  "scalar_train_runtime_seconds": 127.2931,
+  "train_candidate_row_count": 1737632,
+  "train_decision_count": 23659,
+  "train_decision_subset_sha256": "81bceea523281d7228840dfb6e5a45c2bc2f68c5857d3962e1fc69663e935159",
+  "train_pair_count": 2273,
+  "validation_candidate_row_count": 60832,
+  "validation_decision_count": 856,
+  "validation_decision_subset_sha256": "e8d01c02a3c73a2529c76b5a56455a6fdab275c4221a59d23347ae029895000c"
+}

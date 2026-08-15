@@ -1,0 +1,206 @@
+{
+  "created_utc": "2026-08-12T17:01:06Z",
+  "decision_relevance_h4_unique": {
+    "never_reused_observed_suffix": 0,
+    "reused_after_h4": 0,
+    "reused_within_h4": 0
+  },
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "?? analysis/exact_target_oracle_replication_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "h4_informativeness": {
+    "all_candidates_tied_count": 12165,
+    "all_candidates_tied_fraction": 0.6351485406985851,
+    "event_count": 19153,
+    "mean_optimal_set_fraction": 0.9866796324335613,
+    "mean_optimal_set_size": 31.57374823787396,
+    "median_optimal_set_size": 32,
+    "multiple_optimum_count": 19153,
+    "multiple_optimum_fraction": 1.0,
+    "ordinary_margin_summary": {
+      "max": 0.0,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "p90": 0.0
+    },
+    "ordinary_margin_zero_fraction": 1.0,
+    "positive_ordinary_margin_summary": {
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p90": null
+    },
+    "strict_distinct_margin_summary": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "p90": 1.0
+    },
+    "strict_positive_ordinary_margin_fraction": 0.0,
+    "unique_winner_count": 0,
+    "unique_winner_fraction": 0.0
+  },
+  "horizon_comparisons": [
+    {
+      "all_event_count": 19153,
+      "h4_multiple_event_count": 19153,
+      "h4_tied_set_long_resolution_denominator": 19153,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 8,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 32.0,
+        "mean": 31.42760925181434,
+        "median": 32.0,
+        "min": 28.0,
+        "p90": 32.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.13627108024852502,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 1.0,
+        "mean": 0.13627108024852502,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 1.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.14613898605962514,
+      "optimal_set_jaccard_mean": 0.995377960511603
+    },
+    {
+      "all_event_count": 19153,
+      "h4_multiple_event_count": 19153,
+      "h4_tied_set_long_resolution_denominator": 19153,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 16,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 32.0,
+        "mean": 31.265754712055553,
+        "median": 31.0,
+        "min": 21.0,
+        "p90": 32.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.26371847752310346,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 1.0,
+        "mean": 0.26371847752310346,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 1.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.30799352581840966,
+      "optimal_set_jaccard_mean": 0.9902627436420561
+    },
+    {
+      "all_event_count": 19153,
+      "h4_multiple_event_count": 19153,
+      "h4_tied_set_long_resolution_denominator": 19153,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 32,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 32.0,
+        "mean": 31.09935780295515,
+        "median": 31.0,
+        "min": 15.0,
+        "p90": 32.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.3756069545240954,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 2.0,
+        "mean": 0.3756591656659531,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 1.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.47439043491881167,
+      "optimal_set_jaccard_mean": 0.9850034233192198
+    }
+  ],
+  "outputs": {
+    "provenance_json": "analysis/strict_preference_horizon_diagnostic_v1/units/brightkite_cap32/provenance.json",
+    "summary_json": "analysis/strict_preference_horizon_diagnostic_v1/units/brightkite_cap32/summary.json"
+  },
+  "protocol": {
+    "capacity": 32,
+    "family": "brightkite",
+    "history": [
+      0,
+      10000
+    ],
+    "horizons": [
+      4,
+      8,
+      16,
+      32
+    ],
+    "optimal_set_semantics": "all candidates attaining the minimum target value; no total order imposed on ties",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "shared build_candidate_rows_for_full_cache_state eviction_loss_label with LRU continuation",
+    "trajectory": "exact H=4 eviction-loss oracle trajectory with lexicographic H4 tie break"
+  },
+  "status": "COMPLETE",
+  "trace": {
+    "family": "brightkite",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/brightkite/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/brightkite_family_split_map.json",
+      "fold_id": "cross_family_v1_brightkite",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_brightkite.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "brightkite",
+      "test_trace_name": "brightkite_50k",
+      "test_trace_path": "data/processed/brightkite/trace.jsonl",
+      "test_trace_sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de",
+      "train_manifest": "configs/fair_cross_family_v1/folds/brightkite_train_manifest.csv",
+      "training_families": [
+        "cloudphysics",
+        "metacdn",
+        "metakv",
+        "twemcache",
+        "wiki2018"
+      ],
+      "validation_family": "citibike"
+    },
+    "name": "brightkite_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/brightkite/trace.jsonl",
+    "sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de"
+  }
+}

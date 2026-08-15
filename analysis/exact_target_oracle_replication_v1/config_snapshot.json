@@ -1,0 +1,49 @@
+{
+  "aggregate_only_when_all_units_complete": true,
+  "atomic_unit_completion": true,
+  "capacities": [
+    32,
+    64,
+    128
+  ],
+  "capacity_semantics": "object_slots",
+  "exact_oracle_tie_break": "lexicographically first among exact-target optimal candidates",
+  "families": [
+    "brightkite",
+    "citibike",
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "historical_regression": {
+    "capacity": 64,
+    "exact_oracle_misses": 19079,
+    "family": "brightkite",
+    "horizon": 4,
+    "lru_misses": 13225
+  },
+  "history": [
+    0,
+    10000
+  ],
+  "horizon": 4,
+  "learned_policy": "disabled_by_default",
+  "name": "exact_target_oracle_replication_v1",
+  "object_size_semantics": "unit",
+  "optional_policies": [
+    "learned_eviction_loss_scalar",
+    "offline_belady"
+  ],
+  "purpose": "Replicate the finite-horizon eviction-loss target oracle across the canonical 21 family-capacity cells.",
+  "required_policies": [
+    "lru",
+    "exact_finite_horizon_eviction_loss_oracle"
+  ],
+  "score": [
+    10000,
+    50000
+  ],
+  "target_semantics": "Finite-horizon H-step eviction-loss target with LRU continuation, matching the frozen training-label definition."
+}

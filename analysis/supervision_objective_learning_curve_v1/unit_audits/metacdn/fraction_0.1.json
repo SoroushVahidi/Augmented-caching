@@ -1,0 +1,23 @@
+{
+  "capacities_evaluated": [
+    32,
+    64,
+    128
+  ],
+  "fraction": "0.1",
+  "held_out_family": "metacdn",
+  "pairwise_model_sha256": "daf4b7d108358828ba1cfb8c83b9a5a86ceccc6850c19058ab7ecf79d9058d6d",
+  "pairwise_train_runtime_seconds": 2.0563,
+  "protocol_id": "supervision_objective_learning_curve_v1",
+  "same_example_guarantee": "train scalar rows and regret-derived pairwise rows share the exact same filtered decision ids",
+  "scalar_model_family": "hist_gb",
+  "scalar_model_sha256": "f9a3f92b9e3a5aa93fd11048c7cd94279ce3a4814b53c2549f79ab4d9e60f971",
+  "scalar_train_runtime_seconds": 21.1357,
+  "train_candidate_row_count": 3701408,
+  "train_decision_count": 50468,
+  "train_decision_subset_sha256": "280cd67199201a01ad205679631edad2c470fe7759b3722251e46e6570a5a50b",
+  "train_pair_count": 4442,
+  "validation_candidate_row_count": 84864,
+  "validation_decision_count": 1139,
+  "validation_decision_subset_sha256": "35c7b51f389c8dd839e89d75877d33015295051b3438039f5132e0cd3fb8a163"
+}

@@ -1,0 +1,206 @@
+{
+  "created_utc": "2026-08-12T22:03:09Z",
+  "decision_relevance_h4_unique": {
+    "never_reused_observed_suffix": 0,
+    "reused_after_h4": 0,
+    "reused_within_h4": 0
+  },
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "M docs/NEXT_STEPS.md\n M docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md\n?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? docs/reviewer/KBS_POST_COMPLETION_HANDOFF.md\n?? models/\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "h4_informativeness": {
+    "all_candidates_tied_count": 40000,
+    "all_candidates_tied_fraction": 1.0,
+    "event_count": 40000,
+    "mean_optimal_set_fraction": 1.0,
+    "mean_optimal_set_size": 32.0,
+    "median_optimal_set_size": 32.0,
+    "multiple_optimum_count": 40000,
+    "multiple_optimum_fraction": 1.0,
+    "ordinary_margin_summary": {
+      "max": 0.0,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "p90": 0.0
+    },
+    "ordinary_margin_zero_fraction": 1.0,
+    "positive_ordinary_margin_summary": {
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p90": null
+    },
+    "strict_distinct_margin_summary": {
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p90": null
+    },
+    "strict_positive_ordinary_margin_fraction": 0.0,
+    "unique_winner_count": 0,
+    "unique_winner_fraction": 0.0
+  },
+  "horizon_comparisons": [
+    {
+      "all_event_count": 40000,
+      "h4_multiple_event_count": 40000,
+      "h4_tied_set_long_resolution_denominator": 40000,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 8,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 32.0,
+        "mean": 32.0,
+        "median": 32.0,
+        "min": 32.0,
+        "p90": 32.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.0,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.0,
+      "optimal_set_jaccard_mean": 1.0
+    },
+    {
+      "all_event_count": 40000,
+      "h4_multiple_event_count": 40000,
+      "h4_tied_set_long_resolution_denominator": 40000,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 16,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 32.0,
+        "mean": 32.0,
+        "median": 32.0,
+        "min": 32.0,
+        "p90": 32.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.0,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.0,
+      "optimal_set_jaccard_mean": 1.0
+    },
+    {
+      "all_event_count": 40000,
+      "h4_multiple_event_count": 40000,
+      "h4_tied_set_long_resolution_denominator": 40000,
+      "h4_tied_set_long_unique_resolution_count": 0,
+      "h4_tied_set_long_unique_resolution_fraction": 0.0,
+      "h4_unique_event_count": 0,
+      "h4_unique_strict_reversal_fraction": null,
+      "h4_unique_winner_agreement_fraction": null,
+      "h4_unique_winner_disagreement_fraction": null,
+      "horizon": 32,
+      "long_optimal_set_intersects_h4_set_fraction": 1.0,
+      "long_optimal_set_size_summary": {
+        "max": 32.0,
+        "mean": 32.0,
+        "median": 32.0,
+        "min": 32.0,
+        "p90": 32.0
+      },
+      "long_reduces_h4_optimal_set_fraction": 0.0,
+      "long_unique_winner_fraction_given_h4_multiple": 0.0,
+      "long_unique_winner_in_h4_set_fraction": 0.0,
+      "long_values_on_h4_tie_set_spread_summary": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0
+      },
+      "mean_h4_minus_long_optimal_set_size": 0.0,
+      "optimal_set_jaccard_mean": 1.0
+    }
+  ],
+  "outputs": {
+    "provenance_json": "analysis/strict_preference_horizon_diagnostic_v1/units/wiki2018_cap32/provenance.json",
+    "summary_json": "analysis/strict_preference_horizon_diagnostic_v1/units/wiki2018_cap32/summary.json"
+  },
+  "protocol": {
+    "capacity": 32,
+    "family": "wiki2018",
+    "history": [
+      0,
+      10000
+    ],
+    "horizons": [
+      4,
+      8,
+      16,
+      32
+    ],
+    "optimal_set_semantics": "all candidates attaining the minimum target value; no total order imposed on ties",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "shared build_candidate_rows_for_full_cache_state eviction_loss_label with LRU continuation",
+    "trajectory": "exact H=4 eviction-loss oracle trajectory with lexicographic H4 tie break"
+  },
+  "status": "COMPLETE",
+  "trace": {
+    "family": "wiki2018",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/wiki2018/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/wiki2018_family_split_map.json",
+      "fold_id": "cross_family_v1_wiki2018",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_wiki2018.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "wiki2018",
+      "test_trace_name": "wiki2018_pageviews_en_50k",
+      "test_trace_path": "data/processed/wiki2018/trace.jsonl",
+      "test_trace_sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608",
+      "train_manifest": "configs/fair_cross_family_v1/folds/wiki2018_train_manifest.csv",
+      "training_families": [
+        "citibike",
+        "cloudphysics",
+        "metacdn",
+        "metakv",
+        "twemcache"
+      ],
+      "validation_family": "brightkite"
+    },
+    "name": "wiki2018_pageviews_en_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/wiki2018/trace.jsonl",
+    "sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608"
+  }
+}

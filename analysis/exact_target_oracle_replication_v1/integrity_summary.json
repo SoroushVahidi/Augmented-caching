@@ -1,0 +1,11 @@
+{
+  "manifest_completed_units": 21,
+  "required_policies": [
+    "lru",
+    "exact_finite_horizon_eviction_loss_oracle"
+  ],
+  "rows": 42,
+  "status": "COMPLETE",
+  "unique_keys": 42,
+  "units": 21
+}

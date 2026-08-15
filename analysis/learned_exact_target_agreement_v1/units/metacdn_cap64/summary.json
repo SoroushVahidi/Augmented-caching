@@ -1,0 +1,234 @@
+{
+  "conditioned_metrics": {
+    "all": {
+      "decision_count": 31469,
+      "lexicographic_agreement_fraction": 0.08538561759191586,
+      "regret_summary": {
+        "max": 2.0,
+        "mean": 0.1588229686358003,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 1.0,
+        "p95": 1.0,
+        "p99": 1.0
+      },
+      "set_aware_agreement_fraction": 0.8412088086688487,
+      "zero_regret_fraction": 0.8412088086688487
+    },
+    "all_candidates_tied": {
+      "decision_count": 20503,
+      "lexicographic_agreement_fraction": 0.10203384870506756,
+      "regret_summary": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      },
+      "set_aware_agreement_fraction": 1.0,
+      "zero_regret_fraction": 1.0
+    },
+    "multiple_exact_optima": {
+      "decision_count": 31469,
+      "lexicographic_agreement_fraction": 0.08538561759191586,
+      "regret_summary": {
+        "max": 2.0,
+        "mean": 0.1588229686358003,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 1.0,
+        "p95": 1.0,
+        "p99": 1.0
+      },
+      "set_aware_agreement_fraction": 0.8412088086688487,
+      "zero_regret_fraction": 0.8412088086688487
+    },
+    "unique_exact_winner": {
+      "decision_count": 0,
+      "lexicographic_agreement_fraction": null,
+      "regret_summary": {
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "p90": null,
+        "p95": null,
+        "p99": null
+      },
+      "set_aware_agreement_fraction": null,
+      "zero_regret_fraction": null
+    }
+  },
+  "created_utc": "2026-08-12T18:32:58Z",
+  "decision_metrics": {
+    "all_candidates_tied_count": 20503,
+    "decision_count": 31469,
+    "lexicographic_agreement_fraction": 0.08538561759191586,
+    "lexicographic_disagreement_count": 28782,
+    "multiple_exact_optima_count": 31469,
+    "set_aware_agreement_fraction": 0.8412088086688487,
+    "set_aware_disagreement_count": 4997,
+    "unique_exact_winner_count": 0
+  },
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "margin_conditioned_metrics": {
+    "ordinary_positive_gt_0_5": {
+      "decision_count": 0,
+      "lexicographic_agreement_fraction": null,
+      "regret_summary": {
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "p90": null,
+        "p95": null,
+        "p99": null
+      },
+      "set_aware_agreement_fraction": null
+    },
+    "ordinary_positive_le_0_5": {
+      "decision_count": 0,
+      "lexicographic_agreement_fraction": null,
+      "regret_summary": {
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "p90": null,
+        "p95": null,
+        "p99": null
+      },
+      "set_aware_agreement_fraction": null
+    },
+    "ordinary_zero": {
+      "decision_count": 31469,
+      "lexicographic_agreement_fraction": 0.08538561759191586,
+      "regret_summary": {
+        "max": 2.0,
+        "mean": 0.1588229686358003,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 1.0,
+        "p95": 1.0,
+        "p99": 1.0
+      },
+      "set_aware_agreement_fraction": 0.8412088086688487
+    }
+  },
+  "margin_metrics": {
+    "ordinary_margin_zero_fraction": 1.0,
+    "positive_ordinary_margin_summary": {
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p90": null,
+      "p95": null,
+      "p99": null
+    },
+    "strict_distinct_margin_summary": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "p90": 1.0,
+      "p95": 1.0,
+      "p99": 1.0
+    },
+    "strict_positive_ordinary_margin_fraction": 0.0
+  },
+  "model": {
+    "held_out_family": "metacdn",
+    "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/metacdn.pkl",
+    "model_sha256": "d4111f1e6aca557ebd2de2e836f120279f2818b167ee44765c294a81a1356fc3",
+    "objective": "objective_eviction_loss",
+    "selected_hyperparameters": "hist_gb",
+    "training_families": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "twemcache",
+      "wiki2018"
+    ],
+    "validation_family": "metakv"
+  },
+  "online_metrics": {
+    "learned_minus_lru": 8883,
+    "learned_misses": 31469,
+    "lru_misses": 22586
+  },
+  "outputs": {
+    "provenance_json": "analysis/learned_exact_target_agreement_v1/units/metacdn_cap64/provenance.json",
+    "summary_json": "analysis/learned_exact_target_agreement_v1/units/metacdn_cap64/summary.json"
+  },
+  "protocol": {
+    "capacity": 64,
+    "family": "metacdn",
+    "history": [
+      0,
+      10000
+    ],
+    "horizon": 4,
+    "regret_definition": "chosen exact target value minus minimum exact target value",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "Finite-horizon H4 eviction-loss target with LRU continuation",
+    "trajectory": "learned evict_value_v1 scalar deployment trajectory; exact target evaluated on each learned decision state"
+  },
+  "regret_metrics": {
+    "positive_regret_fraction": 0.1587911913311513,
+    "summary": {
+      "max": 2.0,
+      "mean": 0.1588229686358003,
+      "median": 0.0,
+      "min": 0.0,
+      "p90": 1.0,
+      "p95": 1.0,
+      "p99": 1.0
+    },
+    "zero_regret_fraction": 0.8412088086688487
+  },
+  "status": "COMPLETE",
+  "trace": {
+    "family": "metacdn",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/metacdn/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/metacdn_family_split_map.json",
+      "fold_id": "cross_family_v1_metacdn",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_metacdn.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "metacdn",
+      "test_trace_name": "metacdn_cdn_202303_head_50k",
+      "test_trace_path": "data/processed/metacdn/trace.jsonl",
+      "test_trace_sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73",
+      "train_manifest": "configs/fair_cross_family_v1/folds/metacdn_train_manifest.csv",
+      "training_families": [
+        "brightkite",
+        "citibike",
+        "cloudphysics",
+        "twemcache",
+        "wiki2018"
+      ],
+      "validation_family": "metakv"
+    },
+    "name": "metacdn_cdn_202303_head_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/metacdn/trace.jsonl",
+    "sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73"
+  }
+}

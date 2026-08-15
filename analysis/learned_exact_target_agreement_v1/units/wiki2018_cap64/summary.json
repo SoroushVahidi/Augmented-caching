@@ -1,0 +1,234 @@
+{
+  "conditioned_metrics": {
+    "all": {
+      "decision_count": 40000,
+      "lexicographic_agreement_fraction": 0.0,
+      "regret_summary": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      },
+      "set_aware_agreement_fraction": 1.0,
+      "zero_regret_fraction": 1.0
+    },
+    "all_candidates_tied": {
+      "decision_count": 40000,
+      "lexicographic_agreement_fraction": 0.0,
+      "regret_summary": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      },
+      "set_aware_agreement_fraction": 1.0,
+      "zero_regret_fraction": 1.0
+    },
+    "multiple_exact_optima": {
+      "decision_count": 40000,
+      "lexicographic_agreement_fraction": 0.0,
+      "regret_summary": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      },
+      "set_aware_agreement_fraction": 1.0,
+      "zero_regret_fraction": 1.0
+    },
+    "unique_exact_winner": {
+      "decision_count": 0,
+      "lexicographic_agreement_fraction": null,
+      "regret_summary": {
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "p90": null,
+        "p95": null,
+        "p99": null
+      },
+      "set_aware_agreement_fraction": null,
+      "zero_regret_fraction": null
+    }
+  },
+  "created_utc": "2026-08-12T20:41:00Z",
+  "decision_metrics": {
+    "all_candidates_tied_count": 40000,
+    "decision_count": 40000,
+    "lexicographic_agreement_fraction": 0.0,
+    "lexicographic_disagreement_count": 40000,
+    "multiple_exact_optima_count": 40000,
+    "set_aware_agreement_fraction": 1.0,
+    "set_aware_disagreement_count": 0,
+    "unique_exact_winner_count": 0
+  },
+  "git": {
+    "branch": "kbs/second-revision-science",
+    "dirty_status": "M docs/NEXT_STEPS.md\n M docs/reviewer/KBS_SECOND_REVISION_HYPOTHESIS_MAP.md\n?? analysis/exact_target_oracle_replication_v1/\n?? analysis/learned_exact_target_agreement_v1/\n?? analysis/strict_preference_horizon_diagnostic_v1/\n?? configs/exact_target_oracle_replication_v1.json\n?? configs/learned_exact_target_agreement_v1.json\n?? configs/strict_preference_horizon_diagnostic_v1.json\n?? docs/reviewer/KBS_POST_COMPLETION_HANDOFF.md\n?? models/\n?? scripts/experiments/run_exact_target_oracle_replication.py\n?? scripts/experiments/run_learned_exact_target_agreement.py\n?? scripts/experiments/run_strict_preference_horizon_diagnostic.py\n?? tests/test_exact_target_oracle_replication.py\n?? tests/test_learned_exact_target_agreement.py\n?? tests/test_strict_preference_horizon_diagnostic.py",
+    "head": "cced8dc59d0d8ba21251d9232dc8d23b69a2f261"
+  },
+  "margin_conditioned_metrics": {
+    "ordinary_positive_gt_0_5": {
+      "decision_count": 0,
+      "lexicographic_agreement_fraction": null,
+      "regret_summary": {
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "p90": null,
+        "p95": null,
+        "p99": null
+      },
+      "set_aware_agreement_fraction": null
+    },
+    "ordinary_positive_le_0_5": {
+      "decision_count": 0,
+      "lexicographic_agreement_fraction": null,
+      "regret_summary": {
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "p90": null,
+        "p95": null,
+        "p99": null
+      },
+      "set_aware_agreement_fraction": null
+    },
+    "ordinary_zero": {
+      "decision_count": 40000,
+      "lexicographic_agreement_fraction": 0.0,
+      "regret_summary": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      },
+      "set_aware_agreement_fraction": 1.0
+    }
+  },
+  "margin_metrics": {
+    "ordinary_margin_zero_fraction": 1.0,
+    "positive_ordinary_margin_summary": {
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p90": null,
+      "p95": null,
+      "p99": null
+    },
+    "strict_distinct_margin_summary": {
+      "max": null,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "p90": null,
+      "p95": null,
+      "p99": null
+    },
+    "strict_positive_ordinary_margin_fraction": 0.0
+  },
+  "model": {
+    "held_out_family": "wiki2018",
+    "model_path": "/home/soroush/Augmented-caching-kbs-second-revision/models/supervision_objective_ablation_v1/objective_eviction_loss/wiki2018.pkl",
+    "model_sha256": "7ec9108b0bbc8b7f29e9f8ba3c21d91b948bd00ac142c36449a96907e246f856",
+    "objective": "objective_eviction_loss",
+    "selected_hyperparameters": "hist_gb",
+    "training_families": [
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache"
+    ],
+    "validation_family": "brightkite"
+  },
+  "online_metrics": {
+    "learned_minus_lru": 0,
+    "learned_misses": 40000,
+    "lru_misses": 40000
+  },
+  "outputs": {
+    "provenance_json": "analysis/learned_exact_target_agreement_v1/units/wiki2018_cap64/provenance.json",
+    "summary_json": "analysis/learned_exact_target_agreement_v1/units/wiki2018_cap64/summary.json"
+  },
+  "protocol": {
+    "capacity": 64,
+    "family": "wiki2018",
+    "history": [
+      0,
+      10000
+    ],
+    "horizon": 4,
+    "regret_definition": "chosen exact target value minus minimum exact target value",
+    "score": [
+      10000,
+      50000
+    ],
+    "target_semantics": "Finite-horizon H4 eviction-loss target with LRU continuation",
+    "trajectory": "learned evict_value_v1 scalar deployment trajectory; exact target evaluated on each learned decision state"
+  },
+  "regret_metrics": {
+    "positive_regret_fraction": 0.0,
+    "summary": {
+      "max": 0.0,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "p90": 0.0,
+      "p95": 0.0,
+      "p99": 0.0
+    },
+    "zero_regret_fraction": 1.0
+  },
+  "status": "COMPLETE",
+  "trace": {
+    "family": "wiki2018",
+    "fold": {
+      "dataset_output_root": "data/derived/evict_value_v1_cross_family_v1/wiki2018/",
+      "family_split_map": "configs/fair_cross_family_v1/folds/wiki2018_family_split_map.json",
+      "fold_id": "cross_family_v1_wiki2018",
+      "held_out_family_rows_in_train_manifest": 0,
+      "history": [
+        0,
+        10000
+      ],
+      "model_output_path": "models/evict_value_v1_cross_family_v1_wiki2018.pkl",
+      "score": [
+        10000,
+        50000
+      ],
+      "test_family": "wiki2018",
+      "test_trace_name": "wiki2018_pageviews_en_50k",
+      "test_trace_path": "data/processed/wiki2018/trace.jsonl",
+      "test_trace_sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608",
+      "train_manifest": "configs/fair_cross_family_v1/folds/wiki2018_train_manifest.csv",
+      "training_families": [
+        "citibike",
+        "cloudphysics",
+        "metacdn",
+        "metakv",
+        "twemcache"
+      ],
+      "validation_family": "brightkite"
+    },
+    "name": "wiki2018_pageviews_en_50k",
+    "path": "/home/soroush/Augmented-caching/data/processed/wiki2018/trace.jsonl",
+    "sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "capacities": [
+    32,
+    64,
+    128
+  ],
+  "conditions": {
+    "eviction_loss_pairwise": {
+      "pairwise_label_definition": "sign(eviction_loss_label_i - eviction_loss_label_j)",
+      "shared_reward_model": "HALPModel",
+      "type": "pairwise_same_target"
+    },
+    "eviction_loss_scalar": {
+      "eviction_direction": "min",
+      "fixed_model_family_by_fold": {
+        "brightkite": "ridge",
+        "citibike": "hist_gb",
+        "cloudphysics": "random_forest",
+        "metacdn": "hist_gb",
+        "metakv": "hist_gb",
+        "twemcache": "random_forest",
+        "wiki2018": "hist_gb"
+      },
+      "label_column": "eviction_loss_label",
+      "model_family_note": "Frozen per fold from the audited supervision_objective_ablation_v1 objective_eviction_loss training summaries to avoid fraction-by-fraction hyperparameter search.",
+      "type": "scalar_regression"
+    }
+  },
+  "data_read_root": "../Augmented-caching",
+  "dataset_repo_root": "../Augmented-caching-objective-ablation",
+  "dataset_root": "../Augmented-caching-objective-ablation/data/derived/supervision_objective_ablation_v1",
+  "description": "Local same-target learning-curve diagnostic comparing scalar eviction-loss regression against pairwise regret-derived supervision from the exact same training decision subsets.",
+  "fractions": [
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.25,
+    0.5,
+    1.0
+  ],
+  "held_out_families": [
+    "brightkite",
+    "citibike",
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "horizon": 4,
+  "max_wall_hours_default": 10.0,
+  "models_dir": "models/supervision_objective_learning_curve_v1",
+  "output_dir": "analysis/supervision_objective_learning_curve_v1",
+  "pairwise_label_source": "regret",
+  "pairwise_max_pairs_per_decision": 6,
+  "pairwise_sample_seed": 0,
+  "protocol_id": "supervision_objective_learning_curve_v1",
+  "same_example_guarantee": "One deterministic nested training-decision ordering per fold. For each fraction, scalar rows are all candidate rows belonging to the selected decision ids, and pairwise rows are derived only from those exact filtered scalar rows.",
+  "seed": 0,
+  "source_protocol_id": "supervision_objective_ablation_v1",
+  "validation_decision_fraction": 0.01,
+  "validation_decision_fraction_note": "Fixed across all fractions and both conditions; used only for common candidate-ranking / decision-regret metrics and scalar MAE/RMSE, never for held-out policy evaluation."
+}

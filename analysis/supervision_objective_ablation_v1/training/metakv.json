@@ -1,0 +1,157 @@
+{
+  "held_out_family": "metakv",
+  "fold_id": "cross_family_v1_metakv",
+  "objectives": {
+    "objective_eviction_loss": {
+      "label_column": "eviction_loss_label",
+      "direction": "min",
+      "best_model_name": "hist_gb",
+      "comparison_rows": [
+        {
+          "objective": "objective_eviction_loss",
+          "model": "ridge",
+          "val_mae": 1.5617997828615828,
+          "val_rmse": 1.8376151245288956,
+          "test_mae": 1.5617997828615828,
+          "test_rmse": 1.8376151245288956,
+          "val_top1": 0.2789385389659905,
+          "test_top1": 0.2789385389659905,
+          "val_mean_regret": 0.029739210004575262,
+          "test_mean_regret": 0.029739210004575262
+        },
+        {
+          "objective": "objective_eviction_loss",
+          "model": "random_forest",
+          "val_mae": 1.1736141166188905,
+          "val_rmse": 1.3046849551681554,
+          "test_mae": 1.1736141166188905,
+          "test_rmse": 1.3046849551681554,
+          "val_top1": 0.2739057495806009,
+          "test_top1": 0.2739057495806009,
+          "val_mean_regret": 0.02028366631081287,
+          "test_mean_regret": 0.02028366631081287
+        },
+        {
+          "objective": "objective_eviction_loss",
+          "model": "hist_gb",
+          "val_mae": 1.3132305567134186,
+          "val_rmse": 1.4761277886710795,
+          "test_mae": 1.3132305567134186,
+          "test_rmse": 1.4761277886710795,
+          "val_top1": 0.28275125819734637,
+          "test_top1": 0.28275125819734637,
+          "val_mean_regret": 0.013573280463626658,
+          "test_mean_regret": 0.013573280463626658
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_eviction_loss/metakv.pkl",
+      "model_sha256": "a5e74b10eb5b2eedd15583040e9c9e23ade0c9e6b2b99b7cf7a3cf51a631180d",
+      "seed": 0
+    },
+    "objective_next_arrival": {
+      "label_column": "next_arrival_label_censored",
+      "direction": "max",
+      "best_model_name": "ridge",
+      "comparison_rows": [
+        {
+          "objective": "objective_next_arrival",
+          "model": "ridge",
+          "val_mae": 0.06870354213326477,
+          "val_rmse": 0.25663816371631326,
+          "test_mae": 0.06870354213326477,
+          "test_rmse": 0.25663816371631326,
+          "val_top1": 0.2888516089675156,
+          "test_top1": 0.2888516089675156,
+          "val_mean_regret": 0.013420771694372426,
+          "test_mean_regret": 0.013420771694372426
+        },
+        {
+          "objective": "objective_next_arrival",
+          "model": "random_forest",
+          "val_mae": 0.053359507152277025,
+          "val_rmse": 0.2583872378124117,
+          "test_mae": 0.053359507152277025,
+          "test_rmse": 0.2583872378124117,
+          "val_top1": 0.3019673631233796,
+          "test_top1": 0.3019673631233796,
+          "val_mean_regret": 0.013878298002135123,
+          "test_mean_regret": 0.013878298002135123
+        },
+        {
+          "objective": "objective_next_arrival",
+          "model": "hist_gb",
+          "val_mae": 0.04551826214659811,
+          "val_rmse": 0.2570026208656042,
+          "test_mae": 0.04551826214659811,
+          "test_rmse": 0.2570026208656042,
+          "val_top1": 0.4729296934573738,
+          "test_top1": 0.4729296934573738,
+          "val_mean_regret": 0.020741192618575568,
+          "test_mean_regret": 0.020741192618575568
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_next_arrival/metakv.pkl",
+      "model_sha256": "259f4e6389c33225f0c0e06f43329ee013d03df4d80c2fff3cddfd57733771af",
+      "seed": 0
+    },
+    "objective_reuse_distance": {
+      "label_column": "reuse_distance_label_censored",
+      "direction": "max",
+      "best_model_name": "ridge",
+      "comparison_rows": [
+        {
+          "objective": "objective_reuse_distance",
+          "model": "ridge",
+          "val_mae": 0.1195175314441508,
+          "val_rmse": 0.3780205580890787,
+          "test_mae": 0.1195175314441508,
+          "test_rmse": 0.3780205580890787,
+          "val_top1": 0.2906817141985664,
+          "test_top1": 0.2906817141985664,
+          "val_mean_regret": 0.025621473234710996,
+          "test_mean_regret": 0.025621473234710996
+        },
+        {
+          "objective": "objective_reuse_distance",
+          "model": "random_forest",
+          "val_mae": 0.09134273442777097,
+          "val_rmse": 0.382296525928767,
+          "test_mae": 0.09134273442777097,
+          "test_rmse": 0.382296525928767,
+          "val_top1": 0.30410248589293887,
+          "test_top1": 0.30410248589293887,
+          "val_mean_regret": 0.02592649077321946,
+          "test_mean_regret": 0.02592649077321946
+        },
+        {
+          "objective": "objective_reuse_distance",
+          "model": "hist_gb",
+          "val_mae": 0.07944374312931177,
+          "val_rmse": 0.378696234735934,
+          "test_mae": 0.07944374312931177,
+          "test_rmse": 0.378696234735934,
+          "val_top1": 0.3875247826750038,
+          "test_top1": 0.3875247826750038,
+          "val_mean_regret": 0.03019673631233796,
+          "test_mean_regret": 0.03019673631233796
+        }
+      ],
+      "n_train_rows": 150000,
+      "n_val_rows": 30000,
+      "model_path": "models/supervision_objective_ablation_v1/objective_reuse_distance/metakv.pkl",
+      "model_sha256": "29bb2b158d27bbbf745128e41465c6a6b482d45bf60e732e49d31d86dd2ad4e8",
+      "seed": 0
+    },
+    "objective_pairwise": {
+      "label_source": "next_arrival",
+      "n_train_pairs": 37489,
+      "model_path": "models/supervision_objective_ablation_v1/objective_pairwise/metakv.pkl",
+      "model_sha256": "0cb426d3317e7f9cde35f8849777053ccbb5332e44ada51d62fb354735a8aac7",
+      "seed": 0
+    }
+  }
+}

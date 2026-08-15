@@ -1,0 +1,8 @@
+{
+  "cell_rows": 21,
+  "expected_horizons_per_cell": 3,
+  "horizon_rows": 63,
+  "status": "COMPLETE",
+  "unique_cell_keys": 21,
+  "units": 21
+}
