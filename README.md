@@ -31,6 +31,9 @@ Start here: [docs/reviewer/START_HERE.md](docs/reviewer/START_HERE.md)
 
 Folder index: [submission_kbs_revision_final/README.md](submission_kbs_revision_final/README.md).
 
+Final convenience submission archive:
+[submission_kbs_revision_final/package/KBS_second_revision_FINAL_submission.zip](submission_kbs_revision_final/package/KBS_second_revision_FINAL_submission.zip)
+
 **Do not use** files under [historical/](historical/) (including the old
 “robust” zip and earlier manuscript copies) as current submission evidence.
 
