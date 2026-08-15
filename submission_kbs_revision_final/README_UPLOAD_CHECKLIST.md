@@ -1,9 +1,16 @@
 # KBS Revision Upload Checklist
 
+> **Status (2026-08-14).** This checklist was prepared 2026-06-21 and is
+> **not** a current scientific summary. Several bullets below (HALP
+> “analytical only”, fallback framing, page/experiment scope) are
+> superseded. For current reviewer evidence use
+> `01_Revised_Manuscript.pdf`, `02_Response_to_Reviewers.md`,
+> `07_LaTeX_Source/`, and `../docs/reviewer/START_HERE.md`.
+
 Manuscript: **KNOSYS-D-26-07461**  
 Author: **Soroush Vahidi** (sole author)  
 Package folder: `submission_kbs_revision_final/`  
-Prepared: 2026-06-21
+Prepared: 2026-06-21 (historical packaging note)
 
 This package contains the files needed for the KBS revision upload to Editorial Manager. Download this folder (or `submission_kbs_revision_final.zip`) from GitHub and upload each item as requested by the revision email.
 

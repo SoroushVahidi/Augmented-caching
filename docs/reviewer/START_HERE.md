@@ -9,10 +9,16 @@ Public repository: <https://github.com/SoroushVahidi/Augmented-caching>
 
 Canonical files:
 
-- Revised manuscript:
+- Revised manuscript (21-page PDF):
   [submission_kbs_revision_final/01_Revised_Manuscript.pdf](../../submission_kbs_revision_final/01_Revised_Manuscript.pdf)
 - Response to reviewers:
   [submission_kbs_revision_final/02_Response_to_Reviewers.md](../../submission_kbs_revision_final/02_Response_to_Reviewers.md)
+- LaTeX source matching that PDF:
+  [submission_kbs_revision_final/07_LaTeX_Source/](../../submission_kbs_revision_final/07_LaTeX_Source/)
+- Folder index:
+  [submission_kbs_revision_final/README.md](../../submission_kbs_revision_final/README.md)
+
+Do not use files under [historical/](../../historical/) as current evidence.
 
 ## 1. What changed in this revision
 
@@ -93,6 +99,8 @@ Do **not** treat the following as primary:
 - Word/ZIP copies under `submission_kbs_revision_final/` other than the PDF
   and Markdown response listed above. Prefer
   `01_Revised_Manuscript.pdf` and `02_Response_to_Reviewers.md`.
+- Repository `historical/` (old “robust” zip, earlier manuscript_source PDF,
+  Wulver `heavy_r1` gateway note, old submission zip).
 
 ## 5. Reproduction / verification
 
@@ -102,3 +110,17 @@ Do **not** treat the following as primary:
   numerical claims from published files
 
 No scientific experiment was rerun for this reviewer-facing publication.
+
+## 6. Public dataset
+
+Related public dataset: LAFC-Evict provides derived cache-eviction
+supervision data associated with this research program. The manuscript's
+reported experiments use the exact source traces and audited artifacts
+identified in this guide and in
+[REPRODUCTION_MATRIX.md](REPRODUCTION_MATRIX.md).
+
+- LAFC-Evict v0.3 (wiki2018-only derived candidate rows):
+  <https://huggingface.co/datasets/SoroushVahidi/lafc-evict>
+
+This release is not claimed to contain BrightKite, Citi Bike, or the other
+evaluated families, nor the exact matched-replay tables used in the paper.

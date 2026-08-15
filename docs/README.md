@@ -1,6 +1,6 @@
 # Documentation index (`docs/`)
 
-Use this page to find the **right** document without duplicating long runbooks. **Primary KBS gateway (repo root):** [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md).
+Use this page to find the **right** document without duplicating long runbooks. **Current reviewer gateway:** [`reviewer/START_HERE.md`](reviewer/START_HERE.md). The older Wulver `heavy_r1` checklist is historical: [`../historical/CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md).
 
 ---
 
@@ -24,7 +24,7 @@ public entry points.
 
 | Document | Use when you need… |
 |----------|---------------------|
-| [`CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md) | One-page list of scripts, inputs, outputs, and what not to cite |
+| [`CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md) | HISTORICAL Wulver `heavy_r1` checklist (not current reviewer evidence) |
 | [`kbs_manuscript_workflow.md`](kbs_manuscript_workflow.md) | Full workflow, builder command, separation from exploratory work |
 | [`evict_value_v1_kbs_canonical_artifacts.md`](evict_value_v1_kbs_canonical_artifacts.md) | Exact filenames for builder `EVIDENCE_FILES` |
 | [`kbs_manuscript_submission_index.md`](kbs_manuscript_submission_index.md) | Reviewer-facing index for the same line |

@@ -29,7 +29,7 @@ cd "$REPO_ROOT"
 
 - Common-model V1 (pairwise orientation error)
 - Leaky single-split `evict_value_v1` evaluation
-- Older Wulver `heavy_r1` manuscript-artifact workflow docs at repository root
+- Older Wulver `heavy_r1` manuscript-artifact workflow docs now under `historical/`
 
 Cost guide:
 

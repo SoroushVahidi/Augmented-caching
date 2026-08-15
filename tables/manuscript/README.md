@@ -10,4 +10,4 @@ Files here are mostly produced by **`scripts/paper/build_kbs_main_manuscript_art
 
 **Do not edit** generated `.tex` / `.csv` for science fixes; fix upstream analysis or rebuild. **Table~6** is edited deliberately when related-work positioning changes.
 
-**Navigation:** [`../../CANONICAL_KBS_SUBMISSION.md`](../../CANONICAL_KBS_SUBMISSION.md), [`../../docs/kbs_manuscript_workflow.md`](../../docs/kbs_manuscript_workflow.md).
+**Navigation:** [`../../historical/CANONICAL_KBS_SUBMISSION.md`](../../historical/CANONICAL_KBS_SUBMISSION.md), [`../../docs/kbs_manuscript_workflow.md`](../../docs/kbs_manuscript_workflow.md).

@@ -157,7 +157,7 @@ what each diagnostic measures and its current evidence status.
 
 See the root [`README.md`](../README.md) for the full policy roster and the
 canonical Knowledge-Based Systems manuscript reproduction path
-([`CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md)), which has
+([`CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md)), which has
 its own more specific (Slurm-based, larger-scale) reproduction steps.
 
 ## I. Resume / checkpoint semantics (general note)

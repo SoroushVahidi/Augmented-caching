@@ -2,7 +2,7 @@
 
 **Navigation hub (canonical workflow + builder + table/figure paths):** `docs/kbs_manuscript_workflow.md`.
 
-**One-page canonical checklist (repo root):** [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md). **Documentation index:** [`README.md`](README.md).
+**One-page canonical checklist (repo root):** [`../historical/CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md). **Documentation index:** [`README.md`](README.md).
 
 Single entry point for reviewers and authors: what is **canonical** for the main Wulver learned-eviction story, what is **exploratory**, and where tables/figures come from.
 

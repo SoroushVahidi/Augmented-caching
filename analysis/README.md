@@ -2,7 +2,9 @@
 
 `analysis/` stores experiment outputs and manuscript-support artifacts.
 
-**Navigation:** For the finalized **KBS** manuscript (`heavy_r1` Wulver line, builder command, `tables/manuscript/` / `figures/manuscript/`), start at **[`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md)** and **`docs/kbs_manuscript_workflow.md`**.
+**Current reviewer evidence** is indexed from [`docs/reviewer/START_HERE.md`](../docs/reviewer/START_HERE.md), not from the historical `heavy_r1` checklist.
+
+**Navigation:** For the older Wulver **KBS** manuscript-artifact line (`heavy_r1`, builder command, `tables/manuscript/` / `figures/manuscript/`), see **[`../historical/CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md)** and **`docs/kbs_manuscript_workflow.md`**.
 
 ---
 
