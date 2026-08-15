@@ -1,4 +1,4 @@
-# Final KBS second-revision submission package
+# Final KBS second-revision upload package
 
 Manuscript:
 KNOSYS-D-26-07461R1
@@ -6,28 +6,28 @@ KNOSYS-D-26-07461R1
 Title:
 Decision-aligned eviction-value prediction for learning-augmented caching
 
-Archive:
-[KBS_second_revision_FINAL_submission.zip](KBS_second_revision_FINAL_submission.zip)
+Current archive:
+[KBS_second_revision_UPLOAD_ONLY.zip](KBS_second_revision_UPLOAD_ONLY.zip)
 
 SHA-256:
-`aae422d9cf9744c807f4f6c7ea5a460c17fbb2f2b36eb87c04822cadace4e3aa`
+`352d3074fbe86e1182b3b242657187ee9b146a1669e512bedbde238eb0b8dfc8`
 
-This archive is a convenience copy of the final synchronized submission
-materials for the second revision. Editorial Manager may require the
-contained files to be uploaded individually according to their item types.
+This archive contains only files intended for Editorial Manager upload for
+the second revision. The ZIP itself is a convenience archive; Editorial
+Manager may still require the contained files to be uploaded individually
+by item type.
 
-Contents include:
+Contents:
 - 21-page revised manuscript PDF
-- final response to reviewers DOCX/Markdown
-- final cover letter
-- final highlights
+- response to reviewers (DOCX)
+- cover letter
+- highlights
 - CRediT statement
 - declaration of interest
 - current LaTeX source
 
-The author agreement is handled separately / carried forward in Editorial
-Manager and is not represented by a newly generated signed file in this
-archive.
+The existing Author Agreement is carried forward separately in Editorial
+Manager and is not included in this archive.
 
 Canonical reviewer documentation:
 https://github.com/SoroushVahidi/Augmented-caching/blob/main/docs/reviewer/START_HERE.md

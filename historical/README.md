@@ -20,5 +20,6 @@ Do **not** use these files as current reviewer evidence.
 | `CANONICAL_KBS_SUBMISSION.md` | Wulver `heavy_r1` manuscript-artifact workflow. Not the corrected matched second-revision evidence. |
 | `Decision_aligned_eviction_value_prediction_for_robust_learning_augmented_caching.zip` | Older LaTeX/figure package (June 2026) using a superseded title containing “robust”. |
 | `submission_kbs_revision_final.zip` | Earlier zip snapshot of the submission folder; not guaranteed to match the current 21-page PDF. |
+| `KBS_second_revision_FINAL_submission.zip` | Earlier convenience package that also contained Markdown/README/placeholder files. Not the current Editorial Manager upload-only archive. |
 | `manuscript_source/` | Older compiled manuscript (not the current 21-page PDF). |
 | `submission_kbs_revision_docx/` | June 2026 visual-check PDF and a response skeleton. |
