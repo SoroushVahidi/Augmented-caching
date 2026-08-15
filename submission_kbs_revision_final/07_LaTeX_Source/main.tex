@@ -57,7 +57,7 @@ The main contributions of this paper are as follows.
     \item We formulate paging as candidate-level scoring and instantiate a finite-horizon eviction-value predictor, \texttt{evict\_value\_v1}.
     \item Under a matched protocol (identical hashed traces, capacities, windows, and miss accounting) against seven classical and learned baselines, including LRB and 3L-Cache, \texttt{evict\_value\_v1} does not outperform any baseline.
     \item A full-pipeline ablation against reuse-distance, next-arrival, and pairwise-preference supervision finds eviction-loss worst or tied-worst. A matched common-model control that changes only the training objective does \emph{not} support blaming that objective: eviction-loss is nominally best by aggregate misses.
-    \item Mechanistic diagnostics (exact oracle, degeneracy audit, learned/exact agreement, and tie-aware replay) disfavor gross fitting failure and insufficient data. The horizon-4 target is highly action-underdetermined; the deterministic exact-oracle deficit versus LRU is a tie-breaking confound. Continuation-label mismatch is a partial, family-dependent contributor; generic DAgger-style shift correction does not improve online misses.
+    \item Mechanistic diagnostics (exact oracle, degeneracy audit, learned/exact agreement, and tie-aware replay) disfavor a sample-size explanation; the $97.53\%$ set-aware agreement is weak evidence of candidate discrimination. The horizon-4 target is highly action-underdetermined; the deterministic exact-oracle deficit versus LRU is a tie-breaking confound. Continuation-label mismatch is a partial, family-dependent contributor; generic DAgger-style shift correction does not improve online misses.
     \item Controlled timing shows per-decision cost orders of magnitude above lightweight baselines. Combined with the negative miss-ratio result, the present implementation is neither performance-competitive nor deployment-efficient.
 \end{enumerate}
 
@@ -131,7 +131,7 @@ Figure~\ref{fig:method_overview} summarizes the evaluated pipeline. Traces are c
 \node[box] (b5) at (6.0,3.20) {Evict $\arg\min$ and update};
 \foreach \a/\b in {b1/b2,b2/b3,b3/b4,b4/b5} {\draw[arr] (\a) -- (\b);}
 \end{tikzpicture}
-\caption{Evaluated eviction-value workflow: offline candidate-level labels and online $\arg\min$ eviction. No fallback is used in any reported result.}
+\caption{Evaluated eviction-value workflow: offline candidate-level labels and online $\arg\min$ eviction.}
 \label{fig:method_overview}
 \end{figure}
 
@@ -300,7 +300,7 @@ FIFO-Reinsertion  & 0.6733 & 2 & 16 & 3 & $+4.04\%$ \\
 \end{tabular}
 \end{table}
 
-\texttt{evict\_value\_v1} loses on a majority of cells against every baseline (13--17 losses; relative miss-ratio gap $+1.13\%$ vs.\ 3L-Cache to $+4.12\%$ vs.\ LRU). The closest mean comparison is 3L-Cache; the same negative pattern holds against both learned systems and lightweight queues, so the result is not an artifact of a single unusually strong comparator. It offers no matched advantage over LRB or 3L-Cache.
+\texttt{evict\_value\_v1} loses on a majority of cells against every baseline (13--17 losses; relative miss-ratio gap $+1.13\%$ vs.\ 3L-Cache to $+4.12\%$ vs.\ LRU). The closest mean comparison is 3L-Cache, where EV still loses on 13 of 21 cells; the negative result spans both learned systems and lightweight queues. It offers no matched advantage over LRB or 3L-Cache.
 
 \subsubsection{Implementation-fidelity caveats}
 
@@ -358,7 +358,7 @@ Eviction-loss is nominally best by totals and macro mean miss ratio; pairwise is
 
 The matched comparison and pipeline ablation are negative; Table~\ref{tab:common-model-v2} shows the training objective is not the isolated cause. We diagnose the target on the same 21 cells.
 
-\textbf{Is inaccurate prediction the cause?} An exact horizon-4 solver for the same target agrees with the learned scorer on $97.53\%$ of decisions (macro mean \emph{set-aware} agreement): the learned victim usually lies in the exact optimal set. Mean target regret is $0.0247$ and the positive-regret fraction is $0.0247$; learned misses ($601{,}569$) are within $6.4\%$ of LRU ($565{,}126$). Because that set is itself extremely large (below), set-aware agreement is weak evidence of candidate discrimination. It does disfavor \emph{gross} fitting failure---the scorer rarely leaves the set the target defines.
+\textbf{Is inaccurate prediction the cause?} An exact horizon-4 solver for the same target agrees with the learned scorer on $97.53\%$ of decisions (macro mean \emph{set-aware} agreement): the learned victim usually lies in the exact optimal set. Mean target regret is $0.0247$ and the positive-regret fraction is $0.0247$; learned misses ($601{,}569$) are within $6.4\%$ of LRU ($565{,}126$). Because the exact optimal set contains approximately $99.1\%$ of candidates on average, the $97.53\%$ set-aware agreement is weak evidence of discrimination among candidates. Its main implication is that the learned scorer rarely selects outside the target-defined optimal set.
 
 \textbf{Is the target useful if optimized perfectly?} Under deterministic tie-breaking (minimum candidate identifier), the exact oracle has mean miss ratio $0.770090$ vs.\ $0.672769$ for LRU: 0 wins / 3 ties / 18 losses, $+81{,}750$ misses ($646{,}876$ vs.\ $565{,}126$). That instantiation is a poor online policy; it is not a statement about every way of resolving the same optimal sets.
 
@@ -366,7 +366,7 @@ A tie-aware control varies only how exact minimizers are chosen. Every measured 
 
 \textbf{Why so underdetermined?} Two diagnostics agree qualitatively and should not be treated as interchangeable point estimates. In the tie-aware replay above, the mean fraction of decisions in which every candidate is tied is $\approx 0.649$ and the mean optimal-set fraction is $\approx 0.991$. An independent strict-preference audit of the same $H=4$ target reports unique-winner fraction $0.0$, multiple-optimum fraction $1.0$, $76.4\%$ all-tied decisions, and mean optimal-set fraction $0.9949$. The numerical gap reflects different instrumentation (online oracle replay vs.\ a strict-preference diagnostic), not a contradiction. Across $41{,}615{,}776$ candidate-residency observations at $565{,}126$ decisions, $P(T>4)=0.9939$ overall and $0.9793$ even conditioned on eventual reuse. Most consequences lie outside $H=4$, so the target often cannot distinguish candidates.
 
-\textbf{Summary.} A learning-curve check at $1$--$50\%$ of candidate examples shows no material target-quality gain, which disfavors a sample-size explanation. Gross fitting failure is likewise disfavored, with the caveat above that set-aware agreement does not imply discrimination inside a near-full optimal set. The eviction-loss \emph{training objective} is not supported as the culprit (Table~\ref{tab:common-model-v2}). The strongest supported diagnosis is action-underdetermined $H=4$ supervision. Tie degeneracy is not claimed to explain every aspect of learned underperformance. Section~\ref{subsec:continuation_ablations} tests a secondary continuation/deployment contributor.
+\textbf{Summary.} A learning-curve check at $1$--$50\%$ of candidate examples shows no material target-quality gain, which disfavors a sample-size explanation. The $97.53\%$ set-aware agreement does not imply discrimination inside a near-full optimal set. The eviction-loss \emph{training objective} is not supported as the culprit (Table~\ref{tab:common-model-v2}). The strongest supported diagnosis is action-underdetermined $H=4$ supervision. Tie degeneracy is not claimed to explain every aspect of learned underperformance. Section~\ref{subsec:continuation_ablations} tests a secondary continuation/deployment contributor.
 
 \subsection{Continuation-Mismatch and Distribution-Shift Ablations}
 \label{subsec:continuation_ablations}
@@ -433,7 +433,7 @@ Candidate-level $H=4$ eviction-value scoring is learnable offline and unsuccessf
 \item Family-level LRU gaps in Table~\ref{tab:family-capacity-gap} use the same matched protocol as Section~\ref{subsec:major1_comparison}. Capacity 256 is unevaluated.
 \item \texttt{evict\_value\_v1} timing is a single run, not in the 5-repetition campaign.
 \item No validated fallback; an optional early-return guard exists in the accompanying code and is unused for claims.
-\item Single-author revision; audits do not replace independent replication.
+\item Independent replication remains desirable.
 \item Diagnostics constrain interpretation; they do not isolate every downstream cause of underperformance.
 \end{itemize}
 
