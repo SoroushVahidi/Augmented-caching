@@ -2,7 +2,7 @@
 
 **Single navigation page** for finalized **Knowledge-Based Systems** submission work: canonical evidence, builder command, LaTeX-oriented outputs, and where exploratory material lives (so it is not mistaken for the main paper line).
 
-**Checklist hub (scripts + filenames + do-not-cite list):** [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md). **All `docs/` grouped by topic:** [`README.md`](README.md).
+**Checklist hub (scripts + filenames + do-not-cite list):** [`../historical/CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md). **All `docs/` grouped by topic:** [`README.md`](README.md).
 
 ---
 

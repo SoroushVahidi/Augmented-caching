@@ -1,185 +1,147 @@
-# Learning-Augmented Caching (`lafc`)
+# Decision-aligned eviction-value prediction for learning-augmented caching
 
-Research code for **learning-augmented caching**: literature-faithful baselines, robust combiners, dataset pipelines for public and manifest-based traces, and reproducible experiment scripts (CSV / JSON / Markdown artifacts).
+Public repository: <https://github.com/SoroushVahidi/Augmented-caching>
 
----
+This repository contains code and verified experimental artifacts for the
+Knowledge-Based Systems manuscript
 
-## What this repository is
+**"Decision-aligned eviction-value prediction for learning-augmented caching"**
 
-- **Simulator and policies:** `python -m lafc.runner.run_policy` (`src/lafc/`) for trace replay of named policies.
-- **Learned eviction (main line):** **`evict_value_v1`** — scores each cache resident (candidate) with a supervised model; evicts a minimizer. Optional **`evict_value_v1_guarded`** wrapper (`docs/guarded_robust_wrapper.md`).
-- **Exploratory research:** pairwise / ranking supervision, sentinel variants, and theorem notes under `docs/pairwise_*` and `analysis/pairwise_*` — **not** the canonical KBS Wulver table path unless explicitly cross-walked.
+The paper studies a narrow question: whether a candidate-level eviction target
+that estimates finite-horizon downstream miss cost is enough to make a useful
+online cache-replacement policy. It is a controlled study of that target, not a
+claim that `evict_value_v1` is a universally superior cache policy.
 
-**Evidence caveats:** `docs/manuscript_evidence_map.md`, `docs/manuscript_open_questions.md`.
+**Headline result.** Under the corrected held-out / matched second-revision
+protocol, `evict_value_v1` does **not** outperform LRU, FIFO-Reinsertion,
+SIEVE, LRB, 3L-Cache, CACHEUS, or HALP.
 
----
+## Canonical KBS revision materials
 
-## Stable baselines (manuscript-safe references)
+Start here: [docs/reviewer/START_HERE.md](docs/reviewer/START_HERE.md)
 
-Classical and robust policies exposed on the main CLI include `lru`, `marker`, `predictive_marker`, `trust_and_doubt`, `robust_ftp_d_marker` (`robust_ftp`), `blind_oracle_lru_combiner`, and the unweighted optimum `offline_belady` (full lookahead via trace construction). **General caching** (variable sizes/costs) uses a separate LP+rounding entry point: `scripts/run_offline_general_caching_approx.py` — see `docs/offline_general_caching_approx.md` (not a `--policy` on `run_policy`).
+| Material | Location |
+|---|---|
+| Revised manuscript (PDF) | [submission_kbs_revision_final/01_Revised_Manuscript.pdf](submission_kbs_revision_final/01_Revised_Manuscript.pdf) |
+| Response to reviewers | [submission_kbs_revision_final/02_Response_to_Reviewers.md](submission_kbs_revision_final/02_Response_to_Reviewers.md) |
+| LaTeX source | [submission_kbs_revision_final/07_LaTeX_Source/](submission_kbs_revision_final/07_LaTeX_Source/) |
+| Reviewer verification guide | [docs/reviewer/START_HERE.md](docs/reviewer/START_HERE.md) |
+| Reproduction matrix | [docs/reviewer/REPRODUCTION_MATRIX.md](docs/reviewer/REPRODUCTION_MATRIX.md) |
+| Result verification | [docs/reviewer/RESULT_VERIFICATION.md](docs/reviewer/RESULT_VERIFICATION.md) |
 
-Full roster and literature pointers: `docs/baselines.md` (summary lists above).
+Folder index: [submission_kbs_revision_final/README.md](submission_kbs_revision_final/README.md).
 
----
+Final convenience submission archive:
+[submission_kbs_revision_final/package/KBS_second_revision_UPLOAD_CORRECTED.zip](submission_kbs_revision_final/package/KBS_second_revision_UPLOAD_CORRECTED.zip)
 
-## Canonical KBS manuscript path (Wulver `heavy_r1`)
+**Do not use** files under [historical/](historical/) (including the old
+“robust” zip and earlier manuscript copies) as current submission evidence.
 
-For **Knowledge-Based Systems** and the **only** designated multi-trace Wulver `evict_value_v1` evidence line:
+**Primary vs historical evidence**
 
-| Step | Resource |
-|------|----------|
-| **One-page checklist** | **[`CANONICAL_KBS_SUBMISSION.md`](CANONICAL_KBS_SUBMISSION.md)** (repo root) |
-| Narrative workflow | [`docs/kbs_manuscript_workflow.md`](docs/kbs_manuscript_workflow.md) |
-| Slurm train → eval | [`slurm/evict_value_v1_wulver_heavy_train.sbatch`](slurm/evict_value_v1_wulver_heavy_train.sbatch), [`slurm/evict_value_v1_wulver_heavy_eval.sbatch`](slurm/evict_value_v1_wulver_heavy_eval.sbatch) with `EXP_TAG=heavy_r1` |
-| Runbook | [`docs/wulver_heavy_evict_value_experiment.md`](docs/wulver_heavy_evict_value_experiment.md) |
-| Exact filenames | [`docs/evict_value_v1_kbs_canonical_artifacts.md`](docs/evict_value_v1_kbs_canonical_artifacts.md) |
-| Tables / figures | `python scripts/paper/build_kbs_main_manuscript_artifacts.py` → `tables/manuscript/`, `figures/manuscript/`, `reports/manuscript_artifacts/` |
+- **PRIMARY / FINAL:** corrected leave-one-family-out matched comparison
+  (LRB, 3L-Cache, CACHEUS, HALP, LRU, SIEVE, FIFO-Reinsertion);
+  workload-specific Table 4; full-pipeline objective comparison;
+  Common-Model V2; tie-aware exact-target oracle; continuation C0/C1/C2;
+  DAgger negative control; controlled timing.
+  See [docs/reviewer/START_HERE.md](docs/reviewer/START_HERE.md).
+- **HISTORICAL / NON-PRIMARY:** older single-split leaky evaluation;
+  superseded common-model V1; exploratory Wulver `heavy_r1` workflow docs;
+  old manuscript/ZIP/DOCX packaging under `historical/`.
 
-**Do not** cite `analysis/evict_value_wulver_v1_policy_comparison.csv` (unsuffixed) as the main KBS comparison; it may include extra policies from non-heavy drivers. Use **`analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv`** only when present. See [`analysis/README.md`](analysis/README.md).
+## Primary evidence (compact)
 
-### After heavy eval completes (minimal checklist)
+- Matched learned-baseline comparison:
+  [reports/kbs_final_evidence_20260813/major1_reviewer_summary.md](reports/kbs_final_evidence_20260813/major1_reviewer_summary.md)
+- Common-Model V2 audit:
+  [reports/common_model_v2_formal_audit_20260814/AUDIT.md](reports/common_model_v2_formal_audit_20260814/AUDIT.md)
+- Tie-aware exact-target oracle audit:
+  [reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md](reports/tie_aware_exact_oracle_formal_audit_20260814/AUDIT.md)
+- Continuation / DAgger:
+  [reports/kbs_final_evidence_20260813/c0_continuation_summary.csv](reports/kbs_final_evidence_20260813/c0_continuation_summary.csv),
+  [reports/kbs_final_evidence_20260813/distribution_shift_summary.csv](reports/kbs_final_evidence_20260813/distribution_shift_summary.csv)
+- Controlled timing:
+  [reports/kbs_final_evidence_20260813/controlled_timing_summary.csv](reports/kbs_final_evidence_20260813/controlled_timing_summary.csv)
 
-```bash
-test -f analysis/evict_value_wulver_v1_policy_comparison_heavy_r1.csv
-export PYTHONPATH="${PYTHONPATH:-$(pwd)/src}"
-python scripts/paper/build_kbs_main_manuscript_artifacts.py
-ls tables/manuscript figures/manuscript reports/manuscript_artifacts
-```
+Published numerical claims can be checked from those committed summaries
+without rerunning HPC jobs.
 
-If the first command fails, finish the eval stage per [`docs/wulver_heavy_evict_value_experiment.md`](docs/wulver_heavy_evict_value_experiment.md).
+## Related public dataset
 
----
+Related public dataset: LAFC-Evict provides derived cache-eviction
+supervision data associated with this research program. The manuscript's
+reported experiments use the exact source traces and audited artifacts
+identified in the reviewer verification guide.
 
-## Reproduce main artifacts (orientation)
+- LAFC-Evict (v0.3, wiki2018-only derived candidate rows):
+  <https://huggingface.co/datasets/SoroushVahidi/lafc-evict>
 
-| Goal | Start here |
-|------|------------|
-| KBS `heavy_r1` bundle | [`CANONICAL_KBS_SUBMISSION.md`](CANONICAL_KBS_SUBMISSION.md) |
-| All docs (index) | [`docs/README.md`](docs/README.md) |
-| CLI and output roots | [`docs/reproducibility_and_artifacts.md`](docs/reproducibility_and_artifacts.md) |
-| `analysis/` layout | [`analysis/README.md`](analysis/README.md) |
-| `scripts/` layout | [`scripts/README.md`](scripts/README.md) |
-| Repo layout | [`docs/repo_map.md`](docs/repo_map.md) |
+This Hugging Face release is **not** claimed to be the exact payload of every
+manuscript experiment (seven families, matched replay, Common-Model V2, and
+related controls). Exact provenance is in
+[docs/reviewer/START_HERE.md](docs/reviewer/START_HERE.md) and
+[docs/reviewer/REPRODUCTION_MATRIX.md](docs/reviewer/REPRODUCTION_MATRIX.md).
 
-**Method detail (internal support for rewriting Methods):** [`docs/method_detail_support_evict_value_v1.md`](docs/method_detail_support_evict_value_v1.md) (consolidates `docs/evict_value_v1_method_spec.md` and related sources; not a result artifact).
+## Data provenance
 
----
+Upstream traces (BrightKite, Citi Bike, Wiki2018 pageview-derived inputs,
+CloudPhysics, MetaCDN/MetaKV, Twemcache, SPEC CPU2006, and others) are
+**third-party**. This project does not claim ownership of those sources.
+Ingestion notes: [docs/datasets.md](docs/datasets.md),
+[data/raw/README.md](data/raw/README.md).
 
-## Installation
+Committed in-repo: example traces, processed summaries, and audited result
+tables. Full raw traces and HPC campaign trees are generally external.
+Project-generated artifacts are candidate features/labels, replay logs, and
+the published comparison CSVs.
+
+## Software in this repository
+
+Simulator and policies live under `src/lafc/`. License: [LICENSE](LICENSE)
+(MIT). Independent reimplementations and official wrappers are disclosed in
+the manuscript (§3.4.4) and reviewer docs; they are not presented as the
+original authors’ code.
+
+Install:
 
 ```bash
 pip install -e ".[dev]"
 ```
 
----
-
-## Quick start
-
-### Baseline
+Quick LRU smoke check:
 
 ```bash
 python -m lafc.runner.run_policy \
-  --policy predictive_marker \
+  --policy lru \
   --trace data/example_unweighted.json \
   --capacity 3
 ```
 
-### Robust combiner
+Lightweight tests (no HPC; SIEVE does not need extra extras):
 
 ```bash
-python -m lafc.runner.run_policy \
-  --policy robust_ftp_d_marker \
-  --trace data/example_unweighted.json \
-  --capacity 3 \
-  --derive-predicted-caches
+pytest tests/test_sieve.py -q
 ```
 
-### Local `evict_value_v1` first check (small; not the Wulver `heavy_r1` line)
+LRB unit tests need the optional extra: `pip install -e ".[dev,lrb]"`.
 
-```bash
-python scripts/build_evict_value_dataset_v1.py --max-rows 200000
-python scripts/train_evict_value_v1.py --horizon 8
-python scripts/run_evict_value_v1_first_check.py
+Full scientific campaigns are HPC-scale. See
+[docs/reviewer/REPRODUCTION_MATRIX.md](docs/reviewer/REPRODUCTION_MATRIX.md).
+
+## Citation
+
+```bibtex
+@unpublished{vahidi2026decisionaligned,
+  title  = {Decision-aligned eviction-value prediction for learning-augmented caching},
+  author = {Soroush Vahidi},
+  note   = {Manuscript submitted to Knowledge-Based Systems},
+  year   = {2026}
+}
 ```
 
----
+See also [CITATION.cff](CITATION.cff).
 
-## Policy families (`run_policy` registry)
+## Contact
 
-### Literature baselines and robust references
-
-`lru`, `weighted_lru`, `advice_trusting`, `la_det`, `la_det_approx`, `la_det_faithful`, `marker`, `blind_oracle`, `predictive_marker`, `adaptive_query` (`parsimonious_caching`), `trust_and_doubt`, `robust_ftp_d_marker` (`robust_ftp`), `blind_oracle_lru_combiner`, `offline_belady`
-
-### Experimental policies
-
-`atlas_v1`, `atlas_v2`, `atlas_v3`, `atlas_cga_v1` (`atlas_cga`), `atlas_cga_v2`, `rest_v1`, `ml_gate_v1`, `ml_gate_v2`, `evict_value_v1`, `evict_value_v1_guarded`, `sentinel_robust_tripwire_v1`, `sentinel_budgeted_guard_v2`
-
-**Pairwise learned line** (separate scripts, not in `POLICY_REGISTRY`): `scripts/build_evict_value_pairwise_dataset.py`, `scripts/train_evict_value_pairwise_v1.py`, `scripts/run_evict_value_pairwise_first_check.py`.
-
-Details: `docs/baselines.md`, `docs/framework.md`.
-
----
-
-## Datasets
-
-```bash
-python scripts/datasets/prepare_all.py --dataset <brightkite|citibike|spec_cpu2006|wiki2018|twemcache|metakv|metacdn|cloudphysics|all>
-```
-
-- Raw: `data/raw/<dataset>/` — Processed: `data/processed/<dataset>/` — Notes: `docs/datasets.md`
-
----
-
-## Other experiment families (not the canonical KBS `heavy_r1` path unless labeled)
-
-> Sections A–D are useful entry points; they are **not** interchangeable with the Wulver `heavy_r1` manuscript pipeline.
-
-### A) Offline-teacher vs heuristic
-
-```bash
-python scripts/run_offline_teacher_vs_heuristic_experiment.py \
-  --trace-glob "data/example_*.json,data/example_general_caching.json" \
-  --capacities 2,3 --horizon 12 \
-  --output-dir analysis/offline_teacher_vs_heuristic
-```
-
-See `docs/offline_teacher_vs_heuristic_mediumscale.md`.
-
-### B) Pairwise vs pointwise
-
-```bash
-python scripts/run_pairwise_vs_pointwise_experiment.py --output-dir analysis/pairwise_vs_pointwise
-```
-
-Interpret conservatively: `docs/pairwise_vs_pointwise_experiment.md`, `docs/manuscript_evidence_map.md`.
-
-### C) Sentinel / guard refinement
-
-```bash
-python scripts/run_sentinel_budgeted_guard_v2_eval.py
-python scripts/run_sentinel_budgeted_guard_v2_ablation.py
-```
-
----
-
-## Output conventions
-
-Default roots: **`analysis/`** (experiments and manuscript-support), **`output/`** (ad hoc). New work should use `analysis/<experiment_name>/` with `summary.json` + `report.md` when possible.
-
----
-
-## Testing
-
-```bash
-pytest tests/ -v
-```
-
----
-
-## Navigation and hygiene
-
-| Topic | Document |
-|-------|----------|
-| Cleanup / navigation audit (this release) | [`docs/repository_cleanup_report.md`](docs/repository_cleanup_report.md) |
-| KBS hygiene notes | [`docs/kbs_repository_hygiene_report.md`](docs/kbs_repository_hygiene_report.md) |
-| Exploratory lightweight ablations | [`docs/lightweight_exploratory_ablations.md`](docs/lightweight_exploratory_ablations.md) |
+Soroush Vahidi, Ying Wu College of Computing, New Jersey Institute of
+Technology. Contact email: `sv96@njit.edu`.

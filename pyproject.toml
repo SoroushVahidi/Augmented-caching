@@ -14,6 +14,7 @@ keywords = ["caching", "paging", "learning-augmented", "online-algorithms"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7", "matplotlib>=3.7"]
+lrb = ["lightgbm>=4.6"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

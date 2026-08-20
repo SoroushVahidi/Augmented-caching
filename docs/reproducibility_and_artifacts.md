@@ -1,6 +1,6 @@
 # Reproducibility: entry points, artifacts, and manuscript vs exploratory outputs
 
-**KBS manuscript (canonical `heavy_r1`, builder, tables/figures):** start at `docs/kbs_manuscript_workflow.md` and the one-page checklist [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md).
+**KBS manuscript (canonical `heavy_r1`, builder, tables/figures):** start at `docs/kbs_manuscript_workflow.md` and the one-page checklist [`../historical/CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md).
 
 **Index of all `docs/`:** [`README.md`](README.md).
 

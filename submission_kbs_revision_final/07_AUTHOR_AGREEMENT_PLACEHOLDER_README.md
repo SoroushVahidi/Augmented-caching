@@ -2,7 +2,7 @@
 
 The KBS revision email requests an author agreement in DOCX format.
 
-No **official Elsevier / Editorial Manager author-agreement form** was found in this repository. The file `manuscript_source/author-agreement.tex` is an informal LaTeX draft only and is **not** a substitute for the publisher's official form.
+No **official Elsevier / Editorial Manager author-agreement form** was found in this repository. No informal `author-agreement.tex` is part of the current submission package. Any older draft lives under `historical/` and is **not** a substitute for the publisher's official form.
 
 **Before final upload to Editorial Manager, the author should:**
 

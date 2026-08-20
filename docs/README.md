@@ -1,6 +1,22 @@
 # Documentation index (`docs/`)
 
-Use this page to find the **right** document without duplicating long runbooks. **Primary KBS gateway (repo root):** [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md).
+Use this page to find the **right** document without duplicating long runbooks. **Current reviewer gateway:** [`reviewer/START_HERE.md`](reviewer/START_HERE.md). The older Wulver `heavy_r1` checklist is historical: [`../historical/CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md).
+
+---
+
+## Experimental evidence and scientific organization
+
+**Start here for the science.** These pages are organized by scientific
+question, not by manuscript-revision bookkeeping, and are the intended
+public entry points.
+
+| Document | Use when you need… |
+|----------|---------------------|
+| [`EXPERIMENTAL_EVIDENCE.md`](EXPERIMENTAL_EVIDENCE.md) | The scientific questions this project investigates and where the evidence for each stands |
+| [`RESULTS_AND_LIMITATIONS.md`](RESULTS_AND_LIMITATIONS.md) | Honest account of what worked, what didn't, and what remains open, including negative results |
+| [`EXPERIMENT_REGISTRY.md`](EXPERIMENT_REGISTRY.md) | Canonical index of every experiment: question, scope, status, evidence strength, reproducibility |
+| [`HYPOTHESIS_MAP.md`](HYPOTHESIS_MAP.md) | Mechanistic hypotheses for the offline-to-online gap, evidence, and decisive next tests |
+| [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) | Stable install/setup, protocol conventions, and reproduction commands |
 
 ---
 
@@ -8,7 +24,7 @@ Use this page to find the **right** document without duplicating long runbooks. 
 
 | Document | Use when you need… |
 |----------|---------------------|
-| [`CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md) | One-page list of scripts, inputs, outputs, and what not to cite |
+| [`CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md) | HISTORICAL Wulver `heavy_r1` checklist (not current reviewer evidence) |
 | [`kbs_manuscript_workflow.md`](kbs_manuscript_workflow.md) | Full workflow, builder command, separation from exploratory work |
 | [`evict_value_v1_kbs_canonical_artifacts.md`](evict_value_v1_kbs_canonical_artifacts.md) | Exact filenames for builder `EVIDENCE_FILES` |
 | [`kbs_manuscript_submission_index.md`](kbs_manuscript_submission_index.md) | Reviewer-facing index for the same line |

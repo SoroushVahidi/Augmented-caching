@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: "Decision-aligned eviction-value prediction for learning-augmented caching"
+message: "If you use this repository, please cite the manuscript."
+type: software
+authors:
+  - family-names: Vahidi
+    given-names: Soroush
+    email: sv96@njit.edu
+    affiliation: "Ying Wu College of Computing, New Jersey Institute of Technology"
+date-released: "2026-08-14"
+license: MIT
+repository-code: "https://github.com/SoroushVahidi/Augmented-caching"
+url: "https://github.com/SoroushVahidi/Augmented-caching"
+keywords:
+  - learning-augmented caching
+  - online paging
+  - cache replacement
+  - eviction-value prediction
+preferred-citation:
+  type: unpublished
+  title: "Decision-aligned eviction-value prediction for learning-augmented caching"
+  authors:
+    - family-names: Vahidi
+      given-names: Soroush
+  year: 2026
+  notes: "Manuscript submitted to Knowledge-Based Systems"

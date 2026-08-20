@@ -21,10 +21,15 @@ Not covered here (separate scripts / artifact models):
 Supported ``--policy`` values (including aliases):
     advice_trusting, adaptive_query, atlas_cga, atlas_cga_v1, atlas_cga_v2, atlas_v1,
     atlas_v2, atlas_v3, blind_oracle, blind_oracle_lru_combiner, evict_value_v1,
-    evict_value_v1_guarded, la_det, la_det_approx, la_det_faithful, lru, marker,
+    evict_value_v1_guarded, la_det, la_det_approx, la_det_faithful, lrb, lru, marker,
     ml_gate_v1, ml_gate_v2, offline_belady, parsimonious_caching, predictive_marker,
     fifo_reinsertion, rest_v1, robust_ftp, robust_ftp_d_marker, sentinel_budgeted_guard_v2,
     sentinel_robust_tripwire_v1, sieve, trust_and_doubt, weighted_lru
+
+Note: ``lrb`` (Learning Relaxed Belady, NSDI 2020) requires the optional
+'lightgbm' dependency (``pip install 'lafc[lrb]'``); it is importable without
+it, but ``reset()``/running it will raise a clear ImportError if lightgbm is
+missing. See ``docs/lrb_method_spec.md`` and ``docs/baselines.md`` (Baseline 6).
 """
 
 from __future__ import annotations
@@ -49,6 +54,7 @@ from lafc.policies.blind_oracle import BlindOraclePolicy
 from lafc.policies.blind_oracle_lru_combiner import BlindOracleLRUCombiner
 from lafc.policies.la_weighted_paging_deterministic import LAWeightedPagingDeterministic
 from lafc.policies.la_weighted_paging_det_faithful import LAWeightedPagingDeterministicFaithful
+from lafc.policies.lrb import LRBConfig, LRBPolicy
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
 from lafc.policies.offline_belady import OfflineBeladyPolicy
@@ -121,6 +127,8 @@ POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "evict_value_v1_guarded": EvictValueV1GuardedPolicy(),
     "sentinel_robust_tripwire_v1": SentinelRobustTripwireV1Policy(),
     "sentinel_budgeted_guard_v2": SentinelBudgetedGuardV2Policy(),
+    # External baseline: Song et al. 2020 (NSDI), Learning Relaxed Belady.
+    "lrb": LRBPolicy(),
 }
 
 
@@ -387,6 +395,9 @@ def run_policy(
     if isinstance(policy, AdaptiveQueryPolicy):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["adaptive_query"] = {"summary": policy.diagnostics_summary()}
+    if isinstance(policy, LRBPolicy):
+        result.extra_diagnostics = result.extra_diagnostics or {}
+        result.extra_diagnostics["lrb"] = {"summary": policy.diagnostics_summary()}
     if isinstance(policy, RobustFtPDeterministicMarkerCombiner):
         result.extra_diagnostics = result.extra_diagnostics or {}
         result.extra_diagnostics["robust_ftp"] = {
@@ -1264,6 +1275,54 @@ def main() -> None:
         help="Number of requests to stay in fallback mode after a trigger.",
     )
     parser.add_argument(
+        "--lrb-sample-rate",
+        type=int,
+        default=64,
+        help="Eviction-candidate sample size k for lrb (paper/code default 64).",
+    )
+    parser.add_argument(
+        "--lrb-memory-window",
+        type=int,
+        default=4096,
+        help="Sliding memory window (in requests) for lrb. Validation-tunable; see docs/lrb_method_spec.md.",
+    )
+    parser.add_argument(
+        "--lrb-batch-size",
+        type=int,
+        default=2048,
+        help="Matured-label buffer size that triggers a retrain for lrb. Validation-tunable.",
+    )
+    parser.add_argument(
+        "--lrb-num-iterations",
+        type=int,
+        default=32,
+        help="LightGBM num_iterations for lrb (paper/code default 32).",
+    )
+    parser.add_argument(
+        "--lrb-num-leaves",
+        type=int,
+        default=32,
+        help="LightGBM num_leaves for lrb (paper/code default 32).",
+    )
+    parser.add_argument(
+        "--lrb-learning-rate",
+        type=float,
+        default=0.1,
+        help="LightGBM learning_rate for lrb (paper/code default 0.1).",
+    )
+    parser.add_argument(
+        "--lrb-seed",
+        type=int,
+        default=0,
+        help="RNG seed (candidate sampling + LightGBM internal seeds) for lrb.",
+    )
+    parser.add_argument(
+        "--lrb-objective",
+        choices=["object_miss_ratio", "byte_miss_ratio"],
+        default="object_miss_ratio",
+        help="lrb score/size interaction; object_miss_ratio matches this repo's unit-size metric.",
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug logging.",
@@ -1389,6 +1448,19 @@ def main() -> None:
             model_path=args.evict_value_model_path,
             scorer_mode=args.evict_value_scorer_mode,
             lightweight_config_path=(args.evict_value_lightweight_config or None),
+        )
+    elif args.policy == "lrb":
+        policy = LRBPolicy(
+            LRBConfig(
+                sample_rate=args.lrb_sample_rate,
+                memory_window=args.lrb_memory_window,
+                batch_size=args.lrb_batch_size,
+                num_iterations=args.lrb_num_iterations,
+                num_leaves=args.lrb_num_leaves,
+                learning_rate=args.lrb_learning_rate,
+                seed=args.lrb_seed,
+                objective=args.lrb_objective,
+            )
         )
     else:
         policy = POLICY_REGISTRY[args.policy]

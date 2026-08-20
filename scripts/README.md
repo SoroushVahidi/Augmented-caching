@@ -4,7 +4,7 @@ This directory contains reproducible entry points for data preparation, model tr
 
 **Layout stability:** Scripts remain in **flat** and existing subdirectory locations (`scripts/datasets/`, `scripts/paper/`, `scripts/experiments/`, …) so documented commands, Slurm batch files, and papers keep working. This repository prefers **documentation grouping** (this file + `docs/README.md`) over moving Python files.
 
-**KBS canonical checklist:** [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md).
+**KBS canonical checklist:** [`../historical/CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md).
 
 ## Directory structure
 

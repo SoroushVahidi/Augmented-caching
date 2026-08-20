@@ -11,7 +11,7 @@ Cluster job definitions for Wulver-scale (and other) runs. **Paths and `sbatch` 
 | [`evict_value_v1_wulver_heavy_smoke.sbatch`](evict_value_v1_wulver_heavy_smoke.sbatch) | Wiring check only — **not** canonical KBS numbers |
 
 **Runbook:** [`../docs/wulver_heavy_evict_value_experiment.md`](../docs/wulver_heavy_evict_value_experiment.md)  
-**Checklist:** [`../CANONICAL_KBS_SUBMISSION.md`](../CANONICAL_KBS_SUBMISSION.md)
+**Checklist:** [`../historical/CANONICAL_KBS_SUBMISSION.md`](../historical/CANONICAL_KBS_SUBMISSION.md)
 
 ## Exploratory / non-canonical drivers (examples)
 
