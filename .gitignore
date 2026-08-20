@@ -24,3 +24,6 @@ output/
 
 # Slurm job logs
 slurm/logs/
+
+# Local virtualenv
+.venv/
