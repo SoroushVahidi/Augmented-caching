@@ -2,11 +2,21 @@ from __future__ import annotations
 
 import collections
 import math
+import random
 from dataclasses import dataclass
-from typing import Deque, Dict, Iterable, List, Sequence, Tuple
+from typing import Deque, Dict, Iterable, List, Optional, Sequence, Tuple
 
 from lafc.evict_value_features_v1 import EVICT_VALUE_V1_FEATURE_COLUMNS, compute_candidate_features_v1
 from lafc.types import PageId, Request
+
+# Continuation policies whose victim choice depends only on state already
+# recoverable from the LRU-tracked recency order in `order` (or, for
+# "random", on nothing but the resident set plus an RNG) -- see
+# analysis/continuation_policy_sensitivity_design_20260914/POLICY_STATE_AUDIT.md
+# in the primary repository for the full audit. SIEVE is deliberately never
+# added here: its visited-bit/hand-pointer state does not exist after an
+# LRU-generated prefix and was classified NOT_WELL_DEFINED_FOR_COUNTERFACTUAL_SUBSTITUTION.
+SUPPORTED_REFERENCE_POLICIES = ("lru", "mru", "random", "blind_oracle", "fifo")
 
 
 @dataclass(frozen=True)
@@ -17,6 +27,13 @@ class EvictValueV2RolloutConfig:
     history_window: int = 64
     reference_policy: str = "lru"
     include_ties: bool = False
+    # Required when reference_policy == "random"; unused otherwise. The SAME
+    # seed value is reused for every candidate within one (decision, horizon)
+    # -- a common-random-numbers (CRN) design that reduces between-candidate
+    # variance in the resulting regret comparison without making the draws
+    # literally identical (each candidate's forced cache differs, so the RNG
+    # stream advances differently). See DESIGN.md Section 8.
+    rng_seed: Optional[int] = None
 
 
 def _next_use_distance(cache_page: PageId, future_reqs: Sequence[Request], at_idx: int) -> float:
@@ -26,14 +43,30 @@ def _next_use_distance(cache_page: PageId, future_reqs: Sequence[Request], at_id
     return math.inf
 
 
-def _choose_victim(order: collections.OrderedDict[PageId, None], future_reqs: Sequence[Request], step_idx: int, policy: str) -> PageId:
+def _choose_victim(
+    order: "collections.OrderedDict[PageId, None]",
+    future_reqs: Sequence[Request],
+    step_idx: int,
+    policy: str,
+    rng: Optional[random.Random] = None,
+) -> PageId:
     candidates = list(order.keys())
     if policy == "lru":
         return candidates[0]
+    if policy == "mru":
+        # Most-recently-used resident: the tail of the SAME recency-ordered
+        # list LRU already maintains (order.move_to_end(pid) on every hit
+        # applies identically regardless of which end we evict from below).
+        # No new state is tracked for this policy.
+        return candidates[-1]
     if policy == "blind_oracle":
         return max(candidates, key=lambda p: (_next_use_distance(p, future_reqs, step_idx), -candidates.index(p)))
     if policy == "fifo":
         return candidates[0]
+    if policy == "random":
+        if rng is None:
+            raise ValueError("random reference policy requires an rng (rng_seed must be set)")
+        return rng.choice(candidates)
     raise ValueError(f"Unsupported reference policy: {policy}")
 
 
@@ -43,8 +76,15 @@ def simulate_rollout_misses(
     future_reqs: Sequence[Request],
     capacity: int,
     reference_policy: str,
+    rng_seed: Optional[int] = None,
 ) -> int:
     """Simulate finite-horizon misses with a configurable continuation policy."""
+
+    if reference_policy not in SUPPORTED_REFERENCE_POLICIES:
+        raise ValueError(f"Unsupported reference policy: {reference_policy}")
+    if reference_policy == "random" and rng_seed is None:
+        raise ValueError("reference_policy='random' requires rng_seed to be set")
+    rng = random.Random(rng_seed) if reference_policy == "random" else None
 
     order: collections.OrderedDict[PageId, None] = collections.OrderedDict((p, None) for p in cache_pages)
     misses = 0
@@ -56,7 +96,7 @@ def simulate_rollout_misses(
             continue
 
         misses += 1
-        victim = _choose_victim(order, future_reqs, step_idx, reference_policy)
+        victim = _choose_victim(order, future_reqs, step_idx, reference_policy, rng=rng)
         order.pop(victim)
         order[pid] = None
     return misses
@@ -154,6 +194,7 @@ def build_rollout_candidate_rows_v2(
                         future_reqs=future,
                         capacity=capacity,
                         reference_policy=cfg.reference_policy,
+                        rng_seed=cfg.rng_seed,
                     )
                 )
 
@@ -170,6 +211,7 @@ def build_rollout_candidate_rows_v2(
                     "capacity": capacity,
                     "horizon": int(horizon),
                     "reference_policy": cfg.reference_policy,
+                    "continuation_rng_seed": cfg.rng_seed,
                     "candidate_page_id": candidate,
                     "rollout_loss_h": float(losses[candidate]),
                     "rollout_regret_h": regret,
