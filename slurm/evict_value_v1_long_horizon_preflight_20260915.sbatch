@@ -5,18 +5,20 @@
 # Purpose: measure runtime/memory/output scaling with horizon before designing
 # the full PE long-horizon production campaign. See docs/canonical_experiments.md
 # for the canonical (short-horizon, H<=32 historically 8/16/32) pipeline this
-# extends, and scripts/experiments/canonical/build_evict_value_dataset_wulver_v1.py
-# for the generator this preflight drives directly (same script/library used by
-# the known-good slurm/evict_value_v1_wulver_dataset.sbatch template).
+# extends, and scripts/build_evict_value_dataset_wulver_v1.py for the generator
+# this preflight drives directly (same script/library used by the known-good
+# slurm/evict_value_v1_wulver_dataset.sbatch template).
 #
 # Provenance (filled in at submit time, recorded again in stdout):
 #   Source repo:   ~/lafc-work/Augmented-caching (Wulver checkout, branch main)
 #   Wulver SHA:    3a04a25094de1e8c57a603e2662b321bcf1d9e88
 #   Local SHA:     ceb36705b59d0d16db55d0fc0bfb63a5c7a2a6a1 (branch chore/repository-polish)
 #   Scientific-code equivalence: verified byte-identical for
-#     src/lafc/evict_value_wulver_v1.py and
-#     scripts/experiments/canonical/build_evict_value_dataset_wulver_v1.py
-#     (latter was only relocated, not modified, between the two SHAs).
+#     src/lafc/evict_value_wulver_v1.py and build_evict_value_dataset_wulver_v1.py
+#     (the latter lives at scripts/build_evict_value_dataset_wulver_v1.py on this
+#     Wulver checkout (pre-reorg main); the local chore/repository-polish branch
+#     relocated it, unmodified, to scripts/experiments/canonical/ — path differs,
+#     content is byte-identical).
 #
 #SBATCH --job-name=lafc-long-horizon-preflight
 #SBATCH --partition=general
@@ -52,7 +54,7 @@ OUT_DIR="data/derived/evict_value_v1_long_horizon_preflight_metacdn_20260915"
 # failed 5-family preflight at
 # data/derived/evict_value_v1_wulver_preflight_20260915.
 
-python scripts/experiments/canonical/build_evict_value_dataset_wulver_v1.py \
+python scripts/build_evict_value_dataset_wulver_v1.py \
   --trace-glob "data/processed/metacdn/trace.jsonl" \
   --capacities "32" \
   --horizons "16,32,64,128" \
