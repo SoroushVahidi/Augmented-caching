@@ -1,0 +1,11 @@
+{
+  "captured_at_epoch": 1789512619.6313932,
+  "captured_at_iso": "2026-09-15T18:50:19-0400",
+  "method": "df -T (fileset-level; quota_info unavailable on this system)",
+  "quota_domain": "SCRATCH",
+  "scratch_path": "/mmfs1/scratch/ikoutis/sv96",
+  "scratch_total_bytes": 10995116277760,
+  "scratch_used_bytes": 1031798784,
+  "scratch_available_bytes": 10994084478976,
+  "note": "quota_info (NJIT's documented tool) was unavailable on this system even after module load wulver; df -T on the fileset path is used instead, which was confirmed to correctly report PROJECT (2TiB) and SCRATCH (10TiB) fileset quotas exactly matching NJIT's documented per-PI-group allocations."
+}

@@ -144,3 +144,61 @@ dataset revision wants to pursue it, required before any production use:
 exact row/key/y_loss/y_value equality against the current implementation
 across >=2 families x capacities {32,128,256} x horizons {16,32,64,128},
 plus a fresh Wulver timing preflight of the modified code path.
+
+## 5. Storage incident and recovery (job 1288536, 2026-09-15)
+
+The first production launch (array job 1288536) failed campaign-wide
+within 1-3 minutes: all 20 tasks hit `OSError: [Errno 122] Disk quota
+exceeded` writing to `~/lafc-work/Augmented-caching/data/derived/...`,
+physically `/mmfs1/home/sv96/...` -- a GPFS **HOME** fileset. The original
+launch gate's storage check used `df -h` on that path, which reports the
+full `/mmfs1` pool (809TB free) rather than the actual per-user HOME
+quota -- NJIT documents HOME as ~50GB/user and explicitly "not intended
+for research data," which total home usage (~55GB, measured) is
+consistent with already exceeding.
+
+**`quota_info $LOGNAME`** (NJIT's documented quota tool) was tried after
+`module load wulver` and is **not present on this system** -- command not
+found, and not locatable anywhere under `/apps` or `/opt`. `quota -s`
+reports an unrelated local filesystem, not `/mmfs1`. The one reliable
+signal found: **`df -T` on a PROJECT or SCRATCH path (not HOME) correctly
+reports that fileset's own quota** -- confirmed by exact round-number
+matches to NJIT's documented allocations (PROJECT: exactly 2TiB;
+SCRATCH: exactly 10TiB, both for the `ikoutis` PI group).
+
+**Fix**: `RUN_ROOT` in `build_manifest.py` now points at
+`/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_production_v1`
+(SCRATCH: 10TiB quota, ~984MB used group-wide, ~303GB used by sv96
+specifically under the separate 2TiB PROJECT allocation -- SCRATCH has by
+far the most headroom and is NJIT's documented location for "temporary
+simulation/intermediate data"). All downstream scripts (validator,
+aggregator, resume planner, launch guard) already treated `run_root`/
+`out_dir` as opaque path strings, so no code changes were needed there --
+only the one constant in `build_manifest.py`.
+
+**Caveat: SCRATCH is not backed up and is subject to an ~30-day purge.**
+Recommended layout going forward:
+
+```
+SCRATCH (temporary, active compute):
+  /mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_production_v1/
+    manifest/ raw/ validated/ logs/ provenance/ summaries/
+
+PROJECT (durable, backed up, copy here after validation):
+  /mmfs1/project/ikoutis/sv96/lafc-evict/pe_long_horizon_production_v1/
+    validated/ summaries/ provenance/ manifests/ checksums/
+```
+Raw CSV stays in SCRATCH through generation + validation; only the
+(much smaller) validated summaries, provenance, and checksums get copied
+to PROJECT afterward -- not implemented yet (no production run has
+succeeded to copy from), but the launch guard's new `check_run_root_location`
+and `check_quota_audit` checks (see `launch_guard.py`) block any future
+relaunch from repeating the HOME mistake, and require a same-day frozen
+`quota_audit.json` (via `freeze_quota_audit.py`) rather than accepting
+cluster-wide `df` free space as evidence.
+
+**Data preservation**: nothing was deleted as part of this recovery. The
+failed campaign's partial output (~3.2GB, `pe_long_horizon_production_v1`
+under HOME) and all prior preflight/probe artifacts remain exactly as they
+were; see the storage-recovery audit's artifact inventory for
+classification and disposition options, none of which have been acted on.

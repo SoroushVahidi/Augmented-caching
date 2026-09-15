@@ -21,6 +21,27 @@ Refuses to proceed (exit != 0) unless ALL of the following hold:
   - the production run_root does not already exist with ambiguous partial
     content (if it exists, every task subdirectory must either be absent
     or carry a COMPLETE.json -- ambiguous partial dirs block launch)
+  - the run_root is NOT under the user's HOME (added after the first
+    production launch, job 1288536, failed campaign-wide within ~1-3
+    minutes on OSError: [Errno 122] Disk quota exceeded writing to a HOME
+    fileset; run_root must resolve under an approved SCRATCH or PROJECT
+    prefix instead)
+  - a quota-audit artifact (configs/pe_long_horizon_production/provenance/
+    quota_audit.json) exists, is reasonably fresh, and shows
+    scratch_available_bytes >= the required minimum -- cluster-wide `df`
+    free space is explicitly NOT accepted as evidence (see the same
+    incident: /mmfs1 showed 809TB free while the actual per-fileset HOME
+    quota was already exhausted)
+
+IMPORTANT REMAINING GAP (documented, not silently hidden): the ambiguous-
+partial-output check above is LOCAL-FILESYSTEM-ONLY -- it inspects this
+repo's local working copy, which never mirrors Wulver's actual remote
+run_root (this was true even when run_root was HOME-based, since the local
+checkout and the Wulver checkout are different machines). A true
+pre-launch ambiguity check requires an SSH-based inspection of the Wulver
+run_root immediately before submission; this script does not perform that
+and should not be treated as sufficient on its own for that specific
+check.
 
 Does not submit anything, does not touch Wulver, does not modify canonical
 scientific code. Read-only / local-analysis only.
@@ -30,11 +51,18 @@ from __future__ import annotations
 import hashlib
 import json
 import sys
+import time
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PARAMS_PATH = REPO_ROOT / "configs" / "pe_long_horizon_production" / "resource_params.env"
 MANIFEST_PATH = REPO_ROOT / "configs" / "pe_long_horizon_production" / "manifest.json"
+QUOTA_AUDIT_PATH = REPO_ROOT / "configs" / "pe_long_horizon_production" / "provenance" / "quota_audit.json"
+
+HOME_PREFIXES = ("/home/", "/mmfs1/home/")
+APPROVED_PREFIXES = ("/mmfs1/scratch/", "/mmfs1/project/", "/scratch/", "/project/")
+MIN_SCRATCH_AVAILABLE_BYTES = 200 * (1024 ** 3)  # 200GB, per Task 6's conservative gate
+MAX_QUOTA_AUDIT_AGE_SECONDS = 24 * 3600  # require a same-day quota snapshot
 
 EXPECTED_FAMILIES = {"cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"}
 FORBIDDEN_FAMILIES = {"brightkite", "citibike"}
@@ -164,6 +192,59 @@ def check_trace_selection(manifest: dict) -> list[str]:
     return errors
 
 
+def check_run_root_location(manifest: dict) -> list[str]:
+    """Refuses a HOME-based run_root; requires an approved SCRATCH/PROJECT
+    prefix. Pure string check -- works without any Wulver/SSH access."""
+    errors = []
+    run_root = manifest.get("run_root", "")
+    if any(run_root.startswith(p) for p in HOME_PREFIXES):
+        errors.append(
+            f"run_root is under HOME ({run_root!r}) -- this is exactly what caused "
+            "job 1288536's campaign-wide disk-quota failure. Must be under an "
+            f"approved prefix: {APPROVED_PREFIXES}"
+        )
+        return errors
+    if not any(run_root.startswith(p) for p in APPROVED_PREFIXES):
+        errors.append(
+            f"run_root {run_root!r} is not under any approved prefix {APPROVED_PREFIXES} "
+            "(and is not recognized as HOME either -- treat as unapproved by default)"
+        )
+    return errors
+
+
+def check_quota_audit(params: dict[str, str]) -> list[str]:
+    """Requires a frozen, reasonably fresh quota-audit artifact showing
+    sufficient available space -- never accepts cluster-wide `df` free
+    space (809TB was free cluster-wide while the actual per-user HOME
+    fileset quota was already exhausted)."""
+    errors = []
+    if not QUOTA_AUDIT_PATH.exists():
+        errors.append(
+            f"no quota-audit artifact at {QUOTA_AUDIT_PATH} -- generate one "
+            "(see scripts/pe_long_horizon/freeze_quota_audit.py) immediately "
+            "before launch; cluster-wide df free space is not accepted as evidence"
+        )
+        return errors
+
+    audit = json.loads(QUOTA_AUDIT_PATH.read_text(encoding="utf-8"))
+    age = time.time() - audit.get("captured_at_epoch", 0)
+    if age > MAX_QUOTA_AUDIT_AGE_SECONDS:
+        errors.append(
+            f"quota-audit artifact is {age/3600:.1f}h old (max allowed "
+            f"{MAX_QUOTA_AUDIT_AGE_SECONDS/3600:.0f}h) -- regenerate immediately before launch"
+        )
+
+    available = audit.get("scratch_available_bytes")
+    if available is None or available < MIN_SCRATCH_AVAILABLE_BYTES:
+        errors.append(
+            f"quota-audit shows scratch_available_bytes={available}, below the "
+            f"required minimum {MIN_SCRATCH_AVAILABLE_BYTES} (200GB)"
+        )
+    if audit.get("quota_domain") == "HOME":
+        errors.append("quota-audit itself reports quota_domain=HOME -- this is the forbidden domain")
+    return errors
+
+
 def check_run_root_ambiguity(manifest: dict) -> list[str]:
     errors = []
     run_root = REPO_ROOT / manifest["run_root"]
@@ -213,6 +294,8 @@ def main() -> int:
     all_errors.extend(check_manifest_structure(manifest))
     all_errors.extend(check_trace_selection(manifest))
     all_errors.extend(check_generator_hashes(params))
+    all_errors.extend(check_run_root_location(manifest))
+    all_errors.extend(check_quota_audit(params))
     all_errors.extend(check_run_root_ambiguity(manifest))
     all_errors.extend(check_probe_output_not_reused(manifest))
 

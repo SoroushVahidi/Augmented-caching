@@ -31,7 +31,25 @@ CAPACITIES = [32, 64, 128, 256]
 PRODUCTION_HORIZONS = [32, 64, 128]  # H16 is NOT a production cell -- canonical control only
 EXPECTED_WULVER_SOURCE_SHA = "3a04a25094de1e8c57a603e2662b321bcf1d9e88"
 EXPECTED_WULVER_SOURCE_BRANCH = "main"
-RUN_ROOT = "data/derived/pe_long_horizon_production_v1"
+# RUN_ROOT is an ABSOLUTE path under the user's SCRATCH allocation, not HOME.
+# The first production launch (job 1288536) failed campaign-wide within
+# ~1-3 minutes on OSError: [Errno 122] Disk quota exceeded, writing to
+# ~/lafc-work/Augmented-caching/data/derived/... (physically
+# /mmfs1/home/sv96/..., a GPFS HOME fileset with an apparent ~50GB/user
+# quota already close to its ceiling from unrelated prior usage -- NJIT
+# documents HOME as "not intended for research data" for exactly this
+# reason). Measured via df -T on 2026-09-15: PROJECT
+# (/mmfs1/project/ikoutis/sv96) is a 2TiB fileset with ~717GB already used
+# by the group; SCRATCH (/mmfs1/scratch/ikoutis/sv96) is a 10TiB fileset
+# with ~984MB used -- by far the most headroom, and NJIT's documented
+# intended location for "temporary simulation/intermediate data" (though
+# it is NOT backed up and is subject to an ~30-day purge, so durable
+# validated summaries/provenance must be copied to PROJECT after
+# validation, not left only in SCRATCH -- see
+# docs/pe_long_horizon_design_notes.md Sec. 5).
+# TRACE_PATH_TEMPLATE remains relative -- input traces are read (not
+# written) from the existing HOME checkout, which is not a quota concern.
+RUN_ROOT = "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_production_v1"
 TRACE_PATH_TEMPLATE = "data/processed/{family}/trace.jsonl"
 
 
