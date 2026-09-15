@@ -1,6 +1,6 @@
 {
-  "captured_at_epoch": 1789512619.6313932,
-  "captured_at_iso": "2026-09-15T18:50:19-0400",
+  "captured_at_epoch": 1789513794.772096,
+  "captured_at_iso": "2026-09-15T19:09:54-0400",
   "method": "df -T (fileset-level; quota_info unavailable on this system)",
   "quota_domain": "SCRATCH",
   "scratch_path": "/mmfs1/scratch/ikoutis/sv96",
