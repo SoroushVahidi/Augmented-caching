@@ -1,0 +1,61 @@
+{
+  "campaign_id": "pe_tier2_closed_loop_20260915",
+  "prepared_at": "2026-09-15",
+  "source_branch": "main",
+  "source_head": "a01a60d911411b5d7d014558f73558a0ea52c970",
+  "integration_branch": "experiment/pe-tier2-closed-loop-integration-20260915",
+  "families": ["cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"],
+  "capacities": [32, 128],
+  "request_window": {
+    "history_start": 0,
+    "history_end": 0,
+    "score_start": 0,
+    "score_end": 50000,
+    "metric": "misses / scored_requests",
+    "capacity_semantics": "object_slots",
+    "object_size_semantics": "unit"
+  },
+  "tier1_reuse_policies": ["lru", "mru", "random", "sieve"],
+  "new_baseline_policies": ["lfu"],
+  "oracle_policies": ["offline_belady"],
+  "candidate_policies_not_frozen": {
+    "three_l_cache": "adapter exists in feat/3l-cache-baseline but is not frozen in this isolated branch",
+    "cacheus": "official-source wrapper exists in feat/cacheus-baseline but requires external no-license source fetch and is not frozen here",
+    "halp": "repository implementation is a trace-replay approximation without official code/model"
+  },
+  "learned_policy_gate": {
+    "status": "FAIL",
+    "reason": "heavy_r1 has train/test overlap and inconsistent model provenance; evict_value_v1_hist_gb.pkl not present locally",
+    "allowed_learned_cells": [],
+    "allowed_model_sha256": null,
+    "contaminated_model_sha256": "0c9e8a48066f8bb80bfab31b023c9785ca5b955f408d50c18008dbcc314ea61b",
+    "pilot_import_only": {
+      "trace_family": "twemcache",
+      "capacity": 32,
+      "policy": "evict_value_v1",
+      "may_import_as_existing_evidence": true,
+      "may_rerun_as_new": false
+    }
+  },
+  "new_baseline_cells": [
+    {"policy": "lfu", "family": "cloudphysics", "capacity": 32},
+    {"policy": "lfu", "family": "cloudphysics", "capacity": 128},
+    {"policy": "lfu", "family": "metacdn", "capacity": 32},
+    {"policy": "lfu", "family": "metacdn", "capacity": 128},
+    {"policy": "lfu", "family": "metakv", "capacity": 32},
+    {"policy": "lfu", "family": "metakv", "capacity": 128},
+    {"policy": "lfu", "family": "twemcache", "capacity": 32},
+    {"policy": "lfu", "family": "twemcache", "capacity": 128},
+    {"policy": "lfu", "family": "wiki2018", "capacity": 32},
+    {"policy": "lfu", "family": "wiki2018", "capacity": 128}
+  ],
+  "existing_tier1_cells_must_not_recompute": [
+    {"policy": "lru"},
+    {"policy": "mru"},
+    {"policy": "random"},
+    {"policy": "sieve"}
+  ],
+  "result_dir": "analysis/pe_tier2_closed_loop_20260915",
+  "full_experiments_launched": false,
+  "slurm_submission_allowed": false
+}

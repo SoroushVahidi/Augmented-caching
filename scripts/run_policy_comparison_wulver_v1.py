@@ -14,6 +14,7 @@ from lafc.policies.blind_oracle import BlindOraclePolicy
 from lafc.policies.blind_oracle_lru_combiner import BlindOracleLRUCombiner
 from lafc.policies.evict_value_v1 import EvictValueV1Policy
 from lafc.policies.fifo_reinsertion import FIFOReinsertionPolicy
+from lafc.policies.lfu import LFUPolicy
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.ml_gate_v1 import MLGateV1Policy
 from lafc.policies.ml_gate_v2 import MLGateV2Policy
@@ -32,6 +33,7 @@ POLICIES = {
     "ml_gate_v1": lambda _: MLGateV1Policy(),
     "atlas_v3": lambda _: AtlasV3Policy(),
     "lru": lambda _: LRUPolicy(),
+    "lfu": lambda _: LFUPolicy(),
     "sieve": lambda _: SievePolicy(),
     "fifo_reinsertion": lambda _: FIFOReinsertionPolicy(),
     "blind_oracle": lambda _: BlindOraclePolicy(),

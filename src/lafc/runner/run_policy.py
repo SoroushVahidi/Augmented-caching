@@ -54,6 +54,7 @@ from lafc.policies.blind_oracle import BlindOraclePolicy
 from lafc.policies.blind_oracle_lru_combiner import BlindOracleLRUCombiner
 from lafc.policies.la_weighted_paging_deterministic import LAWeightedPagingDeterministic
 from lafc.policies.la_weighted_paging_det_faithful import LAWeightedPagingDeterministicFaithful
+from lafc.policies.lfu import LFUPolicy
 from lafc.policies.lrb import LRBConfig, LRBPolicy
 from lafc.policies.lru import LRUPolicy
 from lafc.policies.marker import MarkerPolicy
@@ -89,6 +90,7 @@ logger = logging.getLogger(__name__)
 
 POLICY_REGISTRY: Dict[str, BasePolicy] = {
     "lru": LRUPolicy(),
+    "lfu": LFUPolicy(),
     "weighted_lru": WeightedLRUPolicy(),
     "advice_trusting": AdviceTrustingPolicy(),
     # Historical interpreted heuristic (kept for backward compatibility).
