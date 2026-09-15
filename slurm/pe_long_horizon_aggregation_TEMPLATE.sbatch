@@ -31,6 +31,13 @@ set -euo pipefail
 cd ~/lafc-work/Augmented-caching
 source .venv/bin/activate
 
+# NOTE: --h16-summary is intentionally omitted. No converter from the
+# existing canonical H16 artifact (tab_dataset_characterization_heavy_r1_pre_eval.csv
+# / raw candidate-row shards) into the {cells: {...}} JSON format aggregate.py
+# expects has been built yet -- this is a known, flagged gap (see final
+# launch-gate report), not a silent omission. aggregate.py's
+# load_h16_canonical() gracefully no-ops (returns {}) without this flag, so
+# Table A/B (the core H=32/64/128 scientific deliverable) are unaffected;
+# only Table C's H16-delta columns will be None until that converter exists.
 python scripts/pe_long_horizon/aggregate.py \
-  --manifest configs/pe_long_horizon_production/manifest.json \
-  --h16-summary configs/pe_long_horizon_production/h16_canonical_summary.json
+  --manifest configs/pe_long_horizon_production/manifest.json

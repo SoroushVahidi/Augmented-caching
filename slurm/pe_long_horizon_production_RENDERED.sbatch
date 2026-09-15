@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# PE long-horizon PRODUCTION array template -- DO NOT SUBMIT AS-IS.
+# PE long-horizon PRODUCTION array -- RENDERED, resource-resolved. Still requires explicit human authorization before sbatch.
 #
 # One array task = one (family, capacity) cell; computes horizons
 # {32,64,128} together in a single generator invocation (shares feature
@@ -24,10 +24,10 @@
 #SBATCH --qos=standard
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=__CPUS__
-#SBATCH --mem=__MEM__
-#SBATCH --time=__WALLTIME__
-#SBATCH --array=__ARRAY_SPEC__
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=4G
+#SBATCH --time=10:00:00
+#SBATCH --array=0-19%10
 #SBATCH --output=slurm/logs/pe-long-horizon-prod-%A_%a.out
 #SBATCH --error=slurm/logs/pe-long-horizon-prod-%A_%a.err
 

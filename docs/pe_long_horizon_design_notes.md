@@ -105,3 +105,42 @@ run_root/                              (= data/derived/pe_long_horizon_productio
   provenance/
     resource_params.env snapshot, git SHA, launch manifest
 ```
+
+## 4. Shared-horizon optimization (deferred engineering debt, Task 14 of the final launch gate)
+
+**Status: analytically proven from source semantics, NOT experimentally
+equivalence-validated, NOT used in this production campaign, and MUST NOT
+appear in the manuscript as a scientific result.** This section documents it
+purely as a repository engineering note for a possible future dataset
+revision.
+
+`src/lafc/evict_value_dataset_v1.py::_simulate_lru_misses` rebuilds a fresh
+`collections.OrderedDict` of size `capacity` on every single
+(candidate, horizon) call -- called `capacity x num_horizons` times per
+decision. This gives the generator's per-decision cost a real O(capacity^2)
+component (confirmed by calibrating a two-term cost model against jobs
+1287838 and 1288047; see the session's `LONG_HORIZON_TIMEOUT_DECISION_REPORT`
+for the full derivation).
+
+Because `_simulate_lru_misses` returns a strictly monotonic cumulative miss
+count over a forward window, the trajectory up to step 32 is entirely
+determined by steps 1-32 and unaffected by anything at steps 33-128. One
+simulation run to `H_max=128` per candidate, recording the running miss
+count at checkpoints {32,64,128} (or {16,32,64,128} including the canonical
+control), would therefore reproduce the current per-horizon outputs
+*exactly* -- this is a provable identity, not an approximation. It would
+cut `OrderedDict` construction (the dominant cost term at large capacity)
+from 3x (or 4x) per candidate down to 1x, and cut total replay steps from
+`sum(horizons)` down to `max(horizons)`. Theoretical speedup for the
+{32,64,128} production case: ~2.96x (~3x).
+
+This was decided **not** to be worth pursuing before this campaign's launch:
+the current (unmodified) generator's evidence-based, conservatively
+safety-margined runtime already clears the 18h/24h operational deadlines
+with 2.5-3x headroom (see the timeout-decision report), so taking on new
+scientific-code risk and a fresh equivalence-validation cycle would only
+delay production for a benefit the deadline doesn't require. If a future
+dataset revision wants to pursue it, required before any production use:
+exact row/key/y_loss/y_value equality against the current implementation
+across >=2 families x capacities {32,128,256} x horizons {16,32,64,128},
+plus a fresh Wulver timing preflight of the modified code path.

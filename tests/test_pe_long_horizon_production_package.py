@@ -62,10 +62,24 @@ def test_no_path_collision_across_tasks() -> None:
     assert len(out_dirs) == len(set(out_dirs)), "duplicate out_dir across production tasks"
 
 
-def test_launch_guard_refuses_while_placeholders_present() -> None:
+def test_launch_guard_detects_placeholders_via_find_placeholders() -> None:
+    # As of the final launch-gate pass, resource_params.env has all
+    # placeholders resolved (by design -- that file is meant to be launch-
+    # ready). This test checks the placeholder-DETECTION logic in isolation
+    # (not the live file's current state) so it stays meaningful regardless.
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("launch_guard", SCRIPTS / "launch_guard.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    fake_params = {"CPUS_PER_TASK": "__TBD__", "MEMORY_PER_TASK": "4G", "X": "__WAIT_FOR_1288047__"}
+    assert set(mod.find_placeholders(fake_params)) == {"CPUS_PER_TASK", "X"}
+
+
+def test_launch_guard_passes_on_the_live_resolved_config() -> None:
     result = run([str(SCRIPTS / "launch_guard.py")])
-    assert result.returncode == 1
-    assert "PRODUCTION LAUNCH BLOCKED" in result.stdout + result.stderr
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "Production launch gate: OPEN" in result.stdout
 
 
 def test_launch_guard_passes_once_placeholders_resolved(tmp_path: Path) -> None:

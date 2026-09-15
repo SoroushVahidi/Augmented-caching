@@ -18,9 +18,9 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
-#SBATCH --mem=__MEM__
-#SBATCH --time=00:30:00
-#SBATCH --array=__ARRAY_SPEC__
+#SBATCH --mem=8G
+#SBATCH --time=00:45:00
+#SBATCH --array=0-19%10
 #SBATCH --output=slurm/logs/pe-long-horizon-validate-%A_%a.out
 #SBATCH --error=slurm/logs/pe-long-horizon-validate-%A_%a.err
 
