@@ -1,6 +1,6 @@
 # LAFC-Evict / Performance Evaluation (PE) - Current Project Status and Handoff
 
-Last verified: 2026-09-16 09:18 EDT.
+Last verified: 2026-09-16 09:57 EDT.
 
 This is the canonical PE handoff document for the `augmented-caching` scientific repository. It covers the PE line only. KBS worktrees and branches (`fairness`, `objective-ablation`, `halp`, `kbs-parallel`, `kbs-second-revision`, `cacheus`, `3l-cache`, and related KBS branches) are a separate publication line and must not be treated as garbage by a PE cleanup agent.
 
@@ -9,9 +9,11 @@ This is the canonical PE handoff document for the `augmented-caching` scientific
 | Purpose | Repository | Branch | HEAD |
 |---|---|---|---|
 | Current PE manuscript | `/home/soroush/projects/lafc-evict-dataset/repo` | `polish/pe-results-independent-cleanup-20260915` | `aa535ae` |
+| Long-horizon manuscript integration | `/home/soroush/projects/lafc-evict-dataset/repo` | `manuscript/pe-long-horizon-integration-20260916` | `545a174` |
 | Current PE handoff/docs | `/home/soroush/projects/augmented-caching/repo` | `docs/pe-project-status-20260915` | updated by Query 3 final docs commit |
 | Tier-2 LFU prepared branch | `/home/soroush/projects/augmented-caching/repo` | `experiment/pe-tier2-closed-loop-integration-20260915` | `4d2a9fd` |
 | Long-horizon completed evidence | `/home/soroush/projects/augmented-caching/repo` | `experiment/pe-long-horizon-production-prep-20260915` | `cc8c1ad` |
+| H16/H32/H64/H128 comparative analysis | `/home/soroush/projects/augmented-caching/repo` | `experiment/pe-h16-h128-comparative-integration-20260916` | `678adcb` |
 | Learned attempt 1 historical archive | `/home/soroush/projects/augmented-caching/repo` | `experiment/pe-publication-learned-retrain-20260915` | `6c17c0b` |
 | Learned attempt 2 canonical evidence | `/home/soroush/projects/augmented-caching/repo` | `experiment/pe-publication-learned-retrain-attempt2-20260915` | `ab36cba` |
 
@@ -21,6 +23,8 @@ This is the canonical PE handoff document for the `augmented-caching` scientific
 - Active PE tmux sessions: none found.
 - Active PE Slurm jobs: none found in `squeue`.
 - Long-horizon Wulver DAG: `COMPLETE_VALID`.
+- H16/H32/H64/H128 comparative analysis: `COMPLETE_VALID`.
+- Long-horizon manuscript integration: `COMPLETE`, on `manuscript/pe-long-horizon-integration-20260916`.
 - Learned model attempt 2: `COMPLETE_VALID`, publication gate `PASS`.
 - Tier-2 overnight/baseline production: `NOT_LAUNCHED`.
 
@@ -30,10 +34,11 @@ This is the canonical PE handoff document for the `augmented-caching` scientific
 - Canonical branch: `polish/pe-results-independent-cleanup-20260915`
 - Canonical HEAD: `aa535ae`
 - PDF: `paper/performance_evaluation/latex/main.pdf`
-- PDF page count: 47
-- Manuscript safety rule for this handoff: do not add long-horizon numbers, learned-policy numbers, LFU numbers, or Wulver acknowledgment until the corresponding scientific findings are actually integrated.
+- Baseline polished PDF page count: 47
+- Long-horizon integration PDF page count: 48
+- Manuscript safety rule for this handoff: do not add learned-policy numbers or LFU numbers until the corresponding scientific findings are actually integrated.
 
-The Wulver acknowledgment is intentionally absent for now. Add it only after Wulver-derived long-horizon results are incorporated into the manuscript.
+The Wulver acknowledgment is present on `manuscript/pe-long-horizon-integration-20260916` because validated Wulver-derived long-horizon results are incorporated there.
 
 ## Completed PE Scientific Evidence
 
@@ -45,6 +50,8 @@ The Wulver acknowledgment is intentionally absent for now. Add it only after Wul
 | Continuation-sensitivity pilot | COMPLETE_VALID | `experiment/continuation-sensitivity-pilot-20260914` |
 | Canonical H={4,8,16} candidate-label dataset | COMPLETE_VALID | `paper/sigmod2027/results/candidate_label_stats/y_loss_summary.csv`; `evict_value_v1_wulver_heavy_r1` |
 | Long-horizon H={32,64,128} campaign | COMPLETE_VALID | `experiment/pe-long-horizon-production-prep-20260915`; durable PROJECT root `/mmfs1/project/ikoutis/sv96/lafc-evict/pe_long_horizon_production_v1` |
+| H16/H32/H64/H128 comparative analysis | COMPLETE_VALID | `experiment/pe-h16-h128-comparative-integration-20260916` at `678adcb`; report `analysis/pe_h16_h128_comparative_20260916/PE_H16_H128_COMPARATIVE_REPORT.md` |
+| Long-horizon manuscript integration | COMPLETE | `manuscript/pe-long-horizon-integration-20260916` at `545a174`; claim map `paper/performance_evaluation/LONG_HORIZON_CLAIM_TRACEABILITY.md` |
 | Learned model attempt 2 | COMPLETE_VALID; publication gate PASS | `experiment/pe-publication-learned-retrain-attempt2-20260915`; durable model backup `/mmfs1/project/ikoutis/sv96/lafc-evict/pe_publication_learned_model_attempt2_20260916/` |
 
 ## Prepared But Not Run
@@ -73,13 +80,9 @@ See `docs/PE_EXTERNAL_ARTIFACT_INVENTORY.md`.
 
 ## Ordered Next Scientific Steps
 
-1. H16 canonical converter / existence audit. Reuse canonical H16; do not regenerate H16.
-2. H16/H32/H64/H128 long-horizon comparative aggregation and interpretation.
-3. Integrate validated long-horizon findings into the manuscript.
-4. Publication-grade learned closed-loop evaluation using the frozen attempt2 model and predetermined leakage-safe evaluation cells.
-5. Tier-2 classical baseline completion, including LFU as appropriate.
-6. Final results-dependent manuscript integration: abstract, results, discussion, and conclusion.
-7. Add Wulver acknowledgment once Wulver-derived long-horizon results are actually incorporated into the manuscript.
+1. Publication-grade learned closed-loop evaluation using the frozen attempt2 model and predetermined leakage-safe evaluation cells.
+2. Tier-2 classical baseline completion, including LFU as appropriate.
+3. Final results-dependent manuscript integration for learned closed-loop and Tier-2 outcomes: abstract, results, discussion, and conclusion.
 
 Do not execute these scientific steps as repository cleanup.
 
