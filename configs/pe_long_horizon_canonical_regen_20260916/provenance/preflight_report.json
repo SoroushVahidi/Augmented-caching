@@ -1,0 +1,114 @@
+{
+  "preflight_status": "FAIL_STOP_BEFORE_SUBMISSION",
+  "errors": [
+    "sbatch is not available in this environment",
+    "/mmfs1/scratch/ikoutis/sv96 is not mounted; quota/storage gate cannot be validated here"
+  ],
+  "source_audit": {
+    "canonical_manifest": "analysis/wulver_trace_manifest_full.csv",
+    "canonical_manifest_sha256": "68b37b3511baffd253a159eea96d862753ffe85ba6610a8bf8e649b186da5e22",
+    "trace_sources": {
+      "cloudphysics": {
+        "path": "data/processed/cloudphysics/trace.jsonl",
+        "trace_name": "cloudphysics_alibaba_block_head_50k",
+        "resolved_local_path": "/home/soroush/projects/augmented-caching/repo/data/processed/cloudphysics/trace.jsonl",
+        "exists_locally": true,
+        "line_count": 50000,
+        "sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57"
+      },
+      "metacdn": {
+        "path": "data/processed/metacdn/trace.jsonl",
+        "trace_name": "metacdn_cdn_202303_head_50k",
+        "resolved_local_path": "/home/soroush/projects/augmented-caching/repo/data/processed/metacdn/trace.jsonl",
+        "exists_locally": true,
+        "line_count": 50000,
+        "sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73"
+      },
+      "metakv": {
+        "path": "data/processed/metakv/trace.jsonl",
+        "trace_name": "metakv_kvcache_202206_head_50k",
+        "resolved_local_path": "/home/soroush/projects/augmented-caching/repo/data/processed/metakv/trace.jsonl",
+        "exists_locally": true,
+        "line_count": 50000,
+        "sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de"
+      },
+      "twemcache": {
+        "path": "data/processed/twemcache/trace.jsonl",
+        "trace_name": "twemcache_cluster26_sample100_50k",
+        "resolved_local_path": "/home/soroush/projects/augmented-caching/repo/data/processed/twemcache/trace.jsonl",
+        "exists_locally": true,
+        "line_count": 50000,
+        "sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9"
+      },
+      "wiki2018": {
+        "path": "data/processed/wiki2018/trace.jsonl",
+        "trace_name": "wiki2018_pageviews_en_50k",
+        "resolved_local_path": "/home/soroush/projects/augmented-caching/repo/data/processed/wiki2018/trace.jsonl",
+        "exists_locally": true,
+        "line_count": 50000,
+        "sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608"
+      }
+    },
+    "twemcache_full_source_proof": {
+      "canonical_h16_candidate_rows_h16_all_caps": 14776736,
+      "canonical_h4_h8_h16_candidate_rows_all_caps": 44330208,
+      "superseded_long_horizon_twemcache_candidate_rows_all_horizons": 10591392,
+      "canonical_expected_total": 44330208,
+      "superseded_expected_total": 10591392
+    }
+  },
+  "pilot": {
+    "scope": "twemcache/metakv capacities 32 and 128, H32 decision enumeration",
+    "results": [
+      {
+        "family": "twemcache",
+        "capacity": 32,
+        "generated_count": 37849,
+        "canonical_h16_count": 37849,
+        "unexpected_generated_keys": 0,
+        "missing_canonical_keys": 0,
+        "split_hash_identity": true,
+        "min_generated_t": 40,
+        "max_generated_t": 49999
+      },
+      {
+        "family": "twemcache",
+        "capacity": 128,
+        "generated_count": 31195,
+        "canonical_h16_count": 31195,
+        "unexpected_generated_keys": 0,
+        "missing_canonical_keys": 0,
+        "split_hash_identity": true,
+        "min_generated_t": 202,
+        "max_generated_t": 49997
+      },
+      {
+        "family": "metakv",
+        "capacity": 32,
+        "generated_count": 38032,
+        "canonical_h16_count": 38032,
+        "unexpected_generated_keys": 0,
+        "missing_canonical_keys": 0,
+        "split_hash_identity": true,
+        "min_generated_t": 56,
+        "max_generated_t": 49999
+      },
+      {
+        "family": "metakv",
+        "capacity": 128,
+        "generated_count": 37856,
+        "canonical_h16_count": 37856,
+        "unexpected_generated_keys": 0,
+        "missing_canonical_keys": 0,
+        "split_hash_identity": true,
+        "min_generated_t": 192,
+        "max_generated_t": 49999
+      }
+    ]
+  },
+  "environment": {
+    "hostname": "al-khwarizmi",
+    "sbatch": null,
+    "mmfs1_scratch_mounted": false
+  }
+}

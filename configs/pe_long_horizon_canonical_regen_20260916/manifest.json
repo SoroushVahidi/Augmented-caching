@@ -1,0 +1,1047 @@
+{
+  "format": "pe_long_horizon_canonical_regen_20260916_manifest_v1",
+  "namespace": "pe_long_horizon_canonical_regen_20260916",
+  "run_root": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916",
+  "supersedes": "analysis/pe_long_horizon_production_v1",
+  "supersession_reason": "stale/undercovered twemcache provenance and non-canonical trace-name split hashing",
+  "canonical_h16_release_decision_view": "/home/soroush/projects/lafc-evict-dataset/repo/release/lafc-evict-v0.1-open-current-contract-preserved/data/decision_view/decision_view.parquet",
+  "canonical_trace_manifest": "analysis/wulver_trace_manifest_full.csv",
+  "canonical_trace_manifest_sha256": "68b37b3511baffd253a159eea96d862753ffe85ba6610a8bf8e649b186da5e22",
+  "families": [
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "excluded_families": [
+    "brightkite",
+    "citibike"
+  ],
+  "capacities": [
+    32,
+    64,
+    128,
+    256
+  ],
+  "production_horizons": [
+    32,
+    64,
+    128
+  ],
+  "h16_regenerated": false,
+  "split_mode": "trace_chunk",
+  "chunk_size": 4096,
+  "split_seed": 7,
+  "split_train_pct": 70,
+  "split_val_pct": 15,
+  "history_window": 64,
+  "max_requests_per_trace": 50000,
+  "max_rows_per_shard": 500000,
+  "expected_source_head_at_preparation": "678adcbb8b6933522aa41e3ea18b400cc647f28a",
+  "expected_source_branch_at_preparation": "experiment/pe-long-horizon-canonical-regen-20260916",
+  "generator_lib_sha256": "6c07e12eb33010b652a5df004abcb22618e0ce3cb2ec169229d5c8cf1dbb6b59",
+  "generator_driver_sha256": "7f467561dd26e609a8c7df51d934a3a6598beed5f3cada5f87043cd8a655e43a",
+  "num_production_tasks": 20,
+  "num_logical_cells": 60,
+  "tasks": [
+    {
+      "array_index": 0,
+      "task_id": "cloudphysics__cap32",
+      "family": "cloudphysics",
+      "reader_facing_family": "alibaba-block",
+      "capacity": 32,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/cloudphysics/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/cloudphysics/trace.jsonl",
+      "trace_name": "cloudphysics_alibaba_block_head_50k",
+      "dataset_source": "cloudphysics",
+      "trace_family": "cloudphysics",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/cloudphysics__cap32",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 49241,
+        "key_sha256": "e97e1b77383cc86a89a7b71df98994682e5d6e4c37b1d304c455318bf8724d32",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 32,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 8058,
+          "train": 37187,
+          "val": 3996
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 1,
+      "task_id": "cloudphysics__cap64",
+      "family": "cloudphysics",
+      "reader_facing_family": "alibaba-block",
+      "capacity": 64,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/cloudphysics/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/cloudphysics/trace.jsonl",
+      "trace_name": "cloudphysics_alibaba_block_head_50k",
+      "dataset_source": "cloudphysics",
+      "trace_family": "cloudphysics",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/cloudphysics__cap64",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 48511,
+        "key_sha256": "0ddf8409166cbf339c2fe4e1d494ab1b1e9db3b469da4211b0a195997341c23e",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 73,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 7971,
+          "train": 36656,
+          "val": 3884
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 2,
+      "task_id": "cloudphysics__cap128",
+      "family": "cloudphysics",
+      "reader_facing_family": "alibaba-block",
+      "capacity": 128,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/cloudphysics/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/cloudphysics/trace.jsonl",
+      "trace_name": "cloudphysics_alibaba_block_head_50k",
+      "dataset_source": "cloudphysics",
+      "trace_family": "cloudphysics",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/cloudphysics__cap128",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 47620,
+        "key_sha256": "22ee6f4d850807c8f5918be9c238d27c4ee01272a780f0e58c57e303cf3a5b23",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 149,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 7832,
+          "train": 36043,
+          "val": 3745
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 3,
+      "task_id": "cloudphysics__cap256",
+      "family": "cloudphysics",
+      "reader_facing_family": "alibaba-block",
+      "capacity": 256,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/cloudphysics/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/cloudphysics/trace.jsonl",
+      "trace_name": "cloudphysics_alibaba_block_head_50k",
+      "dataset_source": "cloudphysics",
+      "trace_family": "cloudphysics",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/cloudphysics__cap256",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 46701,
+        "key_sha256": "415c39172e9e522c5279bed52083cb282241c63ee82920b10451fb52f438af32",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 277,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 7667,
+          "train": 35381,
+          "val": 3653
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 4,
+      "task_id": "metacdn__cap32",
+      "family": "metacdn",
+      "reader_facing_family": "metacdn",
+      "capacity": 32,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/metacdn/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/metacdn/trace.jsonl",
+      "trace_name": "metacdn_cdn_202303_head_50k",
+      "dataset_source": "metacdn",
+      "trace_family": "metacdn",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/metacdn__cap32",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 29348,
+        "key_sha256": "121285866a6d7aaa5a492886aecd30f999bc2d311848ed76b0bdac26f669c7a3",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 44,
+        "max_decision_t": 49996,
+        "split_counts": {
+          "train": 17519,
+          "val": 11829
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 5,
+      "task_id": "metacdn__cap64",
+      "family": "metacdn",
+      "reader_facing_family": "metacdn",
+      "capacity": 64,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/metacdn/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/metacdn/trace.jsonl",
+      "trace_name": "metacdn_cdn_202303_head_50k",
+      "dataset_source": "metacdn",
+      "trace_family": "metacdn",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/metacdn__cap64",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 28552,
+        "key_sha256": "18287703ff82af7b33f4145126aef0e95a15e88ccd81847c32b09693d6ac0ce1",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 91,
+        "max_decision_t": 49996,
+        "split_counts": {
+          "train": 17091,
+          "val": 11461
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 6,
+      "task_id": "metacdn__cap128",
+      "family": "metacdn",
+      "reader_facing_family": "metacdn",
+      "capacity": 128,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/metacdn/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/metacdn/trace.jsonl",
+      "trace_name": "metacdn_cdn_202303_head_50k",
+      "dataset_source": "metacdn",
+      "trace_family": "metacdn",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/metacdn__cap128",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 27683,
+        "key_sha256": "5265cfe9def1fe15df3ee60f4c754456994aa9b5c5aa267b1df6ce2981a1e560",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 194,
+        "max_decision_t": 49996,
+        "split_counts": {
+          "train": 16567,
+          "val": 11116
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 7,
+      "task_id": "metacdn__cap256",
+      "family": "metacdn",
+      "reader_facing_family": "metacdn",
+      "capacity": 256,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/metacdn/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/metacdn/trace.jsonl",
+      "trace_name": "metacdn_cdn_202303_head_50k",
+      "dataset_source": "metacdn",
+      "trace_family": "metacdn",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/metacdn__cap256",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 26737,
+        "key_sha256": "79ef41799585b2c3afbb789a886d471aa11a1b3c547a03238e81d6a2727d272f",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 402,
+        "max_decision_t": 49996,
+        "split_counts": {
+          "train": 16047,
+          "val": 10690
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 8,
+      "task_id": "metakv__cap32",
+      "family": "metakv",
+      "reader_facing_family": "metakv",
+      "capacity": 32,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/metakv/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/metakv/trace.jsonl",
+      "trace_name": "metakv_kvcache_202206_head_50k",
+      "dataset_source": "metakv",
+      "trace_family": "metakv",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/metakv__cap32",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 38032,
+        "key_sha256": "71a5d1bbddab936c12fd1ebac419f073d6d860f9c33a88bc3cd6a566ca03cbff",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 56,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 3003,
+          "train": 25579,
+          "val": 9450
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 9,
+      "task_id": "metakv__cap64",
+      "family": "metakv",
+      "reader_facing_family": "metakv",
+      "capacity": 64,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/metakv/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/metakv/trace.jsonl",
+      "trace_name": "metakv_kvcache_202206_head_50k",
+      "dataset_source": "metakv",
+      "trace_family": "metakv",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/metakv__cap64",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 37977,
+        "key_sha256": "76cbe0148e75f24d86828938c49adad8794309c4138abb9cb440a32bdbb9b0c7",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 101,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 2965,
+          "train": 25567,
+          "val": 9445
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 10,
+      "task_id": "metakv__cap128",
+      "family": "metakv",
+      "reader_facing_family": "metakv",
+      "capacity": 128,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/metakv/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/metakv/trace.jsonl",
+      "trace_name": "metakv_kvcache_202206_head_50k",
+      "dataset_source": "metakv",
+      "trace_family": "metakv",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/metakv__cap128",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 37856,
+        "key_sha256": "21f39b8bc9b2f164a55c4001ebbed4852b5bc4cee74235602169de92fd771add",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 192,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 2858,
+          "train": 25555,
+          "val": 9443
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 11,
+      "task_id": "metakv__cap256",
+      "family": "metakv",
+      "reader_facing_family": "metakv",
+      "capacity": 256,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/metakv/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/metakv/trace.jsonl",
+      "trace_name": "metakv_kvcache_202206_head_50k",
+      "dataset_source": "metakv",
+      "trace_family": "metakv",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/metakv__cap256",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 37486,
+        "key_sha256": "c9fbe394c0287c3ae26e7ea36458af1a711d06aafb8f1f3d80898876d4a1d6fc",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 430,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 2489,
+          "train": 25554,
+          "val": 9443
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 12,
+      "task_id": "twemcache__cap32",
+      "family": "twemcache",
+      "reader_facing_family": "twemcache",
+      "capacity": 32,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/twemcache/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/twemcache/trace.jsonl",
+      "trace_name": "twemcache_cluster26_sample100_50k",
+      "dataset_source": "twemcache",
+      "trace_family": "twemcache",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/twemcache__cap32",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 37849,
+        "key_sha256": "46831ab53fca7b0524339d9baca8131dc84ffc228492c2c88287611e099de6f3",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 40,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 6153,
+          "train": 28782,
+          "val": 2914
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 13,
+      "task_id": "twemcache__cap64",
+      "family": "twemcache",
+      "reader_facing_family": "twemcache",
+      "capacity": 64,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/twemcache/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/twemcache/trace.jsonl",
+      "trace_name": "twemcache_cluster26_sample100_50k",
+      "dataset_source": "twemcache",
+      "trace_family": "twemcache",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/twemcache__cap64",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 34748,
+        "key_sha256": "32fc570c660b8a51ea93c7e6a85b8dd7d3c001a886f92fa3f91c39cd55fd4e59",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 74,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 5633,
+          "train": 26462,
+          "val": 2653
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 14,
+      "task_id": "twemcache__cap128",
+      "family": "twemcache",
+      "reader_facing_family": "twemcache",
+      "capacity": 128,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/twemcache/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/twemcache/trace.jsonl",
+      "trace_name": "twemcache_cluster26_sample100_50k",
+      "dataset_source": "twemcache",
+      "trace_family": "twemcache",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/twemcache__cap128",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 31195,
+        "key_sha256": "8dabaf0e2a153e50a69eed48a6ca997a4ea1bb12dd1e23bea027876ab1ec7560",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 202,
+        "max_decision_t": 49997,
+        "split_counts": {
+          "test": 5083,
+          "train": 23742,
+          "val": 2370
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 15,
+      "task_id": "twemcache__cap256",
+      "family": "twemcache",
+      "reader_facing_family": "twemcache",
+      "capacity": 256,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/twemcache/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/twemcache/trace.jsonl",
+      "trace_name": "twemcache_cluster26_sample100_50k",
+      "dataset_source": "twemcache",
+      "trace_family": "twemcache",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/twemcache__cap256",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 28706,
+        "key_sha256": "b1c272afea63a79606a6e77e7b86a14902eaceafa07616cdb1da2231a17ca230",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 455,
+        "max_decision_t": 49997,
+        "split_counts": {
+          "test": 4710,
+          "train": 21810,
+          "val": 2186
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 16,
+      "task_id": "wiki2018__cap32",
+      "family": "wiki2018",
+      "reader_facing_family": "wiki2018",
+      "capacity": 32,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/wiki2018/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/wiki2018/trace.jsonl",
+      "trace_name": "wiki2018_pageviews_en_50k",
+      "dataset_source": "wiki2018",
+      "trace_family": "wiki2018",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/wiki2018__cap32",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 49968,
+        "key_sha256": "a35212a04dd7843dfbb54af4e3bdebe4e946bdcb7e23771d3e4c09a6cf3f0d33",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 32,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 4096,
+          "train": 41776,
+          "val": 4096
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 17,
+      "task_id": "wiki2018__cap64",
+      "family": "wiki2018",
+      "reader_facing_family": "wiki2018",
+      "capacity": 64,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/wiki2018/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/wiki2018/trace.jsonl",
+      "trace_name": "wiki2018_pageviews_en_50k",
+      "dataset_source": "wiki2018",
+      "trace_family": "wiki2018",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/wiki2018__cap64",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 49936,
+        "key_sha256": "a79c87305e72e67fcfe8bc5ef981a73dcf687cb556be0498bf49d76a7fd46bfb",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 64,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 4096,
+          "train": 41744,
+          "val": 4096
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 18,
+      "task_id": "wiki2018__cap128",
+      "family": "wiki2018",
+      "reader_facing_family": "wiki2018",
+      "capacity": 128,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/wiki2018/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/wiki2018/trace.jsonl",
+      "trace_name": "wiki2018_pageviews_en_50k",
+      "dataset_source": "wiki2018",
+      "trace_family": "wiki2018",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/wiki2018__cap128",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 49872,
+        "key_sha256": "dbb0c73327fcd64709d458c0275a662ca68e375b868416393130509d16195ee7",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 128,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 4096,
+          "train": 41680,
+          "val": 4096
+        }
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "array_index": 19,
+      "task_id": "wiki2018__cap256",
+      "family": "wiki2018",
+      "reader_facing_family": "wiki2018",
+      "capacity": 256,
+      "horizons": [
+        32,
+        64,
+        128
+      ],
+      "trace_path": "/home/soroush/projects/augmented-caching/repo/data/processed/wiki2018/trace.jsonl",
+      "canonical_manifest_trace_path": "data/processed/wiki2018/trace.jsonl",
+      "trace_name": "wiki2018_pageviews_en_50k",
+      "dataset_source": "wiki2018",
+      "trace_family": "wiki2018",
+      "out_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/raw/wiki2018__cap256",
+      "canonical_h16": {
+        "horizon": 16,
+        "decision_count": 49744,
+        "key_sha256": "44baf81149b9b46b64670e977efb41fe884dce71fc731e4c84e18ee411da32f6",
+        "key_format": "trace_name|trace_family|cap=<capacity>|t=<decision_t>|split=<split>",
+        "min_decision_t": 256,
+        "max_decision_t": 49999,
+        "split_counts": {
+          "test": 4096,
+          "train": 41552,
+          "val": 4096
+        }
+      },
+      "status": "NOT_RUN"
+    }
+  ],
+  "cells": [
+    {
+      "family": "cloudphysics",
+      "capacity": 32,
+      "horizon": 32,
+      "task_id": "cloudphysics__cap32"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 32,
+      "horizon": 64,
+      "task_id": "cloudphysics__cap32"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 32,
+      "horizon": 128,
+      "task_id": "cloudphysics__cap32"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 64,
+      "horizon": 32,
+      "task_id": "cloudphysics__cap64"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 64,
+      "horizon": 64,
+      "task_id": "cloudphysics__cap64"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 64,
+      "horizon": 128,
+      "task_id": "cloudphysics__cap64"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 128,
+      "horizon": 32,
+      "task_id": "cloudphysics__cap128"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 128,
+      "horizon": 64,
+      "task_id": "cloudphysics__cap128"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 128,
+      "horizon": 128,
+      "task_id": "cloudphysics__cap128"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 256,
+      "horizon": 32,
+      "task_id": "cloudphysics__cap256"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 256,
+      "horizon": 64,
+      "task_id": "cloudphysics__cap256"
+    },
+    {
+      "family": "cloudphysics",
+      "capacity": 256,
+      "horizon": 128,
+      "task_id": "cloudphysics__cap256"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 32,
+      "horizon": 32,
+      "task_id": "metacdn__cap32"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 32,
+      "horizon": 64,
+      "task_id": "metacdn__cap32"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 32,
+      "horizon": 128,
+      "task_id": "metacdn__cap32"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 64,
+      "horizon": 32,
+      "task_id": "metacdn__cap64"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 64,
+      "horizon": 64,
+      "task_id": "metacdn__cap64"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 64,
+      "horizon": 128,
+      "task_id": "metacdn__cap64"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 128,
+      "horizon": 32,
+      "task_id": "metacdn__cap128"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 128,
+      "horizon": 64,
+      "task_id": "metacdn__cap128"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 128,
+      "horizon": 128,
+      "task_id": "metacdn__cap128"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 256,
+      "horizon": 32,
+      "task_id": "metacdn__cap256"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 256,
+      "horizon": 64,
+      "task_id": "metacdn__cap256"
+    },
+    {
+      "family": "metacdn",
+      "capacity": 256,
+      "horizon": 128,
+      "task_id": "metacdn__cap256"
+    },
+    {
+      "family": "metakv",
+      "capacity": 32,
+      "horizon": 32,
+      "task_id": "metakv__cap32"
+    },
+    {
+      "family": "metakv",
+      "capacity": 32,
+      "horizon": 64,
+      "task_id": "metakv__cap32"
+    },
+    {
+      "family": "metakv",
+      "capacity": 32,
+      "horizon": 128,
+      "task_id": "metakv__cap32"
+    },
+    {
+      "family": "metakv",
+      "capacity": 64,
+      "horizon": 32,
+      "task_id": "metakv__cap64"
+    },
+    {
+      "family": "metakv",
+      "capacity": 64,
+      "horizon": 64,
+      "task_id": "metakv__cap64"
+    },
+    {
+      "family": "metakv",
+      "capacity": 64,
+      "horizon": 128,
+      "task_id": "metakv__cap64"
+    },
+    {
+      "family": "metakv",
+      "capacity": 128,
+      "horizon": 32,
+      "task_id": "metakv__cap128"
+    },
+    {
+      "family": "metakv",
+      "capacity": 128,
+      "horizon": 64,
+      "task_id": "metakv__cap128"
+    },
+    {
+      "family": "metakv",
+      "capacity": 128,
+      "horizon": 128,
+      "task_id": "metakv__cap128"
+    },
+    {
+      "family": "metakv",
+      "capacity": 256,
+      "horizon": 32,
+      "task_id": "metakv__cap256"
+    },
+    {
+      "family": "metakv",
+      "capacity": 256,
+      "horizon": 64,
+      "task_id": "metakv__cap256"
+    },
+    {
+      "family": "metakv",
+      "capacity": 256,
+      "horizon": 128,
+      "task_id": "metakv__cap256"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 32,
+      "horizon": 32,
+      "task_id": "twemcache__cap32"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 32,
+      "horizon": 64,
+      "task_id": "twemcache__cap32"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 32,
+      "horizon": 128,
+      "task_id": "twemcache__cap32"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 64,
+      "horizon": 32,
+      "task_id": "twemcache__cap64"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 64,
+      "horizon": 64,
+      "task_id": "twemcache__cap64"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 64,
+      "horizon": 128,
+      "task_id": "twemcache__cap64"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 128,
+      "horizon": 32,
+      "task_id": "twemcache__cap128"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 128,
+      "horizon": 64,
+      "task_id": "twemcache__cap128"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 128,
+      "horizon": 128,
+      "task_id": "twemcache__cap128"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 256,
+      "horizon": 32,
+      "task_id": "twemcache__cap256"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 256,
+      "horizon": 64,
+      "task_id": "twemcache__cap256"
+    },
+    {
+      "family": "twemcache",
+      "capacity": 256,
+      "horizon": 128,
+      "task_id": "twemcache__cap256"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 32,
+      "horizon": 32,
+      "task_id": "wiki2018__cap32"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 32,
+      "horizon": 64,
+      "task_id": "wiki2018__cap32"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 32,
+      "horizon": 128,
+      "task_id": "wiki2018__cap32"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 64,
+      "horizon": 32,
+      "task_id": "wiki2018__cap64"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 64,
+      "horizon": 64,
+      "task_id": "wiki2018__cap64"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 64,
+      "horizon": 128,
+      "task_id": "wiki2018__cap64"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 128,
+      "horizon": 32,
+      "task_id": "wiki2018__cap128"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 128,
+      "horizon": 64,
+      "task_id": "wiki2018__cap128"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 128,
+      "horizon": 128,
+      "task_id": "wiki2018__cap128"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 256,
+      "horizon": 32,
+      "task_id": "wiki2018__cap256"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 256,
+      "horizon": 64,
+      "task_id": "wiki2018__cap256"
+    },
+    {
+      "family": "wiki2018",
+      "capacity": 256,
+      "horizon": 128,
+      "task_id": "wiki2018__cap256"
+    }
+  ]
+}
