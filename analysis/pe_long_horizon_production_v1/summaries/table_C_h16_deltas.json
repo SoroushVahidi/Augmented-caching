@@ -1,0 +1,482 @@
+[
+  {
+    "family": "cloudphysics",
+    "capacity": 32,
+    "horizon": 32,
+    "discriminativeness": 0.16407059158018722,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 32,
+    "horizon": 64,
+    "discriminativeness": 0.16407059158018722,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 32,
+    "horizon": 128,
+    "discriminativeness": 0.16407059158018722,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 64,
+    "horizon": 32,
+    "discriminativeness": 0.32670940611407717,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 64,
+    "horizon": 64,
+    "discriminativeness": 0.3826142524375915,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 64,
+    "horizon": 128,
+    "discriminativeness": 0.38269670796314237,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 128,
+    "horizon": 32,
+    "discriminativeness": 0.4736035279294414,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 128,
+    "horizon": 64,
+    "discriminativeness": 0.6064048719025619,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 128,
+    "horizon": 128,
+    "discriminativeness": 0.670117597648047,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 256,
+    "horizon": 32,
+    "discriminativeness": 0.5992805293248539,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 256,
+    "horizon": 64,
+    "discriminativeness": 0.7541594398406887,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 256,
+    "horizon": 128,
+    "discriminativeness": 0.8530866576732832,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 32,
+    "horizon": 32,
+    "discriminativeness": 0.9991481531961293,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 32,
+    "horizon": 64,
+    "discriminativeness": 0.9999659261278452,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 32,
+    "horizon": 128,
+    "discriminativeness": 0.9999659261278452,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 64,
+    "horizon": 32,
+    "discriminativeness": 0.9993695713084898,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 64,
+    "horizon": 64,
+    "discriminativeness": 1.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 64,
+    "horizon": 128,
+    "discriminativeness": 1.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 128,
+    "horizon": 32,
+    "discriminativeness": 0.9994220279593975,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 128,
+    "horizon": 64,
+    "discriminativeness": 1.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 128,
+    "horizon": 128,
+    "discriminativeness": 1.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 256,
+    "horizon": 32,
+    "discriminativeness": 0.9994763810449938,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 256,
+    "horizon": 64,
+    "discriminativeness": 1.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metacdn",
+    "capacity": 256,
+    "horizon": 128,
+    "discriminativeness": 1.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 32,
+    "horizon": 32,
+    "discriminativeness": 0.1371739587715608,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 32,
+    "horizon": 64,
+    "discriminativeness": 0.13785759360538496,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 32,
+    "horizon": 128,
+    "discriminativeness": 0.13785759360538496,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 64,
+    "horizon": 32,
+    "discriminativeness": 0.1459830950312031,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 64,
+    "horizon": 64,
+    "discriminativeness": 0.1542775890670669,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 64,
+    "horizon": 128,
+    "discriminativeness": 0.1553835216051821,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 128,
+    "horizon": 32,
+    "discriminativeness": 0.15630283178360105,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 128,
+    "horizon": 64,
+    "discriminativeness": 0.1716504649196957,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 128,
+    "horizon": 128,
+    "discriminativeness": 0.18153000845308542,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 256,
+    "horizon": 32,
+    "discriminativeness": 0.182601504561703,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 256,
+    "horizon": 64,
+    "discriminativeness": 0.1981539774849277,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "metakv",
+    "capacity": 256,
+    "horizon": 128,
+    "discriminativeness": 0.20717067705276637,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 32,
+    "horizon": 32,
+    "discriminativeness": 0.8278883086616892,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 32,
+    "horizon": 64,
+    "discriminativeness": 0.8855465884079237,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 32,
+    "horizon": 128,
+    "discriminativeness": 0.8871434120236502,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 64,
+    "horizon": 32,
+    "discriminativeness": 0.9482099068170672,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 64,
+    "horizon": 64,
+    "discriminativeness": 0.9951937224129476,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 64,
+    "horizon": 128,
+    "discriminativeness": 0.9999509563511525,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 128,
+    "horizon": 32,
+    "discriminativeness": 0.999558693733451,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 128,
+    "horizon": 64,
+    "discriminativeness": 0.9997793468667255,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 128,
+    "horizon": 128,
+    "discriminativeness": 0.9997793468667255,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 256,
+    "horizon": 32,
+    "discriminativeness": 0.9994335882186349,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 256,
+    "horizon": 64,
+    "discriminativeness": 0.9997167941093175,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "twemcache",
+    "capacity": 256,
+    "horizon": 128,
+    "discriminativeness": 0.9997167941093175,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 32,
+    "horizon": 32,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 32,
+    "horizon": 64,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 32,
+    "horizon": 128,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 64,
+    "horizon": 32,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 64,
+    "horizon": 64,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 64,
+    "horizon": 128,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 128,
+    "horizon": 32,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 128,
+    "horizon": 64,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 128,
+    "horizon": 128,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 256,
+    "horizon": 32,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 256,
+    "horizon": 64,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 256,
+    "horizon": 128,
+    "discriminativeness": 0.0,
+    "h16_discriminativeness": null,
+    "delta_vs_h16": null
+  }
+]

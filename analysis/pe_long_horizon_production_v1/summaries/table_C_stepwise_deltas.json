@@ -1,0 +1,122 @@
+[
+  {
+    "family": "cloudphysics",
+    "capacity": 32,
+    "delta_32_to_64": 0.0,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 64,
+    "delta_32_to_64": 0.055904846323514334,
+    "delta_64_to_128": 8.245552555086189e-05
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 128,
+    "delta_32_to_64": 0.1328013439731205,
+    "delta_64_to_128": 0.06371272574548514
+  },
+  {
+    "family": "cloudphysics",
+    "capacity": 256,
+    "delta_32_to_64": 0.1548789105158348,
+    "delta_64_to_128": 0.0989272178325945
+  },
+  {
+    "family": "metacdn",
+    "capacity": 32,
+    "delta_32_to_64": 0.000817772931715921,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "metacdn",
+    "capacity": 64,
+    "delta_32_to_64": 0.0006304286915101986,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "metacdn",
+    "capacity": 128,
+    "delta_32_to_64": 0.0005779720406025035,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "metacdn",
+    "capacity": 256,
+    "delta_32_to_64": 0.0005236189550061887,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "metakv",
+    "capacity": 32,
+    "delta_32_to_64": 0.0006836348338241649,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "metakv",
+    "capacity": 64,
+    "delta_32_to_64": 0.008294494035863798,
+    "delta_64_to_128": 0.0011059325381151952
+  },
+  {
+    "family": "metakv",
+    "capacity": 128,
+    "delta_32_to_64": 0.015347633136094663,
+    "delta_64_to_128": 0.009879543533389712
+  },
+  {
+    "family": "metakv",
+    "capacity": 256,
+    "delta_32_to_64": 0.015552472923224703,
+    "delta_64_to_128": 0.009016699567838682
+  },
+  {
+    "family": "twemcache",
+    "capacity": 32,
+    "delta_32_to_64": 0.0576582797462345,
+    "delta_64_to_128": 0.0015968236157265503
+  },
+  {
+    "family": "twemcache",
+    "capacity": 64,
+    "delta_32_to_64": 0.046983815595880385,
+    "delta_64_to_128": 0.00475723393820493
+  },
+  {
+    "family": "twemcache",
+    "capacity": 128,
+    "delta_32_to_64": 0.00022065313327457314,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "twemcache",
+    "capacity": 256,
+    "delta_32_to_64": 0.0002832058906825363,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 32,
+    "delta_32_to_64": 0.0,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 64,
+    "delta_32_to_64": 0.0,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 128,
+    "delta_32_to_64": 0.0,
+    "delta_64_to_128": 0.0
+  },
+  {
+    "family": "wiki2018",
+    "capacity": 256,
+    "delta_32_to_64": 0.0,
+    "delta_64_to_128": 0.0
+  }
+]

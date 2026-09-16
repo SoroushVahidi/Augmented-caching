@@ -1,0 +1,23 @@
+{
+  "32": {
+    "total_candidate_rows": 81418752,
+    "total_decisions": 706888,
+    "mean_discriminativeness_unweighted": 0.497911603801824,
+    "mean_random_regret_unweighted": 0.025420267408649166,
+    "num_cells": 20
+  },
+  "64": {
+    "total_candidate_rows": 81418752,
+    "total_decisions": 706888,
+    "mean_discriminativeness_unweighted": 0.5224695579381432,
+    "mean_random_regret_unweighted": 0.04214328215358404,
+    "num_cells": 20
+  },
+  "128": {
+    "total_candidate_rows": 81418752,
+    "total_decisions": 706888,
+    "mean_discriminativeness_unweighted": 0.5319234895529885,
+    "mean_random_regret_unweighted": 0.07417861204201115,
+    "num_cells": 20
+  }
+}
