@@ -17,7 +17,9 @@ set -euo pipefail
 
 cd "${SLURM_SUBMIT_DIR:-.}"
 mkdir -p slurm/logs
-source .venv/bin/activate
+if [[ -f .venv/bin/activate ]]; then
+  source .venv/bin/activate
+fi
 export PYTHONPATH=src
 
 python scripts/pe_long_horizon/aggregate.py \

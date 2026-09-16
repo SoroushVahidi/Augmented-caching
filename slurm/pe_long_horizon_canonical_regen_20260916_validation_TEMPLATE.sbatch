@@ -18,7 +18,9 @@ set -euo pipefail
 
 cd "${SLURM_SUBMIT_DIR:-.}"
 mkdir -p slurm/logs
-source .venv/bin/activate
+if [[ -f .venv/bin/activate ]]; then
+  source .venv/bin/activate
+fi
 export PYTHONPATH=src
 
 MANIFEST="configs/pe_long_horizon_canonical_regen_20260916/manifest.json"
