@@ -1,0 +1,121 @@
+{
+  "config": {
+    "capacities": [
+      32,
+      64,
+      128,
+      256
+    ],
+    "experiment_id": "pe_publication_learned_retrain_20260915",
+    "families": [
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "future_closed_loop_capacities": [
+      32,
+      128
+    ],
+    "horizon": 16,
+    "model_candidates": {
+      "hist_gb": {
+        "class": "sklearn.ensemble.HistGradientBoostingRegressor",
+        "params": {
+          "l2_regularization": 0.0,
+          "learning_rate": 0.05,
+          "max_iter": 120,
+          "max_leaf_nodes": 31,
+          "random_state": 20260915
+        }
+      },
+      "ridge": {
+        "class": "sklearn.pipeline.Pipeline(StandardScaler, Ridge)",
+        "params": {
+          "ridge__alpha": 1.0
+        }
+      }
+    },
+    "purge_gap_requests": 512,
+    "release_root": "/home/soroush/projects/lafc-evict-dataset/repo/release/lafc-evict-v0.1-open-current-contract-preserved",
+    "sampling_seed": 20260915,
+    "selection_rule": [
+      "minimize validation mean decision-level regret",
+      "break ties by non-tied mean regret",
+      "then optimal-set selection rate on non-tied decisions",
+      "then validation MAE",
+      "then inference cost"
+    ],
+    "split_design": "blocked_temporal",
+    "target": "y_loss",
+    "train_fraction_end": 0.6,
+    "train_sample_decisions_per_family_capacity": 600,
+    "validation_fraction_end": 0.8,
+    "validation_sample_decisions_per_family_capacity": 600
+  },
+  "config_path": "configs/pe_publication_learned_retrain_h16.json",
+  "config_sha256": "50f638df5a860486d94434233d1361dade0060b4fa2c43dc4bd386bd399bd4d4",
+  "dataset_manifest": "analysis/pe_publication_learned_retrain_20260915/dataset_manifest.json",
+  "dataset_manifest_sha256": "268c72fe7a59f4327bd5df49fcdc6b7cbd3ecc183ad46974899202e17a038e1e",
+  "feature_manifest": "analysis/pe_publication_learned_retrain_20260915/feature_names.json",
+  "feature_manifest_sha256": "de7c1a2bb0a6f23a421635a82c53c1a9be78a36e2e5e62a744826d4fef9522bd",
+  "features": [
+    "request_bucket",
+    "request_confidence",
+    "candidate_bucket",
+    "candidate_confidence",
+    "candidate_recency_rank",
+    "candidate_age_norm",
+    "candidate_predictor_score",
+    "candidate_lru_score",
+    "candidate_is_predictor_victim",
+    "candidate_is_lru_victim",
+    "score_gap_to_predictor_best",
+    "score_gap_to_lru_victim",
+    "bucket_gap_to_predictor_best",
+    "bucket_gap_to_lru_victim",
+    "confidence_gap_to_predictor_best",
+    "confidence_gap_to_lru_victim",
+    "cache_bucket_mean",
+    "cache_bucket_std",
+    "cache_bucket_min",
+    "cache_bucket_max",
+    "cache_unique_bucket_count",
+    "cache_confidence_mean",
+    "cache_confidence_std",
+    "predictor_lru_disagree",
+    "recent_candidate_request_rate",
+    "recent_candidate_hit_rate"
+  ],
+  "frozen_before_test_evaluation_utc": "2026-09-16T01:04:28.552689+00:00",
+  "horizon": 16,
+  "host": "al-khwarizmi",
+  "model_class": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingRegressor",
+  "model_name": "pe_evict_value_h16_hist_gb_20260915",
+  "model_path": "models/pe_evict_value_h16_hist_gb_20260915.pkl",
+  "model_sha256": "c5bf9840f6be4b82903c82bbf1e3ace87c5b4656e4bed163eba84f2ee805611e",
+  "numpy_version": "2.3.5",
+  "old_heavy_r1_used": false,
+  "pandas_version": "3.0.2",
+  "platform": "Linux-7.0.0-29-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "retrain_branch": "experiment/pe-publication-learned-retrain-20260915",
+  "retrain_head_at_training": "4d2a9fd18fd8c67b19dcccfea0b0769ad784f6d1",
+  "selected_candidate": "hist_gb",
+  "selection_rule": [
+    "minimize validation mean decision-level regret",
+    "break ties by non-tied mean regret",
+    "then optimal-set selection rate on non-tied decisions",
+    "then validation MAE",
+    "then inference cost"
+  ],
+  "sklearn_version": "1.8.0",
+  "split_integrity": "analysis/pe_publication_learned_retrain_20260915/split_integrity.json",
+  "split_integrity_sha256": "447f69075ccd06fef68d70471954df9044726fad24b7af66c3f08ebecd338b5c",
+  "split_manifest": "analysis/pe_publication_learned_retrain_20260915/split_manifest.json",
+  "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+  "target": "y_loss",
+  "test_used_for_model_selection": false,
+  "training_command": "OMP_NUM_THREADS=1 PYTHONPATH=.:src python scripts/pe_publication_learned_retrain.py --config configs/pe_publication_learned_retrain_h16.json"
+}

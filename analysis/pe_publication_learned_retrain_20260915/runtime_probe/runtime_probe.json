@@ -1,0 +1,8 @@
+{
+  "fit_seconds": 1.0389218721538782,
+  "load_seconds": 72.57568855024874,
+  "local_training_too_expensive": false,
+  "probe_rows": 240000,
+  "projected_fit_seconds_for_config_sample": 9.7243087233603,
+  "total_probe_seconds": 75.46382640488446
+}

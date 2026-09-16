@@ -1,0 +1,30 @@
+{
+  "candidate_rows": 277995072,
+  "candidate_rows_h16_selected": 92665024,
+  "capacities": [
+    32,
+    64,
+    128,
+    256
+  ],
+  "checksums_sha256": "86cb3722f5b03ee4188ab67230f6537298bf4d600c6a1d3dbbfb0558825ff157",
+  "dataset_name": "lafc-evict-v0.1-open",
+  "dataset_schema_version": "lafc-evict-candidate-v1",
+  "dataset_version": "0.1",
+  "decision_view_sha256": "04337dd5bdcdd4f8ec3e1869a9be570e3b503d7871a388b66271d5539b91827b",
+  "decisions": 2363286,
+  "decisions_h16_selected": 787762,
+  "families": [
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "horizon_used": 16,
+  "release_manifest": "/home/soroush/projects/lafc-evict-dataset/repo/release/lafc-evict-v0.1-open-current-contract-preserved/metadata/release_manifest.json",
+  "release_manifest_sha256": "4d839e6cf4565c0fcbec4c2a014aba6c5aadd0bddc368b518cbad47f2a3208cf",
+  "release_root": "/home/soroush/projects/lafc-evict-dataset/repo/release/lafc-evict-v0.1-open-current-contract-preserved",
+  "source_dataset_repo_head": "bba07270c2c78223316620ddfecd4772c4423a14",
+  "source_manifest": "/home/soroush/Augmented-caching/data/derived/evict_value_v1_wulver_heavy_r1/manifest.json"
+}

@@ -1,0 +1,39 @@
+{
+  "experiment_id": "pe_publication_learned_retrain_20260915",
+  "release_root": "/home/soroush/projects/lafc-evict-dataset/repo/release/lafc-evict-v0.1-open-current-contract-preserved",
+  "target": "y_loss",
+  "horizon": 16,
+  "families": ["cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"],
+  "capacities": [32, 64, 128, 256],
+  "future_closed_loop_capacities": [32, 128],
+  "split_design": "blocked_temporal",
+  "train_fraction_end": 0.60,
+  "validation_fraction_end": 0.80,
+  "purge_gap_requests": 512,
+  "sampling_seed": 20260915,
+  "train_sample_decisions_per_family_capacity": 600,
+  "validation_sample_decisions_per_family_capacity": 600,
+  "model_candidates": {
+    "ridge": {
+      "class": "sklearn.pipeline.Pipeline(StandardScaler, Ridge)",
+      "params": {"ridge__alpha": 1.0}
+    },
+    "hist_gb": {
+      "class": "sklearn.ensemble.HistGradientBoostingRegressor",
+      "params": {
+        "learning_rate": 0.05,
+        "max_iter": 120,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 0.0,
+        "random_state": 20260915
+      }
+    }
+  },
+  "selection_rule": [
+    "minimize validation mean decision-level regret",
+    "break ties by non-tied mean regret",
+    "then optimal-set selection rate on non-tied decisions",
+    "then validation MAE",
+    "then inference cost"
+  ]
+}
