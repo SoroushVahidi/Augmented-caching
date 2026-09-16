@@ -205,7 +205,7 @@
   "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
   "planned_cells": 10,
   "planned_tasks": 250,
-  "protocol_sha256": "7f0e0d41dec7263c5e1d318bc76dbdd565381e85b77348764a31f2e59517c3de",
+  "protocol_sha256": "897b8d42ebfcb7e401a5bbac5245186acba4608a7d3b4af23694d6ca1aeff4b1",
   "requirements": {
     "cross_capacity_assignment_consistent": true,
     "no_training_overlap": true,

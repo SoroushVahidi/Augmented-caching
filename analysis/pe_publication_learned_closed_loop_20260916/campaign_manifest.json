@@ -143,8 +143,8 @@
   },
   "manifest_version": "1.0",
   "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
-  "protocol_sha256": "7f0e0d41dec7263c5e1d318bc76dbdd565381e85b77348764a31f2e59517c3de",
-  "runner_commit": "18c3191ea3201c54730a8d410bbabee8aaf27941",
+  "protocol_sha256": "897b8d42ebfcb7e401a5bbac5245186acba4608a7d3b4af23694d6ca1aeff4b1",
+  "runner_commit": "cd199fd6b4d829fc872b8b5a2745392a5c489d32",
   "tasks": [
     {
       "cell_key": "alibaba-block__cap128",
