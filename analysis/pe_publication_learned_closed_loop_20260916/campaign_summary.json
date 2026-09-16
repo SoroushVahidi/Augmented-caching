@@ -1,0 +1,33 @@
+{
+  "by_policy": {
+    "learned": {
+      "mean_miss_ratio": 0.7629018596982533,
+      "tasks": 10
+    },
+    "lfu": {
+      "mean_miss_ratio": 0.7824545339510133,
+      "tasks": 10
+    },
+    "lru": {
+      "mean_miss_ratio": 0.7117470368523934,
+      "tasks": 10
+    },
+    "mru": {
+      "mean_miss_ratio": 0.8483885676580607,
+      "tasks": 10
+    },
+    "random": {
+      "mean_miss_ratio": 0.7228492621817287,
+      "tasks": 200
+    },
+    "sieve": {
+      "mean_miss_ratio": 0.7096470668010643,
+      "tasks": 10
+    }
+  },
+  "campaign_status": "COMPLETE",
+  "cells": 10,
+  "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+  "protocol_sha256": "897b8d42ebfcb7e401a5bbac5245186acba4608a7d3b4af23694d6ca1aeff4b1",
+  "tasks": 250
+}

@@ -1,0 +1,93 @@
+{
+  "campaign": "pe_publication_learned_closed_loop_20260916",
+  "capacities": [
+    32,
+    128
+  ],
+  "cells": 10,
+  "families": [
+    "alibaba-block",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+  "overall_summary": {
+    "learned": {
+      "macro_miss_ratio_10cell": 0.7629018596982534,
+      "macro_miss_ratio_excl_wiki2018_8cell": 0.7036273246228167,
+      "micro_miss_ratio_10cell": 0.7630194578835062,
+      "micro_miss_ratio_excl_wiki2018_8cell": 0.7037281599556265
+    },
+    "lfu": {
+      "macro_miss_ratio_10cell": 0.7824545339510132,
+      "macro_miss_ratio_excl_wiki2018_8cell": 0.7280681674387665,
+      "micro_miss_ratio_10cell": 0.7825512855724336,
+      "micro_miss_ratio_excl_wiki2018_8cell": 0.7281467492505381
+    },
+    "lru": {
+      "macro_miss_ratio_10cell": 0.7117470368523935,
+      "macro_miss_ratio_excl_wiki2018_8cell": 0.6396837960654919,
+      "micro_miss_ratio_10cell": 0.7119134641793252,
+      "micro_miss_ratio_excl_wiki2018_8cell": 0.639835712682083
+    },
+    "mru": {
+      "macro_miss_ratio_10cell": 0.8483885676580607,
+      "macro_miss_ratio_excl_wiki2018_8cell": 0.8104857095725759,
+      "micro_miss_ratio_10cell": 0.8484566792723892,
+      "micro_miss_ratio_excl_wiki2018_8cell": 0.8105413293538121
+    },
+    "random_mean": {
+      "macro_miss_ratio_10cell": 0.7228492621817288,
+      "macro_miss_ratio_excl_wiki2018_8cell": 0.6535615777271611,
+      "note": "random micro/request-weighted omitted: per-cell CSV stores only mean miss_ratio per seed, not per-seed miss/scored counts"
+    },
+    "sieve": {
+      "macro_miss_ratio_10cell": 0.7096470668010642,
+      "macro_miss_ratio_excl_wiki2018_8cell": 0.6370588335013302,
+      "micro_miss_ratio_10cell": 0.7098113366995542,
+      "micro_miss_ratio_excl_wiki2018_8cell": 0.637207643850451
+    }
+  },
+  "protocol_sha256": "897b8d42ebfcb7e401a5bbac5245186acba4608a7d3b4af23694d6ca1aeff4b1",
+  "provenance": {
+    "actual_submission_checkout_commit": "9684b4dac6e107289738e8d3cdb801b04dd4ef78",
+    "embedded_manifest_runner_commit": "62ccfa252733b5d20d413af2cb74590d0af2f235",
+    "slurm_jobs": {
+      "aggregation": "1291050",
+      "production": "1291048",
+      "validation": "1291049"
+    }
+  },
+  "tie_tolerance": 1e-12,
+  "tie_tolerance_note": "Exact floating-point equality within 1e-12; observed ties are all wiki2018 cells where every policy scores miss_ratio=1.0 exactly (degenerate all-miss trace tail), not near-ties.",
+  "wiki2018_degenerate": true,
+  "wins_ties_losses": {
+    "lfu": {
+      "losses": 3,
+      "ties": 2,
+      "wins": 5
+    },
+    "lru": {
+      "losses": 7,
+      "ties": 2,
+      "wins": 1
+    },
+    "mru": {
+      "losses": 0,
+      "ties": 2,
+      "wins": 8
+    },
+    "random_mean": {
+      "losses": 7,
+      "ties": 2,
+      "wins": 1
+    },
+    "sieve": {
+      "losses": 7,
+      "ties": 2,
+      "wins": 1
+    }
+  }
+}

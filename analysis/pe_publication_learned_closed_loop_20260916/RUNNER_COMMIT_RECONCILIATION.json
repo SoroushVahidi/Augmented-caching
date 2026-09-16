@@ -1,0 +1,33 @@
+{
+  "issue": "Every result.json and provenance.json produced by this campaign embeds runner_commit=62ccfa2..., not the commit that was actually checked out on Wulver at sbatch-submission time (9684b4d...). This file explains and closes that discrepancy without editing any raw result file.",
+  "embedded_manifest_runner_commit": "62ccfa252733b5d20d413af2cb74590d0af2f235",
+  "embedded_manifest_runner_commit_message": "fix(pe): clear learned closed-loop submission gates",
+  "actual_submission_checkout_commit": "9684b4dac6e107289738e8d3cdb801b04dd4ef78",
+  "actual_submission_checkout_commit_message": "fix(pe): reproduce learned model runtime environment on Wulver",
+  "evidence_for_actual_checkout": [
+    "Before `sbatch` was invoked, `git rev-parse HEAD` was run inside the Wulver scratch checkout at /mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_publication_learned_closed_loop_20260916/code and returned 9684b4dac6e107289738e8d3cdb801b04dd4ef78, matching the local and origin HEAD of experiment/pe-publication-learned-closed-loop-20260916 at that moment.",
+    "The sync from 62ccfa2's descendant state to 9684b4d was done via `git checkout origin/<branch> -- <5 explicit changed paths>` plus `git update-ref`/`git symbolic-ref HEAD` (not a blind reset), specifically to avoid disturbing the untracked data/processed trace symlink; the resulting HEAD was re-verified with `git rev-parse HEAD` immediately before `sbatch slurm/pe_learned_cl_prod.sbatch` was run.",
+    "The three sbatch scripts that actually ran (visible in the Slurm job's stdout: the sha256sum preflight line and the python invocation) match the 9684b4d versions, which source the isolated sklearn-1.8.0 venv explicitly rather than the old silent `.venv/bin/activate 2>/dev/null || true` fallback."
+  ],
+  "why_the_manifest_field_is_stale": "campaign_manifest.json's runner_commit field is written once, at generation time, by scripts/prepare_closed_loop.py, as `git rev-parse HEAD` evaluated at that moment (commit 62ccfa2, immediately after the naming-fix). The two subsequent commits (1d016b4: a self-referential provenance update to that same field; 9684b4d: the sklearn environment fix) never re-ran prepare_closed_loop.py, so the manifest -- and therefore every task's copy of that field via `manifest[\"runner_commit\"]` in pe_learned_closed_loop.py's run_task() -- was never updated. This is a static-metadata staleness in the generator's own design, not evidence that different code executed.",
+  "commit_diff_summary_62ccfa2_to_9684b4d": {
+    "files_changed": 6,
+    "files": [
+      "analysis/pe_publication_learned_closed_loop_20260916/WULVER_RUNTIME_ENVIRONMENT.json (new file, environment record)",
+      "analysis/pe_publication_learned_closed_loop_20260916/campaign_manifest.json (1 line: runner_commit self-reference update to 1d016b4, itself later superseded textually by this same field never being regenerated again after 9684b4d)",
+      "requirements-wulver-learned-closed-loop.txt (new file, pinned sklearn==1.8.0 environment)",
+      "slurm/pe_learned_cl_aggregate.sbatch (venv activation block only)",
+      "slurm/pe_learned_cl_prod.sbatch (venv activation block only)",
+      "slurm/pe_learned_cl_validate.sbatch (venv activation block only)"
+    ],
+    "cells_by_key_changed": false,
+    "tasks_changed": false,
+    "protocol_sha256_changed_by_this_range": false
+  },
+  "scientific_protocol_changed": false,
+  "model_changed": false,
+  "cells_changed": false,
+  "features_changed": false,
+  "split_changed": false,
+  "conclusion": "The 62ccfa2 vs 9684b4d difference is entirely runtime-environment/submission-infrastructure (which Python/sklearn the job used to load the model), not a scientific-protocol change. Both values are preserved here rather than silently overwritten in any raw artifact."
+}
