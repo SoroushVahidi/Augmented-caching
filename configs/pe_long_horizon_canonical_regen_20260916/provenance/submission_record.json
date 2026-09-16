@@ -1,0 +1,56 @@
+{
+  "namespace": "pe_long_horizon_canonical_regen_20260916",
+  "campaign_commit": "4f934af8af682ab07820c78ea794a5328bcef9c8",
+  "submission_timestamp_wulver": "2026-09-16T17:55:55-04:00",
+  "wulver_hostname": "login02",
+  "wulver_user": "sv96",
+  "wulver_execution_worktree": "/mmfs1/scratch/ikoutis/sv96/lafc-work/pe_long_horizon_canonical_regen_20260916",
+  "wulver_trace_source_root": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/source_traces",
+  "run_root": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916",
+  "slurm_bin": "/mmfs1/apps/slurm/26.05.4/bin",
+  "slurm_version": "slurm 26.05.2",
+  "scratch_available_bytes_pre_submission": 10829659373568,
+  "conservative_space_reference": {
+    "superseded_campaign_footprint": "150G",
+    "free_space": "9.9T"
+  },
+  "production_job_id": "1291887",
+  "validation_job_id": "1291888",
+  "aggregation_job_id": "1291889",
+  "dependency_graph": {
+    "production": "1291887",
+    "validation": "afterok:1291887_*",
+    "aggregation": "afterok:1291888_*"
+  },
+  "array_shape": {
+    "production": "0-19%10",
+    "validation": "0-19%10",
+    "aggregation": "single job"
+  },
+  "tasks": 20,
+  "logical_cells": 60,
+  "horizons": [32, 64, 128],
+  "h16_regenerated": false,
+  "expected_candidate_rows": 277995072,
+  "submitted_sbatch_sha256": {
+    "production": "8b6c5d8170f8e2ab4757a5fa57a2a1762e4959637f262a1e130c2b8399bbb17d",
+    "validation": "98184f091c9ab9c75d1b2566605b17da4b9eee72f57e48f6c78e21884ad6c73d",
+    "aggregation": "83b58bf7f91b055bfb9c29f5aaa38054035fb0034349a20315376e782e3782cc"
+  },
+  "source_checksums_verified_on_wulver": {
+    "cloudphysics": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57",
+    "metacdn": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73",
+    "metakv": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de",
+    "twemcache": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9",
+    "wiki2018": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608"
+  },
+  "monitor_commands": {
+    "squeue": "/mmfs1/apps/slurm/26.05.4/bin/squeue -j 1291887,1291888,1291889",
+    "sacct": "/mmfs1/apps/slurm/26.05.4/bin/sacct -j 1291887,1291888,1291889 --format=JobID,JobName,State,ExitCode,Elapsed"
+  },
+  "warnings": [
+    "Do not use manuscript numbers until the full DAG reaches successful validated completion.",
+    "Do not use superseded pe_long_horizon_production_v1 outputs for manuscript evidence.",
+    "No automatic recovery or resubmission is enabled."
+  ]
+}

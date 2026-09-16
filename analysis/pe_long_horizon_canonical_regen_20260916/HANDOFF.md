@@ -4,7 +4,7 @@ Date: 2026-09-16
 
 ## State
 
-Pre-submission STOP. The scientific source/provenance and pilot gates passed, but the submission/resource gate failed on host `al-khwarizmi` because `sbatch` is unavailable and `/mmfs1/scratch/ikoutis/sv96` is not mounted. No corrected production, validation, or aggregation jobs were submitted from this session.
+Submitted from Wulver after the corrected campaign package was frozen and Wulver-side source/resource gates passed. The DAG is running; do not use corrected horizon numbers for manuscript evidence until validation and aggregation complete successfully.
 
 ## Why this supersedes the prior long-horizon campaign
 
@@ -43,6 +43,7 @@ Canonical H16 decision authority:
 ## Corrected campaign namespace
 
 - namespace: `pe_long_horizon_canonical_regen_20260916`
+- campaign commit used on Wulver: `4f934af8af682ab07820c78ea794a5328bcef9c8`
 - manifest: `configs/pe_long_horizon_canonical_regen_20260916/manifest.json`
 - manifest SHA256: `24830d0c5a6689e74705c91be305cf5e43cf65bd9666cce6facb0c95a0976ef0`
 - run root: `/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916`
@@ -85,24 +86,35 @@ Result:
 
 ## Submission DAG
 
-No job IDs exist yet for the corrected campaign. Submit only on a Wulver/SLURM host after rerunning preflight and receiving `preflight_status: PASS`.
+Submitted exactly once from:
+`/mmfs1/scratch/ikoutis/sv96/lafc-work/pe_long_horizon_canonical_regen_20260916`
 
-Commands:
+Job IDs:
+- production: `1291887`
+- validation: `1291888`
+- aggregation: `1291889`
+
+Submission timestamp on Wulver: `2026-09-16T17:55:55-04:00`
+
+Dependency graph:
+- production array `1291887`: `0-19%10`
+- validation array `1291888`: `afterok:1291887_*`
+- aggregation job `1291889`: `afterok:1291888_*`
+
+Submitted sbatch snapshots:
+- `configs/pe_long_horizon_canonical_regen_20260916/provenance/production_SUBMITTED.sbatch`
+- `configs/pe_long_horizon_canonical_regen_20260916/provenance/validation_SUBMITTED.sbatch`
+- `configs/pe_long_horizon_canonical_regen_20260916/provenance/aggregation_SUBMITTED.sbatch`
+
+Post-submission provenance:
+- `configs/pe_long_horizon_canonical_regen_20260916/provenance/submission_record.json`
+- `configs/pe_long_horizon_canonical_regen_20260916/provenance/submitted_job_ids.env`
+
+Monitor:
 
 ```bash
-python scripts/pe_long_horizon_canonical_regen_20260916/build_campaign.py preflight
-PROD=$(sbatch --parsable slurm/pe_long_horizon_canonical_regen_20260916_production_TEMPLATE.sbatch)
-VAL=$(sbatch --parsable --dependency=afterok:${PROD} slurm/pe_long_horizon_canonical_regen_20260916_validation_TEMPLATE.sbatch)
-AGG=$(sbatch --parsable --dependency=afterok:${VAL} slurm/pe_long_horizon_canonical_regen_20260916_aggregation_TEMPLATE.sbatch)
-printf 'prod=%s val=%s agg=%s\n' "$PROD" "$VAL" "$AGG"
-```
-
-Dependency graph: production array -> afterok validation array -> afterok aggregation.
-
-Monitoring command after submission:
-
-```bash
-squeue -j ${PROD},${VAL},${AGG}
+/mmfs1/apps/slurm/26.05.4/bin/squeue -j 1291887,1291888,1291889
+/mmfs1/apps/slurm/26.05.4/bin/sacct -j 1291887,1291888,1291889 --format=JobID,JobName,State,ExitCode,Elapsed
 ```
 
 ## Validation criteria after completion
