@@ -1,38 +1,23 @@
-# PE (LAFC-Evict) — Do Not Recompute
+# PE (LAFC-Evict) - Do Not Recompute
 
-Snapshot time: 2026-09-16 ~02:20 UTC. Each item below was individually
-verified as complete and validated in this pass (or in the immediately
-preceding QA pass on 2026-09-15) before being listed here. If you are
-tempted to regenerate any of these, check the canonical artifact path first
-— the cost of regenerating full-population or production-scale evidence is
-substantial, and duplicate runs risk silent divergence from the numbers
-already reported in the manuscript.
+Last verified: 2026-09-16 09:18 EDT.
 
-| Experiment | Status | Canonical artifact | Reason not to recompute | Exceptions |
+This file lists PE evidence that is complete enough to preserve as canonical. Do not regenerate these artifacts merely to reproduce existing results. If a genuine bug is found later, create a new experiment with new provenance instead of overwriting these records.
+
+| Experiment | State | Canonical artifact / branch | Do-not-recompute rule | Legitimate next work |
 |---|---|---|---|---|
-| Tier-1 closed-loop production (LRU/MRU/random/SIEVE, 230 runs, 5 families × 2 capacities) | COMPLETE, VALIDATED, manuscript-used | `augmented-caching` repo, `analysis/closed_loop_tier1_evidence_20260914/` | Independently validated; provenance recorded (host `al-khwarizmi`); reported in `table_tier1_closed_loop` | None — if a bug is later found in the harness, treat as a new experiment with a new provenance record, do not silently overwrite this one |
-| Full-population MRU continuation census (60/60 chunks, 2,363,286 decision-horizon records, capacities 32/64/128/256, horizons 4/8/16) | COMPLETE, VALIDATED, manuscript-used | `lafc-evict-dataset` repo, worktree `.claude/worktrees/continuation-mru-population-census-20260914`, raw output `analysis/continuation_policy_mru_population_census_20260914/outputs/20260914T042528Z_1a29e773a113/` (1.6G) | Complete-population enumeration, independently rechecked; raw output preserved separately from the manuscript branch | None |
-| Continuation-sensitivity pilot (5,000 primary + 500 diagnostic pre-registered decisions, capacities 32/128) | COMPLETE, VALIDATED, manuscript-used | `augmented-caching` repo, branch `experiment/continuation-sensitivity-pilot-20260914` | Pre-registered design; validated end-to-end | None |
-| Mechanistic / offline↔closed-loop linkage analysis | COMPLETE, VALIDATED, manuscript-used | `augmented-caching` repo, `analysis/closed_loop_mechanistic_analysis_20260914/` | Uses only existing trace-only and closed-loop evidence (no new simulation), explicitly disciplined about DIRECTLY OBSERVED vs. CONSISTENT WITH MECHANISM claims | None |
-| Canonical H∈{4,8,16} candidate-label dataset (5–7 families depending on artifact, capacities 32/64/128/256) | COMPLETE, VALIDATED, manuscript-used | `paper/sigmod2027/results/candidate_label_stats/y_loss_summary.csv`; derived dataset `evict_value_v1_wulver_heavy_r1` | This is the existing basis the long-horizon (H=32/64/128) DAG extends, not replaces — regenerating it would not add anything the DAG isn't already doing at higher horizons | None |
-| LFU policy implementation and unit tests | Implemented, tested, campaign NOT run | `augmented-caching` repo, branch `experiment/pe-tier2-closed-loop-integration-20260915`, `src/lafc/policies/lfu.py`, `tests/test_lfu.py` | The *code* is done and tested — do not reimplement it. The closed-loop *campaign* using this code has genuinely not been run yet and is a legitimate next step, not something to avoid | The campaign run itself is pending, not something to avoid — see `docs/PE_CURRENT_PROJECT_STATUS_AND_HANDOFF.md` section K |
-| Cap32 long-horizon preflight + cap256 timing probe | COMPLETE (preflight); the cap256 probe is explicitly timing-only | `augmented-caching` repo, branch `experiment/pe-long-horizon-preflight-20260915` | Confirms the generator's correctness bounds at higher horizons before the production DAG was launched; re-running would only reproduce the same feasibility check | The cap256 timing probe's *numbers* should never be cited as a scientific result — it was never intended as one |
+| Tier-1 closed-loop production: LRU/MRU/random/SIEVE, 230 runs | COMPLETE_VALID | `analysis/closed_loop_tier1_evidence_20260914/` | Do not rerun or overwrite. | Use existing compact validated summaries for manuscript context. |
+| Full-population MRU continuation census: 60/60 chunks, 2,363,286 decision-horizon records, H={4,8,16} | COMPLETE_VALID | raw output under `lafc-evict-dataset` continuation census worktree; compact validation in manuscript repo | Do not rerun the census. | Reuse existing validation and summaries. |
+| Continuation-sensitivity pilot | COMPLETE_VALID | `experiment/continuation-sensitivity-pilot-20260914` | Do not rerun under the same identity. | Treat any changed design as a new experiment. |
+| Mechanistic / offline-to-closed-loop linkage analysis | COMPLETE_VALID | `analysis/closed_loop_mechanistic_analysis_20260914/` | Do not recompute the existing analysis. | Reuse with careful DIRECTLY OBSERVED vs CONSISTENT WITH MECHANISM language. |
+| Canonical H={4,8,16} candidate-label dataset | COMPLETE_VALID | `paper/sigmod2027/results/candidate_label_stats/y_loss_summary.csv`; derived dataset `evict_value_v1_wulver_heavy_r1` | Do not regenerate H4/H8/H16. | First run an H16 existence/conversion audit, then reuse canonical H16 for comparison. |
+| Long-horizon H={32,64,128} five-family x four-capacity campaign | COMPLETE_VALID | `experiment/pe-long-horizon-production-prep-20260915` at `cc8c1ad`; durable PROJECT root `/mmfs1/project/ikoutis/sv96/lafc-evict/pe_long_horizon_production_v1` | DO NOT REGENERATE H32/H64/H128. Production job `1288869`, validation `1288880`, aggregation `1288881` are terminal and successful. | H16 canonical converter / existence audit, then H16/H32/H64/H128 comparative aggregation and interpretation. |
+| Publication-grade learned model attempt 2: training, validation/model selection, frozen selected model, test evaluation, inference benchmark | COMPLETE_VALID; PUBLICATION GATE PASS | `experiment/pe-publication-learned-retrain-attempt2-20260915` at `ab36cba`; selected model SHA256 `8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6`; durable model backup `/mmfs1/project/ikoutis/sv96/lafc-evict/pe_publication_learned_model_attempt2_20260916/` | DO NOT RETRAIN merely to reproduce this run. Test was evaluated after model-selection freeze and was not used for model selection. | Future learned CLOSED-LOOP evaluation using the frozen attempt2 model and predetermined leakage-safe evaluation cells. |
+| LFU policy implementation and unit tests | IMPLEMENTED_TESTED; production NOT_RUN | `experiment/pe-tier2-closed-loop-integration-20260915` at `4d2a9fd` | Do not reimplement LFU or its launch guard. | Tier-2 classical baseline production campaign remains a valid future run. |
+| Cap32 long-horizon preflight and cap256 timing probe | PREFLIGHT_COMPLETE; TIMING_ONLY | `experiment/pe-long-horizon-preflight-20260915` | Do not cite the timing probe as scientific evidence. Do not rerun as a result. | Use only as historical feasibility/infrastructure context. |
 
-## Explicitly NOT on this list (do not treat as validated)
+## Explicitly Historical Or Invalid For Publication Claims
 
-- **Long-horizon DAG (H=32/64/128), jobs 1288869/1288880/1288881** — ACTIVE
-  as of this snapshot (17/20 production tasks done, validation/aggregation
-  pending). Once it reaches COMPLETE_VALID, add it here with its canonical
-  output path; do not add it preemptively.
-- **Learned-model attempt 2** — test evaluation in progress as of this
-  snapshot. Once its publication gate resolves to PASS, add the frozen model
-  and its test metrics here; do not add it preemptively, and do not confuse
-  it with attempt 1 (below).
-- **Learned-model attempt 1**
-  (`experiment/pe-publication-learned-retrain-20260915`, model sha256
-  `c5bf9840f6be4b82903c82bbf1e3ace87c5b4656e4bed163eba84f2ee805611e`) —
-  interrupted, no model-selection freeze, no test evaluation. This is
-  preserved as historical evidence of what was tried, **not** as a reusable
-  scientific result. Do not resume training from this checkpoint and
-  present it as attempt 2's result, and do not report any number derived
-  from it in the manuscript.
+- Learned attempt 1, `experiment/pe-publication-learned-retrain-20260915` at `6c17c0b`, is interrupted historical evidence. It has no publication-valid model-selection freeze and no test evaluation. Do not use its model or numbers for final claims.
+- First long-horizon production launch `1288536_[0-19]` failed due HOME quota. Downstream `1288547` and `1288548` were cancelled because that launch failed. The successful scratch-backed DAG supersedes these infrastructure failures.
+- Cap256 probe `1288047` timed out and was timing-only.
