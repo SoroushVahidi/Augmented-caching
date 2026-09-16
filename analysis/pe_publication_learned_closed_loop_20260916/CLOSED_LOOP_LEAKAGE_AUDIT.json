@@ -1,0 +1,219 @@
+{
+  "cells": [
+    {
+      "cell_key": "alibaba-block__cap32",
+      "offline_labels_read": false,
+      "pass": true,
+      "purge_respected": true,
+      "test_interval": [
+        40518,
+        49999
+      ],
+      "train_interval": [
+        32,
+        30012
+      ],
+      "training_overlap": false,
+      "validation_interval": [
+        30525,
+        40005
+      ],
+      "validation_overlap": false
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "offline_labels_read": false,
+      "pass": true,
+      "purge_respected": true,
+      "test_interval": [
+        40542,
+        49999
+      ],
+      "train_interval": [
+        149,
+        30059
+      ],
+      "training_overlap": false,
+      "validation_interval": [
+        30572,
+        40029
+      ],
+      "validation_overlap": false
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "offline_labels_read": false,
+      "pass": true,
+      "purge_respected": true,
+      "test_interval": [
+        40518,
+        49996
+      ],
+      "train_interval": [
+        44,
+        30015
+      ],
+      "training_overlap": false,
+      "validation_interval": [
+        30528,
+        40005
+      ],
+      "validation_overlap": false
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "offline_labels_read": false,
+      "pass": true,
+      "purge_respected": true,
+      "test_interval": [
+        40548,
+        49996
+      ],
+      "train_interval": [
+        194,
+        30074
+      ],
+      "training_overlap": false,
+      "validation_interval": [
+        30589,
+        40035
+      ],
+      "validation_overlap": false
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "offline_labels_read": false,
+      "pass": true,
+      "purge_respected": true,
+      "test_interval": [
+        40523,
+        49999
+      ],
+      "train_interval": [
+        56,
+        30020
+      ],
+      "training_overlap": false,
+      "validation_interval": [
+        30534,
+        40010
+      ],
+      "validation_overlap": false
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "offline_labels_read": false,
+      "pass": true,
+      "purge_respected": true,
+      "test_interval": [
+        40550,
+        49999
+      ],
+      "train_interval": [
+        192,
+        30076
+      ],
+      "training_overlap": false,
+      "validation_interval": [
+        30590,
+        40037
+      ],
+      "validation_overlap": false
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "offline_labels_read": false,
+      "pass": true,
+      "purge_respected": true,
+      "test_interval": [
+        40520,
+        49999
+      ],
+      "train_interval": [
+        40,
+        30015
+      ],
+      "training_overlap": false,
+      "validation_interval": [
+        30529,
+        40007
+      ],
+      "validation_overlap": false
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "offline_labels_read": false,
+      "pass": true,
+      "purge_respected": true,
+      "test_interval": [
+        40552,
+        49997
+      ],
+      "train_interval": [
+        202,
+        30078
+      ],
+      "training_overlap": false,
+      "validation_interval": [
+        30593,
+        40038
+      ],
+      "validation_overlap": false
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "offline_labels_read": false,
+      "pass": true,
+      "purge_respected": true,
+      "test_interval": [
+        40518,
+        49999
+      ],
+      "train_interval": [
+        32,
+        30012
+      ],
+      "training_overlap": false,
+      "validation_interval": [
+        30525,
+        40005
+      ],
+      "validation_overlap": false
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "offline_labels_read": false,
+      "pass": true,
+      "purge_respected": true,
+      "test_interval": [
+        40537,
+        49999
+      ],
+      "train_interval": [
+        128,
+        30050
+      ],
+      "training_overlap": false,
+      "validation_interval": [
+        30563,
+        40024
+      ],
+      "validation_overlap": false
+    }
+  ],
+  "feature_manifest_sha256": "de7c1a2bb0a6f23a421635a82c53c1a9be78a36e2e5e62a744826d4fef9522bd",
+  "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+  "planned_cells": 10,
+  "planned_tasks": 250,
+  "protocol_sha256": "7f0e0d41dec7263c5e1d318bc76dbdd565381e85b77348764a31f2e59517c3de",
+  "requirements": {
+    "cross_capacity_assignment_consistent": true,
+    "no_training_overlap": true,
+    "no_validation_overlap": true,
+    "online_features_only": true,
+    "purge_boundaries_respected": true,
+    "test_only": true
+  },
+  "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+  "status": "PASS"
+}

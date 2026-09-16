@@ -1,0 +1,1650 @@
+{
+  "cells_by_key": {
+    "alibaba-block__cap128": {
+      "capacity": 128,
+      "cell_key": "alibaba-block__cap128",
+      "family": "alibaba-block",
+      "internal_family": "cloudphysics",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "purge_gap_requests": 512,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40542..49999",
+      "trace_name": "cloudphysics_alibaba_block_head_50k",
+      "trace_path": "data/processed/cloudphysics/trace.jsonl",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    "alibaba-block__cap32": {
+      "capacity": 32,
+      "cell_key": "alibaba-block__cap32",
+      "family": "alibaba-block",
+      "internal_family": "cloudphysics",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "purge_gap_requests": 512,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40518..49999",
+      "trace_name": "cloudphysics_alibaba_block_head_50k",
+      "trace_path": "data/processed/cloudphysics/trace.jsonl",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    "metacdn__cap128": {
+      "capacity": 128,
+      "cell_key": "metacdn__cap128",
+      "family": "metacdn",
+      "internal_family": "metacdn",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "purge_gap_requests": 512,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40548..49996",
+      "trace_name": "metacdn_cdn_202303_head_50k",
+      "trace_path": "data/processed/metacdn/trace.jsonl",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    "metacdn__cap32": {
+      "capacity": 32,
+      "cell_key": "metacdn__cap32",
+      "family": "metacdn",
+      "internal_family": "metacdn",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "purge_gap_requests": 512,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40518..49996",
+      "trace_name": "metacdn_cdn_202303_head_50k",
+      "trace_path": "data/processed/metacdn/trace.jsonl",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    "metakv__cap128": {
+      "capacity": 128,
+      "cell_key": "metakv__cap128",
+      "family": "metakv",
+      "internal_family": "metakv",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "purge_gap_requests": 512,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40550..49999",
+      "trace_name": "metakv_kvcache_202206_head_50k",
+      "trace_path": "data/processed/metakv/trace.jsonl",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    "metakv__cap32": {
+      "capacity": 32,
+      "cell_key": "metakv__cap32",
+      "family": "metakv",
+      "internal_family": "metakv",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "purge_gap_requests": 512,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40523..49999",
+      "trace_name": "metakv_kvcache_202206_head_50k",
+      "trace_path": "data/processed/metakv/trace.jsonl",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    "twemcache__cap128": {
+      "capacity": 128,
+      "cell_key": "twemcache__cap128",
+      "family": "twemcache",
+      "internal_family": "twemcache",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "purge_gap_requests": 512,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40552..49997",
+      "trace_name": "twemcache_cluster26_sample100_50k",
+      "trace_path": "data/processed/twemcache/trace.jsonl",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    "twemcache__cap32": {
+      "capacity": 32,
+      "cell_key": "twemcache__cap32",
+      "family": "twemcache",
+      "internal_family": "twemcache",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "purge_gap_requests": 512,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40520..49999",
+      "trace_name": "twemcache_cluster26_sample100_50k",
+      "trace_path": "data/processed/twemcache/trace.jsonl",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    "wiki2018__cap128": {
+      "capacity": 128,
+      "cell_key": "wiki2018__cap128",
+      "family": "wiki2018",
+      "internal_family": "wiki2018",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "purge_gap_requests": 512,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40537..49999",
+      "trace_name": "wiki2018_pageviews_en_50k",
+      "trace_path": "data/processed/wiki2018/trace.jsonl",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    "wiki2018__cap32": {
+      "capacity": 32,
+      "cell_key": "wiki2018__cap32",
+      "family": "wiki2018",
+      "internal_family": "wiki2018",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "purge_gap_requests": 512,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40518..49999",
+      "trace_name": "wiki2018_pageviews_en_50k",
+      "trace_path": "data/processed/wiki2018/trace.jsonl",
+      "training_overlap": false,
+      "validation_overlap": false
+    }
+  },
+  "manifest_version": "1.0",
+  "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+  "protocol_sha256": "7f0e0d41dec7263c5e1d318bc76dbdd565381e85b77348764a31f2e59517c3de",
+  "runner_commit": "ab36cbaae83c93a8adb5d152a28314bd3dff8c08",
+  "tasks": [
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/learned/seed_deterministic",
+      "policy": "learned",
+      "seed": -1
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/lru/seed_deterministic",
+      "policy": "lru",
+      "seed": -1
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/mru/seed_deterministic",
+      "policy": "mru",
+      "seed": -1
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/sieve/seed_deterministic",
+      "policy": "sieve",
+      "seed": -1
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/lfu/seed_deterministic",
+      "policy": "lfu",
+      "seed": -1
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_0",
+      "policy": "random",
+      "seed": 0
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_1",
+      "policy": "random",
+      "seed": 1
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_2",
+      "policy": "random",
+      "seed": 2
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_3",
+      "policy": "random",
+      "seed": 3
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_4",
+      "policy": "random",
+      "seed": 4
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_5",
+      "policy": "random",
+      "seed": 5
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_6",
+      "policy": "random",
+      "seed": 6
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_7",
+      "policy": "random",
+      "seed": 7
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_8",
+      "policy": "random",
+      "seed": 8
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_9",
+      "policy": "random",
+      "seed": 9
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_10",
+      "policy": "random",
+      "seed": 10
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_11",
+      "policy": "random",
+      "seed": 11
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_12",
+      "policy": "random",
+      "seed": 12
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_13",
+      "policy": "random",
+      "seed": 13
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_14",
+      "policy": "random",
+      "seed": 14
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_15",
+      "policy": "random",
+      "seed": 15
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_16",
+      "policy": "random",
+      "seed": 16
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_17",
+      "policy": "random",
+      "seed": 17
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_18",
+      "policy": "random",
+      "seed": 18
+    },
+    {
+      "cell_key": "alibaba-block__cap128",
+      "output_key": "alibaba-block__cap128/random/seed_19",
+      "policy": "random",
+      "seed": 19
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/learned/seed_deterministic",
+      "policy": "learned",
+      "seed": -1
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/lru/seed_deterministic",
+      "policy": "lru",
+      "seed": -1
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/mru/seed_deterministic",
+      "policy": "mru",
+      "seed": -1
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/sieve/seed_deterministic",
+      "policy": "sieve",
+      "seed": -1
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/lfu/seed_deterministic",
+      "policy": "lfu",
+      "seed": -1
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_0",
+      "policy": "random",
+      "seed": 0
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_1",
+      "policy": "random",
+      "seed": 1
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_2",
+      "policy": "random",
+      "seed": 2
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_3",
+      "policy": "random",
+      "seed": 3
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_4",
+      "policy": "random",
+      "seed": 4
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_5",
+      "policy": "random",
+      "seed": 5
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_6",
+      "policy": "random",
+      "seed": 6
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_7",
+      "policy": "random",
+      "seed": 7
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_8",
+      "policy": "random",
+      "seed": 8
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_9",
+      "policy": "random",
+      "seed": 9
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_10",
+      "policy": "random",
+      "seed": 10
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_11",
+      "policy": "random",
+      "seed": 11
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_12",
+      "policy": "random",
+      "seed": 12
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_13",
+      "policy": "random",
+      "seed": 13
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_14",
+      "policy": "random",
+      "seed": 14
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_15",
+      "policy": "random",
+      "seed": 15
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_16",
+      "policy": "random",
+      "seed": 16
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_17",
+      "policy": "random",
+      "seed": 17
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_18",
+      "policy": "random",
+      "seed": 18
+    },
+    {
+      "cell_key": "alibaba-block__cap32",
+      "output_key": "alibaba-block__cap32/random/seed_19",
+      "policy": "random",
+      "seed": 19
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/learned/seed_deterministic",
+      "policy": "learned",
+      "seed": -1
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/lru/seed_deterministic",
+      "policy": "lru",
+      "seed": -1
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/mru/seed_deterministic",
+      "policy": "mru",
+      "seed": -1
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/sieve/seed_deterministic",
+      "policy": "sieve",
+      "seed": -1
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/lfu/seed_deterministic",
+      "policy": "lfu",
+      "seed": -1
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_0",
+      "policy": "random",
+      "seed": 0
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_1",
+      "policy": "random",
+      "seed": 1
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_2",
+      "policy": "random",
+      "seed": 2
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_3",
+      "policy": "random",
+      "seed": 3
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_4",
+      "policy": "random",
+      "seed": 4
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_5",
+      "policy": "random",
+      "seed": 5
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_6",
+      "policy": "random",
+      "seed": 6
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_7",
+      "policy": "random",
+      "seed": 7
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_8",
+      "policy": "random",
+      "seed": 8
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_9",
+      "policy": "random",
+      "seed": 9
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_10",
+      "policy": "random",
+      "seed": 10
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_11",
+      "policy": "random",
+      "seed": 11
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_12",
+      "policy": "random",
+      "seed": 12
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_13",
+      "policy": "random",
+      "seed": 13
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_14",
+      "policy": "random",
+      "seed": 14
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_15",
+      "policy": "random",
+      "seed": 15
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_16",
+      "policy": "random",
+      "seed": 16
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_17",
+      "policy": "random",
+      "seed": 17
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_18",
+      "policy": "random",
+      "seed": 18
+    },
+    {
+      "cell_key": "metacdn__cap128",
+      "output_key": "metacdn__cap128/random/seed_19",
+      "policy": "random",
+      "seed": 19
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/learned/seed_deterministic",
+      "policy": "learned",
+      "seed": -1
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/lru/seed_deterministic",
+      "policy": "lru",
+      "seed": -1
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/mru/seed_deterministic",
+      "policy": "mru",
+      "seed": -1
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/sieve/seed_deterministic",
+      "policy": "sieve",
+      "seed": -1
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/lfu/seed_deterministic",
+      "policy": "lfu",
+      "seed": -1
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_0",
+      "policy": "random",
+      "seed": 0
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_1",
+      "policy": "random",
+      "seed": 1
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_2",
+      "policy": "random",
+      "seed": 2
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_3",
+      "policy": "random",
+      "seed": 3
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_4",
+      "policy": "random",
+      "seed": 4
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_5",
+      "policy": "random",
+      "seed": 5
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_6",
+      "policy": "random",
+      "seed": 6
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_7",
+      "policy": "random",
+      "seed": 7
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_8",
+      "policy": "random",
+      "seed": 8
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_9",
+      "policy": "random",
+      "seed": 9
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_10",
+      "policy": "random",
+      "seed": 10
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_11",
+      "policy": "random",
+      "seed": 11
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_12",
+      "policy": "random",
+      "seed": 12
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_13",
+      "policy": "random",
+      "seed": 13
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_14",
+      "policy": "random",
+      "seed": 14
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_15",
+      "policy": "random",
+      "seed": 15
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_16",
+      "policy": "random",
+      "seed": 16
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_17",
+      "policy": "random",
+      "seed": 17
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_18",
+      "policy": "random",
+      "seed": 18
+    },
+    {
+      "cell_key": "metacdn__cap32",
+      "output_key": "metacdn__cap32/random/seed_19",
+      "policy": "random",
+      "seed": 19
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/learned/seed_deterministic",
+      "policy": "learned",
+      "seed": -1
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/lru/seed_deterministic",
+      "policy": "lru",
+      "seed": -1
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/mru/seed_deterministic",
+      "policy": "mru",
+      "seed": -1
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/sieve/seed_deterministic",
+      "policy": "sieve",
+      "seed": -1
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/lfu/seed_deterministic",
+      "policy": "lfu",
+      "seed": -1
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_0",
+      "policy": "random",
+      "seed": 0
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_1",
+      "policy": "random",
+      "seed": 1
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_2",
+      "policy": "random",
+      "seed": 2
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_3",
+      "policy": "random",
+      "seed": 3
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_4",
+      "policy": "random",
+      "seed": 4
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_5",
+      "policy": "random",
+      "seed": 5
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_6",
+      "policy": "random",
+      "seed": 6
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_7",
+      "policy": "random",
+      "seed": 7
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_8",
+      "policy": "random",
+      "seed": 8
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_9",
+      "policy": "random",
+      "seed": 9
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_10",
+      "policy": "random",
+      "seed": 10
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_11",
+      "policy": "random",
+      "seed": 11
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_12",
+      "policy": "random",
+      "seed": 12
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_13",
+      "policy": "random",
+      "seed": 13
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_14",
+      "policy": "random",
+      "seed": 14
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_15",
+      "policy": "random",
+      "seed": 15
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_16",
+      "policy": "random",
+      "seed": 16
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_17",
+      "policy": "random",
+      "seed": 17
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_18",
+      "policy": "random",
+      "seed": 18
+    },
+    {
+      "cell_key": "metakv__cap128",
+      "output_key": "metakv__cap128/random/seed_19",
+      "policy": "random",
+      "seed": 19
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/learned/seed_deterministic",
+      "policy": "learned",
+      "seed": -1
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/lru/seed_deterministic",
+      "policy": "lru",
+      "seed": -1
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/mru/seed_deterministic",
+      "policy": "mru",
+      "seed": -1
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/sieve/seed_deterministic",
+      "policy": "sieve",
+      "seed": -1
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/lfu/seed_deterministic",
+      "policy": "lfu",
+      "seed": -1
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_0",
+      "policy": "random",
+      "seed": 0
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_1",
+      "policy": "random",
+      "seed": 1
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_2",
+      "policy": "random",
+      "seed": 2
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_3",
+      "policy": "random",
+      "seed": 3
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_4",
+      "policy": "random",
+      "seed": 4
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_5",
+      "policy": "random",
+      "seed": 5
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_6",
+      "policy": "random",
+      "seed": 6
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_7",
+      "policy": "random",
+      "seed": 7
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_8",
+      "policy": "random",
+      "seed": 8
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_9",
+      "policy": "random",
+      "seed": 9
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_10",
+      "policy": "random",
+      "seed": 10
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_11",
+      "policy": "random",
+      "seed": 11
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_12",
+      "policy": "random",
+      "seed": 12
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_13",
+      "policy": "random",
+      "seed": 13
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_14",
+      "policy": "random",
+      "seed": 14
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_15",
+      "policy": "random",
+      "seed": 15
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_16",
+      "policy": "random",
+      "seed": 16
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_17",
+      "policy": "random",
+      "seed": 17
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_18",
+      "policy": "random",
+      "seed": 18
+    },
+    {
+      "cell_key": "metakv__cap32",
+      "output_key": "metakv__cap32/random/seed_19",
+      "policy": "random",
+      "seed": 19
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/learned/seed_deterministic",
+      "policy": "learned",
+      "seed": -1
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/lru/seed_deterministic",
+      "policy": "lru",
+      "seed": -1
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/mru/seed_deterministic",
+      "policy": "mru",
+      "seed": -1
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/sieve/seed_deterministic",
+      "policy": "sieve",
+      "seed": -1
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/lfu/seed_deterministic",
+      "policy": "lfu",
+      "seed": -1
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_0",
+      "policy": "random",
+      "seed": 0
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_1",
+      "policy": "random",
+      "seed": 1
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_2",
+      "policy": "random",
+      "seed": 2
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_3",
+      "policy": "random",
+      "seed": 3
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_4",
+      "policy": "random",
+      "seed": 4
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_5",
+      "policy": "random",
+      "seed": 5
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_6",
+      "policy": "random",
+      "seed": 6
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_7",
+      "policy": "random",
+      "seed": 7
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_8",
+      "policy": "random",
+      "seed": 8
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_9",
+      "policy": "random",
+      "seed": 9
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_10",
+      "policy": "random",
+      "seed": 10
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_11",
+      "policy": "random",
+      "seed": 11
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_12",
+      "policy": "random",
+      "seed": 12
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_13",
+      "policy": "random",
+      "seed": 13
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_14",
+      "policy": "random",
+      "seed": 14
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_15",
+      "policy": "random",
+      "seed": 15
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_16",
+      "policy": "random",
+      "seed": 16
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_17",
+      "policy": "random",
+      "seed": 17
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_18",
+      "policy": "random",
+      "seed": 18
+    },
+    {
+      "cell_key": "twemcache__cap128",
+      "output_key": "twemcache__cap128/random/seed_19",
+      "policy": "random",
+      "seed": 19
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/learned/seed_deterministic",
+      "policy": "learned",
+      "seed": -1
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/lru/seed_deterministic",
+      "policy": "lru",
+      "seed": -1
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/mru/seed_deterministic",
+      "policy": "mru",
+      "seed": -1
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/sieve/seed_deterministic",
+      "policy": "sieve",
+      "seed": -1
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/lfu/seed_deterministic",
+      "policy": "lfu",
+      "seed": -1
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_0",
+      "policy": "random",
+      "seed": 0
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_1",
+      "policy": "random",
+      "seed": 1
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_2",
+      "policy": "random",
+      "seed": 2
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_3",
+      "policy": "random",
+      "seed": 3
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_4",
+      "policy": "random",
+      "seed": 4
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_5",
+      "policy": "random",
+      "seed": 5
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_6",
+      "policy": "random",
+      "seed": 6
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_7",
+      "policy": "random",
+      "seed": 7
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_8",
+      "policy": "random",
+      "seed": 8
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_9",
+      "policy": "random",
+      "seed": 9
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_10",
+      "policy": "random",
+      "seed": 10
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_11",
+      "policy": "random",
+      "seed": 11
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_12",
+      "policy": "random",
+      "seed": 12
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_13",
+      "policy": "random",
+      "seed": 13
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_14",
+      "policy": "random",
+      "seed": 14
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_15",
+      "policy": "random",
+      "seed": 15
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_16",
+      "policy": "random",
+      "seed": 16
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_17",
+      "policy": "random",
+      "seed": 17
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_18",
+      "policy": "random",
+      "seed": 18
+    },
+    {
+      "cell_key": "twemcache__cap32",
+      "output_key": "twemcache__cap32/random/seed_19",
+      "policy": "random",
+      "seed": 19
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/learned/seed_deterministic",
+      "policy": "learned",
+      "seed": -1
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/lru/seed_deterministic",
+      "policy": "lru",
+      "seed": -1
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/mru/seed_deterministic",
+      "policy": "mru",
+      "seed": -1
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/sieve/seed_deterministic",
+      "policy": "sieve",
+      "seed": -1
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/lfu/seed_deterministic",
+      "policy": "lfu",
+      "seed": -1
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_0",
+      "policy": "random",
+      "seed": 0
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_1",
+      "policy": "random",
+      "seed": 1
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_2",
+      "policy": "random",
+      "seed": 2
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_3",
+      "policy": "random",
+      "seed": 3
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_4",
+      "policy": "random",
+      "seed": 4
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_5",
+      "policy": "random",
+      "seed": 5
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_6",
+      "policy": "random",
+      "seed": 6
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_7",
+      "policy": "random",
+      "seed": 7
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_8",
+      "policy": "random",
+      "seed": 8
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_9",
+      "policy": "random",
+      "seed": 9
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_10",
+      "policy": "random",
+      "seed": 10
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_11",
+      "policy": "random",
+      "seed": 11
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_12",
+      "policy": "random",
+      "seed": 12
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_13",
+      "policy": "random",
+      "seed": 13
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_14",
+      "policy": "random",
+      "seed": 14
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_15",
+      "policy": "random",
+      "seed": 15
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_16",
+      "policy": "random",
+      "seed": 16
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_17",
+      "policy": "random",
+      "seed": 17
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_18",
+      "policy": "random",
+      "seed": 18
+    },
+    {
+      "cell_key": "wiki2018__cap128",
+      "output_key": "wiki2018__cap128/random/seed_19",
+      "policy": "random",
+      "seed": 19
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/learned/seed_deterministic",
+      "policy": "learned",
+      "seed": -1
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/lru/seed_deterministic",
+      "policy": "lru",
+      "seed": -1
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/mru/seed_deterministic",
+      "policy": "mru",
+      "seed": -1
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/sieve/seed_deterministic",
+      "policy": "sieve",
+      "seed": -1
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/lfu/seed_deterministic",
+      "policy": "lfu",
+      "seed": -1
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_0",
+      "policy": "random",
+      "seed": 0
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_1",
+      "policy": "random",
+      "seed": 1
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_2",
+      "policy": "random",
+      "seed": 2
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_3",
+      "policy": "random",
+      "seed": 3
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_4",
+      "policy": "random",
+      "seed": 4
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_5",
+      "policy": "random",
+      "seed": 5
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_6",
+      "policy": "random",
+      "seed": 6
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_7",
+      "policy": "random",
+      "seed": 7
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_8",
+      "policy": "random",
+      "seed": 8
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_9",
+      "policy": "random",
+      "seed": 9
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_10",
+      "policy": "random",
+      "seed": 10
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_11",
+      "policy": "random",
+      "seed": 11
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_12",
+      "policy": "random",
+      "seed": 12
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_13",
+      "policy": "random",
+      "seed": 13
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_14",
+      "policy": "random",
+      "seed": 14
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_15",
+      "policy": "random",
+      "seed": 15
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_16",
+      "policy": "random",
+      "seed": 16
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_17",
+      "policy": "random",
+      "seed": 17
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_18",
+      "policy": "random",
+      "seed": 18
+    },
+    {
+      "cell_key": "wiki2018__cap32",
+      "output_key": "wiki2018__cap32/random/seed_19",
+      "policy": "random",
+      "seed": 19
+    }
+  ]
+}
