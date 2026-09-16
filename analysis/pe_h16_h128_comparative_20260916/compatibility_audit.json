@@ -1,0 +1,100 @@
+[
+  {
+    "compatible": "YES",
+    "field": "family",
+    "h16_source": "trace_family in canonical H16 decision-view audit; cloudphysics maps to reader-facing alibaba-block",
+    "long_horizon_source": "family in production manifest/table_A; cloudphysics maps to reader-facing alibaba-block",
+    "note": "Same five internal families; reader-facing mapping preserved."
+  },
+  {
+    "compatible": "YES",
+    "field": "capacity",
+    "h16_source": "capacity column: 32,64,128,256",
+    "long_horizon_source": "capacity column: 32,64,128,256",
+    "note": "Same four capacities."
+  },
+  {
+    "compatible": "YES",
+    "field": "decision",
+    "h16_source": "decision_view row, one full-cache-miss eviction decision",
+    "long_horizon_source": "validated_summary unique decision_id from production shards",
+    "note": "Definition matches; H128 production uses a stricter long-horizon-eligible denominator for twemcache cells."
+  },
+  {
+    "compatible": "YES",
+    "field": "candidate set",
+    "h16_source": "candidate_count residents per decision in decision_view",
+    "long_horizon_source": "candidate_page_id rows per decision in production shards",
+    "note": "Candidate row counts equal decision_count x capacity in every converted/validated cell."
+  },
+  {
+    "compatible": "YES",
+    "field": "counterfactual continuation",
+    "h16_source": "canonical H16 LAFC-Evict LRU-continuation labels from existing decision_view",
+    "long_horizon_source": "same generator family extended to H32/H64/H128; H16_REGENERATED=NO",
+    "note": "Comparison reuses existing H16 and completed H32/H64/H128 summaries."
+  },
+  {
+    "compatible": "YES",
+    "field": "y_loss",
+    "h16_source": "finite-horizon miss-count loss; lower is better",
+    "long_horizon_source": "finite-horizon miss-count loss; y_value=-y_loss validated",
+    "note": "Same sign convention and target meaning."
+  },
+  {
+    "compatible": "YES",
+    "field": "optimal candidate set",
+    "h16_source": "optimal_candidate_count / tie_count equals candidates with regret==0",
+    "long_horizon_source": "candidates with y_loss equal to per-decision minimum",
+    "note": "Both use tied argmin set."
+  },
+  {
+    "compatible": "YES",
+    "field": "all-tied criterion",
+    "h16_source": "optimal_candidate_count == candidate_count",
+    "long_horizon_source": "min(y_loss) == max(y_loss) within decision",
+    "note": "Equivalent criteria."
+  },
+  {
+    "compatible": "YES",
+    "field": "discriminative decision criterion",
+    "h16_source": "1 - all_tied_fraction; regret_max > 0",
+    "long_horizon_source": "1 - all_tied_fraction",
+    "note": "Equivalent decision-level criterion."
+  },
+  {
+    "compatible": "YES",
+    "field": "random-optimal probability",
+    "h16_source": "mean optimal_set_fraction / random_optimal_probability",
+    "long_horizon_source": "total optimal rows divided by candidate rows per cell",
+    "note": "Per-cell capacity is fixed, so cell values match decision-weighted optimal-set fraction."
+  },
+  {
+    "compatible": "YES",
+    "field": "per-candidate/random regret",
+    "h16_source": "mean_random_regret from decision_view regret_mean",
+    "long_horizon_source": "mean of per-decision random-candidate regret",
+    "note": "Both are decision-weighted inside each cell."
+  },
+  {
+    "compatible": "YES",
+    "field": "request preprocessing",
+    "h16_source": "/home/soroush/projects/lafc-evict-dataset/worktrees/pe-results-polish/analysis/sigmod_target_discriminativeness_20260913/outputs/phase4_stratified_family_capacity_horizon.csv",
+    "long_horizon_source": "analysis/pe_long_horizon_production_v1/manifests/campaign_manifest.json",
+    "note": "Both draw from the same canonical processed family/capacity corpus identities."
+  },
+  {
+    "compatible": "YES",
+    "field": "cache initialization",
+    "h16_source": "canonical decision_view full-cache-miss decisions",
+    "long_horizon_source": "same production cache state semantics, validated per shard",
+    "note": "No source indicates a changed initialization rule."
+  },
+  {
+    "compatible": "YES",
+    "field": "admission semantics",
+    "h16_source": "LAFC-Evict candidate label contract",
+    "long_horizon_source": "same generator contract in completed long-horizon production branch",
+    "note": "No source indicates a changed admission rule."
+  }
+]

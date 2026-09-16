@@ -1,0 +1,202 @@
+[
+  {
+    "all_tied_fraction": 0.7192265440743884,
+    "cell_count": 4,
+    "decisions": 192073,
+    "discriminative_fraction": 0.2807734559256116,
+    "family": "alibaba-block",
+    "horizon": 16,
+    "mean_random_regret": 0.005764511572422985,
+    "random_optimal_probability": 0.994305774204339
+  },
+  {
+    "all_tied_fraction": 0.6122932426733586,
+    "cell_count": 4,
+    "decisions": 192073,
+    "discriminative_fraction": 0.38770675732664145,
+    "family": "alibaba-block",
+    "horizon": 32,
+    "mean_random_regret": 0.011411229389346758,
+    "random_optimal_probability": 0.9889599063572183
+  },
+  {
+    "all_tied_fraction": 0.5275910721444451,
+    "cell_count": 4,
+    "decisions": 192073,
+    "discriminative_fraction": 0.47240892785555494,
+    "family": "alibaba-block",
+    "horizon": 64,
+    "mean_random_regret": 0.018295534119839852,
+    "random_optimal_probability": 0.9831695663888209
+  },
+  {
+    "all_tied_fraction": 0.48772081448199384,
+    "cell_count": 4,
+    "decisions": 192073,
+    "discriminative_fraction": 0.5122791855180062,
+    "family": "alibaba-block",
+    "horizon": 128,
+    "mean_random_regret": 0.023229550906426203,
+    "random_optimal_probability": 0.978734790125369
+  },
+  {
+    "all_tied_fraction": 0.009455128205128204,
+    "cell_count": 4,
+    "decisions": 112320,
+    "discriminative_fraction": 0.9905448717948718,
+    "family": "metacdn",
+    "horizon": 16,
+    "mean_random_regret": 0.031056461171207264,
+    "random_optimal_probability": 0.9691129765958868
+  },
+  {
+    "all_tied_fraction": 0.0006499287749287749,
+    "cell_count": 4,
+    "decisions": 112320,
+    "discriminative_fraction": 0.9993500712250712,
+    "family": "metacdn",
+    "horizon": 32,
+    "mean_random_regret": 0.040596482149216524,
+    "random_optimal_probability": 0.9598936771055911
+  },
+  {
+    "all_tied_fraction": 8.903133903133903e-06,
+    "cell_count": 4,
+    "decisions": 112320,
+    "discriminative_fraction": 0.9999910968660969,
+    "family": "metacdn",
+    "horizon": 64,
+    "mean_random_regret": 0.05092700403979701,
+    "random_optimal_probability": 0.9500279614049145
+  },
+  {
+    "all_tied_fraction": 8.903133903133903e-06,
+    "cell_count": 4,
+    "decisions": 112320,
+    "discriminative_fraction": 0.9999910968660969,
+    "family": "metacdn",
+    "horizon": 128,
+    "mean_random_regret": 0.05934192624866453,
+    "random_optimal_probability": 0.9420087069867343
+  },
+  {
+    "all_tied_fraction": 0.8545698409657022,
+    "cell_count": 4,
+    "decisions": 151351,
+    "discriminative_fraction": 0.14543015903429773,
+    "family": "metakv",
+    "horizon": 16,
+    "mean_random_regret": 0.0023084275128674404,
+    "random_optimal_probability": 0.9976920628621548
+  },
+  {
+    "all_tied_fraction": 0.844579817774577,
+    "cell_count": 4,
+    "decisions": 151351,
+    "discriminative_fraction": 0.15542018222542303,
+    "family": "metakv",
+    "horizon": 32,
+    "mean_random_regret": 0.0025933354008232518,
+    "random_optimal_probability": 0.9974094261848286
+  },
+  {
+    "all_tied_fraction": 0.834636044690818,
+    "cell_count": 4,
+    "decisions": 151351,
+    "discriminative_fraction": 0.16536395530918196,
+    "family": "metakv",
+    "horizon": 64,
+    "mean_random_regret": 0.0030011983733176525,
+    "random_optimal_probability": 0.9970059507783232
+  },
+  {
+    "all_tied_fraction": 0.8296542474116457,
+    "cell_count": 4,
+    "decisions": 151351,
+    "discriminative_fraction": 0.17034575258835424,
+    "family": "metakv",
+    "horizon": 128,
+    "mean_random_regret": 0.0034534273807242766,
+    "random_optimal_probability": 0.9965539798630336
+  },
+  {
+    "all_tied_fraction": 0.14936829235158267,
+    "cell_count": 4,
+    "decisions": 132498,
+    "discriminative_fraction": 0.8506317076484173,
+    "family": "twemcache",
+    "horizon": 16,
+    "mean_random_regret": 0.04125242102710985,
+    "random_optimal_probability": 0.9594363275766427
+  },
+  {
+    "all_tied_fraction": 0.09778397644506431,
+    "cell_count": 4,
+    "decisions": 51624,
+    "discriminative_fraction": 0.9022160235549357,
+    "family": "twemcache",
+    "horizon": 32,
+    "mean_random_regret": 0.06944588212362467,
+    "random_optimal_probability": 0.9373399636070432
+  },
+  {
+    "all_tied_fraction": 0.0533085386641872,
+    "cell_count": 4,
+    "decisions": 51624,
+    "discriminative_fraction": 0.9466914613358128,
+    "family": "twemcache",
+    "horizon": 64,
+    "mean_random_regret": 0.13052295807182707,
+    "random_optimal_probability": 0.8959410836045251
+  },
+  {
+    "all_tied_fraction": 0.05071284673795134,
+    "cell_count": 4,
+    "decisions": 51624,
+    "discriminative_fraction": 0.9492871532620487,
+    "family": "twemcache",
+    "horizon": 128,
+    "mean_random_regret": 0.27684358897993183,
+    "random_optimal_probability": 0.8312249389818689
+  },
+  {
+    "all_tied_fraction": 1.0,
+    "cell_count": 4,
+    "decisions": 199520,
+    "discriminative_fraction": 0.0,
+    "family": "wiki2018",
+    "horizon": 16,
+    "mean_random_regret": 0.0,
+    "random_optimal_probability": 1.0
+  },
+  {
+    "all_tied_fraction": 1.0,
+    "cell_count": 4,
+    "decisions": 199520,
+    "discriminative_fraction": 0.0,
+    "family": "wiki2018",
+    "horizon": 32,
+    "mean_random_regret": 0.0,
+    "random_optimal_probability": 1.0
+  },
+  {
+    "all_tied_fraction": 1.0,
+    "cell_count": 4,
+    "decisions": 199520,
+    "discriminative_fraction": 0.0,
+    "family": "wiki2018",
+    "horizon": 64,
+    "mean_random_regret": 0.0,
+    "random_optimal_probability": 1.0
+  },
+  {
+    "all_tied_fraction": 1.0,
+    "cell_count": 4,
+    "decisions": 199520,
+    "discriminative_fraction": 0.0,
+    "family": "wiki2018",
+    "horizon": 128,
+    "mean_random_regret": 0.0,
+    "random_optimal_probability": 1.0
+  }
+]

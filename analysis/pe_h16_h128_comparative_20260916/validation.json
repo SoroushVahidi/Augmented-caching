@@ -1,0 +1,8 @@
+{
+  "errors": [],
+  "expected_cells": 80,
+  "h16_cells": 20,
+  "long_horizon_cells": 60,
+  "status": "PASS",
+  "valid_cells": 80
+}

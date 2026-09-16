@@ -1,0 +1,42 @@
+[
+  {
+    "all_tied_fraction": 0.6617996654242362,
+    "candidate_rows": 6542016,
+    "capacity": 32,
+    "decisions": 204438,
+    "discriminative_fraction": 0.3382003345757638,
+    "horizon": 16,
+    "mean_random_regret": 0.02380795155499467,
+    "random_optimal_probability": 0.9765879508701905
+  },
+  {
+    "all_tied_fraction": 0.6743149241146712,
+    "candidate_rows": 6072320,
+    "capacity": 32,
+    "decisions": 189760,
+    "discriminative_fraction": 0.32568507588532886,
+    "horizon": 32,
+    "mean_random_regret": 0.024541196774873524,
+    "random_optimal_probability": 0.9758701781197302
+  },
+  {
+    "all_tied_fraction": 0.6670109612141653,
+    "candidate_rows": 6072320,
+    "capacity": 32,
+    "decisions": 189760,
+    "discriminative_fraction": 0.33298903878583475,
+    "horizon": 64,
+    "mean_random_regret": 0.029658021975126476,
+    "random_optimal_probability": 0.9710935853182968
+  },
+  {
+    "all_tied_fraction": 0.6668159780775716,
+    "candidate_rows": 6072320,
+    "capacity": 32,
+    "decisions": 189760,
+    "discriminative_fraction": 0.33318402192242835,
+    "horizon": 128,
+    "mean_random_regret": 0.02993896896079258,
+    "random_optimal_probability": 0.9708342116357505
+  }
+]

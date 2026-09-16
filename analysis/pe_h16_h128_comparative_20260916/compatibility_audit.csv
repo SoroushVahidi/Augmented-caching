@@ -1,0 +1,15 @@
+field,h16_source,long_horizon_source,compatible,note
+family,trace_family in canonical H16 decision-view audit; cloudphysics maps to reader-facing alibaba-block,family in production manifest/table_A; cloudphysics maps to reader-facing alibaba-block,YES,Same five internal families; reader-facing mapping preserved.
+capacity,"capacity column: 32,64,128,256","capacity column: 32,64,128,256",YES,Same four capacities.
+decision,"decision_view row, one full-cache-miss eviction decision",validated_summary unique decision_id from production shards,YES,Definition matches; H128 production uses a stricter long-horizon-eligible denominator for twemcache cells.
+candidate set,candidate_count residents per decision in decision_view,candidate_page_id rows per decision in production shards,YES,Candidate row counts equal decision_count x capacity in every converted/validated cell.
+counterfactual continuation,canonical H16 LAFC-Evict LRU-continuation labels from existing decision_view,same generator family extended to H32/H64/H128; H16_REGENERATED=NO,YES,Comparison reuses existing H16 and completed H32/H64/H128 summaries.
+y_loss,finite-horizon miss-count loss; lower is better,finite-horizon miss-count loss; y_value=-y_loss validated,YES,Same sign convention and target meaning.
+optimal candidate set,optimal_candidate_count / tie_count equals candidates with regret==0,candidates with y_loss equal to per-decision minimum,YES,Both use tied argmin set.
+all-tied criterion,optimal_candidate_count == candidate_count,min(y_loss) == max(y_loss) within decision,YES,Equivalent criteria.
+discriminative decision criterion,1 - all_tied_fraction; regret_max > 0,1 - all_tied_fraction,YES,Equivalent decision-level criterion.
+random-optimal probability,mean optimal_set_fraction / random_optimal_probability,total optimal rows divided by candidate rows per cell,YES,"Per-cell capacity is fixed, so cell values match decision-weighted optimal-set fraction."
+per-candidate/random regret,mean_random_regret from decision_view regret_mean,mean of per-decision random-candidate regret,YES,Both are decision-weighted inside each cell.
+request preprocessing,/home/soroush/projects/lafc-evict-dataset/worktrees/pe-results-polish/analysis/sigmod_target_discriminativeness_20260913/outputs/phase4_stratified_family_capacity_horizon.csv,analysis/pe_long_horizon_production_v1/manifests/campaign_manifest.json,YES,Both draw from the same canonical processed family/capacity corpus identities.
+cache initialization,canonical decision_view full-cache-miss decisions,"same production cache state semantics, validated per shard",YES,No source indicates a changed initialization rule.
+admission semantics,LAFC-Evict candidate label contract,same generator contract in completed long-horizon production branch,YES,No source indicates a changed admission rule.

@@ -1,0 +1,50 @@
+[
+  {
+    "all_tied_fraction": 0.49016731209264214,
+    "candidate_rows": 68752064,
+    "cell_count": 16,
+    "decisions": 588242,
+    "discriminative_fraction": 0.5098326879073578,
+    "horizon": 16,
+    "mean_random_regret": 0.017698013477021362,
+    "random_optimal_probability": 0.9825125517006607,
+    "scope": "EXCLUDING_WIKI2018",
+    "weighting": "DECISION_MICRO"
+  },
+  {
+    "all_tied_fraction": 0.4938309077434919,
+    "candidate_rows": 57505792,
+    "cell_count": 16,
+    "decisions": 507368,
+    "discriminative_fraction": 0.5061690922565081,
+    "horizon": 32,
+    "mean_random_regret": 0.02114671020344208,
+    "random_optimal_probability": 0.9797935743878211,
+    "scope": "EXCLUDING_WIKI2018",
+    "weighting": "DECISION_MICRO"
+  },
+  {
+    "all_tied_fraction": 0.4541319121426657,
+    "candidate_rows": 57505792,
+    "cell_count": 16,
+    "decisions": 507368,
+    "discriminative_fraction": 0.5458680878573343,
+    "horizon": 64,
+    "mean_random_regret": 0.03237600869832154,
+    "random_optimal_probability": 0.9710848514416558,
+    "scope": "EXCLUDING_WIKI2018",
+    "weighting": "DECISION_MICRO"
+  },
+  {
+    "all_tied_fraction": 0.4372881222308068,
+    "candidate_rows": 57505792,
+    "cell_count": 16,
+    "decisions": 507368,
+    "discriminative_fraction": 0.5627118777691932,
+    "horizon": 128,
+    "mean_random_regret": 0.051129570277392344,
+    "random_optimal_probability": 0.9609110999683662,
+    "scope": "EXCLUDING_WIKI2018",
+    "weighting": "DECISION_MICRO"
+  }
+]

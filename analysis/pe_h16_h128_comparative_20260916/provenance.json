@@ -1,0 +1,71 @@
+{
+  "aggregation_script": "scripts/pe_h16_h128_comparative.py",
+  "converter_script": "scripts/pe_h16_h128_comparative.py",
+  "environment": {
+    "cwd": "/home/soroush/projects/augmented-caching/worktrees/pe-h16-h128-comparative-integration-20260916",
+    "platform": "Linux-7.0.0-29-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+  },
+  "h16_regenerated": false,
+  "h16_source_hashes": {
+    "h16_analysis_script": "d554895e8966a372f9efabcbd6440f4582cf9959c775745dfceb15e01f9c5d9a",
+    "h16_decision_view_report": "817c37e556eaa448d4c41d989e8e91c33ddd95fa4d18395ace27ec1215281074",
+    "h16_source_csv": "8777418be26904717568ed349c268063afb20e670a5b5eaa5a9f06098062630a",
+    "long_horizon_manifest": "1ad7b8c944959bc7168a028471fe3094d85ec940218f482606401ccbeaf3ec1c",
+    "long_horizon_table_A": "401d3d5502c977129c3f2d714b71db0c62c4bd1bc854d6a396664113e39e6f68",
+    "long_horizon_table_B": "ffedfd46c6edf1b54981792089e2d1f44ecbc858e214c57470b5c6c4787c59c3"
+  },
+  "h16_source_paths": {
+    "analysis_script": "/home/soroush/projects/lafc-evict-dataset/worktrees/pe-results-polish/analysis/sigmod_target_discriminativeness_20260913/scripts/01_decision_view_analysis.py",
+    "decision_view_report_json": "/home/soroush/projects/lafc-evict-dataset/worktrees/pe-results-polish/analysis/sigmod_target_discriminativeness_20260913/outputs/decision_view_report.json",
+    "stratified_summary_csv": "/home/soroush/projects/lafc-evict-dataset/worktrees/pe-results-polish/analysis/sigmod_target_discriminativeness_20260913/outputs/phase4_stratified_family_capacity_horizon.csv"
+  },
+  "h32_h64_h128_regenerated": false,
+  "long_horizon_sources": {
+    "manifest": "analysis/pe_long_horizon_production_v1/manifests/campaign_manifest.json",
+    "table_A": "analysis/pe_long_horizon_production_v1/summaries/table_A_family_capacity_horizon.csv",
+    "table_B": "analysis/pe_long_horizon_production_v1/summaries/table_B_horizon_pooled.json"
+  },
+  "outputs": [
+    "PE_H16_H128_COMPARATIVE_REPORT.md",
+    "cap32_sanity_scope_audit.csv",
+    "cap32_sanity_scope_audit.json",
+    "capacity_sensitivity.csv",
+    "capacity_sensitivity.json",
+    "cell_macro_summary.csv",
+    "cell_macro_summary.json",
+    "combined_family_capacity_horizon.csv",
+    "combined_family_capacity_horizon.json",
+    "compatibility_audit.csv",
+    "compatibility_audit.json",
+    "converted_h16_cells.csv",
+    "converted_h16_cells.json",
+    "excluding_wiki2018_cell_macro_summary.csv",
+    "excluding_wiki2018_cell_macro_summary.json",
+    "excluding_wiki2018_decision_micro_summary.csv",
+    "excluding_wiki2018_decision_micro_summary.json",
+    "family_capacity_wide_primary_metrics.csv",
+    "family_sensitivity.csv",
+    "family_sensitivity.json",
+    "figures/h16_h128_metric_trajectories.pdf",
+    "figures/h16_h128_metric_trajectories.png",
+    "h16_existence_audit.csv",
+    "horizon_paired_deltas.csv",
+    "horizon_paired_deltas.json",
+    "leave_one_family_out_macro.csv",
+    "leave_one_family_out_macro.json",
+    "primary_decision_micro_summary.csv",
+    "primary_decision_micro_summary.json",
+    "provenance.json",
+    "validation.json"
+  ],
+  "source_branch": "experiment/pe-h16-h128-comparative-integration-20260916",
+  "source_head": "cc8c1ad0f5380356ed3023e538cec28d1416dece",
+  "task": "PE_H16_LONG_HORIZON_COMPARATIVE_INTEGRATION",
+  "timestamp_utc": "2026-09-16T13:47:49.930677+00:00",
+  "validation_status": "PASS",
+  "weighting_definitions": {
+    "CELL_MACRO": "each family/capacity cell receives equal weight",
+    "DECISION_MICRO": "weighted by decision_count across family/capacity cells"
+  }
+}

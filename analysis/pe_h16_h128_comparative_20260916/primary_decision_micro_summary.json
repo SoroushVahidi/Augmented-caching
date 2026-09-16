@@ -1,0 +1,50 @@
+[
+  {
+    "all_tied_fraction": 0.6192949139460903,
+    "candidate_rows": 92665024,
+    "cell_count": 20,
+    "decisions": 787762,
+    "discriminative_fraction": 0.3807050860539097,
+    "horizon": 16,
+    "mean_random_regret": 0.013215558561786429,
+    "random_optimal_probability": 0.9869416758329292,
+    "scope": "ALL_FIVE_FAMILIES",
+    "weighting": "DECISION_MICRO"
+  },
+  {
+    "all_tied_fraction": 0.6366977512703569,
+    "candidate_rows": 81418752,
+    "cell_count": 20,
+    "decisions": 706888,
+    "discriminative_fraction": 0.3633022487296432,
+    "horizon": 32,
+    "mean_random_regret": 0.015178025461600707,
+    "random_optimal_probability": 0.9854968626571677,
+    "scope": "ALL_FIVE_FAMILIES",
+    "weighting": "DECISION_MICRO"
+  },
+  {
+    "all_tied_fraction": 0.6082038455879857,
+    "candidate_rows": 81418752,
+    "cell_count": 20,
+    "decisions": 706888,
+    "discriminative_fraction": 0.3917961544120144,
+    "horizon": 64,
+    "mean_random_regret": 0.023237840762963865,
+    "random_optimal_probability": 0.9792461873822302,
+    "scope": "ALL_FIVE_FAMILIES",
+    "weighting": "DECISION_MICRO"
+  },
+  {
+    "all_tied_fraction": 0.5961142359185614,
+    "candidate_rows": 81418752,
+    "cell_count": 20,
+    "decisions": 706888,
+    "discriminative_fraction": 0.40388576408143867,
+    "horizon": 128,
+    "mean_random_regret": 0.03669818671769785,
+    "random_optimal_probability": 0.9719439896684482,
+    "scope": "ALL_FIVE_FAMILIES",
+    "weighting": "DECISION_MICRO"
+  }
+]
