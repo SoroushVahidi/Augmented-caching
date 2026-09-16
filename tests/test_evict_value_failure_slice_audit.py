@@ -10,7 +10,7 @@ def test_evict_value_failure_slice_audit_smoke(tmp_path):
     out_md = tmp_path / "summary.md"
     cmd = [
         sys.executable,
-        "scripts/run_evict_value_failure_slice_audit.py",
+        "scripts/experiments/diagnostics/run_evict_value_failure_slice_audit.py",
         "--trace-manifest",
         "",
         "--trace-glob",

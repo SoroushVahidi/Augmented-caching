@@ -10,7 +10,7 @@ def test_hybrid_fallback_experiment_runs(tmp_path):
     out_dir = tmp_path / "hybrid_fallback"
     cmd = [
         sys.executable,
-        "scripts/run_hybrid_fallback_experiment.py",
+        "scripts/experiments/exploratory/run_hybrid_fallback_experiment.py",
         "--trace-glob",
         "data/example_unweighted.json,data/example_atlas_v1.json,data/example_general_caching.json,data/example.json",
         "--capacities",

@@ -34,7 +34,7 @@ def test_decision_aligned_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/build_evict_regret_dataset_v1.py",
+            "scripts/experiments/exploratory/build_evict_regret_dataset_v1.py",
             "--trace-glob",
             "data/example_*.json",
             "--capacities",
@@ -49,7 +49,7 @@ def test_decision_aligned_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/build_evict_pairwise_dataset_v1.py",
+            "scripts/experiments/exploratory/build_evict_pairwise_dataset_v1.py",
             "--trace-glob",
             "data/example_*.json",
             "--capacities",
@@ -65,7 +65,7 @@ def test_decision_aligned_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/run_evict_regret_first_check.py",
+            "scripts/experiments/exploratory/run_evict_regret_first_check.py",
             "--data-dir",
             str(data_dir),
             "--output-dir",
@@ -76,7 +76,7 @@ def test_decision_aligned_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/run_evict_pairwise_first_check.py",
+            "scripts/experiments/exploratory/run_evict_pairwise_first_check.py",
             "--data-dir",
             str(data_dir),
             "--output-dir",

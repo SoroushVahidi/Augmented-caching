@@ -11,7 +11,7 @@ def test_family_winner_selection_runs(tmp_path):
     model_path = out_dir / "models" / "ml_gate_v2_lightweight.pkl"
     cmd = [
         sys.executable,
-        "scripts/run_family_winner_selection.py",
+        "scripts/experiments/reviewer/run_family_winner_selection.py",
         "--capacities",
         "2,3",
         "--max-requests",

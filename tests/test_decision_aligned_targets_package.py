@@ -15,7 +15,7 @@ def test_decision_aligned_target_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/build_evict_value_decision_aligned_dataset.py",
+            "scripts/experiments/exploratory/build_evict_value_decision_aligned_dataset.py",
             "--trace-glob",
             "data/example_*.json",
             "--capacities",
@@ -35,7 +35,7 @@ def test_decision_aligned_target_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/build_evict_value_pairwise_dataset.py",
+            "scripts/experiments/exploratory/build_evict_value_pairwise_dataset.py",
             "--candidate-csv",
             str(cand_dir / "candidate_rows.csv"),
             "--output-dir",
@@ -49,7 +49,7 @@ def test_decision_aligned_target_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/run_evict_value_decision_aligned_first_check.py",
+            "scripts/experiments/exploratory/run_evict_value_decision_aligned_first_check.py",
             "--candidate-csv",
             str(cand_dir / "candidate_rows.csv"),
             "--output-dir",
@@ -61,7 +61,7 @@ def test_decision_aligned_target_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/run_evict_value_pairwise_first_check.py",
+            "scripts/experiments/exploratory/run_evict_value_pairwise_first_check.py",
             "--pairwise-csv",
             str(pair_dir / "pairwise_rows.csv"),
             "--output-dir",

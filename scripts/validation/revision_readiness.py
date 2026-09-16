@@ -43,31 +43,91 @@ def concern_1_readiness(c1: Dict[str, object]) -> Dict[str, str]:
 
 def concern_2_readiness(c2: Dict[str, object], ablation_root: Optional[Path]) -> Dict[str, str]:
     training = "COMPLETE" if c2.get("models_done") == c2.get("models_total") else "RUNNING"
-    audits = "NOT_RUN"
-    if ablation_root is not None:
-        same_ex = _audit_final_state(ablation_root / "analysis" / "supervision_objective_ablation_v1" / "same_example_audit.json")
-        fair = _audit_final_state(ablation_root / "analysis" / "supervision_objective_ablation_v1" / "fairness_audit.json")
-        if same_ex == "COMPLETE" and fair == "COMPLETE":
-            audits = "COMPLETE"
-        elif same_ex != "NOT_RUN" or fair != "NOT_RUN":
-            audits = f"PARTIAL (same_example={same_ex}, fairness={fair})"
+
+    # Audit states come from the richer status fields (already computed in revision_status).
+    same_ex_pass = bool(c2.get("same_example_final_pass"))
+    fair_pass = bool(c2.get("fairness_final_pass"))
+    same_ex_exists = bool(c2.get("same_example_audit_exists"))
+    fair_exists = bool(c2.get("fairness_audit_exists"))
+
+    if same_ex_pass and fair_pass:
+        audits = "BOTH_FINAL_PASS"
+    elif same_ex_exists or fair_exists:
+        audits = f"PARTIAL (same_example_final_pass={same_ex_pass}, fairness_final_pass={fair_pass})"
+    else:
+        audits = "NOT_RUN"
+
     if c2.get("registry_frozen"):
         registry = "FROZEN"
     elif training == "COMPLETE":
         registry = "READY_TO_FREEZE"
     else:
         registry = "BLOCKED"
-    eval_ = "COMPLETE" if c2.get("eval_rows", 0) >= c2.get("eval_rows_expected", 84) else (
-        "READY" if c2.get("registry_frozen") else "BLOCKED"
-    )
-    note = None
-    if training == "RUNNING":
-        note = ("NOTE: the running objective_ablation_pipeline tmux session already auto-chains "
-                "dataset build -> train -> registry freeze -> 84-row eval with NO manual step in "
-                "between -- it does not wait for the same-example/fairness audits above. If those "
-                "audits are meant to gate the eval, the pipeline must be interrupted before Stage 4 "
-                "fires, which is a deliberate, audited decision -- not something this tool does.")
-    return {"training": training, "audits": audits, "registry": registry, "eval": eval_, **({"note": note} if note else {})}
+
+    # Use the eval_state from status module for precise eval classification.
+    eval_state = c2.get("eval_state", "NOT_STARTED")
+    eval_rows = c2.get("eval_rows", 0)
+    eval_expected = c2.get("eval_rows_expected", 84)
+
+    if eval_state == "COMPLETE_AND_AUDITED":
+        eval_ = "COMPLETE_AND_AUDITED"
+    elif eval_state in ("FINAL_AUDITS_RUNNING",):
+        eval_ = "FINAL_AUDITS_RUNNING"
+    elif eval_state == "BLOCKED_BY_AUDIT":
+        eval_ = "BLOCKED_BY_AUDIT"
+    elif eval_state == "CURRENT_RUN_EVAL_COMPLETE_AUDITS_REQUIRED":
+        # 84/84 rows exist but the final audits have not been produced yet.
+        eval_ = "CURRENT_RUN_EVAL_COMPLETE_AUDITS_REQUIRED"
+    elif eval_state == "CURRENT_RUN_RUNNING_PRE_GATE":
+        # Currently running but audits were not run before eval started.
+        # This is the live run that began before the gate was installed.
+        eval_ = "CURRENT_RUN_RUNNING_PRE_GATE"
+    elif eval_state == "CURRENT_RUN_PARTIAL_STOPPED_PRE_GATE":
+        eval_ = "CURRENT_RUN_PARTIAL_STOPPED_PRE_GATE"
+    elif eval_state == "NOT_STARTED":
+        if registry == "FROZEN" and training == "COMPLETE":
+            eval_ = "READY_TO_START"
+        else:
+            eval_ = "NOT_STARTED"
+    elif eval_state in ("INVALID_OVERFLOW", "INVALID_DUPLICATE_KEYS", "INVALID_NAN_INF", "EVALUATION_FAILED"):
+        eval_ = "FAILED"
+    else:
+        eval_ = "BLOCKED"
+
+    result: Dict[str, str] = {
+        "training": training,
+        "audits": audits,
+        "registry": registry,
+        "eval": eval_,
+        "eval_rows": f"{eval_rows}/{eval_expected}",
+    }
+
+    # Acceptance note for the current live run that started without the audit gate.
+    if eval_state == "CURRENT_RUN_RUNNING_PRE_GATE":
+        result["acceptance_note"] = (
+            "CURRENT RUN started before the audit gate was installed. "
+            "Run both final audits after 84/84 rows complete. "
+            "If both pass with FINAL=true, the run is scientifically acceptable."
+        )
+    elif eval_state == "CURRENT_RUN_PARTIAL_STOPPED_PRE_GATE":
+        result["acceptance_note"] = (
+            "CURRENT RUN evaluation stopped before reaching 84/84 (pre-gate run). "
+            "Resume the evaluator to 84/84, then run both final audits."
+        )
+    elif eval_state == "CURRENT_RUN_EVAL_COMPLETE_AUDITS_REQUIRED":
+        result["acceptance_note"] = (
+            "Evaluation is 84/84 but the final audits have not yet run. "
+            "Run audit_supervision_objective_examples.py and "
+            "audit_supervision_objective_fairness.py (both FINAL=true) "
+            "to reach COMPLETE_AND_AUDITED."
+        )
+    elif eval_state == "BLOCKED_BY_AUDIT":
+        result["acceptance_note"] = (
+            "One or both final audits FAILED. Acceptance is blocked until the "
+            "underlying training/model/data issue is fixed and the audits pass."
+        )
+
+    return result
 
 
 def concern_3_readiness(c3: Dict[str, object], active_tmux) -> Dict[str, str]:
@@ -86,12 +146,20 @@ def concern_3_readiness(c3: Dict[str, object], active_tmux) -> Dict[str, str]:
 
 
 def concern_4_readiness(c4: Dict[str, object]) -> Dict[str, str]:
-    smoke = "COMPLETE" if c4.get("smoke_artifacts") else "NOT_STARTED"
+    expected = c4.get("smoke_artifacts_expected", 9)
+    present = c4.get("smoke_artifacts_count", 0)
+    missing = c4.get("smoke_artifacts_missing", [])
+    smoke = "COMPLETE" if present == expected and not missing else (
+        "INCOMPLETE" if present > 0 else "NOT_STARTED"
+    )
     gate = c4.get("timing_gate", "DEFER")
     controlled_timing = "BLOCKED_BY_ACTIVE_JOBS" if gate == "DEFER" else "READY"
     if c4.get("controlled_campaign_started"):
         controlled_timing = "COMPLETE"
-    return {"smoke": smoke, "controlled_timing": controlled_timing}
+    result: Dict[str, str] = {"smoke": smoke, "controlled_timing": controlled_timing}
+    if missing:
+        result["smoke_missing"] = str(missing)
+    return result
 
 
 def next_action(c1r, c2r, c3r, c4r) -> str:
@@ -101,11 +169,19 @@ def next_action(c1r, c2r, c3r, c4r) -> str:
     # -- only surface it as the top action when C1/C2 aren't already
     # actively consuming CPU for their own training, to avoid recommending
     # a 4th heavy job on top of 2-3 already running.
-    other_heavy_job_running = c1r["training"] == "RUNNING" or c2r["training"] == "RUNNING"
+    other_heavy_job_running = (
+        c1r["training"] == "RUNNING"
+        or c2r["training"] == "RUNNING"
+        or c2r["eval"] in ("RUNNING", "CURRENT_RUN_RUNNING_PRE_GATE")
+    )
     if c1r["registry"] == "READY_TO_FREEZE":
         return "CONCERN_1_READY_FOR_NEXT_STAGE"
     if c2r["registry"] == "READY_TO_FREEZE" and c2r["training"] == "COMPLETE":
         return "CONCERN_2_READY_FOR_NEXT_STAGE"
+    if c2r["eval"] in ("CURRENT_RUN_EVAL_COMPLETE_AUDITS_REQUIRED", "FINAL_AUDITS_RUNNING"):
+        return "RUN_C2_FINAL_AUDITS"
+    if c2r["eval"] == "BLOCKED_BY_AUDIT":
+        return "REVIEW_C2_AUDIT_FAILURE"
     if c3r["resume"] == "READY" and not other_heavy_job_running:
         return "CONCERN_3_READY_TO_RESUME"
     if c4r["controlled_timing"] == "READY":

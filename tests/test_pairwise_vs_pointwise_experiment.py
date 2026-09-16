@@ -9,7 +9,7 @@ def test_pairwise_vs_pointwise_experiment_runs(tmp_path):
     out_dir = tmp_path / "pairwise_vs_pointwise"
     cmd = [
         sys.executable,
-        "scripts/run_pairwise_vs_pointwise_experiment.py",
+        "scripts/experiments/exploratory/run_pairwise_vs_pointwise_experiment.py",
         "--trace-glob",
         "data/example_unweighted.json,data/example_atlas_v1.json,data/example_general_caching.json,data/example.json",
         "--capacities",

@@ -146,7 +146,7 @@ constant default (67,108,864 requests) is CDN-scale and never fires within
 this repository's ≤50,000-request/trace, 32–128-slot evaluation. **Required
 adaptation**: this repository ships an illustrative default
 (`memory_window=4096`) and performs its own small validation-only grid
-search per trace/capacity in `scripts/experiments/run_lrb_external_baseline.py`,
+search per trace/capacity in `scripts/experiments/reviewer/run_lrb_external_baseline.py`,
 analogous in spirit to the paper's own protocol — never tuned against the
 evaluated/test region.
 

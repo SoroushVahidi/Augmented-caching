@@ -9,7 +9,7 @@ def test_offline_teacher_vs_heuristic_mediumscale_runs(tmp_path):
     out_dir = tmp_path / "medium"
     cmd = [
         sys.executable,
-        "scripts/run_offline_teacher_vs_heuristic_mediumscale.py",
+        "scripts/experiments/exploratory/run_offline_teacher_vs_heuristic_mediumscale.py",
         "--trace-glob",
         "data/example_unweighted.json,data/example_atlas_v1.json,data/example_general_caching.json,data/example.json",
         "--capacities",

@@ -83,7 +83,7 @@ def test_prepare_cli_brightkite(tmp_path: Path):
         fh.write("1\t2008-01-01T00:00:00Z\t40.0\t-70.0\tvenueA\n")
     cmd = [
         sys.executable,
-        "scripts/datasets/prepare_all.py",
+        "scripts/setup/prepare_all.py",
         "--dataset",
         "brightkite",
         "--raw-dir",
@@ -112,7 +112,7 @@ def test_prepare_cli_spec_missing_manifest_fails(tmp_path: Path):
     (raw_root / "spec_cpu2006").mkdir(parents=True)
     cmd = [
         sys.executable,
-        "scripts/datasets/prepare_all.py",
+        "scripts/setup/prepare_all.py",
         "--dataset",
         "spec_cpu2006",
         "--raw-dir",
@@ -201,7 +201,7 @@ def test_prepare_cli_sample_only_for_new_dataset(tmp_path: Path):
     )
     cmd = [
         sys.executable,
-        "scripts/datasets/prepare_all.py",
+        "scripts/setup/prepare_all.py",
         "--dataset",
         "twemcache",
         "--raw-dir",
@@ -220,7 +220,7 @@ def test_prepare_cli_sample_only_without_raw_uses_examples(tmp_path: Path):
     out_root = tmp_path / "out"
     cmd = [
         sys.executable,
-        "scripts/datasets/prepare_all.py",
+        "scripts/setup/prepare_all.py",
         "--dataset",
         "metakv",
         "--raw-dir",

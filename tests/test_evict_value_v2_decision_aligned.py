@@ -42,7 +42,7 @@ def test_v2_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/build_evict_value_v2_rollout_dataset.py",
+            "scripts/experiments/exploratory/build_evict_value_v2_rollout_dataset.py",
             "--trace-glob",
             "data/example_*.json",
             "--dataset",
@@ -64,7 +64,7 @@ def test_v2_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/build_evict_value_v2_pairwise_dataset.py",
+            "scripts/experiments/exploratory/build_evict_value_v2_pairwise_dataset.py",
             "--candidate-csv",
             str(rollout_dir / "candidate_rows.csv"),
             "--output-dir",
@@ -76,7 +76,7 @@ def test_v2_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/run_evict_value_v2_rollout_first_check.py",
+            "scripts/experiments/exploratory/run_evict_value_v2_rollout_first_check.py",
             "--candidate-csv",
             str(rollout_dir / "candidate_rows.csv"),
             "--output-dir",
@@ -88,7 +88,7 @@ def test_v2_scripts_smoke(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/run_evict_value_v2_pairwise_first_check.py",
+            "scripts/experiments/exploratory/run_evict_value_v2_pairwise_first_check.py",
             "--pairwise-csv",
             str(pairwise_dir / "pairwise_rows.csv"),
             "--output-dir",

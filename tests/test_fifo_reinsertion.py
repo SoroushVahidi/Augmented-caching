@@ -103,7 +103,7 @@ def test_fifo_reinsertion_runs_via_run_policy_helper():
 
 def test_runner_policies_dict_accepts_fifo_reinsertion():
     repo_root = Path(__file__).resolve().parents[1]
-    script_path = repo_root / "scripts" / "run_policy_comparison_wulver_v1.py"
+    script_path = repo_root / "scripts" / "experiments" / "canonical" / "run_policy_comparison_wulver_v1.py"
     spec = importlib.util.spec_from_file_location("run_policy_comparison_wulver_v1", script_path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

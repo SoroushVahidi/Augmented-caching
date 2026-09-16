@@ -2,7 +2,7 @@
 
 | File | Purpose |
 |------|---------|
-| [`related_work_table6.bib`](related_work_table6.bib) | BibTeX keys cited by [`../tables/manuscript/table6_related_work_learned_caching.tex`](../tables/manuscript/table6_related_work_learned_caching.tex) |
+| [`related_work_table6.bib`](related_work_table6.bib) | BibTeX keys cited by [`../../../tables/manuscript/table6_related_work_learned_caching.tex`](../../../tables/manuscript/table6_related_work_learned_caching.tex) |
 
 **Usage:** merge these entries into your main manuscript `.bib`, or add `\bibliography{refs/related_work_table6}` on a path LaTeX can see.
 

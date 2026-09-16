@@ -261,7 +261,7 @@ required adaptation, or an optional deviation. The two `memory_window`/
 values (the official defaults are CDN-scale constants that never fire at
 this repository's request-count scale); both are validation-tunable via CLI
 flags and are tuned on a held-out validation prefix (never the test region)
-in `scripts/experiments/run_lrb_external_baseline.py`, mirroring the
+in `scripts/experiments/reviewer/run_lrb_external_baseline.py`, mirroring the
 paper's own per-trace tuning protocol.
 
 ### Diagnostics exposed
@@ -296,7 +296,7 @@ Full external-baseline comparison across all 7 manuscript trace families and
 capacities 32/64/128:
 
 ```bash
-python scripts/experiments/run_lrb_external_baseline.py
+python scripts/experiments/reviewer/run_lrb_external_baseline.py
 ```
 
 Outputs write to `analysis/external_learned_baselines/lrb/` — canonical

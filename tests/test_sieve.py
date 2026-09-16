@@ -109,7 +109,7 @@ def test_runner_policies_dict_accepts_sieve():
     # `--policies sieve` resolves to a working SievePolicy instance without
     # running any trace (zero-compute check on the registry wiring itself).
     repo_root = Path(__file__).resolve().parents[1]
-    script_path = repo_root / "scripts" / "run_policy_comparison_wulver_v1.py"
+    script_path = repo_root / "scripts" / "experiments" / "canonical" / "run_policy_comparison_wulver_v1.py"
     spec = importlib.util.spec_from_file_location("run_policy_comparison_wulver_v1", script_path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

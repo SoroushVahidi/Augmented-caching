@@ -71,7 +71,7 @@ Controlled timing benchmarks on an idle machine.
 The primary external baseline is **LRB**. It is run across all canonical traces:
 
 ```bash
-python scripts/experiments/run_lrb_external_baseline.py \
+python scripts/experiments/reviewer/run_lrb_external_baseline.py \
   --capacities 32,64,128 \
   --out-dir analysis/external_learned_baselines/lrb
 ```

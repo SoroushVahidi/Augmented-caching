@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import subprocess
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -105,6 +106,67 @@ def concern_1_status(fairness_root: Path) -> Dict[str, object]:
     }
 
 
+def _is_process_running(cmd_fragment: str) -> bool:
+    """Return True if any process in the process table has cmd_fragment in its cmdline."""
+    out = subprocess.run(["ps", "-eo", "cmd"], capture_output=True, text=True).stdout
+    for line in out.splitlines():
+        if "grep" in line or "revision_status.py" in line or "revision_readiness.py" in line:
+            continue
+        if cmd_fragment in line:
+            return True
+    return False
+
+
+def _audit_state(audit_path: Path) -> str:
+    """Classify an audit artifact into NOT_RUN / CORRUPT / PARTIAL / PASS / FAIL."""
+    if not audit_path.exists():
+        return "NOT_RUN"
+    try:
+        d = json.loads(audit_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return "CORRUPT"
+    if not d.get("FINAL"):
+        return "PARTIAL"
+    if d.get("overall") == "PASS":
+        return "PASS"
+    return "FAIL"
+
+
+def _audit_final_pass(audit_path: Path) -> bool:
+    """Return True iff audit file exists, FINAL=true, and overall=PASS."""
+    return _audit_state(audit_path) == "PASS"
+
+
+def _analyze_eval_csv(path: Path) -> Dict[str, object]:
+    """Stream the C2 eval CSV and report integrity facts (never loads the
+    whole file into memory): row count, non-ok rows, duplicate (objective,
+    held_out_family, capacity) keys, and NaN/Inf cells."""
+    facts = {"rows": 0, "non_ok_rows": 0, "duplicate_keys": 0, "nan_inf_cells": 0}
+    if not path.exists():
+        return facts
+    seen = set()
+    with path.open(newline="", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            facts["rows"] += 1
+            if str(row.get("status", "")).lower() in ("fail", "failed", "error"):
+                facts["non_ok_rows"] += 1
+            key = (row.get("objective"), row.get("held_out_family"), row.get("capacity"))
+            if key in seen:
+                facts["duplicate_keys"] += 1
+            seen.add(key)
+            for value in row.values():
+                if value in ("", "n/a", "NA"):
+                    continue
+                try:
+                    float(value)
+                except (TypeError, ValueError):
+                    continue
+                f = float(value)
+                if math.isnan(f) or math.isinf(f):
+                    facts["nan_inf_cells"] += 1
+    return facts
+
+
 def concern_2_status(ablation_root: Path) -> Dict[str, object]:
     data_root = ablation_root / "data" / "derived" / "supervision_objective_ablation_v1"
     models_root = ablation_root / "models" / "supervision_objective_ablation_v1"
@@ -119,26 +181,100 @@ def concern_2_status(ablation_root: Path) -> Dict[str, object]:
         registry_frozen = bool(json.loads(registry_path.read_text(encoding="utf-8")).get("MODEL_SELECTION_FROZEN"))
 
     eval_csv = ablation_root / "analysis" / "supervision_objective_ablation_v1" / "policy_comparison.csv"
-    eval_rows = _count_csv_rows(eval_csv)
+    eval_facts = _analyze_eval_csv(eval_csv)
+    eval_rows = eval_facts["rows"]
+    eval_failures = eval_facts["non_ok_rows"]
 
     same_example_path = ablation_root / "analysis" / "supervision_objective_ablation_v1" / "same_example_audit.json"
     fairness_audit_path = ablation_root / "analysis" / "supervision_objective_ablation_v1" / "fairness_audit.json"
 
+    same_example_state = _audit_state(same_example_path)
+    fairness_state = _audit_state(fairness_audit_path)
+    same_example_final_pass = _audit_final_pass(same_example_path)
+    fairness_final_pass = _audit_final_pass(fairness_audit_path)
+
     expected_models = len(OBJECTIVES) * len(FAMILIES)
     expected_eval = len(OBJECTIVES) * len(FAMILIES) * len(CAPACITIES)
+
+    # Detect whether the evaluator / audit processes are currently alive.
+    evaluator_active = _is_process_running("run_supervision_objective_ablation.py")
+    audit_active = _is_process_running("audit_supervision_objective")
+
+    # ----- Explicit C2 evaluation state machine -------------------------------
+    #   NOT_STARTED                      rows == 0, evaluator absent
+    #   CURRENT_RUN_RUNNING_PRE_GATE     0 < rows < 84, evaluator active
+    #   CURRENT_RUN_PARTIAL_STOPPED_PRE_GATE  0 < rows < 84, evaluator absent
+    #   CURRENT_RUN_EVAL_COMPLETE_AUDITS_REQUIRED  rows == 84, audits not FINAL PASS
+    #   FINAL_AUDITS_RUNNING             rows == 84, audits not FINAL PASS, audit process alive
+    #   COMPLETE_AND_AUDITED             rows == 84, both audits FINAL PASS
+    #   BLOCKED_BY_AUDIT                 rows == 84, any audit FAIL
+    #   FAILED / INVALID                 rows > 84, duplicate keys, non-ok rows, or NaN/Inf
+    # --------------------------------------------------------------------------
+    invalid = (
+        eval_rows > expected_eval
+        or eval_facts["duplicate_keys"] > 0
+        or eval_failures > 0
+        or eval_facts["nan_inf_cells"] > 0
+    )
+    if invalid:
+        if eval_rows > expected_eval:
+            eval_state = "INVALID_OVERFLOW"
+        elif eval_facts["duplicate_keys"] > 0:
+            eval_state = "INVALID_DUPLICATE_KEYS"
+        elif eval_facts["nan_inf_cells"] > 0:
+            eval_state = "INVALID_NAN_INF"
+        else:
+            eval_state = "EVALUATION_FAILED"
+    elif eval_rows == expected_eval:
+        if same_example_final_pass and fairness_final_pass:
+            eval_state = "COMPLETE_AND_AUDITED"
+        elif audit_active:
+            eval_state = "FINAL_AUDITS_RUNNING"
+        elif same_example_state == "FAIL" or fairness_state == "FAIL":
+            eval_state = "BLOCKED_BY_AUDIT"
+        else:
+            eval_state = "CURRENT_RUN_EVAL_COMPLETE_AUDITS_REQUIRED"
+    elif eval_rows > 0:
+        if evaluator_active:
+            eval_state = "CURRENT_RUN_RUNNING_PRE_GATE"
+        else:
+            eval_state = "CURRENT_RUN_PARTIAL_STOPPED_PRE_GATE"
+    elif evaluator_active:
+        eval_state = "CURRENT_RUN_RUNNING_PRE_GATE"
+    else:
+        eval_state = "NOT_STARTED"
+
+    # ----- Overall concern-2 pipeline status ---------------------------------
+    if invalid:
+        status = "FAILED"
+    elif eval_state in ("COMPLETE_AND_AUDITED", "FINAL_AUDITS_RUNNING",
+                        "BLOCKED_BY_AUDIT", "CURRENT_RUN_EVAL_COMPLETE_AUDITS_REQUIRED"):
+        status = eval_state
+    elif eval_state in ("CURRENT_RUN_RUNNING_PRE_GATE", "CURRENT_RUN_PARTIAL_STOPPED_PRE_GATE"):
+        status = eval_state
+    elif models_done == expected_models:
+        status = "TRAINING_COMPLETE_AUDITS_NOT_RUN" if not (same_example_final_pass and fairness_final_pass) else "READY_FOR_EVALUATION"
+    elif models_done > 0 or datasets_done > 0:
+        status = "TRAINING_RUNNING"
+    else:
+        status = "NOT_STARTED"
+
     return {
         "datasets_done": datasets_done, "datasets_total": len(FAMILIES),
         "models_done": models_done, "models_total": expected_models,
         "registry_frozen": registry_frozen,
         "eval_rows": eval_rows, "eval_rows_expected": expected_eval,
+        "eval_failures": eval_failures, "eval_duplicate_keys": eval_facts["duplicate_keys"],
+        "eval_nan_inf_cells": eval_facts["nan_inf_cells"],
+        "evaluator_active": evaluator_active, "audit_active": audit_active,
+        "eval_state": eval_state,
         "same_example_audit_exists": same_example_path.exists(),
+        "same_example_audit_state": same_example_state,
+        "same_example_final_pass": same_example_final_pass,
         "fairness_audit_exists": fairness_audit_path.exists(),
-        "status": (
-            "COMPLETE" if eval_rows >= expected_eval else
-            "TRAINING COMPLETE — EVALUATION PENDING" if models_done == expected_models and not registry_frozen else
-            "EVALUATION RUNNING" if registry_frozen and eval_rows > 0 else
-            "RUNNING — TRAINING" if models_done > 0 or datasets_done > 0 else "NOT_STARTED"
-        ),
+        "fairness_audit_state": fairness_state,
+        "fairness_final_pass": fairness_final_pass,
+        "status": status,
     }
 
 
@@ -159,16 +295,38 @@ def concern_3_status(fairness_root: Path) -> Dict[str, object]:
     }
 
 
+# Canonical list of smoke artifacts for Concern 4 (practical-significance
+# ablation v1). This is the authoritative list -- do not use a glob.
+# provenance.json is bookkeeping, not a result artifact.
+C4_SMOKE_ARTIFACTS: List[str] = [
+    "exact_optimization_equivalence.json",
+    "profiler_breakdown.csv",
+    "selective_invocation.csv",
+    "topk_tradeoff.csv",
+    "model_complexity_tradeoff.csv",
+    "break_even_miss_cost.csv",
+    "miss_cost_sweep.csv",
+    "weighted_cost.csv",
+    "pareto_frontier.csv",
+]
+
+
 def concern_4_status(fairness_root: Path) -> Dict[str, object]:
     smoke_dir = fairness_root / "analysis" / "practical_significance_ablation_v1"
-    smoke_artifacts = sorted(p.name for p in smoke_dir.glob("*.csv")) if smoke_dir.exists() else []
+    present = [a for a in C4_SMOKE_ARTIFACTS if (smoke_dir / a).exists()] if smoke_dir.exists() else []
+    missing = [a for a in C4_SMOKE_ARTIFACTS if a not in present]
+    smoke_complete = len(missing) == 0 and len(present) == len(C4_SMOKE_ARTIFACTS)
     controlled_marker = smoke_dir / "controlled_final" / "profiler_breakdown.csv"
     return {
-        "smoke_artifacts": smoke_artifacts,
+        "smoke_artifacts_present": present,
+        "smoke_artifacts_missing": missing,
+        "smoke_artifacts_expected": len(C4_SMOKE_ARTIFACTS),
+        "smoke_artifacts_count": len(present),
         "controlled_campaign_started": controlled_marker.exists(),
         "timing_gate": _c4_gate_from_process_list(),
-        "status": "SMOKE_COMPLETE_CONTROLLED_PENDING" if smoke_artifacts and not controlled_marker.exists() else (
-            "CONTROLLED_COMPLETE" if controlled_marker.exists() else "NOT_STARTED"
+        "status": "SMOKE_COMPLETE_CONTROLLED_PENDING" if smoke_complete and not controlled_marker.exists() else (
+            "CONTROLLED_COMPLETE" if controlled_marker.exists() else
+            "SMOKE_INCOMPLETE" if present and missing else "NOT_STARTED"
         ),
     }
 
@@ -208,9 +366,14 @@ def format_report(report: Dict[str, object]) -> str:
     lines.append(f"    datasets {c2.get('datasets_done', '?')}/{c2.get('datasets_total', '?')}")
     lines.append(f"    models   {c2.get('models_done', '?')}/{c2.get('models_total', '?')}")
     lines.append(f"    registry frozen: {c2.get('registry_frozen', '?')}")
-    lines.append(f"    evaluation {c2.get('eval_rows', '?')}/{c2.get('eval_rows_expected', '?')}")
-    lines.append(f"    same_example_audit exists: {c2.get('same_example_audit_exists', '?')}, "
-                 f"fairness_audit exists: {c2.get('fairness_audit_exists', '?')}")
+    lines.append(f"    evaluation {c2.get('eval_rows', '?')}/{c2.get('eval_rows_expected', '?')}"
+                 f"  failures={c2.get('eval_failures', '?')}  dup_keys={c2.get('eval_duplicate_keys', '?')}"
+                 f"  nan_inf={c2.get('eval_nan_inf_cells', '?')}  evaluator_active={c2.get('evaluator_active', '?')}")
+    lines.append(f"    eval_state: {c2.get('eval_state', '?')}")
+    lines.append(f"    same_example_audit: exists={c2.get('same_example_audit_exists', '?')} "
+                 f"state={c2.get('same_example_audit_state', '?')} final_pass={c2.get('same_example_final_pass', '?')}")
+    lines.append(f"    fairness_audit: exists={c2.get('fairness_audit_exists', '?')} "
+                 f"state={c2.get('fairness_audit_state', '?')} final_pass={c2.get('fairness_final_pass', '?')}")
     lines.append(f"    status {c2.get('status')}")
     lines.append("")
 
@@ -223,7 +386,9 @@ def format_report(report: Dict[str, object]) -> str:
 
     c4 = report["concern_4"]
     lines.append("Concern 4 (practical significance):")
-    lines.append(f"    smoke artifacts: {len(c4.get('smoke_artifacts', []))} file(s)")
+    lines.append(f"    smoke artifacts: {c4.get('smoke_artifacts_count', '?')}/{c4.get('smoke_artifacts_expected', '?')}")
+    if c4.get("smoke_artifacts_missing"):
+        lines.append(f"    MISSING: {c4.get('smoke_artifacts_missing')}")
     lines.append(f"    controlled campaign started: {c4.get('controlled_campaign_started', '?')}")
     lines.append(f"    C4_CONTROLLED_TIMING_GATE = {c4.get('timing_gate', '?')}")
     lines.append(f"    status {c4.get('status')}")

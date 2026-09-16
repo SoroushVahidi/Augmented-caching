@@ -52,7 +52,7 @@ def test_evict_value_v1_training_smoke_and_reproducibility(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/build_evict_value_dataset_v1.py",
+            "scripts/experiments/exploratory/build_evict_value_dataset_v1.py",
             "--sample-only",
             "--capacities",
             "2",
@@ -68,7 +68,7 @@ def test_evict_value_v1_training_smoke_and_reproducibility(tmp_path: Path):
 
     cmd = [
         sys.executable,
-        "scripts/train_evict_value_v1.py",
+        "scripts/experiments/exploratory/train_evict_value_v1.py",
         "--data-dir",
         str(out_dir),
         "--horizon",
@@ -154,7 +154,7 @@ def test_lightweight_comparison_includes_evict_value_v1(tmp_path: Path):
     subprocess.run(
         [
             sys.executable,
-            "scripts/run_lightweight_baseline_comparison.py",
+            "scripts/experiments/exploratory/run_lightweight_baseline_comparison.py",
             "--capacities",
             "3",
             "--max-requests",

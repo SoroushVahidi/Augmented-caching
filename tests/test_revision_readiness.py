@@ -1,4 +1,4 @@
-"""Fixture tests for scripts/revision_readiness.py."""
+"""Fixture tests for scripts/validation/revision_readiness.py."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-_SCRIPTS_DIR = str(Path("scripts").resolve())
+_SCRIPTS_DIR = str(Path("scripts/validation").resolve())
 
 
 @pytest.fixture(autouse=True)
@@ -62,6 +62,25 @@ def test_next_action_timing_ready_when_everything_else_settled():
     assert m.next_action(c1r, c2r, c3r, c4r) == "CONCERN_4_TIMING_READY"
 
 
+def test_next_action_run_c2_final_audits_when_eval_complete_audits_required():
+    m = _import_module()
+    c1r = {"training": "COMPLETE", "registry": "FROZEN", "eval": "BLOCKED"}
+    c2r = {"training": "COMPLETE", "registry": "FROZEN", "eval": "CURRENT_RUN_EVAL_COMPLETE_AUDITS_REQUIRED",
+           "audits": "NOT_RUN"}
+    c3r = {"campaign": "PARTIAL", "resume": "READY", "completion_audit": "BLOCKED"}
+    c4r = {"smoke": "COMPLETE", "controlled_timing": "BLOCKED_BY_ACTIVE_JOBS"}
+    assert m.next_action(c1r, c2r, c3r, c4r) == "RUN_C2_FINAL_AUDITS"
+
+
+def test_next_action_review_audit_failure_when_blocked():
+    m = _import_module()
+    c1r = {"training": "COMPLETE", "registry": "FROZEN", "eval": "BLOCKED"}
+    c2r = {"training": "COMPLETE", "registry": "FROZEN", "eval": "BLOCKED_BY_AUDIT", "audits": "PARTIAL"}
+    c3r = {"campaign": "PARTIAL", "resume": "READY", "completion_audit": "BLOCKED"}
+    c4r = {"smoke": "COMPLETE", "controlled_timing": "BLOCKED_BY_ACTIVE_JOBS"}
+    assert m.next_action(c1r, c2r, c3r, c4r) == "REVIEW_C2_AUDIT_FAILURE"
+
+
 def test_concern_1_readiness_blocked_while_training(tmp_path):
     m = _import_module()
     c1 = {"models_done": 2, "models_total": 7, "registry_frozen": False,
@@ -79,23 +98,55 @@ def test_concern_1_readiness_ready_to_freeze_when_all_models_done(tmp_path):
     assert r["training"] == "COMPLETE"
 
 
-def test_concern_2_readiness_flags_auto_chain_note_while_training(tmp_path):
+def test_concern_2_readiness_training_running_eval_blocked(tmp_path):
     m = _import_module()
     c2 = {"models_done": 24, "models_total": 28, "registry_frozen": False,
-          "eval_rows": 0, "eval_rows_expected": 84}
+          "eval_rows": 0, "eval_rows_expected": 84, "eval_state": "NOT_STARTED"}
     r = m.concern_2_readiness(c2, ablation_root=None)
     assert r["training"] == "RUNNING"
-    assert "note" in r
-    assert "auto-chains" in r["note"]
+    assert r["registry"] == "BLOCKED"
+    assert r["eval"] == "NOT_STARTED"
 
 
-def test_concern_2_readiness_no_note_when_training_complete(tmp_path):
+def test_concern_2_readiness_ready_to_start_when_frozen_no_eval_state(tmp_path):
     m = _import_module()
     c2 = {"models_done": 28, "models_total": 28, "registry_frozen": True,
-          "eval_rows": 84, "eval_rows_expected": 84}
+          "eval_rows": 84, "eval_rows_expected": 84, "eval_state": "NOT_STARTED"}
     r = m.concern_2_readiness(c2, ablation_root=None)
-    assert "note" not in r
-    assert r["eval"] == "COMPLETE"
+    assert "acceptance_note" not in r
+    assert r["eval"] == "READY_TO_START"
+
+
+def test_concern_2_readiness_running_pre_gate_has_acceptance_note():
+    m = _import_module()
+    c2 = {"models_done": 28, "models_total": 28, "registry_frozen": True,
+          "eval_rows": 40, "eval_rows_expected": 84, "eval_state": "CURRENT_RUN_RUNNING_PRE_GATE",
+          "same_example_final_pass": False, "fairness_final_pass": False}
+    r = m.concern_2_readiness(c2, ablation_root=None)
+    assert r["eval"] == "CURRENT_RUN_RUNNING_PRE_GATE"
+    assert "acceptance_note" in r
+
+
+def test_concern_2_readiness_eval_complete_audits_required():
+    m = _import_module()
+    c2 = {"models_done": 28, "models_total": 28, "registry_frozen": True,
+          "eval_rows": 84, "eval_rows_expected": 84,
+          "eval_state": "CURRENT_RUN_EVAL_COMPLETE_AUDITS_REQUIRED",
+          "same_example_final_pass": False, "fairness_final_pass": False}
+    r = m.concern_2_readiness(c2, ablation_root=None)
+    assert r["eval"] == "CURRENT_RUN_EVAL_COMPLETE_AUDITS_REQUIRED"
+    assert "acceptance_note" in r
+
+
+def test_concern_2_readiness_blocked_by_audit():
+    m = _import_module()
+    c2 = {"models_done": 28, "models_total": 28, "registry_frozen": True,
+          "eval_rows": 84, "eval_rows_expected": 84,
+          "eval_state": "BLOCKED_BY_AUDIT",
+          "same_example_final_pass": True, "fairness_final_pass": False}
+    r = m.concern_2_readiness(c2, ablation_root=None)
+    assert r["eval"] == "BLOCKED_BY_AUDIT"
+    assert "acceptance_note" in r
 
 
 def test_audit_final_state_reads_final_flag(tmp_path):
@@ -124,5 +175,7 @@ def test_concern_3_readiness_ready_when_no_session_active():
 
 def test_concern_4_readiness_reflects_gate():
     m = _import_module()
-    r = m.concern_4_readiness({"smoke_artifacts": ["a.csv"], "timing_gate": "READY", "controlled_campaign_started": False})
+    c4 = {"smoke_artifacts_expected": 9, "smoke_artifacts_count": 9, "smoke_artifacts_missing": [],
+          "timing_gate": "READY", "controlled_campaign_started": False}
+    r = m.concern_4_readiness(c4)
     assert r == {"smoke": "COMPLETE", "controlled_timing": "READY"}

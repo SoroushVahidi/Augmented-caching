@@ -38,5 +38,5 @@ This directory contains detailed technical documentation for the Augmented Cachi
 
 ## Historical and internal notes
 
-- **[Archive](README.md)**: (This file)
+- **Archival Material**: See [docs/archival/](archival/) for historical reports and references.
 - **Internal Notes**: See `docs/internal_*` for author-facing working notes and novelty guardrails.
