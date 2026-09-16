@@ -14,7 +14,14 @@
 #SBATCH --error=slurm/logs/%x-%A_%a.err
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR}"
-source .venv/bin/activate 2>/dev/null || true
+# The frozen model was pickled under scikit-learn 1.8.0; the shared
+# /mmfs1/home/sv96/lafc-work/Augmented-caching/.venv runs 1.9.0 and cannot
+# unpickle it (sklearn 1.9 removed _hist_gradient_boosting._loss). Use the
+# campaign-scoped, isolated venv pinned to 1.8.0 instead. See
+# analysis/pe_publication_learned_closed_loop_20260916/WULVER_RUNTIME_ENVIRONMENT.json
+PE_LEARNED_CL_VENV="${PE_LEARNED_CL_VENV:-/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_publication_learned_closed_loop_20260916/env/sklearn180}"
+source "${PE_LEARNED_CL_VENV}/bin/activate"
+python3 -c "import sklearn; assert sklearn.__version__ == '1.8.0', sklearn.__version__"
 export PYTHONPATH="${PWD}/src"
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 MODEL="${MODEL_PATH:-/mmfs1/project/ikoutis/sv96/lafc-evict/pe_publication_learned_model_attempt2_20260916/model/pe_evict_value_h16_hist_gb_attempt2_20260915.pkl}"

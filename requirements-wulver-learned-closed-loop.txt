@@ -1,0 +1,9 @@
+# Pinned runtime dependencies to reproduce the isolated Wulver venv used for
+# the pe-publication-learned-closed-loop-20260916 campaign's frozen model
+# (scikit-learn 1.8.0, matching MODEL_PROVENANCE.json's training environment).
+# Build with: python3 -m venv env/sklearn180 && pip install -r requirements-wulver-learned-closed-loop.txt
+scikit-learn==1.8.0
+numpy==2.3.5
+scipy==1.17.1
+joblib==1.6.0
+threadpoolctl==3.7.0

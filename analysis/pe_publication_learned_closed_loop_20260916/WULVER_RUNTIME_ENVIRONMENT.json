@@ -1,0 +1,36 @@
+{
+  "purpose": "Isolated Wulver Python environment for the frozen learned model, created solely because the shared /mmfs1/home/sv96/lafc-work/Augmented-caching/.venv runs scikit-learn 1.9.0, which cannot unpickle the model frozen under scikit-learn 1.8.0 (ModuleNotFoundError: No module named '_loss', since sklearn 1.9 removed sklearn.ensemble._hist_gradient_boosting._loss).",
+  "created_utc": "2026-09-16T17:49:10Z",
+  "venv_path": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_publication_learned_closed_loop_20260916/env/sklearn180",
+  "base_interpreter": "/apps/easybuild/software/Anaconda3/2023.09-0/bin/python3.11",
+  "creation_method": "python3 -m venv (no --system-site-packages; isolated from the shared 1.9.0 venv)",
+  "shared_venv_modified": false,
+  "shared_venv_path": "/mmfs1/home/sv96/lafc-work/Augmented-caching/.venv",
+  "shared_venv_sklearn_version": "1.9.0",
+  "python_version": "3.11.5",
+  "packages": {
+    "scikit-learn": "1.8.0",
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "joblib": "1.6.0",
+    "threadpoolctl": "3.7.0"
+  },
+  "pinned_from_training_provenance": ["scikit-learn", "numpy"],
+  "resolved_by_pip": ["scipy", "joblib", "threadpoolctl"],
+  "training_provenance_source": "analysis/pe_publication_learned_retrain_attempt2_20260915/MODEL_PROVENANCE.json",
+  "training_python_version": "3.12.3",
+  "training_platform": "Linux-7.0.0-29-generic-x86_64-with-glibc2.39 (host al-khwarizmi, off-cluster)",
+  "note_on_python_version_mismatch": "Training used Python 3.12.3 off-cluster; this Wulver venv uses 3.11.5 (the only readily available interpreter matching an existing, working venv pattern on this cluster). scikit-learn model pickles are not Python-version-sensitive in the way they are sklearn-version-sensitive; verified empirically by a successful model load and finite, non-degenerate predictions on real frozen feature rows (see model_load_verification below) rather than assumed.",
+  "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+  "model_load_verification": {
+    "loaded_without_warning_or_error": true,
+    "estimator_type": "sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingRegressor",
+    "n_features_in_": 26,
+    "tiny_prediction_all_zero_features": 11.316844998165793,
+    "real_feature_row_predictions_vs_y_loss_target_15.0": [13.948977, 12.914985, 14.864812, 12.707415, 12.92269],
+    "reference_sample_source": "analysis/pe_publication_learned_retrain_attempt2_20260915/clean_process_prediction_sample.csv",
+    "note": "clean_process_prediction_sample.csv stores the training target y_loss, not a stored model output, so this is a sanity/reasonableness check (finite, non-degenerate, in the right neighborhood) rather than an exact reproducibility oracle."
+  },
+  "installation_method": "pip install \"scikit-learn==1.8.0\" \"numpy==2.3.5\" from PyPI (outbound internet confirmed reachable from the Wulver login node)",
+  "runner_test_verification": "16/16 tests pass under this venv: tests/test_lfu.py, tests/test_pe_learned_closed_loop.py, tests/test_pe_tier2_launch_guard.py"
+}
