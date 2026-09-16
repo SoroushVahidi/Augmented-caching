@@ -39,11 +39,12 @@ Generated from existing Slurm accounting and durable PROJECT artifacts only. No 
 - `analysis/pe_long_horizon_production_v1/manifests/campaign_manifest.json`
 - `analysis/pe_long_horizon_production_v1/provenance/campaign_relaunch_record.json`
 - `analysis/pe_long_horizon_production_v1/checksums.sha256`
-- `analysis/pe_long_horizon_production_v1/logs/campaign_monitor.log`
 - `analysis/pe_long_horizon_production_v1/summaries/table_A_family_capacity_horizon.csv`
 - `analysis/pe_long_horizon_production_v1/summaries/table_B_horizon_pooled.json`
 - `analysis/pe_long_horizon_production_v1/summaries/table_C_h16_deltas.json`
 - `analysis/pe_long_horizon_production_v1/summaries/table_C_stepwise_deltas.json`
+
+The durable PROJECT campaign monitor log remains external at `/mmfs1/project/ikoutis/sv96/lafc-evict/pe_long_horizon_production_v1/logs/campaign_monitor.log`. Local `logs/` paths are intentionally ignored by repository policy and were not force-added.
 
 ## Verification
 
