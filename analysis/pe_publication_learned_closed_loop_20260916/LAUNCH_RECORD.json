@@ -1,0 +1,42 @@
+{
+  "submitted_utc": "2026-09-16T17:51:00Z",
+  "campaign_branch": "experiment/pe-publication-learned-closed-loop-20260916",
+  "campaign_commit": "9684b4dac6e107289738e8d3cdb801b04dd4ef78",
+  "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+  "protocol_sha256": "897b8d42ebfcb7e401a5bbac5245186acba4608a7d3b4af23694d6ca1aeff4b1",
+  "feature_manifest_sha256": "de7c1a2bb0a6f23a421635a82c53c1a9be78a36e2e5e62a744826d4fef9522bd",
+  "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+  "campaign_manifest_path": "analysis/pe_publication_learned_closed_loop_20260916/campaign_manifest.json",
+  "runtime_environment_record": "analysis/pe_publication_learned_closed_loop_20260916/WULVER_RUNTIME_ENVIRONMENT.json",
+  "runtime_venv_path": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_publication_learned_closed_loop_20260916/env/sklearn180",
+  "runtime_python_version": "3.11.5",
+  "runtime_sklearn_version": "1.8.0",
+  "slurm": {
+    "production_job_id": "1291048",
+    "production_sbatch": "slurm/pe_learned_cl_prod.sbatch",
+    "production_array": "0-249%20",
+    "validation_job_id": "1291049",
+    "validation_sbatch": "slurm/pe_learned_cl_validate.sbatch",
+    "validation_dependency": "afterok:1291048",
+    "aggregation_job_id": "1291050",
+    "aggregation_sbatch": "slurm/pe_learned_cl_aggregate.sbatch",
+    "aggregation_dependency": "afterok:1291049",
+    "submit_dir": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_publication_learned_closed_loop_20260916/code",
+    "submit_dir_head_at_submission": "9684b4dac6e107289738e8d3cdb801b04dd4ef78"
+  },
+  "scratch_root": "/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_publication_learned_closed_loop_20260916",
+  "project_root": "/mmfs1/project/ikoutis/sv96/lafc-evict/pe_publication_learned_closed_loop_20260916",
+  "health_check_at_submission": {
+    "checked_utc": "2026-09-16T17:52:30Z",
+    "duration_approx_seconds": 150,
+    "production_running": 10,
+    "production_pending_dependency_none": true,
+    "production_completed_so_far": 240,
+    "production_failed": 0,
+    "nonempty_stderr_logs": 0,
+    "result_statuses_seen": {"COMPLETED": 240},
+    "validation_state": "PENDING(Dependency)",
+    "aggregation_state": "PENDING(Dependency)",
+    "note": "The 10 still-running tasks are the 'learned' policy (one per cell, the only policy that scores every request through the model); the other 240 deterministic/random tasks completed within ~1 minute of submission with zero errors."
+  }
+}
