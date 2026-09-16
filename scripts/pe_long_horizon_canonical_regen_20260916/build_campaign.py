@@ -23,7 +23,10 @@ RELEASE_DECISION_VIEW = Path(
     "lafc-evict-v0.1-open-current-contract-preserved/data/decision_view/decision_view.parquet"
 )
 TRACE_ROOT_CANDIDATES = [
+    Path(os.environ["TRACE_SOURCE_ROOT"]) if os.environ.get("TRACE_SOURCE_ROOT") else None,
     REPO,
+    Path("/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/source_traces"),
+    Path("/mmfs1/home/sv96/lafc-work/Augmented-caching"),
     Path("/home/soroush/projects/augmented-caching/repo"),
 ]
 FAMILIES = ["cloudphysics", "metacdn", "metakv", "twemcache", "wiki2018"]
@@ -57,7 +60,12 @@ def load_trace_manifest() -> dict[str, dict[str, str]]:
 
 
 def resolve_trace_path(rel_path: str) -> Path | None:
+    p = Path(rel_path)
+    if p.is_absolute() and p.exists():
+        return p
     for root in TRACE_ROOT_CANDIDATES:
+        if root is None:
+            continue
         p = root / rel_path
         if p.exists():
             return p
@@ -135,8 +143,11 @@ def build_manifest() -> None:
                 "reader_facing_family": READER_NAMES.get(family, family),
                 "capacity": cap,
                 "horizons": HORIZONS,
-                "trace_path": str(resolved_trace_path),
+                "trace_path": trace["path"],
                 "canonical_manifest_trace_path": trace["path"],
+                "preparation_resolved_trace_path": str(resolved_trace_path),
+                "trace_line_count": sum(1 for _ in resolved_trace_path.open("rb")),
+                "trace_sha256": sha256_file(resolved_trace_path),
                 "trace_name": trace["trace_name"],
                 "dataset_source": trace["dataset_source"],
                 "trace_family": trace["trace_family"],
@@ -158,6 +169,10 @@ def build_manifest() -> None:
             ("canonical_h16_release_decision_view", str(RELEASE_DECISION_VIEW)),
             ("canonical_trace_manifest", str(CANONICAL_MANIFEST.relative_to(REPO))),
             ("canonical_trace_manifest_sha256", sha256_file(CANONICAL_MANIFEST)),
+            (
+                "trace_source_resolution",
+                "Resolve task.trace_path relative to TRACE_SOURCE_ROOT, or to the execution worktree/source-trace root.",
+            ),
             ("families", FAMILIES),
             ("excluded_families", ["brightkite", "citibike"]),
             ("capacities", CAPACITIES),

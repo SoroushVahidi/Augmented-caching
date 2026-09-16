@@ -45,10 +45,15 @@ TASK_ID="$(python3 -c "import json,sys; print(json.loads(sys.argv[1])['task_id']
 FAMILY="$(python3 -c "import json,sys; print(json.loads(sys.argv[1])['family'])" "${TASK_JSON}")"
 CAPACITY="$(python3 -c "import json,sys; print(json.loads(sys.argv[1])['capacity'])" "${TASK_JSON}")"
 TRACE_PATH="$(python3 -c "import json,sys; print(json.loads(sys.argv[1])['trace_path'])" "${TASK_JSON}")"
+CANONICAL_MANIFEST_TRACE_PATH="$(python3 -c "import json,sys; print(json.loads(sys.argv[1]).get('canonical_manifest_trace_path', json.loads(sys.argv[1])['trace_path']))" "${TASK_JSON}")"
 TRACE_NAME="$(python3 -c "import json,sys; print(json.loads(sys.argv[1])['trace_name'])" "${TASK_JSON}")"
 DATASET_SOURCE="$(python3 -c "import json,sys; print(json.loads(sys.argv[1])['dataset_source'])" "${TASK_JSON}")"
 TRACE_FAMILY="$(python3 -c "import json,sys; print(json.loads(sys.argv[1])['trace_family'])" "${TASK_JSON}")"
 OUT_DIR="$(python3 -c "import json,sys; print(json.loads(sys.argv[1])['out_dir'])" "${TASK_JSON}")"
+TRACE_SOURCE_ROOT="${TRACE_SOURCE_ROOT:-/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/source_traces}"
+if [[ "${TRACE_PATH}" != /* ]]; then
+  TRACE_PATH="${TRACE_SOURCE_ROOT%/}/${TRACE_PATH}"
+fi
 
 COMPLETION_MARKER="${OUT_DIR}/COMPLETE.json"
 INCOMPLETE_MARKER="${OUT_DIR}/INCOMPLETE.json"
@@ -112,6 +117,8 @@ json.dump({
   'capacity': int('${CAPACITY}'),
   'horizons': [32, 64, 128],
   'trace_path': '${TRACE_PATH}',
+  'canonical_manifest_trace_path': '${CANONICAL_MANIFEST_TRACE_PATH}',
+  'trace_source_root': '${TRACE_SOURCE_ROOT}',
   'trace_name': '${TRACE_NAME}',
   'dataset_source': '${DATASET_SOURCE}',
   'trace_family': '${TRACE_FAMILY}',

@@ -44,8 +44,10 @@ Canonical H16 decision authority:
 
 - namespace: `pe_long_horizon_canonical_regen_20260916`
 - manifest: `configs/pe_long_horizon_canonical_regen_20260916/manifest.json`
-- manifest SHA256: `84d268de8cbf82f4bef58aa9003ac324788a430ae0b5460d0297f0a7c36de624`
+- manifest SHA256: `24830d0c5a6689e74705c91be305cf5e43cf65bd9666cce6facb0c95a0976ef0`
 - run root: `/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916`
+- Wulver source root: `/mmfs1/scratch/ikoutis/sv96/lafc-evict/pe_long_horizon_canonical_regen_20260916/source_traces`
+- Production resolves canonical manifest-relative `data/processed/.../trace.jsonl` paths under `TRACE_SOURCE_ROOT`; do not use the dirty Wulver home checkout as the production trace source unless checksums match this handoff.
 - physical tasks: `20`
 - logical family x capacity x horizon cells: `60`
 - production array: `0-19%10`
