@@ -1,0 +1,12 @@
+{
+  "status": "COMPLETE_VALID",
+  "final_stage": "test_stage_complete",
+  "process_active": false,
+  "tmux_active": false,
+  "historical_pid": 4020712,
+  "historical_tmux_session": "pe-learned-attempt2-test",
+  "completion_marker": "TEST_EVALUATION_COMPLETE.json",
+  "final_completion_time_utc": "2026-09-16T09:35:45.872105+00:00",
+  "publication_gate": "PASS",
+  "notes": "Terminal status recorded after Query 3 terminality audit. Historical PID and tmux session are retained in EXECUTION_STATE.json for provenance; they are not active."
+}

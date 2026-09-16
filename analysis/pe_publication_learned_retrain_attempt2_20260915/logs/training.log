@@ -1,0 +1,18 @@
+TRAINING_SCRIPT_START=2026-09-15T21:22:38-04:00
+WORKTREE=/home/soroush/projects/augmented-caching/worktrees/pe-publication-learned-retrain-attempt2-20260915
+BRANCH=experiment/pe-publication-learned-retrain-attempt2-20260915
+HEAD=4d2a9fd18fd8c67b19dcccfea0b0769ad784f6d1
+PYTHON=/home/soroush/modal-venv/bin/python
+Python 3.12.3
+{
+  "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+  "selected_model": "hist_gb",
+  "status": "TRAINING_STAGE_COMPLETE",
+  "train_decisions": 12000,
+  "train_rows": 1440000,
+  "training_end": "2026-09-16T01:25:49.045829+00:00",
+  "training_start": "2026-09-16T01:25:32.145570+00:00",
+  "validation_decisions": 12000,
+  "validation_rows": 1440000
+}
+TRAINING_SCRIPT_END=2026-09-15T21:34:59-04:00

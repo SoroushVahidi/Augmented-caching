@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "all_five_pe_families_handled": true,
+    "candidate_rows_inherit_decision_split": true,
+    "capacities_handled_consistently": true,
+    "h16_only": true,
+    "no_decision_id_in_more_than_one_split": true,
+    "no_identical_candidate_key_crosses_splits": true,
+    "no_trace_time_overlap": true,
+    "purge_ranges_respected": true,
+    "test_disjoint_from_training": true,
+    "test_disjoint_from_validation": true,
+    "validation_disjoint_from_training": true
+  },
+  "dataset_manifest_sha256": "268c72fe7a59f4327bd5df49fcdc6b7cbd3ecc183ad46974899202e17a038e1e",
+  "feature_leakage_gate": "PASS",
+  "feature_manifest_sha256": "de7c1a2bb0a6f23a421635a82c53c1a9be78a36e2e5e62a744826d4fef9522bd",
+  "split_integrity": "PASS",
+  "split_integrity_sha256": "447f69075ccd06fef68d70471954df9044726fad24b7af66c3f08ebecd338b5c",
+  "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+  "training_sample_manifest_sha256": "45aa357565c89fda5b87c58bfb4a93feb5755f43f68d971e49a3a8a32c2536cf"
+}

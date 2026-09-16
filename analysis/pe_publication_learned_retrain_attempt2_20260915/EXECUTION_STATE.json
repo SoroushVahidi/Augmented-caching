@@ -1,0 +1,13 @@
+{
+  "HEAD": "4d2a9fd18fd8c67b19dcccfea0b0769ad784f6d1",
+  "branch": "experiment/pe-publication-learned-retrain-attempt2-20260915",
+  "last_completed_stage": "TEST_EVALUATION_COMPLETE",
+  "log_path": "/home/soroush/projects/augmented-caching/worktrees/pe-publication-learned-retrain-attempt2-20260915/analysis/pe_publication_learned_retrain_attempt2_20260915/logs/test.log",
+  "model_selection_frozen": true,
+  "pid": 4020712,
+  "stage": "test_stage_complete",
+  "test_completed": true,
+  "test_started": true,
+  "tmux_session": "pe-learned-attempt2-test",
+  "update_time": "2026-09-16T09:35:45.876358+00:00"
+}

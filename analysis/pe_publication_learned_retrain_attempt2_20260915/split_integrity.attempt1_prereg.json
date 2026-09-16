@@ -1,0 +1,440 @@
+{
+  "checks": {
+    "all_five_pe_families_handled": true,
+    "candidate_rows_inherit_decision_split": true,
+    "capacities_handled_consistently": true,
+    "h16_only": true,
+    "no_decision_id_in_more_than_one_split": true,
+    "no_identical_candidate_key_crosses_splits": true,
+    "no_trace_time_overlap": true,
+    "purge_ranges_respected": true,
+    "test_disjoint_from_training": true,
+    "test_disjoint_from_validation": true,
+    "validation_disjoint_from_training": true
+  },
+  "counts_by_family_capacity_split": [
+    {
+      "capacity": 32,
+      "decisions": 9265,
+      "new_split": "test",
+      "rows": 296480,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 32,
+      "decisions": 29536,
+      "new_split": "train",
+      "rows": 945152,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 32,
+      "decisions": 9423,
+      "new_split": "validation",
+      "rows": 301536,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 64,
+      "decisions": 9132,
+      "new_split": "test",
+      "rows": 584448,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 64,
+      "decisions": 29115,
+      "new_split": "train",
+      "rows": 1863360,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 64,
+      "decisions": 9252,
+      "new_split": "validation",
+      "rows": 592128,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 128,
+      "decisions": 8999,
+      "new_split": "test",
+      "rows": 1151872,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 128,
+      "decisions": 28544,
+      "new_split": "train",
+      "rows": 3653632,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 128,
+      "decisions": 9090,
+      "new_split": "validation",
+      "rows": 1163520,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 256,
+      "decisions": 8886,
+      "new_split": "test",
+      "rows": 2274816,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 256,
+      "decisions": 27939,
+      "new_split": "train",
+      "rows": 7152384,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 256,
+      "decisions": 8904,
+      "new_split": "validation",
+      "rows": 2279424,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 32,
+      "decisions": 5339,
+      "new_split": "test",
+      "rows": 170848,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 32,
+      "decisions": 18121,
+      "new_split": "train",
+      "rows": 579872,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 32,
+      "decisions": 5309,
+      "new_split": "validation",
+      "rows": 169888,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 64,
+      "decisions": 5147,
+      "new_split": "test",
+      "rows": 329408,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 64,
+      "decisions": 17645,
+      "new_split": "train",
+      "rows": 1129280,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 64,
+      "decisions": 5194,
+      "new_split": "validation",
+      "rows": 332416,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 128,
+      "decisions": 5006,
+      "new_split": "test",
+      "rows": 640768,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 128,
+      "decisions": 17050,
+      "new_split": "train",
+      "rows": 2182400,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 128,
+      "decisions": 5081,
+      "new_split": "validation",
+      "rows": 650368,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 256,
+      "decisions": 4814,
+      "new_split": "test",
+      "rows": 1232384,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 256,
+      "decisions": 16465,
+      "new_split": "train",
+      "rows": 4215040,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 256,
+      "decisions": 4931,
+      "new_split": "validation",
+      "rows": 1262336,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 32,
+      "decisions": 7262,
+      "new_split": "test",
+      "rows": 232384,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 32,
+      "decisions": 22726,
+      "new_split": "train",
+      "rows": 727232,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 32,
+      "decisions": 7281,
+      "new_split": "validation",
+      "rows": 232992,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 64,
+      "decisions": 7251,
+      "new_split": "test",
+      "rows": 464064,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 64,
+      "decisions": 22694,
+      "new_split": "train",
+      "rows": 1452416,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 64,
+      "decisions": 7271,
+      "new_split": "validation",
+      "rows": 465344,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 128,
+      "decisions": 7237,
+      "new_split": "test",
+      "rows": 926336,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 128,
+      "decisions": 22603,
+      "new_split": "train",
+      "rows": 2893184,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 128,
+      "decisions": 7260,
+      "new_split": "validation",
+      "rows": 929280,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 256,
+      "decisions": 7201,
+      "new_split": "test",
+      "rows": 1843456,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 256,
+      "decisions": 22301,
+      "new_split": "train",
+      "rows": 5709056,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 256,
+      "decisions": 7225,
+      "new_split": "validation",
+      "rows": 1849600,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 32,
+      "decisions": 6925,
+      "new_split": "test",
+      "rows": 221600,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 32,
+      "decisions": 23019,
+      "new_split": "train",
+      "rows": 736608,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 32,
+      "decisions": 7271,
+      "new_split": "validation",
+      "rows": 232672,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 64,
+      "decisions": 6330,
+      "new_split": "test",
+      "rows": 405120,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 64,
+      "decisions": 21120,
+      "new_split": "train",
+      "rows": 1351680,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 64,
+      "decisions": 6708,
+      "new_split": "validation",
+      "rows": 429312,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 128,
+      "decisions": 5734,
+      "new_split": "test",
+      "rows": 733952,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 128,
+      "decisions": 18880,
+      "new_split": "train",
+      "rows": 2416640,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 128,
+      "decisions": 6040,
+      "new_split": "validation",
+      "rows": 773120,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 256,
+      "decisions": 5237,
+      "new_split": "test",
+      "rows": 1340672,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 256,
+      "decisions": 17338,
+      "new_split": "train",
+      "rows": 4438528,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 256,
+      "decisions": 5626,
+      "new_split": "validation",
+      "rows": 1440256,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 32,
+      "decisions": 9482,
+      "new_split": "test",
+      "rows": 303424,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 32,
+      "decisions": 29981,
+      "new_split": "train",
+      "rows": 959392,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 32,
+      "decisions": 9481,
+      "new_split": "validation",
+      "rows": 303392,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 64,
+      "decisions": 9475,
+      "new_split": "test",
+      "rows": 606400,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 64,
+      "decisions": 29962,
+      "new_split": "train",
+      "rows": 1917568,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 64,
+      "decisions": 9475,
+      "new_split": "validation",
+      "rows": 606400,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 128,
+      "decisions": 9463,
+      "new_split": "test",
+      "rows": 1211264,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 128,
+      "decisions": 29923,
+      "new_split": "train",
+      "rows": 3830144,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 128,
+      "decisions": 9462,
+      "new_split": "validation",
+      "rows": 1211136,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 256,
+      "decisions": 9437,
+      "new_split": "test",
+      "rows": 2415872,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 256,
+      "decisions": 29846,
+      "new_split": "train",
+      "rows": 7640576,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 256,
+      "decisions": 9437,
+      "new_split": "validation",
+      "rows": 2415872,
+      "trace_family": "wiki2018"
+    }
+  ],
+  "interval_failures": [],
+  "overlap_decisions": 0,
+  "status": "PASS"
+}

@@ -1,0 +1,11 @@
+TEST_SCRIPT_START=2026-09-15T21:44:23-04:00
+WORKTREE=/home/soroush/projects/augmented-caching/worktrees/pe-publication-learned-retrain-attempt2-20260915
+BRANCH=experiment/pe-publication-learned-retrain-attempt2-20260915
+HEAD=4d2a9fd18fd8c67b19dcccfea0b0769ad784f6d1
+PYTHON=/home/soroush/modal-venv/bin/python
+Python 3.12.3
+{
+  "publication_gate": "PASS",
+  "status": "TEST_STAGE_COMPLETE"
+}
+TEST_SCRIPT_END=2026-09-16T05:35:46-04:00

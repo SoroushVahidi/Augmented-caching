@@ -1,0 +1,17 @@
+{
+  "attempt_id": "pe_publication_learned_retrain_attempt2_20260915",
+  "forbidden_for_selection": [
+    "test metrics",
+    "attempt1 partial model",
+    "attempt1 test exposure"
+  ],
+  "frozen_at": "2026-09-16T01:22:39.395833+00:00",
+  "primary_metric": "mean decision-level validation regret",
+  "secondary_metrics_in_order": [
+    "non-tied validation regret",
+    "optimal-set selection rate on informative decisions",
+    "validation MAE",
+    "inference cost"
+  ],
+  "selection_key_implementation": "scripts.pe_publication_learned_retrain.selection_key"
+}

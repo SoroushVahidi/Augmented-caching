@@ -1,0 +1,14 @@
+{
+  "cap128": {
+    "estimated_50k_replay": 949.5195600902663,
+    "feature_time": 0.018617366359103472,
+    "predict_time": 0.0002773195831105113,
+    "selection_time": 9.570525959134102e-05
+  },
+  "cap32": {
+    "estimated_50k_replay": 43.14126225654036,
+    "feature_time": 0.0007722457614727318,
+    "predict_time": 7.656254805624485e-05,
+    "selection_time": 1.4016935601830482e-05
+  }
+}

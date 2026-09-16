@@ -1,0 +1,27 @@
+{
+  "attempt1_test_exposure": {
+    "classification": "UNKNOWN",
+    "evidence": {
+      "clean_process_reproducibility_exists": false,
+      "future_closed_loop_manifest_exists": false,
+      "model_provenance_exists": true,
+      "test_results_json_exists": false,
+      "training_summary_json_exists": false
+    },
+    "reason": "No durable test metric artifact exists, but the interrupted script would have loaded test rows immediately after writing MODEL_PROVENANCE.json; without a terminal log the absence of output is not proof of non-access."
+  },
+  "candidate_names": [
+    "hist_gb",
+    "ridge"
+  ],
+  "config_sha256": "ba9625ee598ab7b7ad0c1cdec2b0478eb6fb62fbb8398bb0941455aa1e75d2b3",
+  "feature_count": 26,
+  "git": {
+    "branch": "experiment/pe-publication-learned-retrain-attempt2-20260915",
+    "head": "4d2a9fd18fd8c67b19dcccfea0b0769ad784f6d1"
+  },
+  "horizon": 16,
+  "status": "PREFLIGHT_PASS",
+  "target": "y_loss",
+  "time": "2026-09-16T01:22:21.063984+00:00"
+}

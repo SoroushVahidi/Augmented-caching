@@ -1,0 +1,135 @@
+{
+  "DESIGN_L": {
+    "estimated_wallclock_seconds": 215.7063112827018,
+    "runs": 5
+  },
+  "DESIGN_L_PLUS": {
+    "estimated_wallclock_seconds": 4963.3041117340335,
+    "runs": 10
+  },
+  "capacities": [
+    32,
+    128
+  ],
+  "cells": [
+    {
+      "capacity": 32,
+      "estimated_runtime_seconds": 43.14126225654036,
+      "family": "cloudphysics",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "policy_valid": true,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40518..49999",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    {
+      "capacity": 128,
+      "estimated_runtime_seconds": 949.5195600902663,
+      "family": "cloudphysics",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "policy_valid": true,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40542..49999",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    {
+      "capacity": 32,
+      "estimated_runtime_seconds": 43.14126225654036,
+      "family": "metacdn",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "policy_valid": true,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40518..49996",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    {
+      "capacity": 128,
+      "estimated_runtime_seconds": 949.5195600902663,
+      "family": "metacdn",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "policy_valid": true,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40548..49996",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    {
+      "capacity": 32,
+      "estimated_runtime_seconds": 43.14126225654036,
+      "family": "metakv",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "policy_valid": true,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40523..49999",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    {
+      "capacity": 128,
+      "estimated_runtime_seconds": 949.5195600902663,
+      "family": "metakv",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "policy_valid": true,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40550..49999",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    {
+      "capacity": 32,
+      "estimated_runtime_seconds": 43.14126225654036,
+      "family": "twemcache",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "policy_valid": true,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40520..49999",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    {
+      "capacity": 128,
+      "estimated_runtime_seconds": 949.5195600902663,
+      "family": "twemcache",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "policy_valid": true,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40552..49997",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    {
+      "capacity": 32,
+      "estimated_runtime_seconds": 43.14126225654036,
+      "family": "wiki2018",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "policy_valid": true,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40518..49999",
+      "training_overlap": false,
+      "validation_overlap": false
+    },
+    {
+      "capacity": 128,
+      "estimated_runtime_seconds": 949.5195600902663,
+      "family": "wiki2018",
+      "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+      "policy_valid": true,
+      "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90",
+      "test_request_range": "40537..49999",
+      "training_overlap": false,
+      "validation_overlap": false
+    }
+  ],
+  "families": [
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+  "split_manifest_sha256": "4783d96b1ecc242bf726943ba7f960605e3502ceb389cb9866ab17e93cf54b90"
+}

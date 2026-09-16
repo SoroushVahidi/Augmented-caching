@@ -1,0 +1,9 @@
+{
+  "clean_process_reproducibility_pass": true,
+  "feature_leakage_gate_pass": true,
+  "missing": [],
+  "old_attempt1_model_used": false,
+  "split_integrity_pass": true,
+  "status": "PASS",
+  "test_used_for_model_selection": false
+}

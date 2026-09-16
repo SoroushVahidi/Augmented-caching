@@ -1,0 +1,306 @@
+{
+  "audit": {
+    "excluded": [
+      "y_loss",
+      "y_value",
+      "optimal_candidate_page_ids",
+      "regret_*",
+      "split",
+      "decision_id",
+      "decision_t",
+      "decision_chunk_id",
+      "candidate_page_id"
+    ],
+    "feature_count": 26,
+    "features": [
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "request_bucket",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "bucket/prediction metadata on incoming request",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "request_confidence",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "confidence metadata on incoming request",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "candidate_bucket",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "latest known bucket metadata for candidate object",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "candidate_confidence",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "latest known confidence metadata for candidate object",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "candidate_recency_rank",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "candidate position in current LRU order",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "candidate_age_norm",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "candidate recency rank normalized by cache size",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "candidate_predictor_score",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "online predictor eviction score from current cache metadata",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "candidate_lru_score",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "online LRU eviction score from current cache order",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "candidate_is_predictor_victim",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "whether current predictor heuristic would evict candidate",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "candidate_is_lru_victim",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "whether current LRU heuristic would evict candidate",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "score_gap_to_predictor_best",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "candidate predictor-score gap to current predictor victim",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "score_gap_to_lru_victim",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "candidate LRU-score gap to current LRU victim",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "bucket_gap_to_predictor_best",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "candidate bucket gap to current predictor victim",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "bucket_gap_to_lru_victim",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "candidate bucket gap to current LRU victim",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "confidence_gap_to_predictor_best",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "candidate confidence gap to current predictor victim",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "confidence_gap_to_lru_victim",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "candidate confidence gap to current LRU victim",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "cache_bucket_mean",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "mean bucket value across cache contents",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "cache_bucket_std",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "standard deviation of bucket values across cache contents",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "cache_bucket_min",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "minimum bucket value across cache contents",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "cache_bucket_max",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "maximum bucket value across cache contents",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "cache_unique_bucket_count",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "number of distinct bucket values in cache",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "cache_confidence_mean",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "mean confidence across cache contents",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "cache_confidence_std",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "standard deviation of confidence across cache contents",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "predictor_lru_disagree",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "whether predictor and LRU heuristic victims differ",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "recent_candidate_request_rate",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "candidate request frequency in bounded recent history",
+        "target_derived": false
+      },
+      {
+        "allowed": true,
+        "computed_from_eviction_time_information": true,
+        "constant": false,
+        "feature": "recent_candidate_hit_rate",
+        "future_information": false,
+        "release_placeholder": false,
+        "semantic_meaning": "candidate hit frequency in bounded recent history",
+        "target_derived": false
+      }
+    ]
+  },
+  "ordered_feature_names": [
+    "request_bucket",
+    "request_confidence",
+    "candidate_bucket",
+    "candidate_confidence",
+    "candidate_recency_rank",
+    "candidate_age_norm",
+    "candidate_predictor_score",
+    "candidate_lru_score",
+    "candidate_is_predictor_victim",
+    "candidate_is_lru_victim",
+    "score_gap_to_predictor_best",
+    "score_gap_to_lru_victim",
+    "bucket_gap_to_predictor_best",
+    "bucket_gap_to_lru_victim",
+    "confidence_gap_to_predictor_best",
+    "confidence_gap_to_lru_victim",
+    "cache_bucket_mean",
+    "cache_bucket_std",
+    "cache_bucket_min",
+    "cache_bucket_max",
+    "cache_unique_bucket_count",
+    "cache_confidence_mean",
+    "cache_confidence_std",
+    "predictor_lru_disagree",
+    "recent_candidate_request_rate",
+    "recent_candidate_hit_rate"
+  ]
+}

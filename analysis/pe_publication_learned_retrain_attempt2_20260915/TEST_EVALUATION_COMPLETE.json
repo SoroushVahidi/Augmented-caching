@@ -1,0 +1,10 @@
+{
+  "clean_process_reproducibility": "PASS",
+  "completed_at": "2026-09-16T09:35:45.872105+00:00",
+  "future_closed_loop_manifest_sha256": "0eff72b20814e7a8a08631ebf7f1a65f90bfc20ca55b2af35eff77c50501aa1d",
+  "inference_benchmark_sha256": "a2f2c87d3c38a109eac88a29c37d792cce800af52df4c0312d56080dac179eaa",
+  "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+  "status": "TEST_EVALUATION_COMPLETE",
+  "test_evaluated_after_freeze": true,
+  "test_results_sha256": "8913f73cc2de094b32d6db6c42f33ed20eaecdf60e5e5f076f2bc60abbe8db08"
+}

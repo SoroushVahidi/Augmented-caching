@@ -1,0 +1,7 @@
+{
+  "model_name": "pe_evict_value_h16_hist_gb_attempt2_20260915",
+  "model_sha256": "8ba5f6e17b9293615b811b1922317ec7b1fe51769d2377f9846ede579062bcd6",
+  "prediction_digest": "53e1bc2921a43564af2eb13a8ccbe33284dab9b5377512a59c327a90f3dc37eb",
+  "sample_mae": 1.7905310181453413,
+  "status": "PASS"
+}

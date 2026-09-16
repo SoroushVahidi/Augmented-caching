@@ -1,0 +1,44 @@
+{
+  "lru_feature": {
+    "all_tied_decisions": 91965.0,
+    "decisions": 147622.0,
+    "informative_decisions": 55657.0,
+    "mae": 13.224302881562455,
+    "mean_regret": 0.004376041511427836,
+    "median_regret": 0.0,
+    "non_tied_mean_regret": 0.01160680597229459,
+    "non_tied_optimal_set_selection_rate": 0.988411161219613,
+    "optimal_set_selection_rate": 0.9956307325466394,
+    "rmse": 13.610936924054386,
+    "rows": 17385568.0,
+    "strict_pairwise_accuracy": 0.007651011799012757
+  },
+  "predictor_feature": {
+    "all_tied_decisions": 91965.0,
+    "decisions": 147622.0,
+    "informative_decisions": 55657.0,
+    "mae": 13.224302881562455,
+    "mean_regret": 0.004376041511427836,
+    "median_regret": 0.0,
+    "non_tied_mean_regret": 0.01160680597229459,
+    "non_tied_optimal_set_selection_rate": 0.988411161219613,
+    "optimal_set_selection_rate": 0.9956307325466394,
+    "rmse": 13.610936924054386,
+    "rows": 17385568.0,
+    "strict_pairwise_accuracy": 0.007651011799012757
+  },
+  "random_candidate": {
+    "all_tied_decisions": 91965.0,
+    "decisions": 147622.0,
+    "informative_decisions": 55657.0,
+    "mae": 13.224302881562455,
+    "mean_regret": 0.013358442508569183,
+    "median_regret": 0.0,
+    "non_tied_mean_regret": 0.03543130244174138,
+    "non_tied_optimal_set_selection_rate": 0.9649460085883177,
+    "optimal_set_selection_rate": 0.9867838127108426,
+    "rmse": 13.610936924054386,
+    "rows": 17385568.0,
+    "strict_pairwise_accuracy": 0.00751155157031196
+  }
+}

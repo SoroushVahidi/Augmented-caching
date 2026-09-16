@@ -1,0 +1,233 @@
+{
+  "by_family_capacity": [
+    {
+      "capacity": 32,
+      "decisions": 49241,
+      "max_decision_t": 49999,
+      "min_decision_t": 32,
+      "rows": 1575712,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 64,
+      "decisions": 48511,
+      "max_decision_t": 49999,
+      "min_decision_t": 73,
+      "rows": 3104704,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 128,
+      "decisions": 47620,
+      "max_decision_t": 49999,
+      "min_decision_t": 149,
+      "rows": 6095360,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 256,
+      "decisions": 46701,
+      "max_decision_t": 49999,
+      "min_decision_t": 277,
+      "rows": 11955456,
+      "trace_family": "cloudphysics"
+    },
+    {
+      "capacity": 32,
+      "decisions": 29348,
+      "max_decision_t": 49996,
+      "min_decision_t": 44,
+      "rows": 939136,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 64,
+      "decisions": 28552,
+      "max_decision_t": 49996,
+      "min_decision_t": 91,
+      "rows": 1827328,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 128,
+      "decisions": 27683,
+      "max_decision_t": 49996,
+      "min_decision_t": 194,
+      "rows": 3543424,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 256,
+      "decisions": 26737,
+      "max_decision_t": 49996,
+      "min_decision_t": 402,
+      "rows": 6844672,
+      "trace_family": "metacdn"
+    },
+    {
+      "capacity": 32,
+      "decisions": 38032,
+      "max_decision_t": 49999,
+      "min_decision_t": 56,
+      "rows": 1217024,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 64,
+      "decisions": 37977,
+      "max_decision_t": 49999,
+      "min_decision_t": 101,
+      "rows": 2430528,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 128,
+      "decisions": 37856,
+      "max_decision_t": 49999,
+      "min_decision_t": 192,
+      "rows": 4845568,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 256,
+      "decisions": 37486,
+      "max_decision_t": 49999,
+      "min_decision_t": 430,
+      "rows": 9596416,
+      "trace_family": "metakv"
+    },
+    {
+      "capacity": 32,
+      "decisions": 37849,
+      "max_decision_t": 49999,
+      "min_decision_t": 40,
+      "rows": 1211168,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 64,
+      "decisions": 34748,
+      "max_decision_t": 49999,
+      "min_decision_t": 74,
+      "rows": 2223872,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 128,
+      "decisions": 31195,
+      "max_decision_t": 49997,
+      "min_decision_t": 202,
+      "rows": 3992960,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 256,
+      "decisions": 28706,
+      "max_decision_t": 49997,
+      "min_decision_t": 455,
+      "rows": 7348736,
+      "trace_family": "twemcache"
+    },
+    {
+      "capacity": 32,
+      "decisions": 49968,
+      "max_decision_t": 49999,
+      "min_decision_t": 32,
+      "rows": 1598976,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 64,
+      "decisions": 49936,
+      "max_decision_t": 49999,
+      "min_decision_t": 64,
+      "rows": 3195904,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 128,
+      "decisions": 49872,
+      "max_decision_t": 49999,
+      "min_decision_t": 128,
+      "rows": 6383616,
+      "trace_family": "wiki2018"
+    },
+    {
+      "capacity": 256,
+      "decisions": 49744,
+      "max_decision_t": 49999,
+      "min_decision_t": 256,
+      "rows": 12734464,
+      "trace_family": "wiki2018"
+    }
+  ],
+  "capacities": [
+    32,
+    64,
+    128,
+    256
+  ],
+  "families": [
+    "cloudphysics",
+    "metacdn",
+    "metakv",
+    "twemcache",
+    "wiki2018"
+  ],
+  "horizon": 16,
+  "split_design_evaluation": {
+    "blocked_temporal": "selected: within each trace/capacity, train precedes validation, validation precedes test, with purge gaps",
+    "family_level_holdout": "rejected for this artifact because later closed-loop PE cells must cover every publication family; leave-one-family-out would train separate fold models rather than one frozen selector",
+    "trace_level_holdout": "not feasible: the frozen publication subset has one trace per family"
+  },
+  "trace_count": 5,
+  "traces": [
+    {
+      "decisions": 192073,
+      "max_decision_t": 49999,
+      "min_decision_t": 32,
+      "rows": 22731232,
+      "trace_family": "cloudphysics",
+      "trace_name": "cloudphysics_alibaba_block_head_50k"
+    },
+    {
+      "decisions": 112320,
+      "max_decision_t": 49996,
+      "min_decision_t": 44,
+      "rows": 13154560,
+      "trace_family": "metacdn",
+      "trace_name": "metacdn_cdn_202303_head_50k"
+    },
+    {
+      "decisions": 151351,
+      "max_decision_t": 49999,
+      "min_decision_t": 56,
+      "rows": 18089536,
+      "trace_family": "metakv",
+      "trace_name": "metakv_kvcache_202206_head_50k"
+    },
+    {
+      "decisions": 132498,
+      "max_decision_t": 49999,
+      "min_decision_t": 40,
+      "rows": 14776736,
+      "trace_family": "twemcache",
+      "trace_name": "twemcache_cluster26_sample100_50k"
+    },
+    {
+      "decisions": 199520,
+      "max_decision_t": 49999,
+      "min_decision_t": 32,
+      "rows": 23912960,
+      "trace_family": "wiki2018",
+      "trace_name": "wiki2018_pageviews_en_50k"
+    }
+  ],
+  "traces_per_family": {
+    "cloudphysics": 1,
+    "metacdn": 1,
+    "metakv": 1,
+    "twemcache": 1,
+    "wiki2018": 1
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "attempt_id": "pe_publication_learned_retrain_attempt2_20260915",
+  "candidates": {
+    "hist_gb": {
+      "class": "sklearn.ensemble.HistGradientBoostingRegressor",
+      "params": {
+        "l2_regularization": 0.0,
+        "learning_rate": 0.05,
+        "max_iter": 120,
+        "max_leaf_nodes": 31,
+        "random_state": 20260915
+      }
+    },
+    "ridge": {
+      "class": "sklearn.pipeline.Pipeline(StandardScaler, Ridge)",
+      "params": {
+        "ridge__alpha": 1.0
+      }
+    }
+  },
+  "frozen_at": "2026-09-16T01:22:39.395690+00:00",
+  "thread_count": {
+    "MKL_NUM_THREADS": null,
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": null
+  },
+  "verified_preregistered_source": "/home/soroush/projects/augmented-caching/worktrees/pe-publication-learned-retrain-attempt2-20260915/configs/pe_publication_learned_retrain_attempt2_h16.json"
+}

@@ -1,0 +1,32 @@
+{
+  "candidate_config_sha256": "cf9ac21fba8727fc004b8add341ed12271c138e9f286f65ee37dd58a3621cc22",
+  "candidate_order": [
+    "hist_gb",
+    "ridge"
+  ],
+  "decision_time": "2026-09-16T01:34:59.302309+00:00",
+  "selected_model": "hist_gb",
+  "selected_validation_global": {
+    "all_tied_decisions": 6774.0,
+    "decisions": 12000.0,
+    "informative_decisions": 5226.0,
+    "mae": 2.6669223447850174,
+    "mean_regret": 0.06908333333333333,
+    "median_regret": 0.0,
+    "non_tied_mean_regret": 0.1586299272866437,
+    "non_tied_optimal_set_selection_rate": 0.8434749330271718,
+    "optimal_set_selection_rate": 0.9318333333333333,
+    "rmse": 3.203083013146604,
+    "rows": 1440000.0,
+    "strict_pairwise_accuracy": 0.4849276578757466
+  },
+  "selection_protocol_sha256": "bae440eda829922655224819e796b1f2f9701081a979a5ca16cdddd8d004b44b",
+  "selection_rule": [
+    "minimize validation mean decision-level regret",
+    "break ties by non-tied mean regret",
+    "then optimal-set selection rate on non-tied decisions",
+    "then validation MAE",
+    "then inference cost"
+  ],
+  "test_used_for_model_selection": false
+}

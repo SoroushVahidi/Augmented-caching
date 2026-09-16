@@ -1,0 +1,8 @@
+{
+  "model_class": "sklearn.pipeline.Pipeline",
+  "model_path": "models/pe_publication_learned_retrain_attempt2_20260915/candidates/pe_publication_learned_retrain_attempt2_20260915_ridge.pkl",
+  "model_sha256": "2ca6c0aafe5275a65f1317db2cb8dfaa624e652c43b2219b81b7d6e653a4cf89",
+  "status": "TRAINING_COMPLETE",
+  "training_end": "2026-09-16T01:25:49.045829+00:00",
+  "training_start": "2026-09-16T01:25:32.145570+00:00"
+}
