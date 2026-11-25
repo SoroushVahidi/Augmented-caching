@@ -3,7 +3,7 @@ name: Python tests
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, "review/**"]
 
 permissions:
   contents: read
@@ -26,3 +26,9 @@ jobs:
       - run: python -m pip install -e '.[dev]'
       - run: python -m pytest -q
       - run: python -m lafc.runner.run_policy --policy lru --trace data/example_unweighted.json --capacity 3
+      - name: Verify preserved research artifacts
+        shell: bash
+        run: |
+          if [[ -f post-acceptance-research/MANIFEST.sha256 ]]; then
+            sha256sum --strict --quiet -c post-acceptance-research/MANIFEST.sha256
+          fi

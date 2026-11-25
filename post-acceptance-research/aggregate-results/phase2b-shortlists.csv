@@ -1,0 +1,757 @@
+family,capacity,mechanism,k,metadata,decisions,all_candidate_opportunities,covered_opportunities,available_positive_actions,shortlisted_positive_actions,sum_best_advantage,all_candidate_sum_best,construction_seconds
+brightkite,32,lru_tail,4,resident recency,56,6,0,78,0,0,6,4.600733518600464e-06
+brightkite,32,lru_tail,8,resident recency,56,6,1,78,2,1,6,4.600733518600464e-06
+brightkite,32,lru_tail,16,resident recency,56,6,4,78,18,4,6,4.600733518600464e-06
+brightkite,32,lru_tail,32,resident recency,56,6,6,78,78,6,6,4.600733518600464e-06
+brightkite,32,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,6,0,78,0,0,6,0.0007786881178617477
+brightkite,32,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,6,6,78,18,6,6,0.0007786881178617477
+brightkite,32,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,6,6,78,48,6,6,0.0007786881178617477
+brightkite,32,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,6,6,78,78,6,6,0.0007786881178617477
+brightkite,32,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,6,2,78,2,2,6,0.0003232862800359726
+brightkite,32,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,6,3,78,13,3,6,0.0003232862800359726
+brightkite,32,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,6,5,78,42,5,6,0.0003232862800359726
+brightkite,32,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,6,6,78,78,6,6,0.0003232862800359726
+brightkite,32,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,6,0,78,0,0,6,0.0002952422946691513
+brightkite,32,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,6,6,78,18,6,6,0.0002952422946691513
+brightkite,32,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,6,6,78,48,6,6,0.0002952422946691513
+brightkite,32,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,6,6,78,78,6,6,0.0002952422946691513
+brightkite,32,uniform_7,4,random generator and resident recency,56,6,5,78,10,5,6,0.00048642419278621674
+brightkite,32,uniform_7,8,random generator and resident recency,56,6,5,78,20,5,6,0.00048642419278621674
+brightkite,32,uniform_7,16,random generator and resident recency,56,6,6,78,37,6,6,0.00048642419278621674
+brightkite,32,uniform_7,32,random generator and resident recency,56,6,6,78,78,6,6,0.00048642419278621674
+brightkite,32,uniform_19,4,random generator and resident recency,56,6,6,78,10,6,6,0.00033780932426452637
+brightkite,32,uniform_19,8,random generator and resident recency,56,6,6,78,19,6,6,0.00033780932426452637
+brightkite,32,uniform_19,16,random generator and resident recency,56,6,6,78,41,6,6,0.00033780932426452637
+brightkite,32,uniform_19,32,random generator and resident recency,56,6,6,78,78,6,6,0.00033780932426452637
+brightkite,32,uniform_42,4,random generator and resident recency,56,6,6,78,8,6,6,0.0002986826002597809
+brightkite,32,uniform_42,8,random generator and resident recency,56,6,6,78,16,6,6,0.0002986826002597809
+brightkite,32,uniform_42,16,random generator and resident recency,56,6,6,78,35,6,6,0.0002986826002597809
+brightkite,32,uniform_42,32,random generator and resident recency,56,6,6,78,78,6,6,0.0002986826002597809
+brightkite,32,uniform_101,4,random generator and resident recency,56,6,6,78,7,6,6,0.00027996674180030823
+brightkite,32,uniform_101,8,random generator and resident recency,56,6,6,78,18,6,6,0.00027996674180030823
+brightkite,32,uniform_101,16,random generator and resident recency,56,6,6,78,37,6,6,0.00027996674180030823
+brightkite,32,uniform_101,32,random generator and resident recency,56,6,6,78,78,6,6,0.00027996674180030823
+brightkite,32,uniform_20261125,4,random generator and resident recency,56,6,5,78,9,5,6,0.00027423910796642303
+brightkite,32,uniform_20261125,8,random generator and resident recency,56,6,5,78,15,5,6,0.00027423910796642303
+brightkite,32,uniform_20261125,16,random generator and resident recency,56,6,6,78,37,6,6,0.00027423910796642303
+brightkite,32,uniform_20261125,32,random generator and resident recency,56,6,6,78,78,6,6,0.00027423910796642303
+brightkite,64,lru_tail,4,resident recency,56,7,2,231,4,2,7,4.410743713378906e-06
+brightkite,64,lru_tail,8,resident recency,56,7,2,231,12,2,7,4.410743713378906e-06
+brightkite,64,lru_tail,16,resident recency,56,7,3,231,33,3,7,4.410743713378906e-06
+brightkite,64,lru_tail,32,resident recency,56,7,5,231,104,5,7,4.410743713378906e-06
+brightkite,64,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,7,3,231,8,3,7,0.0007728263735771179
+brightkite,64,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,7,3,231,19,3,7,0.0007728263735771179
+brightkite,64,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,7,5,231,57,5,7,0.0007728263735771179
+brightkite,64,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,7,7,231,129,7,7,0.0007728263735771179
+brightkite,64,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,7,2,231,5,2,7,0.00032387860119342804
+brightkite,64,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,7,4,231,16,4,7,0.00032387860119342804
+brightkite,64,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,7,5,231,49,5,7,0.00032387860119342804
+brightkite,64,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,7,7,231,124,7,7,0.00032387860119342804
+brightkite,64,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,7,3,231,8,3,7,0.00034646131098270416
+brightkite,64,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,7,3,231,19,3,7,0.00034646131098270416
+brightkite,64,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,7,5,231,57,5,7,0.00034646131098270416
+brightkite,64,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,7,7,231,133,7,7,0.00034646131098270416
+brightkite,64,uniform_7,4,random generator and resident recency,56,7,7,231,13,7,7,0.0004954710602760315
+brightkite,64,uniform_7,8,random generator and resident recency,56,7,7,231,30,7,7,0.0004954710602760315
+brightkite,64,uniform_7,16,random generator and resident recency,56,7,7,231,60,7,7,0.0004954710602760315
+brightkite,64,uniform_7,32,random generator and resident recency,56,7,7,231,109,7,7,0.0004954710602760315
+brightkite,64,uniform_19,4,random generator and resident recency,56,7,5,231,10,5,7,0.00034770742058753967
+brightkite,64,uniform_19,8,random generator and resident recency,56,7,7,231,25,7,7,0.00034770742058753967
+brightkite,64,uniform_19,16,random generator and resident recency,56,7,7,231,55,7,7,0.00034770742058753967
+brightkite,64,uniform_19,32,random generator and resident recency,56,7,7,231,115,7,7,0.00034770742058753967
+brightkite,64,uniform_42,4,random generator and resident recency,56,7,7,231,12,7,7,0.000305933877825737
+brightkite,64,uniform_42,8,random generator and resident recency,56,7,7,231,24,7,7,0.000305933877825737
+brightkite,64,uniform_42,16,random generator and resident recency,56,7,7,231,59,7,7,0.000305933877825737
+brightkite,64,uniform_42,32,random generator and resident recency,56,7,7,231,117,7,7,0.000305933877825737
+brightkite,64,uniform_101,4,random generator and resident recency,56,7,5,231,12,5,7,0.00028513185679912567
+brightkite,64,uniform_101,8,random generator and resident recency,56,7,7,231,22,7,7,0.00028513185679912567
+brightkite,64,uniform_101,16,random generator and resident recency,56,7,7,231,47,7,7,0.00028513185679912567
+brightkite,64,uniform_101,32,random generator and resident recency,56,7,7,231,106,7,7,0.00028513185679912567
+brightkite,64,uniform_20261125,4,random generator and resident recency,56,7,6,231,15,6,7,0.00027966685593128204
+brightkite,64,uniform_20261125,8,random generator and resident recency,56,7,6,231,33,6,7,0.00027966685593128204
+brightkite,64,uniform_20261125,16,random generator and resident recency,56,7,6,231,62,6,7,0.00027966685593128204
+brightkite,64,uniform_20261125,32,random generator and resident recency,56,7,7,231,118,7,7,0.00027966685593128204
+brightkite,128,lru_tail,4,resident recency,56,5,0,244,0,0,6,4.351139068603516e-06
+brightkite,128,lru_tail,8,resident recency,56,5,0,244,0,0,6,4.351139068603516e-06
+brightkite,128,lru_tail,16,resident recency,56,5,0,244,0,0,6,4.351139068603516e-06
+brightkite,128,lru_tail,32,resident recency,56,5,1,244,9,1,6,4.351139068603516e-06
+brightkite,128,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,5,0,244,0,0,6,0.0008818488568067551
+brightkite,128,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,5,0,244,0,0,6,0.0008818488568067551
+brightkite,128,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,5,1,244,4,1,6,0.0008818488568067551
+brightkite,128,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,5,2,244,21,3,6,0.0008818488568067551
+brightkite,128,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,5,0,244,0,0,6,0.0003349762409925461
+brightkite,128,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,5,0,244,0,0,6,0.0003349762409925461
+brightkite,128,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,5,2,244,10,2,6,0.0003349762409925461
+brightkite,128,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,5,2,244,39,3,6,0.0003349762409925461
+brightkite,128,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,5,0,244,0,0,6,0.0004279688000679016
+brightkite,128,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,5,0,244,0,0,6,0.0004279688000679016
+brightkite,128,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,5,1,244,4,1,6,0.0004279688000679016
+brightkite,128,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,5,2,244,21,3,6,0.0004279688000679016
+brightkite,128,uniform_7,4,random generator and resident recency,56,5,3,244,7,4,6,0.000527726486325264
+brightkite,128,uniform_7,8,random generator and resident recency,56,5,5,244,13,6,6,0.000527726486325264
+brightkite,128,uniform_7,16,random generator and resident recency,56,5,5,244,27,6,6,0.000527726486325264
+brightkite,128,uniform_7,32,random generator and resident recency,56,5,5,244,57,6,6,0.000527726486325264
+brightkite,128,uniform_19,4,random generator and resident recency,56,5,3,244,4,4,6,0.00036852993071079254
+brightkite,128,uniform_19,8,random generator and resident recency,56,5,4,244,7,5,6,0.00036852993071079254
+brightkite,128,uniform_19,16,random generator and resident recency,56,5,4,244,22,5,6,0.00036852993071079254
+brightkite,128,uniform_19,32,random generator and resident recency,56,5,5,244,58,6,6,0.00036852993071079254
+brightkite,128,uniform_42,4,random generator and resident recency,56,5,2,244,3,3,6,0.00033343397080898285
+brightkite,128,uniform_42,8,random generator and resident recency,56,5,5,244,14,6,6,0.00033343397080898285
+brightkite,128,uniform_42,16,random generator and resident recency,56,5,5,244,29,6,6,0.00033343397080898285
+brightkite,128,uniform_42,32,random generator and resident recency,56,5,5,244,54,6,6,0.00033343397080898285
+brightkite,128,uniform_101,4,random generator and resident recency,56,5,4,244,6,4,6,0.0003123972564935684
+brightkite,128,uniform_101,8,random generator and resident recency,56,5,5,244,15,6,6,0.0003123972564935684
+brightkite,128,uniform_101,16,random generator and resident recency,56,5,5,244,26,6,6,0.0003123972564935684
+brightkite,128,uniform_101,32,random generator and resident recency,56,5,5,244,56,6,6,0.0003123972564935684
+brightkite,128,uniform_20261125,4,random generator and resident recency,56,5,3,244,4,4,6,0.0003035459667444229
+brightkite,128,uniform_20261125,8,random generator and resident recency,56,5,4,244,11,5,6,0.0003035459667444229
+brightkite,128,uniform_20261125,16,random generator and resident recency,56,5,4,244,32,5,6,0.0003035459667444229
+brightkite,128,uniform_20261125,32,random generator and resident recency,56,5,5,244,56,6,6,0.0003035459667444229
+citibike,32,lru_tail,4,resident recency,56,3,0,34,0,0,3,4.45730984210968e-06
+citibike,32,lru_tail,8,resident recency,56,3,0,34,0,0,3,4.45730984210968e-06
+citibike,32,lru_tail,16,resident recency,56,3,1,34,6,1,3,4.45730984210968e-06
+citibike,32,lru_tail,32,resident recency,56,3,3,34,34,3,3,4.45730984210968e-06
+citibike,32,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,3,2,34,3,2,3,0.0007020384073257446
+citibike,32,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,3,3,34,8,3,3,0.0007020384073257446
+citibike,32,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,3,3,34,18,3,3,0.0007020384073257446
+citibike,32,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,3,3,34,34,3,3,0.0007020384073257446
+citibike,32,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,1,34,1,1,3,0.0003084912896156311
+citibike,32,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,2,34,8,2,3,0.0003084912896156311
+citibike,32,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,3,34,20,3,3,0.0003084912896156311
+citibike,32,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,3,34,34,3,3,0.0003084912896156311
+citibike,32,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,3,2,34,3,2,3,0.0002916492521762848
+citibike,32,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,3,3,34,8,3,3,0.0002916492521762848
+citibike,32,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,3,3,34,18,3,3,0.0002916492521762848
+citibike,32,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,3,3,34,34,3,3,0.0002916492521762848
+citibike,32,uniform_7,4,random generator and resident recency,56,3,1,34,2,1,3,0.0004535689949989319
+citibike,32,uniform_7,8,random generator and resident recency,56,3,2,34,7,2,3,0.0004535689949989319
+citibike,32,uniform_7,16,random generator and resident recency,56,3,3,34,19,3,3,0.0004535689949989319
+citibike,32,uniform_7,32,random generator and resident recency,56,3,3,34,34,3,3,0.0004535689949989319
+citibike,32,uniform_19,4,random generator and resident recency,56,3,2,34,3,2,3,0.0003218185156583786
+citibike,32,uniform_19,8,random generator and resident recency,56,3,2,34,6,2,3,0.0003218185156583786
+citibike,32,uniform_19,16,random generator and resident recency,56,3,2,34,15,2,3,0.0003218185156583786
+citibike,32,uniform_19,32,random generator and resident recency,56,3,3,34,34,3,3,0.0003218185156583786
+citibike,32,uniform_42,4,random generator and resident recency,56,3,1,34,3,1,3,0.00028330087661743164
+citibike,32,uniform_42,8,random generator and resident recency,56,3,2,34,8,2,3,0.00028330087661743164
+citibike,32,uniform_42,16,random generator and resident recency,56,3,3,34,18,3,3,0.00028330087661743164
+citibike,32,uniform_42,32,random generator and resident recency,56,3,3,34,34,3,3,0.00028330087661743164
+citibike,32,uniform_101,4,random generator and resident recency,56,3,1,34,1,1,3,0.0002919267863035202
+citibike,32,uniform_101,8,random generator and resident recency,56,3,2,34,7,2,3,0.0002919267863035202
+citibike,32,uniform_101,16,random generator and resident recency,56,3,3,34,15,3,3,0.0002919267863035202
+citibike,32,uniform_101,32,random generator and resident recency,56,3,3,34,34,3,3,0.0002919267863035202
+citibike,32,uniform_20261125,4,random generator and resident recency,56,3,2,34,4,2,3,0.00027029775083065033
+citibike,32,uniform_20261125,8,random generator and resident recency,56,3,3,34,11,3,3,0.00027029775083065033
+citibike,32,uniform_20261125,16,random generator and resident recency,56,3,3,34,21,3,3,0.00027029775083065033
+citibike,32,uniform_20261125,32,random generator and resident recency,56,3,3,34,34,3,3,0.00027029775083065033
+citibike,64,lru_tail,4,resident recency,56,2,0,83,0,0,3,4.4014304876327515e-06
+citibike,64,lru_tail,8,resident recency,56,2,1,83,2,1,3,4.4014304876327515e-06
+citibike,64,lru_tail,16,resident recency,56,2,1,83,10,1,3,4.4014304876327515e-06
+citibike,64,lru_tail,32,resident recency,56,2,1,83,26,1,3,4.4014304876327515e-06
+citibike,64,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,2,1,83,3,1,3,0.0008214432746171951
+citibike,64,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,2,2,83,9,3,3,0.0008214432746171951
+citibike,64,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,2,2,83,21,3,3,0.0008214432746171951
+citibike,64,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,2,2,83,43,3,3,0.0008214432746171951
+citibike,64,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,2,0,83,0,0,3,0.00032537244260311127
+citibike,64,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,2,1,83,4,1,3,0.00032537244260311127
+citibike,64,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,2,2,83,18,3,3,0.00032537244260311127
+citibike,64,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,2,2,83,43,3,3,0.00032537244260311127
+citibike,64,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,2,1,83,3,1,3,0.00038515031337738037
+citibike,64,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,2,2,83,10,3,3,0.00038515031337738037
+citibike,64,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,2,2,83,22,3,3,0.00038515031337738037
+citibike,64,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,2,2,83,44,3,3,0.00038515031337738037
+citibike,64,uniform_7,4,random generator and resident recency,56,2,2,83,5,3,3,0.0004998520016670227
+citibike,64,uniform_7,8,random generator and resident recency,56,2,2,83,10,3,3,0.0004998520016670227
+citibike,64,uniform_7,16,random generator and resident recency,56,2,2,83,23,3,3,0.0004998520016670227
+citibike,64,uniform_7,32,random generator and resident recency,56,2,2,83,40,3,3,0.0004998520016670227
+citibike,64,uniform_19,4,random generator and resident recency,56,2,2,83,3,3,3,0.00035017915070056915
+citibike,64,uniform_19,8,random generator and resident recency,56,2,2,83,8,3,3,0.00035017915070056915
+citibike,64,uniform_19,16,random generator and resident recency,56,2,2,83,21,3,3,0.00035017915070056915
+citibike,64,uniform_19,32,random generator and resident recency,56,2,2,83,44,3,3,0.00035017915070056915
+citibike,64,uniform_42,4,random generator and resident recency,56,2,2,83,4,3,3,0.00032670609652996063
+citibike,64,uniform_42,8,random generator and resident recency,56,2,2,83,10,3,3,0.00032670609652996063
+citibike,64,uniform_42,16,random generator and resident recency,56,2,2,83,19,3,3,0.00032670609652996063
+citibike,64,uniform_42,32,random generator and resident recency,56,2,2,83,42,3,3,0.00032670609652996063
+citibike,64,uniform_101,4,random generator and resident recency,56,2,1,83,3,1,3,0.00028643570840358734
+citibike,64,uniform_101,8,random generator and resident recency,56,2,2,83,5,3,3,0.00028643570840358734
+citibike,64,uniform_101,16,random generator and resident recency,56,2,2,83,16,3,3,0.00028643570840358734
+citibike,64,uniform_101,32,random generator and resident recency,56,2,2,83,39,3,3,0.00028643570840358734
+citibike,64,uniform_20261125,4,random generator and resident recency,56,2,1,83,2,1,3,0.0002815239131450653
+citibike,64,uniform_20261125,8,random generator and resident recency,56,2,1,83,6,1,3,0.0002815239131450653
+citibike,64,uniform_20261125,16,random generator and resident recency,56,2,2,83,15,3,3,0.0002815239131450653
+citibike,64,uniform_20261125,32,random generator and resident recency,56,2,2,83,40,3,3,0.0002815239131450653
+citibike,128,lru_tail,4,resident recency,56,10,0,692,0,0,12,4.557892680168152e-06
+citibike,128,lru_tail,8,resident recency,56,10,0,692,0,0,12,4.557892680168152e-06
+citibike,128,lru_tail,16,resident recency,56,10,1,692,7,1,12,4.557892680168152e-06
+citibike,128,lru_tail,32,resident recency,56,10,5,692,44,6,12,4.557892680168152e-06
+citibike,128,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,10,7,692,16,9,12,0.0009563658386468887
+citibike,128,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,10,9,692,43,11,12,0.0009563658386468887
+citibike,128,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,10,10,692,88,12,12,0.0009563658386468887
+citibike,128,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,10,10,692,187,12,12,0.0009563658386468887
+citibike,128,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,10,0,692,0,0,12,0.0003468431532382965
+citibike,128,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,10,2,692,3,2,12,0.0003468431532382965
+citibike,128,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,10,5,692,26,6,12,0.0003468431532382965
+citibike,128,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,10,9,692,121,11,12,0.0003468431532382965
+citibike,128,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,10,7,692,16,9,12,0.0005534347146749496
+citibike,128,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,10,10,692,42,12,12,0.0005534347146749496
+citibike,128,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,10,10,692,90,12,12,0.0005534347146749496
+citibike,128,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,10,10,692,186,12,12,0.0005534347146749496
+citibike,128,uniform_7,4,random generator and resident recency,56,10,9,692,23,11,12,0.0005664397031068802
+citibike,128,uniform_7,8,random generator and resident recency,56,10,9,692,43,11,12,0.0005664397031068802
+citibike,128,uniform_7,16,random generator and resident recency,56,10,10,692,78,12,12,0.0005664397031068802
+citibike,128,uniform_7,32,random generator and resident recency,56,10,10,692,164,12,12,0.0005664397031068802
+citibike,128,uniform_19,4,random generator and resident recency,56,10,8,692,17,10,12,0.00038436055183410645
+citibike,128,uniform_19,8,random generator and resident recency,56,10,9,692,42,11,12,0.00038436055183410645
+citibike,128,uniform_19,16,random generator and resident recency,56,10,9,692,79,11,12,0.00038436055183410645
+citibike,128,uniform_19,32,random generator and resident recency,56,10,10,692,169,12,12,0.00038436055183410645
+citibike,128,uniform_42,4,random generator and resident recency,56,10,8,692,17,10,12,0.0003352966159582138
+citibike,128,uniform_42,8,random generator and resident recency,56,10,8,692,34,10,12,0.0003352966159582138
+citibike,128,uniform_42,16,random generator and resident recency,56,10,10,692,81,12,12,0.0003352966159582138
+citibike,128,uniform_42,32,random generator and resident recency,56,10,10,692,172,12,12,0.0003352966159582138
+citibike,128,uniform_101,4,random generator and resident recency,56,10,7,692,13,8,12,0.0003142561763525009
+citibike,128,uniform_101,8,random generator and resident recency,56,10,10,692,35,12,12,0.0003142561763525009
+citibike,128,uniform_101,16,random generator and resident recency,56,10,10,692,84,12,12,0.0003142561763525009
+citibike,128,uniform_101,32,random generator and resident recency,56,10,10,692,175,12,12,0.0003142561763525009
+citibike,128,uniform_20261125,4,random generator and resident recency,56,10,8,692,16,10,12,0.0003040209412574768
+citibike,128,uniform_20261125,8,random generator and resident recency,56,10,9,692,32,11,12,0.0003040209412574768
+citibike,128,uniform_20261125,16,random generator and resident recency,56,10,9,692,73,11,12,0.0003040209412574768
+citibike,128,uniform_20261125,32,random generator and resident recency,56,10,10,692,153,12,12,0.0003040209412574768
+cloudphysics,32,lru_tail,4,resident recency,56,0,0,0,0,0,0,4.213303327560425e-06
+cloudphysics,32,lru_tail,8,resident recency,56,0,0,0,0,0,0,4.213303327560425e-06
+cloudphysics,32,lru_tail,16,resident recency,56,0,0,0,0,0,0,4.213303327560425e-06
+cloudphysics,32,lru_tail,32,resident recency,56,0,0,0,0,0,0,4.213303327560425e-06
+cloudphysics,32,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.00067189522087574
+cloudphysics,32,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.00067189522087574
+cloudphysics,32,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.00067189522087574
+cloudphysics,32,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.00067189522087574
+cloudphysics,32,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00030165910720825195
+cloudphysics,32,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00030165910720825195
+cloudphysics,32,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00030165910720825195
+cloudphysics,32,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00030165910720825195
+cloudphysics,32,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.000264609232544899
+cloudphysics,32,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.000264609232544899
+cloudphysics,32,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.000264609232544899
+cloudphysics,32,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.000264609232544899
+cloudphysics,32,uniform_7,4,random generator and resident recency,56,0,0,0,0,0,0,0.0004642810672521591
+cloudphysics,32,uniform_7,8,random generator and resident recency,56,0,0,0,0,0,0,0.0004642810672521591
+cloudphysics,32,uniform_7,16,random generator and resident recency,56,0,0,0,0,0,0,0.0004642810672521591
+cloudphysics,32,uniform_7,32,random generator and resident recency,56,0,0,0,0,0,0,0.0004642810672521591
+cloudphysics,32,uniform_19,4,random generator and resident recency,56,0,0,0,0,0,0,0.00032942555844783783
+cloudphysics,32,uniform_19,8,random generator and resident recency,56,0,0,0,0,0,0,0.00032942555844783783
+cloudphysics,32,uniform_19,16,random generator and resident recency,56,0,0,0,0,0,0,0.00032942555844783783
+cloudphysics,32,uniform_19,32,random generator and resident recency,56,0,0,0,0,0,0,0.00032942555844783783
+cloudphysics,32,uniform_42,4,random generator and resident recency,56,0,0,0,0,0,0,0.00028537027537822723
+cloudphysics,32,uniform_42,8,random generator and resident recency,56,0,0,0,0,0,0,0.00028537027537822723
+cloudphysics,32,uniform_42,16,random generator and resident recency,56,0,0,0,0,0,0,0.00028537027537822723
+cloudphysics,32,uniform_42,32,random generator and resident recency,56,0,0,0,0,0,0,0.00028537027537822723
+cloudphysics,32,uniform_101,4,random generator and resident recency,56,0,0,0,0,0,0,0.0002762526273727417
+cloudphysics,32,uniform_101,8,random generator and resident recency,56,0,0,0,0,0,0,0.0002762526273727417
+cloudphysics,32,uniform_101,16,random generator and resident recency,56,0,0,0,0,0,0,0.0002762526273727417
+cloudphysics,32,uniform_101,32,random generator and resident recency,56,0,0,0,0,0,0,0.0002762526273727417
+cloudphysics,32,uniform_20261125,4,random generator and resident recency,56,0,0,0,0,0,0,0.0002755243331193924
+cloudphysics,32,uniform_20261125,8,random generator and resident recency,56,0,0,0,0,0,0,0.0002755243331193924
+cloudphysics,32,uniform_20261125,16,random generator and resident recency,56,0,0,0,0,0,0,0.0002755243331193924
+cloudphysics,32,uniform_20261125,32,random generator and resident recency,56,0,0,0,0,0,0,0.0002755243331193924
+cloudphysics,64,lru_tail,4,resident recency,56,3,0,114,0,0,7,4.412606358528137e-06
+cloudphysics,64,lru_tail,8,resident recency,56,3,0,114,0,0,7,4.412606358528137e-06
+cloudphysics,64,lru_tail,16,resident recency,56,3,1,114,7,2,7,4.412606358528137e-06
+cloudphysics,64,lru_tail,32,resident recency,56,3,2,114,32,4,7,4.412606358528137e-06
+cloudphysics,64,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,3,0,114,0,0,7,0.00077800452709198
+cloudphysics,64,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,3,1,114,2,2,7,0.00077800452709198
+cloudphysics,64,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,3,1,114,9,3,7,0.00077800452709198
+cloudphysics,64,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,3,2,114,36,4,7,0.00077800452709198
+cloudphysics,64,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,3,114,8,7,7,0.000344717875123024
+cloudphysics,64,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,3,114,8,7,7,0.000344717875123024
+cloudphysics,64,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,3,114,12,7,7,0.000344717875123024
+cloudphysics,64,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,3,114,34,7,7,0.000344717875123024
+cloudphysics,64,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,3,0,114,0,0,7,0.000295441597700119
+cloudphysics,64,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,3,1,114,2,2,7,0.000295441597700119
+cloudphysics,64,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,3,1,114,9,3,7,0.000295441597700119
+cloudphysics,64,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,3,2,114,36,4,7,0.000295441597700119
+cloudphysics,64,uniform_7,4,random generator and resident recency,56,3,2,114,5,5,7,0.0005012527108192444
+cloudphysics,64,uniform_7,8,random generator and resident recency,56,3,3,114,14,7,7,0.0005012527108192444
+cloudphysics,64,uniform_7,16,random generator and resident recency,56,3,3,114,33,7,7,0.0005012527108192444
+cloudphysics,64,uniform_7,32,random generator and resident recency,56,3,3,114,63,7,7,0.0005012527108192444
+cloudphysics,64,uniform_19,4,random generator and resident recency,56,3,2,114,5,4,7,0.0003482978790998459
+cloudphysics,64,uniform_19,8,random generator and resident recency,56,3,3,114,13,6,7,0.0003482978790998459
+cloudphysics,64,uniform_19,16,random generator and resident recency,56,3,3,114,29,6,7,0.0003482978790998459
+cloudphysics,64,uniform_19,32,random generator and resident recency,56,3,3,114,58,7,7,0.0003482978790998459
+cloudphysics,64,uniform_42,4,random generator and resident recency,56,3,3,114,5,7,7,0.0003114622086286545
+cloudphysics,64,uniform_42,8,random generator and resident recency,56,3,3,114,10,7,7,0.0003114622086286545
+cloudphysics,64,uniform_42,16,random generator and resident recency,56,3,3,114,30,7,7,0.0003114622086286545
+cloudphysics,64,uniform_42,32,random generator and resident recency,56,3,3,114,59,7,7,0.0003114622086286545
+cloudphysics,64,uniform_101,4,random generator and resident recency,56,3,3,114,6,6,7,0.000285465270280838
+cloudphysics,64,uniform_101,8,random generator and resident recency,56,3,3,114,15,6,7,0.000285465270280838
+cloudphysics,64,uniform_101,16,random generator and resident recency,56,3,3,114,31,7,7,0.000285465270280838
+cloudphysics,64,uniform_101,32,random generator and resident recency,56,3,3,114,59,7,7,0.000285465270280838
+cloudphysics,64,uniform_20261125,4,random generator and resident recency,56,3,2,114,5,4,7,0.0002994462847709656
+cloudphysics,64,uniform_20261125,8,random generator and resident recency,56,3,3,114,10,6,7,0.0002994462847709656
+cloudphysics,64,uniform_20261125,16,random generator and resident recency,56,3,3,114,27,7,7,0.0002994462847709656
+cloudphysics,64,uniform_20261125,32,random generator and resident recency,56,3,3,114,56,7,7,0.0002994462847709656
+cloudphysics,128,lru_tail,4,resident recency,56,0,0,0,0,0,0,4.580244421958923e-06
+cloudphysics,128,lru_tail,8,resident recency,56,0,0,0,0,0,0,4.580244421958923e-06
+cloudphysics,128,lru_tail,16,resident recency,56,0,0,0,0,0,0,4.580244421958923e-06
+cloudphysics,128,lru_tail,32,resident recency,56,0,0,0,0,0,0,4.580244421958923e-06
+cloudphysics,128,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0008649472147226334
+cloudphysics,128,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0008649472147226334
+cloudphysics,128,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0008649472147226334
+cloudphysics,128,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0008649472147226334
+cloudphysics,128,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00035390444099903107
+cloudphysics,128,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00035390444099903107
+cloudphysics,128,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00035390444099903107
+cloudphysics,128,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00035390444099903107
+cloudphysics,128,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00033601000905036926
+cloudphysics,128,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00033601000905036926
+cloudphysics,128,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00033601000905036926
+cloudphysics,128,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00033601000905036926
+cloudphysics,128,uniform_7,4,random generator and resident recency,56,0,0,0,0,0,0,0.0005491450428962708
+cloudphysics,128,uniform_7,8,random generator and resident recency,56,0,0,0,0,0,0,0.0005491450428962708
+cloudphysics,128,uniform_7,16,random generator and resident recency,56,0,0,0,0,0,0,0.0005491450428962708
+cloudphysics,128,uniform_7,32,random generator and resident recency,56,0,0,0,0,0,0,0.0005491450428962708
+cloudphysics,128,uniform_19,4,random generator and resident recency,56,0,0,0,0,0,0,0.00038587674498558044
+cloudphysics,128,uniform_19,8,random generator and resident recency,56,0,0,0,0,0,0,0.00038587674498558044
+cloudphysics,128,uniform_19,16,random generator and resident recency,56,0,0,0,0,0,0,0.00038587674498558044
+cloudphysics,128,uniform_19,32,random generator and resident recency,56,0,0,0,0,0,0,0.00038587674498558044
+cloudphysics,128,uniform_42,4,random generator and resident recency,56,0,0,0,0,0,0,0.000342370942234993
+cloudphysics,128,uniform_42,8,random generator and resident recency,56,0,0,0,0,0,0,0.000342370942234993
+cloudphysics,128,uniform_42,16,random generator and resident recency,56,0,0,0,0,0,0,0.000342370942234993
+cloudphysics,128,uniform_42,32,random generator and resident recency,56,0,0,0,0,0,0,0.000342370942234993
+cloudphysics,128,uniform_101,4,random generator and resident recency,56,0,0,0,0,0,0,0.0003087390214204788
+cloudphysics,128,uniform_101,8,random generator and resident recency,56,0,0,0,0,0,0,0.0003087390214204788
+cloudphysics,128,uniform_101,16,random generator and resident recency,56,0,0,0,0,0,0,0.0003087390214204788
+cloudphysics,128,uniform_101,32,random generator and resident recency,56,0,0,0,0,0,0,0.0003087390214204788
+cloudphysics,128,uniform_20261125,4,random generator and resident recency,56,0,0,0,0,0,0,0.0003088284283876419
+cloudphysics,128,uniform_20261125,8,random generator and resident recency,56,0,0,0,0,0,0,0.0003088284283876419
+cloudphysics,128,uniform_20261125,16,random generator and resident recency,56,0,0,0,0,0,0,0.0003088284283876419
+cloudphysics,128,uniform_20261125,32,random generator and resident recency,56,0,0,0,0,0,0,0.0003088284283876419
+metacdn,32,lru_tail,4,resident recency,56,1,0,14,0,0,1,4.511326551437378e-06
+metacdn,32,lru_tail,8,resident recency,56,1,0,14,0,0,1,4.511326551437378e-06
+metacdn,32,lru_tail,16,resident recency,56,1,0,14,0,0,1,4.511326551437378e-06
+metacdn,32,lru_tail,32,resident recency,56,1,1,14,14,1,1,4.511326551437378e-06
+metacdn,32,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,1,0,14,0,0,1,0.000778714194893837
+metacdn,32,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,1,0,14,0,0,1,0.000778714194893837
+metacdn,32,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,1,1,14,4,1,1,0.000778714194893837
+metacdn,32,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,1,1,14,14,1,1,0.000778714194893837
+metacdn,32,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,1,1,14,2,1,1,0.00033122673630714417
+metacdn,32,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,1,1,14,3,1,1,0.00033122673630714417
+metacdn,32,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,1,1,14,3,1,1,0.00033122673630714417
+metacdn,32,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,1,1,14,14,1,1,0.00033122673630714417
+metacdn,32,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,1,0,14,0,0,1,0.000292288139462471
+metacdn,32,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,1,0,14,0,0,1,0.000292288139462471
+metacdn,32,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,1,1,14,4,1,1,0.000292288139462471
+metacdn,32,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,1,1,14,14,1,1,0.000292288139462471
+metacdn,32,uniform_7,4,random generator and resident recency,56,1,1,14,1,1,1,0.0004921872168779373
+metacdn,32,uniform_7,8,random generator and resident recency,56,1,1,14,1,1,1,0.0004921872168779373
+metacdn,32,uniform_7,16,random generator and resident recency,56,1,1,14,5,1,1,0.0004921872168779373
+metacdn,32,uniform_7,32,random generator and resident recency,56,1,1,14,14,1,1,0.0004921872168779373
+metacdn,32,uniform_19,4,random generator and resident recency,56,1,0,14,0,0,1,0.0003345683217048645
+metacdn,32,uniform_19,8,random generator and resident recency,56,1,1,14,1,1,1,0.0003345683217048645
+metacdn,32,uniform_19,16,random generator and resident recency,56,1,1,14,7,1,1,0.0003345683217048645
+metacdn,32,uniform_19,32,random generator and resident recency,56,1,1,14,14,1,1,0.0003345683217048645
+metacdn,32,uniform_42,4,random generator and resident recency,56,1,1,14,1,1,1,0.00028947368264198303
+metacdn,32,uniform_42,8,random generator and resident recency,56,1,1,14,1,1,1,0.00028947368264198303
+metacdn,32,uniform_42,16,random generator and resident recency,56,1,1,14,5,1,1,0.00028947368264198303
+metacdn,32,uniform_42,32,random generator and resident recency,56,1,1,14,14,1,1,0.00028947368264198303
+metacdn,32,uniform_101,4,random generator and resident recency,56,1,1,14,2,1,1,0.00028435513377189636
+metacdn,32,uniform_101,8,random generator and resident recency,56,1,1,14,5,1,1,0.00028435513377189636
+metacdn,32,uniform_101,16,random generator and resident recency,56,1,1,14,9,1,1,0.00028435513377189636
+metacdn,32,uniform_101,32,random generator and resident recency,56,1,1,14,14,1,1,0.00028435513377189636
+metacdn,32,uniform_20261125,4,random generator and resident recency,56,1,1,14,2,1,1,0.00027970969676971436
+metacdn,32,uniform_20261125,8,random generator and resident recency,56,1,1,14,3,1,1,0.00027970969676971436
+metacdn,32,uniform_20261125,16,random generator and resident recency,56,1,1,14,7,1,1,0.00027970969676971436
+metacdn,32,uniform_20261125,32,random generator and resident recency,56,1,1,14,14,1,1,0.00027970969676971436
+metacdn,64,lru_tail,4,resident recency,56,3,1,167,2,1,4,4.513189196586609e-06
+metacdn,64,lru_tail,8,resident recency,56,3,2,167,9,2,4,4.513189196586609e-06
+metacdn,64,lru_tail,16,resident recency,56,3,3,167,28,3,4,4.513189196586609e-06
+metacdn,64,lru_tail,32,resident recency,56,3,3,167,76,3,4,4.513189196586609e-06
+metacdn,64,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,3,1,167,3,1,4,0.00080057792365551
+metacdn,64,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,3,2,167,11,2,4,0.00080057792365551
+metacdn,64,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,3,3,167,34,3,4,0.00080057792365551
+metacdn,64,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,3,3,167,82,3,4,0.00080057792365551
+metacdn,64,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,3,167,7,3,4,0.00033132918179035187
+metacdn,64,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,3,167,19,3,4,0.00033132918179035187
+metacdn,64,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,3,167,36,3,4,0.00033132918179035187
+metacdn,64,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,3,3,167,82,4,4,0.00033132918179035187
+metacdn,64,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,3,1,167,3,1,4,0.00032662786543369293
+metacdn,64,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,3,2,167,11,2,4,0.00032662786543369293
+metacdn,64,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,3,3,167,34,3,4,0.00032662786543369293
+metacdn,64,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,3,3,167,82,3,4,0.00032662786543369293
+metacdn,64,uniform_7,4,random generator and resident recency,56,3,3,167,8,4,4,0.0005060750991106033
+metacdn,64,uniform_7,8,random generator and resident recency,56,3,3,167,20,4,4,0.0005060750991106033
+metacdn,64,uniform_7,16,random generator and resident recency,56,3,3,167,43,4,4,0.0005060750991106033
+metacdn,64,uniform_7,32,random generator and resident recency,56,3,3,167,82,4,4,0.0005060750991106033
+metacdn,64,uniform_19,4,random generator and resident recency,56,3,3,167,8,4,4,0.0003503095358610153
+metacdn,64,uniform_19,8,random generator and resident recency,56,3,3,167,17,4,4,0.0003503095358610153
+metacdn,64,uniform_19,16,random generator and resident recency,56,3,3,167,41,4,4,0.0003503095358610153
+metacdn,64,uniform_19,32,random generator and resident recency,56,3,3,167,81,4,4,0.0003503095358610153
+metacdn,64,uniform_42,4,random generator and resident recency,56,3,3,167,8,4,4,0.0003127101808786392
+metacdn,64,uniform_42,8,random generator and resident recency,56,3,3,167,18,4,4,0.0003127101808786392
+metacdn,64,uniform_42,16,random generator and resident recency,56,3,3,167,38,4,4,0.0003127101808786392
+metacdn,64,uniform_42,32,random generator and resident recency,56,3,3,167,84,4,4,0.0003127101808786392
+metacdn,64,uniform_101,4,random generator and resident recency,56,3,3,167,7,4,4,0.00028214231133461
+metacdn,64,uniform_101,8,random generator and resident recency,56,3,3,167,18,4,4,0.00028214231133461
+metacdn,64,uniform_101,16,random generator and resident recency,56,3,3,167,39,4,4,0.00028214231133461
+metacdn,64,uniform_101,32,random generator and resident recency,56,3,3,167,81,4,4,0.00028214231133461
+metacdn,64,uniform_20261125,4,random generator and resident recency,56,3,3,167,8,3,4,0.00028327852487564087
+metacdn,64,uniform_20261125,8,random generator and resident recency,56,3,3,167,18,4,4,0.00028327852487564087
+metacdn,64,uniform_20261125,16,random generator and resident recency,56,3,3,167,40,4,4,0.00028327852487564087
+metacdn,64,uniform_20261125,32,random generator and resident recency,56,3,3,167,84,4,4,0.00028327852487564087
+metacdn,128,lru_tail,4,resident recency,56,2,0,194,0,0,2,4.505738615989685e-06
+metacdn,128,lru_tail,8,resident recency,56,2,0,194,0,0,2,4.505738615989685e-06
+metacdn,128,lru_tail,16,resident recency,56,2,0,194,0,0,2,4.505738615989685e-06
+metacdn,128,lru_tail,32,resident recency,56,2,1,194,15,1,2,4.505738615989685e-06
+metacdn,128,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,2,0,194,0,0,2,0.0009344480931758881
+metacdn,128,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,2,0,194,0,0,2,0.0009344480931758881
+metacdn,128,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,2,1,194,5,1,2,0.0009344480931758881
+metacdn,128,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,2,2,194,26,2,2,0.0009344480931758881
+metacdn,128,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,2,1,194,1,1,2,0.0003509689122438431
+metacdn,128,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,2,2,194,8,2,2,0.0003509689122438431
+metacdn,128,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,2,2,194,24,2,2,0.0003509689122438431
+metacdn,128,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,2,2,194,56,2,2,0.0003509689122438431
+metacdn,128,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,2,0,194,0,0,2,0.00040339864790439606
+metacdn,128,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,2,0,194,0,0,2,0.00040339864790439606
+metacdn,128,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,2,1,194,5,1,2,0.00040339864790439606
+metacdn,128,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,2,2,194,26,2,2,0.00040339864790439606
+metacdn,128,uniform_7,4,random generator and resident recency,56,2,2,194,2,2,2,0.0005752835422754288
+metacdn,128,uniform_7,8,random generator and resident recency,56,2,2,194,9,2,2,0.0005752835422754288
+metacdn,128,uniform_7,16,random generator and resident recency,56,2,2,194,24,2,2,0.0005752835422754288
+metacdn,128,uniform_7,32,random generator and resident recency,56,2,2,194,49,2,2,0.0005752835422754288
+metacdn,128,uniform_19,4,random generator and resident recency,56,2,2,194,3,2,2,0.0003900621086359024
+metacdn,128,uniform_19,8,random generator and resident recency,56,2,2,194,10,2,2,0.0003900621086359024
+metacdn,128,uniform_19,16,random generator and resident recency,56,2,2,194,23,2,2,0.0003900621086359024
+metacdn,128,uniform_19,32,random generator and resident recency,56,2,2,194,49,2,2,0.0003900621086359024
+metacdn,128,uniform_42,4,random generator and resident recency,56,2,2,194,6,2,2,0.00034776702523231506
+metacdn,128,uniform_42,8,random generator and resident recency,56,2,2,194,11,2,2,0.00034776702523231506
+metacdn,128,uniform_42,16,random generator and resident recency,56,2,2,194,23,2,2,0.00034776702523231506
+metacdn,128,uniform_42,32,random generator and resident recency,56,2,2,194,47,2,2,0.00034776702523231506
+metacdn,128,uniform_101,4,random generator and resident recency,56,2,2,194,5,2,2,0.0003230925649404526
+metacdn,128,uniform_101,8,random generator and resident recency,56,2,2,194,12,2,2,0.0003230925649404526
+metacdn,128,uniform_101,16,random generator and resident recency,56,2,2,194,23,2,2,0.0003230925649404526
+metacdn,128,uniform_101,32,random generator and resident recency,56,2,2,194,51,2,2,0.0003230925649404526
+metacdn,128,uniform_20261125,4,random generator and resident recency,56,2,2,194,5,2,2,0.00031909719109535217
+metacdn,128,uniform_20261125,8,random generator and resident recency,56,2,2,194,11,2,2,0.00031909719109535217
+metacdn,128,uniform_20261125,16,random generator and resident recency,56,2,2,194,23,2,2,0.00031909719109535217
+metacdn,128,uniform_20261125,32,random generator and resident recency,56,2,2,194,46,2,2,0.00031909719109535217
+metakv,32,lru_tail,4,resident recency,56,0,0,0,0,0,0,4.494562745094299e-06
+metakv,32,lru_tail,8,resident recency,56,0,0,0,0,0,0,4.494562745094299e-06
+metakv,32,lru_tail,16,resident recency,56,0,0,0,0,0,0,4.494562745094299e-06
+metakv,32,lru_tail,32,resident recency,56,0,0,0,0,0,0,4.494562745094299e-06
+metakv,32,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007306225597858429
+metakv,32,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007306225597858429
+metakv,32,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007306225597858429
+metakv,32,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007306225597858429
+metakv,32,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00034382380545139313
+metakv,32,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00034382380545139313
+metakv,32,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00034382380545139313
+metakv,32,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00034382380545139313
+metakv,32,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0002861674875020981
+metakv,32,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0002861674875020981
+metakv,32,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0002861674875020981
+metakv,32,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0002861674875020981
+metakv,32,uniform_7,4,random generator and resident recency,56,0,0,0,0,0,0,0.00047993287444114685
+metakv,32,uniform_7,8,random generator and resident recency,56,0,0,0,0,0,0,0.00047993287444114685
+metakv,32,uniform_7,16,random generator and resident recency,56,0,0,0,0,0,0,0.00047993287444114685
+metakv,32,uniform_7,32,random generator and resident recency,56,0,0,0,0,0,0,0.00047993287444114685
+metakv,32,uniform_19,4,random generator and resident recency,56,0,0,0,0,0,0,0.00033428706228733063
+metakv,32,uniform_19,8,random generator and resident recency,56,0,0,0,0,0,0,0.00033428706228733063
+metakv,32,uniform_19,16,random generator and resident recency,56,0,0,0,0,0,0,0.00033428706228733063
+metakv,32,uniform_19,32,random generator and resident recency,56,0,0,0,0,0,0,0.00033428706228733063
+metakv,32,uniform_42,4,random generator and resident recency,56,0,0,0,0,0,0,0.0002885442227125168
+metakv,32,uniform_42,8,random generator and resident recency,56,0,0,0,0,0,0,0.0002885442227125168
+metakv,32,uniform_42,16,random generator and resident recency,56,0,0,0,0,0,0,0.0002885442227125168
+metakv,32,uniform_42,32,random generator and resident recency,56,0,0,0,0,0,0,0.0002885442227125168
+metakv,32,uniform_101,4,random generator and resident recency,56,0,0,0,0,0,0,0.00027616508305072784
+metakv,32,uniform_101,8,random generator and resident recency,56,0,0,0,0,0,0,0.00027616508305072784
+metakv,32,uniform_101,16,random generator and resident recency,56,0,0,0,0,0,0,0.00027616508305072784
+metakv,32,uniform_101,32,random generator and resident recency,56,0,0,0,0,0,0,0.00027616508305072784
+metakv,32,uniform_20261125,4,random generator and resident recency,56,0,0,0,0,0,0,0.0002748575061559677
+metakv,32,uniform_20261125,8,random generator and resident recency,56,0,0,0,0,0,0,0.0002748575061559677
+metakv,32,uniform_20261125,16,random generator and resident recency,56,0,0,0,0,0,0,0.0002748575061559677
+metakv,32,uniform_20261125,32,random generator and resident recency,56,0,0,0,0,0,0,0.0002748575061559677
+metakv,64,lru_tail,4,resident recency,56,0,0,0,0,0,0,4.367902874946594e-06
+metakv,64,lru_tail,8,resident recency,56,0,0,0,0,0,0,4.367902874946594e-06
+metakv,64,lru_tail,16,resident recency,56,0,0,0,0,0,0,4.367902874946594e-06
+metakv,64,lru_tail,32,resident recency,56,0,0,0,0,0,0,4.367902874946594e-06
+metakv,64,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0008080750703811646
+metakv,64,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0008080750703811646
+metakv,64,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0008080750703811646
+metakv,64,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0008080750703811646
+metakv,64,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00032789818942546844
+metakv,64,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00032789818942546844
+metakv,64,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00032789818942546844
+metakv,64,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00032789818942546844
+metakv,64,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0003303457051515579
+metakv,64,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0003303457051515579
+metakv,64,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0003303457051515579
+metakv,64,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0003303457051515579
+metakv,64,uniform_7,4,random generator and resident recency,56,0,0,0,0,0,0,0.0005047507584095001
+metakv,64,uniform_7,8,random generator and resident recency,56,0,0,0,0,0,0,0.0005047507584095001
+metakv,64,uniform_7,16,random generator and resident recency,56,0,0,0,0,0,0,0.0005047507584095001
+metakv,64,uniform_7,32,random generator and resident recency,56,0,0,0,0,0,0,0.0005047507584095001
+metakv,64,uniform_19,4,random generator and resident recency,56,0,0,0,0,0,0,0.00035535916686058044
+metakv,64,uniform_19,8,random generator and resident recency,56,0,0,0,0,0,0,0.00035535916686058044
+metakv,64,uniform_19,16,random generator and resident recency,56,0,0,0,0,0,0,0.00035535916686058044
+metakv,64,uniform_19,32,random generator and resident recency,56,0,0,0,0,0,0,0.00035535916686058044
+metakv,64,uniform_42,4,random generator and resident recency,56,0,0,0,0,0,0,0.00030549056828022003
+metakv,64,uniform_42,8,random generator and resident recency,56,0,0,0,0,0,0,0.00030549056828022003
+metakv,64,uniform_42,16,random generator and resident recency,56,0,0,0,0,0,0,0.00030549056828022003
+metakv,64,uniform_42,32,random generator and resident recency,56,0,0,0,0,0,0,0.00030549056828022003
+metakv,64,uniform_101,4,random generator and resident recency,56,0,0,0,0,0,0,0.0002793408930301666
+metakv,64,uniform_101,8,random generator and resident recency,56,0,0,0,0,0,0,0.0002793408930301666
+metakv,64,uniform_101,16,random generator and resident recency,56,0,0,0,0,0,0,0.0002793408930301666
+metakv,64,uniform_101,32,random generator and resident recency,56,0,0,0,0,0,0,0.0002793408930301666
+metakv,64,uniform_20261125,4,random generator and resident recency,56,0,0,0,0,0,0,0.00028142519295215607
+metakv,64,uniform_20261125,8,random generator and resident recency,56,0,0,0,0,0,0,0.00028142519295215607
+metakv,64,uniform_20261125,16,random generator and resident recency,56,0,0,0,0,0,0,0.00028142519295215607
+metakv,64,uniform_20261125,32,random generator and resident recency,56,0,0,0,0,0,0,0.00028142519295215607
+metakv,128,lru_tail,4,resident recency,56,0,0,0,0,0,0,4.472211003303528e-06
+metakv,128,lru_tail,8,resident recency,56,0,0,0,0,0,0,4.472211003303528e-06
+metakv,128,lru_tail,16,resident recency,56,0,0,0,0,0,0,4.472211003303528e-06
+metakv,128,lru_tail,32,resident recency,56,0,0,0,0,0,0,4.472211003303528e-06
+metakv,128,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0009457003325223923
+metakv,128,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0009457003325223923
+metakv,128,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0009457003325223923
+metakv,128,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0009457003325223923
+metakv,128,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00033640116453170776
+metakv,128,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00033640116453170776
+metakv,128,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00033640116453170776
+metakv,128,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00033640116453170776
+metakv,128,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00042165443301200867
+metakv,128,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00042165443301200867
+metakv,128,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00042165443301200867
+metakv,128,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00042165443301200867
+metakv,128,uniform_7,4,random generator and resident recency,56,0,0,0,0,0,0,0.0005483515560626984
+metakv,128,uniform_7,8,random generator and resident recency,56,0,0,0,0,0,0,0.0005483515560626984
+metakv,128,uniform_7,16,random generator and resident recency,56,0,0,0,0,0,0,0.0005483515560626984
+metakv,128,uniform_7,32,random generator and resident recency,56,0,0,0,0,0,0,0.0005483515560626984
+metakv,128,uniform_19,4,random generator and resident recency,56,0,0,0,0,0,0,0.00038878433406352997
+metakv,128,uniform_19,8,random generator and resident recency,56,0,0,0,0,0,0,0.00038878433406352997
+metakv,128,uniform_19,16,random generator and resident recency,56,0,0,0,0,0,0,0.00038878433406352997
+metakv,128,uniform_19,32,random generator and resident recency,56,0,0,0,0,0,0,0.00038878433406352997
+metakv,128,uniform_42,4,random generator and resident recency,56,0,0,0,0,0,0,0.00033132731914520264
+metakv,128,uniform_42,8,random generator and resident recency,56,0,0,0,0,0,0,0.00033132731914520264
+metakv,128,uniform_42,16,random generator and resident recency,56,0,0,0,0,0,0,0.00033132731914520264
+metakv,128,uniform_42,32,random generator and resident recency,56,0,0,0,0,0,0,0.00033132731914520264
+metakv,128,uniform_101,4,random generator and resident recency,56,0,0,0,0,0,0,0.0003106985241174698
+metakv,128,uniform_101,8,random generator and resident recency,56,0,0,0,0,0,0,0.0003106985241174698
+metakv,128,uniform_101,16,random generator and resident recency,56,0,0,0,0,0,0,0.0003106985241174698
+metakv,128,uniform_101,32,random generator and resident recency,56,0,0,0,0,0,0,0.0003106985241174698
+metakv,128,uniform_20261125,4,random generator and resident recency,56,0,0,0,0,0,0,0.00030471570789813995
+metakv,128,uniform_20261125,8,random generator and resident recency,56,0,0,0,0,0,0,0.00030471570789813995
+metakv,128,uniform_20261125,16,random generator and resident recency,56,0,0,0,0,0,0,0.00030471570789813995
+metakv,128,uniform_20261125,32,random generator and resident recency,56,0,0,0,0,0,0,0.00030471570789813995
+twemcache,32,lru_tail,4,resident recency,56,8,1,109,3,1,8,4.306435585021973e-06
+twemcache,32,lru_tail,8,resident recency,56,8,1,109,7,1,8,4.306435585021973e-06
+twemcache,32,lru_tail,16,resident recency,56,8,4,109,36,4,8,4.306435585021973e-06
+twemcache,32,lru_tail,32,resident recency,56,8,8,109,109,8,8,4.306435585021973e-06
+twemcache,32,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,8,2,109,5,2,8,0.0007177591323852539
+twemcache,32,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,8,4,109,18,4,8,0.0007177591323852539
+twemcache,32,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,8,7,109,52,7,8,0.0007177591323852539
+twemcache,32,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,8,8,109,109,8,8,0.0007177591323852539
+twemcache,32,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,8,5,109,11,5,8,0.0003117639571428299
+twemcache,32,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,8,6,109,19,6,8,0.0003117639571428299
+twemcache,32,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,8,7,109,36,7,8,0.0003117639571428299
+twemcache,32,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,8,8,109,109,8,8,0.0003117639571428299
+twemcache,32,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,8,2,109,5,2,8,0.0002833716571331024
+twemcache,32,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,8,4,109,18,4,8,0.0002833716571331024
+twemcache,32,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,8,7,109,54,7,8,0.0002833716571331024
+twemcache,32,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,8,8,109,109,8,8,0.0002833716571331024
+twemcache,32,uniform_7,4,random generator and resident recency,56,8,5,109,11,5,8,0.00047279149293899536
+twemcache,32,uniform_7,8,random generator and resident recency,56,8,6,109,27,6,8,0.00047279149293899536
+twemcache,32,uniform_7,16,random generator and resident recency,56,8,7,109,51,7,8,0.00047279149293899536
+twemcache,32,uniform_7,32,random generator and resident recency,56,8,8,109,109,8,8,0.00047279149293899536
+twemcache,32,uniform_19,4,random generator and resident recency,56,8,7,109,11,7,8,0.00033481791615486145
+twemcache,32,uniform_19,8,random generator and resident recency,56,8,7,109,24,7,8,0.00033481791615486145
+twemcache,32,uniform_19,16,random generator and resident recency,56,8,8,109,57,8,8,0.00033481791615486145
+twemcache,32,uniform_19,32,random generator and resident recency,56,8,8,109,109,8,8,0.00033481791615486145
+twemcache,32,uniform_42,4,random generator and resident recency,56,8,6,109,12,6,8,0.0002865307033061981
+twemcache,32,uniform_42,8,random generator and resident recency,56,8,7,109,30,7,8,0.0002865307033061981
+twemcache,32,uniform_42,16,random generator and resident recency,56,8,7,109,56,7,8,0.0002865307033061981
+twemcache,32,uniform_42,32,random generator and resident recency,56,8,8,109,109,8,8,0.0002865307033061981
+twemcache,32,uniform_101,4,random generator and resident recency,56,8,6,109,11,6,8,0.00027255527675151825
+twemcache,32,uniform_101,8,random generator and resident recency,56,8,6,109,24,6,8,0.00027255527675151825
+twemcache,32,uniform_101,16,random generator and resident recency,56,8,7,109,55,7,8,0.00027255527675151825
+twemcache,32,uniform_101,32,random generator and resident recency,56,8,8,109,109,8,8,0.00027255527675151825
+twemcache,32,uniform_20261125,4,random generator and resident recency,56,8,6,109,11,6,8,0.00027129054069519043
+twemcache,32,uniform_20261125,8,random generator and resident recency,56,8,6,109,27,6,8,0.00027129054069519043
+twemcache,32,uniform_20261125,16,random generator and resident recency,56,8,7,109,56,7,8,0.00027129054069519043
+twemcache,32,uniform_20261125,32,random generator and resident recency,56,8,8,109,109,8,8,0.00027129054069519043
+twemcache,64,lru_tail,4,resident recency,56,5,0,93,0,0,6,4.36045229434967e-06
+twemcache,64,lru_tail,8,resident recency,56,5,0,93,0,0,6,4.36045229434967e-06
+twemcache,64,lru_tail,16,resident recency,56,5,1,93,1,1,6,4.36045229434967e-06
+twemcache,64,lru_tail,32,resident recency,56,5,1,93,14,2,6,4.36045229434967e-06
+twemcache,64,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,5,0,93,0,0,6,0.0007953587919473648
+twemcache,64,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,5,0,93,0,0,6,0.0007953587919473648
+twemcache,64,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,5,4,93,11,5,6,0.0007953587919473648
+twemcache,64,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,5,5,93,39,6,6,0.0007953587919473648
+twemcache,64,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,5,2,93,3,3,6,0.00035183876752853394
+twemcache,64,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,5,3,93,9,4,6,0.00035183876752853394
+twemcache,64,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,5,3,93,19,4,6,0.00035183876752853394
+twemcache,64,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,5,4,93,41,5,6,0.00035183876752853394
+twemcache,64,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,5,0,93,0,0,6,0.000332903116941452
+twemcache,64,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,5,0,93,0,0,6,0.000332903116941452
+twemcache,64,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,5,4,93,11,5,6,0.000332903116941452
+twemcache,64,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,5,5,93,42,6,6,0.000332903116941452
+twemcache,64,uniform_7,4,random generator and resident recency,56,5,3,93,4,4,6,0.0004939250648021698
+twemcache,64,uniform_7,8,random generator and resident recency,56,5,4,93,9,5,6,0.0004939250648021698
+twemcache,64,uniform_7,16,random generator and resident recency,56,5,5,93,20,6,6,0.0004939250648021698
+twemcache,64,uniform_7,32,random generator and resident recency,56,5,5,93,47,6,6,0.0004939250648021698
+twemcache,64,uniform_19,4,random generator and resident recency,56,5,4,93,4,5,6,0.00034563615918159485
+twemcache,64,uniform_19,8,random generator and resident recency,56,5,4,93,11,5,6,0.00034563615918159485
+twemcache,64,uniform_19,16,random generator and resident recency,56,5,5,93,25,6,6,0.00034563615918159485
+twemcache,64,uniform_19,32,random generator and resident recency,56,5,5,93,51,6,6,0.00034563615918159485
+twemcache,64,uniform_42,4,random generator and resident recency,56,5,1,93,2,2,6,0.00030015595257282257
+twemcache,64,uniform_42,8,random generator and resident recency,56,5,4,93,10,5,6,0.00030015595257282257
+twemcache,64,uniform_42,16,random generator and resident recency,56,5,5,93,20,6,6,0.00030015595257282257
+twemcache,64,uniform_42,32,random generator and resident recency,56,5,5,93,45,6,6,0.00030015595257282257
+twemcache,64,uniform_101,4,random generator and resident recency,56,5,3,93,4,4,6,0.00027958303689956665
+twemcache,64,uniform_101,8,random generator and resident recency,56,5,4,93,12,5,6,0.00027958303689956665
+twemcache,64,uniform_101,16,random generator and resident recency,56,5,5,93,25,6,6,0.00027958303689956665
+twemcache,64,uniform_101,32,random generator and resident recency,56,5,5,93,54,6,6,0.00027958303689956665
+twemcache,64,uniform_20261125,4,random generator and resident recency,56,5,2,93,4,3,6,0.0002741776406764984
+twemcache,64,uniform_20261125,8,random generator and resident recency,56,5,4,93,10,5,6,0.0002741776406764984
+twemcache,64,uniform_20261125,16,random generator and resident recency,56,5,4,93,18,5,6,0.0002741776406764984
+twemcache,64,uniform_20261125,32,random generator and resident recency,56,5,5,93,40,6,6,0.0002741776406764984
+twemcache,128,lru_tail,4,resident recency,56,9,0,588,0,0,9,4.559755325317383e-06
+twemcache,128,lru_tail,8,resident recency,56,9,1,588,3,1,9,4.559755325317383e-06
+twemcache,128,lru_tail,16,resident recency,56,9,4,588,31,4,9,4.559755325317383e-06
+twemcache,128,lru_tail,32,resident recency,56,9,5,588,91,5,9,4.559755325317383e-06
+twemcache,128,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,9,3,588,5,3,9,0.0009349137544631958
+twemcache,128,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,9,3,588,14,3,9,0.0009349137544631958
+twemcache,128,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,9,4,588,40,4,9,0.0009349137544631958
+twemcache,128,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,9,8,588,121,8,9,0.0009349137544631958
+twemcache,128,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,9,4,588,8,4,9,0.000339290127158165
+twemcache,128,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,9,5,588,25,5,9,0.000339290127158165
+twemcache,128,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,9,6,588,58,6,9,0.000339290127158165
+twemcache,128,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,9,8,588,129,8,9,0.000339290127158165
+twemcache,128,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,9,3,588,5,3,9,0.000421229749917984
+twemcache,128,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,9,3,588,14,3,9,0.000421229749917984
+twemcache,128,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,9,4,588,40,4,9,0.000421229749917984
+twemcache,128,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,9,8,588,121,8,9,0.000421229749917984
+twemcache,128,uniform_7,4,random generator and resident recency,56,9,7,588,12,7,9,0.000544840469956398
+twemcache,128,uniform_7,8,random generator and resident recency,56,9,8,588,30,8,9,0.000544840469956398
+twemcache,128,uniform_7,16,random generator and resident recency,56,9,9,588,72,9,9,0.000544840469956398
+twemcache,128,uniform_7,32,random generator and resident recency,56,9,9,588,149,9,9,0.000544840469956398
+twemcache,128,uniform_19,4,random generator and resident recency,56,9,7,588,13,7,9,0.00038426928222179413
+twemcache,128,uniform_19,8,random generator and resident recency,56,9,9,588,29,9,9,0.00038426928222179413
+twemcache,128,uniform_19,16,random generator and resident recency,56,9,9,588,67,9,9,0.00038426928222179413
+twemcache,128,uniform_19,32,random generator and resident recency,56,9,9,588,136,9,9,0.00038426928222179413
+twemcache,128,uniform_42,4,random generator and resident recency,56,9,9,588,17,9,9,0.00033971481025218964
+twemcache,128,uniform_42,8,random generator and resident recency,56,9,9,588,38,9,9,0.00033971481025218964
+twemcache,128,uniform_42,16,random generator and resident recency,56,9,9,588,79,9,9,0.00033971481025218964
+twemcache,128,uniform_42,32,random generator and resident recency,56,9,9,588,155,9,9,0.00033971481025218964
+twemcache,128,uniform_101,4,random generator and resident recency,56,9,8,588,17,8,9,0.00031500495970249176
+twemcache,128,uniform_101,8,random generator and resident recency,56,9,9,588,37,9,9,0.00031500495970249176
+twemcache,128,uniform_101,16,random generator and resident recency,56,9,9,588,71,9,9,0.00031500495970249176
+twemcache,128,uniform_101,32,random generator and resident recency,56,9,9,588,142,9,9,0.00031500495970249176
+twemcache,128,uniform_20261125,4,random generator and resident recency,56,9,5,588,11,5,9,0.00031372345983982086
+twemcache,128,uniform_20261125,8,random generator and resident recency,56,9,7,588,31,7,9,0.00031372345983982086
+twemcache,128,uniform_20261125,16,random generator and resident recency,56,9,7,588,65,7,9,0.00031372345983982086
+twemcache,128,uniform_20261125,32,random generator and resident recency,56,9,9,588,140,9,9,0.00031372345983982086
+wiki2018,32,lru_tail,4,resident recency,56,0,0,0,0,0,0,4.289671778678894e-06
+wiki2018,32,lru_tail,8,resident recency,56,0,0,0,0,0,0,4.289671778678894e-06
+wiki2018,32,lru_tail,16,resident recency,56,0,0,0,0,0,0,4.289671778678894e-06
+wiki2018,32,lru_tail,32,resident recency,56,0,0,0,0,0,0,4.289671778678894e-06
+wiki2018,32,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0006434470415115356
+wiki2018,32,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0006434470415115356
+wiki2018,32,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0006434470415115356
+wiki2018,32,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0006434470415115356
+wiki2018,32,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00043927133083343506
+wiki2018,32,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00043927133083343506
+wiki2018,32,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00043927133083343506
+wiki2018,32,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00043927133083343506
+wiki2018,32,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0002477802336215973
+wiki2018,32,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0002477802336215973
+wiki2018,32,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0002477802336215973
+wiki2018,32,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.0002477802336215973
+wiki2018,32,uniform_7,4,random generator and resident recency,56,0,0,0,0,0,0,0.00043159350752830505
+wiki2018,32,uniform_7,8,random generator and resident recency,56,0,0,0,0,0,0,0.00043159350752830505
+wiki2018,32,uniform_7,16,random generator and resident recency,56,0,0,0,0,0,0,0.00043159350752830505
+wiki2018,32,uniform_7,32,random generator and resident recency,56,0,0,0,0,0,0,0.00043159350752830505
+wiki2018,32,uniform_19,4,random generator and resident recency,56,0,0,0,0,0,0,0.0003084838390350342
+wiki2018,32,uniform_19,8,random generator and resident recency,56,0,0,0,0,0,0,0.0003084838390350342
+wiki2018,32,uniform_19,16,random generator and resident recency,56,0,0,0,0,0,0,0.0003084838390350342
+wiki2018,32,uniform_19,32,random generator and resident recency,56,0,0,0,0,0,0,0.0003084838390350342
+wiki2018,32,uniform_42,4,random generator and resident recency,56,0,0,0,0,0,0,0.0002804510295391083
+wiki2018,32,uniform_42,8,random generator and resident recency,56,0,0,0,0,0,0,0.0002804510295391083
+wiki2018,32,uniform_42,16,random generator and resident recency,56,0,0,0,0,0,0,0.0002804510295391083
+wiki2018,32,uniform_42,32,random generator and resident recency,56,0,0,0,0,0,0,0.0002804510295391083
+wiki2018,32,uniform_101,4,random generator and resident recency,56,0,0,0,0,0,0,0.00026817433536052704
+wiki2018,32,uniform_101,8,random generator and resident recency,56,0,0,0,0,0,0,0.00026817433536052704
+wiki2018,32,uniform_101,16,random generator and resident recency,56,0,0,0,0,0,0,0.00026817433536052704
+wiki2018,32,uniform_101,32,random generator and resident recency,56,0,0,0,0,0,0,0.00026817433536052704
+wiki2018,32,uniform_20261125,4,random generator and resident recency,56,0,0,0,0,0,0,0.0002758689224720001
+wiki2018,32,uniform_20261125,8,random generator and resident recency,56,0,0,0,0,0,0,0.0002758689224720001
+wiki2018,32,uniform_20261125,16,random generator and resident recency,56,0,0,0,0,0,0,0.0002758689224720001
+wiki2018,32,uniform_20261125,32,random generator and resident recency,56,0,0,0,0,0,0,0.0002758689224720001
+wiki2018,64,lru_tail,4,resident recency,56,0,0,0,0,0,0,4.505738615989685e-06
+wiki2018,64,lru_tail,8,resident recency,56,0,0,0,0,0,0,4.505738615989685e-06
+wiki2018,64,lru_tail,16,resident recency,56,0,0,0,0,0,0,4.505738615989685e-06
+wiki2018,64,lru_tail,32,resident recency,56,0,0,0,0,0,0,4.505738615989685e-06
+wiki2018,64,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007589440792798996
+wiki2018,64,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007589440792798996
+wiki2018,64,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007589440792798996
+wiki2018,64,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007589440792798996
+wiki2018,64,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00046255066990852356
+wiki2018,64,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00046255066990852356
+wiki2018,64,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00046255066990852356
+wiki2018,64,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00046255066990852356
+wiki2018,64,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00027148984372615814
+wiki2018,64,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00027148984372615814
+wiki2018,64,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00027148984372615814
+wiki2018,64,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00027148984372615814
+wiki2018,64,uniform_7,4,random generator and resident recency,56,0,0,0,0,0,0,0.00048540718853473663
+wiki2018,64,uniform_7,8,random generator and resident recency,56,0,0,0,0,0,0,0.00048540718853473663
+wiki2018,64,uniform_7,16,random generator and resident recency,56,0,0,0,0,0,0,0.00048540718853473663
+wiki2018,64,uniform_7,32,random generator and resident recency,56,0,0,0,0,0,0,0.00048540718853473663
+wiki2018,64,uniform_19,4,random generator and resident recency,56,0,0,0,0,0,0,0.00034140609204769135
+wiki2018,64,uniform_19,8,random generator and resident recency,56,0,0,0,0,0,0,0.00034140609204769135
+wiki2018,64,uniform_19,16,random generator and resident recency,56,0,0,0,0,0,0,0.00034140609204769135
+wiki2018,64,uniform_19,32,random generator and resident recency,56,0,0,0,0,0,0,0.00034140609204769135
+wiki2018,64,uniform_42,4,random generator and resident recency,56,0,0,0,0,0,0,0.0003032814711332321
+wiki2018,64,uniform_42,8,random generator and resident recency,56,0,0,0,0,0,0,0.0003032814711332321
+wiki2018,64,uniform_42,16,random generator and resident recency,56,0,0,0,0,0,0,0.0003032814711332321
+wiki2018,64,uniform_42,32,random generator and resident recency,56,0,0,0,0,0,0,0.0003032814711332321
+wiki2018,64,uniform_101,4,random generator and resident recency,56,0,0,0,0,0,0,0.00028209388256073
+wiki2018,64,uniform_101,8,random generator and resident recency,56,0,0,0,0,0,0,0.00028209388256073
+wiki2018,64,uniform_101,16,random generator and resident recency,56,0,0,0,0,0,0,0.00028209388256073
+wiki2018,64,uniform_101,32,random generator and resident recency,56,0,0,0,0,0,0,0.00028209388256073
+wiki2018,64,uniform_20261125,4,random generator and resident recency,56,0,0,0,0,0,0,0.0002785399556159973
+wiki2018,64,uniform_20261125,8,random generator and resident recency,56,0,0,0,0,0,0,0.0002785399556159973
+wiki2018,64,uniform_20261125,16,random generator and resident recency,56,0,0,0,0,0,0,0.0002785399556159973
+wiki2018,64,uniform_20261125,32,random generator and resident recency,56,0,0,0,0,0,0,0.0002785399556159973
+wiki2018,128,lru_tail,4,resident recency,56,0,0,0,0,0,0,4.598870873451233e-06
+wiki2018,128,lru_tail,8,resident recency,56,0,0,0,0,0,0,4.598870873451233e-06
+wiki2018,128,lru_tail,16,resident recency,56,0,0,0,0,0,0,4.598870873451233e-06
+wiki2018,128,lru_tail,32,resident recency,56,0,0,0,0,0,0,4.598870873451233e-06
+wiki2018,128,low_frequency,4,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007733330130577087
+wiki2018,128,low_frequency,8,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007733330130577087
+wiki2018,128,low_frequency,16,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007733330130577087
+wiki2018,128,low_frequency,32,Phase 2A causal resident/ghost count and recency,56,0,0,0,0,0,0,0.0007733330130577087
+wiki2018,128,sieve_derived,4,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00046570971608161926
+wiki2018,128,sieve_derived,8,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00046570971608161926
+wiki2018,128,sieve_derived,16,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00046570971608161926
+wiki2018,128,sieve_derived,32,"parallel SIEVE queue, visited bits, hand and resident recency",56,0,0,0,0,0,0,0.00046570971608161926
+wiki2018,128,ghost_informed,4,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00028502941131591797
+wiki2018,128,ghost_informed,8,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00028502941131591797
+wiki2018,128,ghost_informed,16,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00028502941131591797
+wiki2018,128,ghost_informed,32,Phase 2A bounded ghost reinsertion history/count and recency,56,0,0,0,0,0,0,0.00028502941131591797
+wiki2018,128,uniform_7,4,random generator and resident recency,56,0,0,0,0,0,0,0.00051918625831604
+wiki2018,128,uniform_7,8,random generator and resident recency,56,0,0,0,0,0,0,0.00051918625831604
+wiki2018,128,uniform_7,16,random generator and resident recency,56,0,0,0,0,0,0,0.00051918625831604
+wiki2018,128,uniform_7,32,random generator and resident recency,56,0,0,0,0,0,0,0.00051918625831604
+wiki2018,128,uniform_19,4,random generator and resident recency,56,0,0,0,0,0,0,0.00036803632974624634
+wiki2018,128,uniform_19,8,random generator and resident recency,56,0,0,0,0,0,0,0.00036803632974624634
+wiki2018,128,uniform_19,16,random generator and resident recency,56,0,0,0,0,0,0,0.00036803632974624634
+wiki2018,128,uniform_19,32,random generator and resident recency,56,0,0,0,0,0,0,0.00036803632974624634
+wiki2018,128,uniform_42,4,random generator and resident recency,56,0,0,0,0,0,0,0.00032827630639076233
+wiki2018,128,uniform_42,8,random generator and resident recency,56,0,0,0,0,0,0,0.00032827630639076233
+wiki2018,128,uniform_42,16,random generator and resident recency,56,0,0,0,0,0,0,0.00032827630639076233
+wiki2018,128,uniform_42,32,random generator and resident recency,56,0,0,0,0,0,0,0.00032827630639076233
+wiki2018,128,uniform_101,4,random generator and resident recency,56,0,0,0,0,0,0,0.00030761584639549255
+wiki2018,128,uniform_101,8,random generator and resident recency,56,0,0,0,0,0,0,0.00030761584639549255
+wiki2018,128,uniform_101,16,random generator and resident recency,56,0,0,0,0,0,0,0.00030761584639549255
+wiki2018,128,uniform_101,32,random generator and resident recency,56,0,0,0,0,0,0,0.00030761584639549255
+wiki2018,128,uniform_20261125,4,random generator and resident recency,56,0,0,0,0,0,0,0.0003049038350582123
+wiki2018,128,uniform_20261125,8,random generator and resident recency,56,0,0,0,0,0,0,0.0003049038350582123
+wiki2018,128,uniform_20261125,16,random generator and resident recency,56,0,0,0,0,0,0,0.0003049038350582123
+wiki2018,128,uniform_20261125,32,random generator and resident recency,56,0,0,0,0,0,0,0.0003049038350582123

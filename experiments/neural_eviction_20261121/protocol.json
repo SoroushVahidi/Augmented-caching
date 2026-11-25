@@ -1,0 +1,128 @@
+{
+  "brightkite": {
+    "trace": "brightkite_50k",
+    "sha256": "04c8cebb51742e7f192b6654e0e3029690a74b8ff494db771f0e132dc68d01de",
+    "validation": "citibike",
+    "train": [
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "models": {
+      "best": "b81e43d326ad1d75c85b923debb3e95a89cb406f6218432bebf6d77f8bee5df0",
+      "h4_hist_gb": "b81e43d326ad1d75c85b923debb3e95a89cb406f6218432bebf6d77f8bee5df0",
+      "h4_random_forest": "95797ebb7d9f070e3f00fe1abcaa893f18a3c92bf9a9633a41d39b460b63f90a",
+      "h4_ridge": "7b37c514bd86293e4dda089eb49922cfb71de82ec9b70086da72ece458b3818d"
+    }
+  },
+  "citibike": {
+    "trace": "citibike_202401_50k",
+    "sha256": "1ddab59d9dd9cd32ced3bf7409a2e2432cc6453cd06a6837670babb7f5d77130",
+    "validation": "cloudphysics",
+    "train": [
+      "brightkite",
+      "metacdn",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "models": {
+      "best": "917431ef90be1d127c807e40984d6a4b2aff769a403fb820df5405621c8b95d9",
+      "h4_hist_gb": "917431ef90be1d127c807e40984d6a4b2aff769a403fb820df5405621c8b95d9",
+      "h4_random_forest": "8674de3465f335632fe29db8c4cedee877c31d23065b16f852461d5fc02815f5",
+      "h4_ridge": "5d10302caa2a86abf4b7e4f337dbd0ba19520f0e6df7f70a2b4b66d23c8543fa"
+    }
+  },
+  "cloudphysics": {
+    "trace": "cloudphysics_alibaba_block_head_50k",
+    "sha256": "fedb3d31ee3c1dd847d25f967392cdf0fdec1e9c1fbb6808772e281bc8d4fb57",
+    "validation": "metacdn",
+    "train": [
+      "brightkite",
+      "citibike",
+      "metakv",
+      "twemcache",
+      "wiki2018"
+    ],
+    "models": {
+      "best": "02a166238d9f0160c3f4581f6e9267e78b147cac73ea54ab108b2d332eac7dbc",
+      "h4_hist_gb": "57a187f47dbb42ad426f7df968f563ee25b5d712f48ad182c6fc12c9bb3c975f",
+      "h4_random_forest": "02a166238d9f0160c3f4581f6e9267e78b147cac73ea54ab108b2d332eac7dbc",
+      "h4_ridge": "de8dcaa768ed9bd32bb89f7159c09891ba7f728798e7eb7178a5cda6734d6c14"
+    }
+  },
+  "metacdn": {
+    "trace": "metacdn_cdn_202303_head_50k",
+    "sha256": "7301f02e1373cb7e06f1ed2c417a8ebe16581319354780f811c8d032391f4e73",
+    "validation": "metakv",
+    "train": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "twemcache",
+      "wiki2018"
+    ],
+    "models": {
+      "best": "55bdc344bbc80ca21ce60b260c7539fdc927865d48998dc7949aa3274f54c14c",
+      "h4_hist_gb": "0795af3e1e150dce82060abc3aa6a40328f2330fd6ee1c6810a30857e6191652",
+      "h4_random_forest": "55bdc344bbc80ca21ce60b260c7539fdc927865d48998dc7949aa3274f54c14c",
+      "h4_ridge": "17b047d7773ae41cdee1baef04d2752751560af32bdad5f8366d04b37a3e9339"
+    }
+  },
+  "metakv": {
+    "trace": "metakv_kvcache_202206_head_50k",
+    "sha256": "4c229e841d546cd57a2edb6e3ddc53461ff4dc03d366e9d24e4239a89db7e0de",
+    "validation": "twemcache",
+    "train": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "wiki2018"
+    ],
+    "models": {
+      "best": "0aa23b68502ef5d92f4a2e5141fc37338cd02dcaca28e9feacc6431dc8846023",
+      "h4_hist_gb": "0e9274c1f309873db440f97783816cfe71ac334da9a71f0651593eff4a8c964d",
+      "h4_random_forest": "1fddac2659af1df172339497b9b559fcfeda221645314fd7a0daa46cf932119d",
+      "h4_ridge": "0aa23b68502ef5d92f4a2e5141fc37338cd02dcaca28e9feacc6431dc8846023"
+    }
+  },
+  "twemcache": {
+    "trace": "twemcache_cluster26_sample100_50k",
+    "sha256": "62df27062ce2595c843fd91e01d26c9783ff8f165f6b26e983696eda7ada0bb9",
+    "validation": "wiki2018",
+    "train": [
+      "brightkite",
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "metakv"
+    ],
+    "models": {
+      "best": "9f4b04151743c335ea9a1466c45167e2fb63e4cbaeabfd293b9e69f420287075",
+      "h4_hist_gb": "ded26fc267c2095fac9740d78cad130179ae4b5a9333ebd353dfb0e83f17615d",
+      "h4_random_forest": "9f4b04151743c335ea9a1466c45167e2fb63e4cbaeabfd293b9e69f420287075",
+      "h4_ridge": "8d4008263e5f808a98870d2eb09c5e89bf070a5399e07c344169c7d794f43c6f"
+    }
+  },
+  "wiki2018": {
+    "trace": "wiki2018_pageviews_en_50k",
+    "sha256": "3813084bebfcf463ac22a685494b46aea45aded55d314411c9fbb058b5d67608",
+    "validation": "brightkite",
+    "train": [
+      "citibike",
+      "cloudphysics",
+      "metacdn",
+      "metakv",
+      "twemcache"
+    ],
+    "models": {
+      "best": "0143abd42eba342f7e06da87b9796d74655d3ac3aa27e074eccf6d477ce2f5a4",
+      "h4_hist_gb": "0143abd42eba342f7e06da87b9796d74655d3ac3aa27e074eccf6d477ce2f5a4",
+      "h4_random_forest": "3005e7a5e7c1f0ceda37295b9a5d90f3011e0c4030667dea16b5f2cafcfd1597",
+      "h4_ridge": "8b280a4ee30a20d53e716df6cdb31aacc35744d611f95918cd9e81421fdbe210"
+    }
+  }
+}

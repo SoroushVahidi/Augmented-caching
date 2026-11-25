@@ -1,0 +1,25 @@
+{
+  "unexplained_mismatches": 0,
+  "exhaustive_case_count": 26530,
+  "randomized_case_count": 10000,
+  "randomized_by_capacity": {
+    "1": 1250,
+    "2": 1250,
+    "4": 1250,
+    "8": 1250,
+    "32": 1250,
+    "64": 1250,
+    "128": 1250,
+    "256": 1250
+  },
+  "structured_case_count": 44,
+  "elapsed_seconds": 46.63871245458722,
+  "seed": 20261125,
+  "authoritative_simulator": "lafc.evict_value_v2_rollout.simulate_rollout_misses",
+  "compiled_comparators": [
+    "generalized November exhaustive",
+    "Phase 2A paired ordered coalescence"
+  ],
+  "legacy_horizon_zero_issue": "Phase 2A paired replay starts recording at request one. Its archived horizons are positive.",
+  "archive_validation": "recorded separately after verified joins"
+}
