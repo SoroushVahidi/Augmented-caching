@@ -28,11 +28,12 @@
 | Quick smoke test | `pip install -e ".[dev]"`, then `python -m lafc.runner.run_policy --policy lru --trace data/example_unweighted.json --capacity 3` |
 | Reviewer and verification guide | [docs/reviewer/START_HERE.md](docs/reviewer/START_HERE.md) |
 | Companion dataset | [LAFC-Evict](https://github.com/SoroushVahidi/lafc-evict-dataset) on [Hugging Face](https://huggingface.co/datasets/SoroushVahidi/lafc-evict) and the [AWS Registry of Open Data](https://registry.opendata.aws/lafc-evict/) |
+| Research and evidence index | [Experiment inventory](docs/research/README.md) · [Methodology](docs/research/METHODOLOGY.md) |
 | Tutorial | [lafc-evict-tutorial](https://github.com/SoroushVahidi/lafc-evict-tutorial) |
 
 ---
 
-> The detailed documentation below is kept from the previous README, with only small factual updates.
+The [contribution guide](CONTRIBUTING.md) documents the base install, test and review workflow.
 
 Public repository: <https://github.com/SoroushVahidi/Augmented-caching>
 

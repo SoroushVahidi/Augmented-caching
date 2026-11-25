@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: "Decision-aligned eviction-value prediction for learning-augmented caching"
-message: "If you use this repository, please cite the manuscript."
+message: "If you use this repository, please cite the published article."
 type: software
 authors:
   - family-names: Vahidi
@@ -17,10 +17,11 @@ keywords:
   - cache replacement
   - eviction-value prediction
 preferred-citation:
-  type: unpublished
+  type: article
   title: "Decision-aligned eviction-value prediction for learning-augmented caching"
   authors:
     - family-names: Vahidi
       given-names: Soroush
   year: 2026
-  notes: "Manuscript submitted to Knowledge-Based Systems"
+  journal: "Knowledge-Based Systems"
+  doi: "10.1016/j.knosys.2026.117353"
