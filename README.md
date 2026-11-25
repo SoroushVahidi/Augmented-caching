@@ -30,6 +30,30 @@
 | Companion dataset | [LAFC-Evict](https://github.com/SoroushVahidi/lafc-evict-dataset) on [Hugging Face](https://huggingface.co/datasets/SoroushVahidi/lafc-evict) and the [AWS Registry of Open Data](https://registry.opendata.aws/lafc-evict/) |
 | Tutorial | [lafc-evict-tutorial](https://github.com/SoroushVahidi/lafc-evict-tutorial) |
 
+
+## Post-Acceptance Research — November 2026
+
+The *Knowledge-Based Systems* manuscript was accepted on November 15, 2026.
+The subsequent neural, recurrent, and controlled eviction experiments are
+separate from the paper and have not undergone its peer-review process.
+
+The exact shared LRU labeler evaluates every forced victim under deterministic
+LRU continuation in expected O(C + H) time with O(C) core auxiliary memory.
+A single alternative adds at most one miss, and at least max(1, C − H) actions
+are optimal. The median recorded speedup over compiled exhaustive replay was
+19.7×, with some small configurations favoring the compiled comparator.
+
+On the retrospective development grid, the optimized boosting finalist saved
+3,730 of 565,126 LRU misses (0.660%) at 18.35× the CPU cost. No candidate
+passed the full advancement screen. Independent confirmation remained sealed.
+
+Read the [technical report](post-acceptance-research/REPORT.pdf),
+[research index](post-acceptance-research/README.md), and
+[aggregate tables](post-acceptance-research/aggregate-results/).
+The [reproducibility guide](post-acceptance-research/REPRODUCIBILITY.md) describes
+the source revisions and input requirements. Public figures rebuild from
+existing aggregates. Exact replay requires authorized historical inputs.
+
 ---
 
 > The detailed documentation below is kept from the previous README, with only small factual updates.

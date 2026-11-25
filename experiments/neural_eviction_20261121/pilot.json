@@ -1,0 +1,40 @@
+{
+  "history": 10000,
+  "end": 50000,
+  "capacities": [
+    32
+  ],
+  "horizons": [
+    4
+  ],
+  "architectures": [
+    "mlp",
+    "deepsets"
+  ],
+  "seeds": [
+    7
+  ],
+  "sample_seed": 421,
+  "build_groups_per_cell": 512,
+  "train_groups_per_cell": 512,
+  "val_groups_per_cell": 256,
+  "test_groups_per_cell": 512,
+  "batch_size": 64,
+  "epochs": 6,
+  "patience": 3,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "network_grid": [
+    {
+      "width": 128,
+      "layers": 3,
+      "dropout": 0.1
+    }
+  ],
+  "historical_models": true,
+  "refit_horizons": [],
+  "fit_tree_jobs": 1,
+  "mixed_precision": false,
+  "margin": 0.05,
+  "replay_margin_methods": []
+}
