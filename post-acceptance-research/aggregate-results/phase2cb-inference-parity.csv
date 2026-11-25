@@ -1,0 +1,15 @@
+fold,policy,capacity,parity,reference_cpu_seconds,optimized_cpu_seconds,reference_misses,optimized_misses
+brightkite,D_ridge_finalist,64,True,8.548759685,6.36839869,13227,13227
+brightkite,D_hgb_finalist,64,True,6.881413098,0.774363093,13160,13160
+citibike,D_ridge_finalist,64,True,5.67754972,2.085613115,23126,23126
+citibike,D_hgb_finalist,64,True,8.250390971,0.895615278,15665,15665
+cloudphysics,D_ridge_finalist,64,True,12.015756696,1.772723663,38249,38249
+cloudphysics,D_hgb_finalist,64,True,16.036534949,2.718447497,37823,37823
+metacdn,D_ridge_finalist,64,True,0.061149178,0.062696163,22586,22586
+metacdn,D_hgb_finalist,64,True,11.713749074,1.245949221,22386,22386
+metakv,D_ridge_finalist,64,True,9.752172873,1.487983826,30551,30551
+metakv,D_hgb_finalist,64,True,0.07499841,0.077320385,30552,30552
+twemcache,D_ridge_finalist,64,True,0.071648363,0.073518794,27650,27650
+twemcache,D_hgb_finalist,64,True,0.074912806,0.075990069,27650,27650
+wiki2018,D_ridge_finalist,64,True,12.178533115,1.776147597,40000,40000
+wiki2018,D_hgb_finalist,64,True,21.911154299,2.824108231,40000,40000

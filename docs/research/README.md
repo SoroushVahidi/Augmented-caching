@@ -18,4 +18,6 @@ The [accepted KBS verification guide](../reviewer/START_HERE.md) and [accepted u
 
 The [November preservation draft](https://github.com/SoroushVahidi/Augmented-caching/pull/53) provides source provenance, stage reproduction commands, model settings, and checksum-pinned aggregates for the November neural and Phase 2 studies. Its source and evidence are independently versioned. Later restricted receipts and source revisions are held in the project evidence archive. Use the per-campaign manifest and executed revision when deriving new summaries.
 
+[Subsequent evidence and snapshot verification](RECONCILIATION.md) explain how the November report relates to later work.
+
 The main CLI and archived runner paths are part of the reproduction record. The cache API and reference policies live in [src/lafc](../../src/lafc/). Training and replay entry points remain in [scripts](../../scripts/), with benchmark and scheduler notes under [docs](../README.md) and [slurm](../../slurm/).
