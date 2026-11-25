@@ -6,6 +6,8 @@ Use this page to find the **right** document without duplicating long runbooks. 
 
 ## Experimental evidence and scientific organization
 
+[Post-acceptance experiment index](research/README.md) and [evaluation methodology](research/METHODOLOGY.md) cover the later research line.
+
 **Start here for the science.** These pages are organized by scientific
 question, not by manuscript-revision bookkeeping, and are the intended
 public entry points.

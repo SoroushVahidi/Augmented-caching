@@ -20,7 +20,7 @@ This installs `numpy`, `scikit-learn`, `pulp`, `pytest`, and `matplotlib`. See `
 pytest tests/ -v
 ```
 
-All 283 tests should pass. There are no linters configured in this repo.
+The base suite runs in the Python tests workflow. See CONTRIBUTING.md for the smoke command.
 
 ### Running policies (CLI)
 
