@@ -6,7 +6,7 @@
 
 This is the durable scientific audit. Failed wrap-up artifacts and unit
 SHA-256s are preserved in
-[../tie_aware_exact_oracle_recovery_20260814/](../tie_aware_exact_oracle_recovery_20260814/).
+[the archived recovery notes](https://github.com/SoroushVahidi/Augmented-caching/blob/677af892dc5612f7147ae223b746c5125c74e9c2/reports/tie_aware_exact_oracle_recovery_20260814/RECOVERY.md).
 
 ## Campaign identity
 
@@ -38,7 +38,7 @@ SHA-256s are preserved in
 
 No family/capacity unit was rerun. Production unit SHA-256 hashes after
 recovery match the hashes recorded at recovery time in
-`reports/tie_aware_exact_oracle_recovery_20260814/PROVENANCE.json`.
+[the archived provenance manifest](https://github.com/SoroushVahidi/Augmented-caching/blob/677af892dc5612f7147ae223b746c5125c74e9c2/reports/tie_aware_exact_oracle_recovery_20260814/PROVENANCE.json).
 
 ## Wrap-up CSV failure
 

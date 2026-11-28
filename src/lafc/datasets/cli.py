@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Sequence
 
 from lafc.datasets.base import CanonicalTraceRecord, write_records, write_request_sequence
 from lafc.datasets.additional_public import (
@@ -47,13 +47,24 @@ PREPARERS: Dict[str, Callable[[Path, int | None], List[CanonicalTraceRecord]]] =
     "wiki2018": _prepare_wiki,
 }
 
+ADDITIONAL_DATASETS = ("twemcache", "metakv", "metacdn", "cloudphysics")
 
-def run_dataset(dataset: str, raw_root: Path, out_root: Path, fmt: str, limit: int | None, **kwargs: object) -> Path:
+
+def run_dataset(
+    dataset: str,
+    raw_root: Path,
+    out_root: Path,
+    fmt: str,
+    limit: int | None,
+    *,
+    example_dir: Path = Path("data/examples"),
+    **kwargs: object,
+) -> Path:
     raw_dir = raw_root / dataset
     out_dir = out_root / dataset
     if dataset in PREPARERS:
         records = PREPARERS[dataset](raw_dir, limit)
-    elif dataset in {"twemcache", "metakv", "metacdn", "cloudphysics"}:
+    elif dataset in ADDITIONAL_DATASETS:
         sample_only = bool(kwargs.get("sample_only", False))
         try:
             if dataset == "twemcache":
@@ -97,7 +108,7 @@ def run_dataset(dataset: str, raw_root: Path, out_root: Path, fmt: str, limit: i
         except FileNotFoundError:
             if not sample_only:
                 raise
-            sample_path = Path("data/examples") / f"{dataset}_sample.jsonl"
+            sample_path = example_dir / f"{dataset}_sample.jsonl"
             if not sample_path.exists():
                 raise
             records = _load_sample_records(sample_path, dataset, limit=limit)
@@ -155,26 +166,19 @@ def _write_dataset_descriptor(dataset: str, out_dir: Path) -> None:
     )
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Prepare benchmark datasets into canonical trace format")
-    parser.add_argument(
-        "--dataset",
-        default="all",
-        choices=[
-            "brightkite",
-            "citibike",
-            "spec_cpu2006",
-            "wiki2018",
-            "twemcache",
-            "metakv",
-            "metacdn",
-            "cloudphysics",
-            "all",
-        ],
-    )
+    dataset_names = (*PREPARERS, *ADDITIONAL_DATASETS)
+    parser.add_argument("--dataset", default="all", choices=(*dataset_names, "all"))
     parser.add_argument("--raw-dir", type=Path, default=Path("data/raw"))
     parser.add_argument("--output-dir", type=Path, default=Path("data/processed"))
-    parser.add_argument("--sample-only", action="store_true", help="Write at most 100 records")
+    parser.add_argument(
+        "--example-dir",
+        type=Path,
+        default=Path("data/examples"),
+        help="Fallback JSONL directory for sample-only preparation",
+    )
+    parser.add_argument("--sample-only", action="store_true", help="Default to 100 records if --limit is omitted")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--format", choices=["jsonl", "csv"], default="jsonl")
     parser.add_argument("--cluster", default=None, help="Optional cluster filter (twemcache).")
@@ -184,28 +188,32 @@ def main() -> int:
     parser.add_argument("--aggregate-ranges", action="store_true", help="Aggregate range requests to object-level (metacdn).")
     parser.add_argument("--page-size", type=int, default=4096, help="Page size for CloudPhysics LBN->page mapping.")
     parser.add_argument("--paging-view", action="store_true", help="Always write requests_only.txt.")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     limit = 100 if args.sample_only and args.limit is None else args.limit
-    datasets = (list(PREPARERS.keys()) + ["twemcache", "metakv", "metacdn", "cloudphysics"]) if args.dataset == "all" else [args.dataset]
+    datasets = dataset_names if args.dataset == "all" else (args.dataset,)
 
     for ds in datasets:
-        path = run_dataset(
-            ds,
-            args.raw_dir,
-            args.output_dir,
-            args.format,
-            limit,
-            cluster=args.cluster,
-            usecase=args.usecase,
-            read_only=args.read_only,
-            keep_usecase_fields=not args.drop_usecase_fields,
-            aggregate_ranges=args.aggregate_ranges,
-            page_size=args.page_size,
-            sample_only=args.sample_only,
-            paging_view=args.paging_view,
-        )
-        _write_dataset_descriptor(ds, args.output_dir / ds)
+        try:
+            path = run_dataset(
+                ds,
+                args.raw_dir,
+                args.output_dir,
+                args.format,
+                limit,
+                example_dir=args.example_dir,
+                cluster=args.cluster,
+                usecase=args.usecase,
+                read_only=args.read_only,
+                keep_usecase_fields=not args.drop_usecase_fields,
+                aggregate_ranges=args.aggregate_ranges,
+                page_size=args.page_size,
+                sample_only=args.sample_only,
+                paging_view=args.paging_view,
+            )
+            _write_dataset_descriptor(ds, args.output_dir / ds)
+        except (OSError, ValueError) as exc:
+            parser.exit(1, f"Could not prepare {ds}: {exc}\n")
         print(f"Prepared {ds}: {path}")
 
     return 0

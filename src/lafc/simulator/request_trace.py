@@ -17,7 +17,8 @@ from typing import Dict, List, Optional, Tuple
 from lafc.types import Page, PageId, Request
 
 
-def _compute_actual_next(page_ids: List[PageId]) -> List[float]:
+def extract_actual_next_arrivals(page_ids: List[PageId]) -> List[float]:
+    """Return the zero-based next occurrence of each request, or infinity."""
     n = len(page_ids)
     result: List[float] = [math.inf] * n
     last_seen: Dict[PageId, int] = {}
@@ -46,14 +47,15 @@ def build_requests_from_lists(
     if missing:
         raise KeyError(f"No weight provided for page(s): {sorted(set(missing))}")
 
-    if predictions is not None and len(predictions) != len(page_ids):
-        raise ValueError("predictions length must match requests length")
-    if predicted_caches is not None and len(predicted_caches) != len(page_ids):
-        raise ValueError("predicted_caches length must match requests length")
-    if prediction_records is not None and len(prediction_records) != len(page_ids):
-        raise ValueError("prediction_records length must match requests length")
+    for name, rows in (
+        ("predictions", predictions),
+        ("predicted_caches", predicted_caches),
+        ("prediction_records", prediction_records),
+    ):
+        if rows is not None and len(rows) != len(page_ids):
+            raise ValueError(f"{name} length must match requests length")
 
-    actual_nexts = _compute_actual_next(page_ids)
+    actual_nexts = extract_actual_next_arrivals(page_ids)
     preds = predictions if predictions is not None else [math.inf] * len(page_ids)
 
     requests: List[Request] = []

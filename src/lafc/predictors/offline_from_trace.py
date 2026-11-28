@@ -5,19 +5,10 @@ from __future__ import annotations
 import math
 from typing import Dict, List, Set
 
+from lafc.simulator.request_trace import (
+    extract_actual_next_arrivals as extract_actual_next_arrivals,
+)
 from lafc.types import PageId, Request
-
-
-def extract_actual_next_arrivals(page_ids: List[PageId]) -> List[float]:
-    n = len(page_ids)
-    result: List[float] = [math.inf] * n
-    last_seen: Dict[PageId, int] = {}
-    for t in range(n - 1, -1, -1):
-        pid = page_ids[t]
-        if pid in last_seen:
-            result[t] = float(last_seen[pid])
-        last_seen[pid] = t
-    return result
 
 
 def compute_perfect_predictions(requests: List[Request]) -> List[Request]:
