@@ -1,0 +1,22 @@
+# Python 3.12, Linux x86-64. Install with pip -c and the dev extra.
+contourpy==1.4.0
+cycler==0.12.1
+fonttools==4.69.1
+iniconfig==2.3.1
+joblib==1.5.3
+kiwisolver==1.5.1
+lightgbm==4.6.0
+matplotlib==3.10.9
+numpy==2.3.5
+packaging==26.4
+pillow==13.0.0
+pluggy==1.7.0
+PuLP==3.3.0
+Pygments==2.21.0
+pyparsing==3.3.3
+pytest==9.0.3
+python-dateutil==4.0.0
+scikit-learn==1.8.0
+scipy==1.17.1
+threadpoolctl==3.6.0
+tzdata==2026.6

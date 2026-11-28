@@ -25,12 +25,13 @@ output/
 # Slurm job logs
 slurm/logs/
 
-# Local virtualenv
-.venv/
-
 # Local engineering tooling
 /.coverage
 /htmlcov/
 /.mypy_cache/
 /.ruff_cache/
 /.venv*/
+/.env
+/.env.*
+!/.env.example
+/.testmondata
