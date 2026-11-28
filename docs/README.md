@@ -4,6 +4,8 @@ Use this page to find the **right** document without duplicating long runbooks. 
 
 ---
 
+[Software guide](SOFTWARE_GUIDE.md) for installation, maintained commands and archived workflows.
+
 ## Experimental evidence and scientific organization
 
 [Post-acceptance experiment index](research/README.md) and [evaluation methodology](research/METHODOLOGY.md) cover the later research line.

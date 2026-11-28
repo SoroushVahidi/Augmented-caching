@@ -19,10 +19,10 @@ A paging-view export is also written as:
 ## Unified CLI
 
 ```bash
-python -m lafc.datasets.prepare --dataset <name> --raw-dir data/raw --output-dir data/processed
-# or
-python scripts/datasets/prepare_all.py --dataset <name>
+lafc-prepare-dataset --dataset wiki2018 --raw-dir data/raw --output-dir data/processed
 ```
+
+The example expects authorized Wiki2018 inputs under `data/raw/wiki2018/`. The module `python -m lafc.datasets.prepare` and the `scripts/datasets/prepare_all.py` and `scripts/datasets/prepare_dataset.py` wrappers call the same CLI.
 
 Supported `--dataset` values:
 - `brightkite`, `citibike`, `spec_cpu2006`, `wiki2018`
@@ -31,6 +31,7 @@ Supported `--dataset` values:
 
 Important flags:
 - `--sample-only` / `--limit`
+- `--example-dir` selects the fallback JSONL directory for sample-only preparation of Twemcache, MetaKV, MetaCDN and Alibaba Block.
 - `--format {jsonl,csv}`
 - `--cluster` (twemcache)
 - `--usecase` (metakv/metacdn)

@@ -1,24 +1,15 @@
 # Decision-Aligned Eviction-Value Prediction for Learning-Augmented Caching
 
-**Published in *Knowledge-Based Systems* (2026).** Sole author: Soroush Vahidi (NJIT).
+**Published in *Knowledge-Based Systems*, volume 356 (January 2027).** Sole author: Soroush Vahidi (NJIT).
 
 **In plain words.** When a cache is full and a new item arrives, the cache has to evict something. Classic rules like LRU ignore *what each eviction will cost later*. This project asks a narrow, testable question: if we train a model to predict, for each candidate, the extra misses its eviction would cause over a finite future horizon (a "decision-aligned" target), does that make a good online eviction policy? The repository contains the cache simulator, the learned policy (`evict_value_v1`), reimplementations and wrappers of classical and learned baselines (LRU, FIFO-Reinsertion, SIEVE, LRB, 3L-Cache, CACHEUS, HALP), and the audited result tables behind the paper. The honest headline is reported up front: under the corrected held-out protocol, the learned policy does **not** beat these baselines. The paper is a controlled study of the target, not a claim of a new best cache policy.
 
 ## Paper
 
-- **Published version:** S. Vahidi. *Decision-aligned eviction-value prediction for learning-augmented caching.* Knowledge-Based Systems, article 117353, 2026. [doi:10.1016/j.knosys.2026.117353](https://doi.org/10.1016/j.knosys.2026.117353)
+- **Published version:** S. Vahidi. *Decision-aligned eviction-value prediction for learning-augmented caching.* Knowledge-Based Systems 356 (2027), article 117353. [doi:10.1016/j.knosys.2026.117353](https://doi.org/10.1016/j.knosys.2026.117353)
 - **Preprint** (earlier title: "...for robust learning-augmented caching"): SSRN, 2026. [ssrn.com/abstract=6636732](https://ssrn.com/abstract=6636732) · [doi:10.2139/ssrn.6636732](https://doi.org/10.2139/ssrn.6636732)
 
-```bibtex
-@article{vahidi2026decisionaligned,
-  author  = {Vahidi, Soroush},
-  title   = {Decision-aligned eviction-value prediction for learning-augmented caching},
-  journal = {Knowledge-Based Systems},
-  pages   = {117353},
-  year    = {2026},
-  doi     = {10.1016/j.knosys.2026.117353}
-}
-```
+See [citation information](#citation).
 
 ## At a glance
 
@@ -164,51 +155,31 @@ the published comparison CSVs.
 
 ## Software in this repository
 
-Simulator and policies live under `src/lafc/`. License: [LICENSE](LICENSE)
-(MIT). Independent reimplementations and official wrappers are disclosed in
-the manuscript (§3.4.4) and reviewer docs; they are not presented as the
-original authors’ code.
+Install the maintained simulator and dataset preparation CLI in a virtual environment.
 
-Install:
-
-```bash
-pip install -e ".[dev]"
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+python -m pytest -q tests/test_simulator.py tests/test_metrics.py tests/test_datasets.py
+lafc-prepare-dataset --help
 ```
 
-Quick LRU smoke check:
-
-```bash
-python -m lafc.runner.run_policy \
-  --policy lru \
-  --trace data/example_unweighted.json \
-  --capacity 3
-```
-
-Lightweight tests (no HPC; SIEVE does not need extra extras):
-
-```bash
-pytest tests/test_sieve.py -q
-```
-
-LRB unit tests need the optional extra: `pip install -e ".[dev,lrb]"`.
-
-Full scientific campaigns are HPC-scale. See
-[docs/reviewer/REPRODUCTION_MATRIX.md](docs/reviewer/REPRODUCTION_MATRIX.md).
+See the [software and reproduction guide](docs/SOFTWARE_GUIDE.md) for evaluation modes, portable paths, and qualified dependency versions. Start with the [reviewer reproduction matrix](docs/reviewer/REPRODUCTION_MATRIX.md) for archived results. The [MIT license](LICENSE) covers the repository software. Trace inputs have their own terms.
 
 ## Citation
 
 ```bibtex
-@article{vahidi2026decisionaligned,
+@article{vahidi2027decisionaligned,
   author  = {Vahidi, Soroush},
   title   = {Decision-aligned eviction-value prediction for learning-augmented caching},
   journal = {Knowledge-Based Systems},
+  volume  = {356},
   pages   = {117353},
-  year    = {2026},
+  year    = {2027},
   doi     = {10.1016/j.knosys.2026.117353}
 }
 ```
-
-(`CITATION.cff` should also be updated from "submitted" to the published article.)
 
 See also [CITATION.cff](CITATION.cff).
 
